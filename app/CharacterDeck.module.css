@@ -18,9 +18,11 @@
   position: absolute;
   z-index: -2;
   inset: 0;
-  background: url("/sgg-art/seven-gates.webp") center / cover no-repeat;
-  opacity: 0.2;
-  filter: saturate(0.75) contrast(1.08);
+  background:
+    radial-gradient(circle at 20% 30%, rgba(104, 68, 180, 0.22), transparent 19%),
+    radial-gradient(circle at 72% 58%, color-mix(in srgb, var(--active-accent) 16%, transparent), transparent 25%),
+    conic-gradient(from 35deg at 45% 52%, transparent 0 9%, rgba(230, 196, 111, 0.08) 9.2% 9.5%, transparent 9.7% 20%);
+  opacity: 0.72;
   transform: scale(1.045);
   mask-image: linear-gradient(90deg, #000, rgba(0, 0, 0, 0.62) 58%, transparent);
 }
@@ -148,8 +150,8 @@
   top: 50%;
   left: 50%;
   display: block;
-  width: 222px;
-  aspect-ratio: 0.8;
+  width: 248px;
+  aspect-ratio: 1;
   overflow: hidden;
   padding: 0;
   cursor: pointer;
@@ -427,7 +429,7 @@
   .heading h2 { font-size: 25px; }
   .stage { min-height: 410px; perspective: 900px; }
   .portal { width: 360px; }
-  .card { width: 178px; }
+  .card { width: 190px; }
   .card[data-slot="0"] { transform: translate(-50%, -50%) translateZ(95px) scale(1.06); }
   .card[data-slot="1"] { transform: translate(-50%, -50%) translateX(122px) translateZ(-15px) rotateY(-22deg) scale(0.77); }
   .card[data-slot="-1"] { transform: translate(-50%, -50%) translateX(-122px) translateZ(-15px) rotateY(22deg) scale(0.77); }
@@ -440,8 +442,8 @@
   .detailIndex { font-size: 32px; }
   .detail h3 { font-size: 24px; }
   .godLink { display: none; }
-  .selector { grid-template-columns: repeat(7, minmax(42px, 1fr)); min-height: 56px; overflow-x: auto; }
-  .selector button { min-width: 42px; }
+  .selector { grid-template-columns: repeat(7, minmax(44px, 1fr)); min-height: 56px; overflow-x: auto; }
+  .selector button { min-width: 44px; }
   .selector button span { display: none; }
 }
 

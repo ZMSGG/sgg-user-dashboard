@@ -243,7 +243,7 @@ export function Dashboard() {
             保護設定を確認
           </button>
         </div>
-        <p className="sidebar-foot">USER DASHBOARD / DIMENSION V0.3</p>
+        <p className="sidebar-foot">USER DASHBOARD / EXCLUSIVE V0.4</p>
       </aside>
 
       <div className="main-shell">
@@ -290,10 +290,10 @@ export function Dashboard() {
                   <div className="hero-world-back" />
                   <img
                     className="hero-world-art"
-                    src="/sgg-art/hero-golden-stairway.webp"
+                    src="/dashboard-art/hero-taimaru-command.png"
                     alt=""
-                    width="1684"
-                    height="934"
+                    width="1600"
+                    height="843"
                     fetchPriority="high"
                   />
                   <div className="hero-world-halo"><i /><i /><i /></div>
@@ -302,9 +302,10 @@ export function Dashboard() {
                 </div>
                 <div className="hero-copy">
                   <p className="hero-label">ZEN_TARO / MY SGG</p>
-                  <h1 id="hero-title">七柱と歩む、<br />あなたの戦歴。</h1>
+                  <span className="hero-equipped"><i aria-hidden="true" /> ACTIVE OTOMO / TAIMARU</span>
+                  <h1 id="hero-title">ZEN_TAROの、<br />神域記録。</h1>
                   <p>
-                    大会の結果、ウォレットの資産、SGGポイント。あなたとSGGキャラクターが歩んだ軌跡を、ひとつの神域記録へ。
+                    装備中のOTOMO・鯛丸とともに、大会結果、ウォレット資産、SGGポイントを本人専用の記録として同期します。
                   </p>
                   <div className="player-signature">
                     <span>PLAYER</span><strong>ZEN_TARO</strong><small>ID / 0007-7F3A91</small>
@@ -374,7 +375,10 @@ export function Dashboard() {
               </div>
 
               <section className="next-card" aria-labelledby="next-title">
-                <img className="next-card-art" src="/sgg-art/seven-gates.webp" alt="" width="1684" height="934" loading="lazy" />
+                <div className="next-scene" aria-hidden="true">
+                  <span className="next-gate"><i /></span>
+                  <img src="/dashboard-characters/momokatsu-3d.webp" alt="" width="768" height="768" loading="lazy" />
+                </div>
                 <div className="next-number" aria-hidden="true">07</div>
                 <div>
                   <p className="kicker">NEXT CHALLENGE</p>
@@ -445,21 +449,24 @@ export function Dashboard() {
                 <>
                   <section className="asset-grid" aria-label="ウォレット保有アセット">
                     <article className="asset-card token-card">
-                      <img className="asset-card-art" src="/sgg-art/token-orbit.webp" alt="" width="1536" height="1024" loading="lazy" />
+                      <div className="asset-relic token-relic" aria-hidden="true"><i>SGG</i><span /></div>
                       <div className="asset-card-top"><span className="asset-glyph"><i>S</i></span><span className="demo-stamp">DEMO</span></div>
                       <p>SGG TOKEN</p>
                       <strong>4,277<small>.00</small></strong>
                       <span>公開前の表示サンプル</span>
                     </article>
                     <article className="asset-card gods-card">
-                      <img className="asset-card-art" src="/sgg-art/seven-gates.webp" alt="" width="1684" height="934" loading="lazy" />
+                      <div className="asset-relic gods-relic" aria-hidden="true"><i>七</i>{Array.from({ length: 7 }, (_, index) => <span key={index} />)}</div>
                       <div className="asset-card-top"><span className="asset-glyph"><i>七</i></span><span>WALLET</span></div>
                       <p>SEVENGODS</p>
                       <strong>02<small> ASSETS</small></strong>
                       <span>所有コレクション</span>
                     </article>
                     <article className="asset-card otomo-total-card">
-                      <img className="asset-card-art" src="/sgg-art/taimaru-evolution.webp" alt="" width="1536" height="1024" loading="lazy" />
+                      <div className="asset-character-stack" aria-hidden="true">
+                        <img src="/dashboard-characters/juka-3d.webp" alt="" width="768" height="768" loading="lazy" />
+                        <img src="/dashboard-characters/haku-3d.webp" alt="" width="768" height="768" loading="lazy" />
+                      </div>
                       <div className="asset-card-top"><span className="asset-glyph"><i>O</i></span><span>WALLET</span></div>
                       <p>OTOMO TOTAL</p>
                       <strong>12<small> ASSETS</small></strong>
@@ -509,7 +516,11 @@ export function Dashboard() {
                 demo
               />
               <section className="points-hero" aria-labelledby="points-balance-title">
-                <img className="points-hero-art" src="/sgg-art/token-orbit.webp" alt="" width="1536" height="1024" loading="lazy" />
+                <div className="points-core-art" aria-hidden="true">
+                  <span className="points-orbit orbit-a" /><span className="points-orbit orbit-b" /><span className="points-orbit orbit-c" />
+                  <i className="points-gem" />
+                  <img src="/dashboard-characters/shofuku-3d.webp" alt="" width="768" height="768" loading="lazy" />
+                </div>
                 <div className="points-balance">
                   <p id="points-balance-title">AVAILABLE SGG POINTS</p>
                   <strong>12,840</strong>
@@ -556,7 +567,7 @@ export function Dashboard() {
         </main>
 
         <footer className="site-footer">
-          <span>MY SGG / CHARACTER DIMENSION V0.3</span>
+          <span>MY SGG / DASHBOARD EXCLUSIVE V0.4</span>
           <span>デモデータ · 本番連携前</span>
         </footer>
       </div>

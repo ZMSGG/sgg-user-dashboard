@@ -32,12 +32,13 @@ test("server-renders the SGG dashboard starter", async () => {
 
   const html = await response.text();
   assert.match(html, /MY SGG/);
-  assert.match(html, /七柱と歩む/);
+  assert.match(html, /ZEN_TAROの/);
   assert.match(html, /大会出場/);
   assert.match(html, /優勝回数/);
-  assert.match(html, /100 SHOTS/);
-  assert.match(html, /sgg-art\/hero-golden-stairway\.webp/);
-  assert.match(html, /sgg-art\/pair-taimaru\.webp/);
+  assert.match(html, /DASHBOARD EXCLUSIVE/);
+  assert.match(html, /dashboard-art\/hero-taimaru-command\.png/);
+  assert.match(html, /dashboard-characters\/taimaru-3d\.webp/);
+  assert.doesNotMatch(html, /sgg-art\//);
   assert.match(html, /STARTER KIT/);
   assert.match(html, /DEMO DATA/);
   assert.match(html, /property="og:image" content="http:\/\/localhost:3000\/og\.png"/);
@@ -65,4 +66,15 @@ test("keeps canonical asset and point vocabulary separated", async () => {
 
 test("removes the disposable starter preview", async () => {
   await assert.rejects(access(new URL("../app/_sites-preview", templateRoot)));
+});
+
+test("keeps LP artwork out of the user dashboard source", async () => {
+  const [dashboard, deck, styles] = await Promise.all([
+    readFile(new URL("../app/Dashboard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/CharacterDeck.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.doesNotMatch(`${dashboard}\n${deck}\n${styles}`, /\/sgg-art\//);
+  await assert.rejects(access(new URL("../public/sgg-art", templateRoot)));
 });

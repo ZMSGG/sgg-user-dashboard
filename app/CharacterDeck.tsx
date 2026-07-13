@@ -4,7 +4,7 @@ import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
 import { useRef, useState } from "react";
 import styles from "./CharacterDeck.module.css";
 
-type CharacterPair = {
+type Character = {
   id: string;
   god: string;
   otomo: string;
@@ -14,20 +14,20 @@ type CharacterPair = {
   forms: number;
 };
 
-const pairs: CharacterPair[] = [
-  { id: "taimaru", god: "EBISU", otomo: "TAIMARU", image: "/sgg-art/pair-taimaru.webp", accent: "#ff7467", status: "EQUIPPED", forms: 3 },
-  { id: "kozuchi", god: "DAIKOKU", otomo: "KOZUCHI", image: "/sgg-art/pair-kozuchi.webp", accent: "#ffad52", status: "OWNED", forms: 2 },
-  { id: "momokatsu", god: "BISHAMON", otomo: "MOMOKATSU", image: "/sgg-art/pair-momokatsu.webp", accent: "#62ddff", status: "OWNED", forms: 1 },
-  { id: "kotone", god: "BENZAI", otomo: "KOTONE", image: "/sgg-art/pair-kotone.webp", accent: "#db74ff", status: "OWNED", forms: 2 },
-  { id: "juka", god: "JURO", otomo: "JUKA", image: "/sgg-art/pair-juka.webp", accent: "#7be5a7", status: "OWNED", forms: 1 },
-  { id: "haku", god: "FUKU", otomo: "HAKU", image: "/sgg-art/pair-haku.webp", accent: "#bceeff", status: "OWNED", forms: 1 },
-  { id: "shofuku", god: "HOTEI", otomo: "SHOFUKU", image: "/sgg-art/pair-shofuku.webp", accent: "#f4cc73", status: "OWNED", forms: 2 },
+const characters: Character[] = [
+  { id: "taimaru", god: "EBISU", otomo: "TAIMARU", image: "/dashboard-characters/taimaru-3d.webp", accent: "#ff7467", status: "EQUIPPED", forms: 3 },
+  { id: "kozuchi", god: "DAIKOKU", otomo: "KOZUCHI", image: "/dashboard-characters/kozuchi-3d.webp", accent: "#ffad52", status: "OWNED", forms: 2 },
+  { id: "momokatsu", god: "BISHAMON", otomo: "MOMOKATSU", image: "/dashboard-characters/momokatsu-3d.webp", accent: "#62ddff", status: "OWNED", forms: 1 },
+  { id: "kotone", god: "BENZAI", otomo: "KOTONE", image: "/dashboard-characters/kotone-3d.webp", accent: "#db74ff", status: "OWNED", forms: 2 },
+  { id: "juka", god: "JURO", otomo: "JUKA", image: "/dashboard-characters/juka-3d.webp", accent: "#7be5a7", status: "OWNED", forms: 1 },
+  { id: "haku", god: "FUKU", otomo: "HAKU", image: "/dashboard-characters/haku-3d.webp", accent: "#bceeff", status: "OWNED", forms: 1 },
+  { id: "shofuku", god: "HOTEI", otomo: "SHOFUKU", image: "/dashboard-characters/shofuku-3d.webp", accent: "#f4cc73", status: "OWNED", forms: 2 },
 ];
 
 const relativeSlot = (index: number, selected: number) => {
   let delta = index - selected;
-  if (delta > 3) delta -= pairs.length;
-  if (delta < -3) delta += pairs.length;
+  if (delta > 3) delta -= characters.length;
+  if (delta < -3) delta += characters.length;
   return delta;
 };
 
@@ -35,10 +35,10 @@ export function CharacterDeck({ onOpenAssets }: { onOpenAssets: () => void }) {
   const [selected, setSelected] = useState(0);
   const pointerStart = useRef<number | null>(null);
   const pointerDragged = useRef(false);
-  const selectedPair = pairs[selected];
+  const selectedCharacter = characters[selected];
 
   const rotate = (direction: -1 | 1) => {
-    setSelected((current) => (current + direction + pairs.length) % pairs.length);
+    setSelected((current) => (current + direction + characters.length) % characters.length);
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -53,7 +53,7 @@ export function CharacterDeck({ onOpenAssets }: { onOpenAssets: () => void }) {
       setSelected(0);
     } else if (event.key === "End") {
       event.preventDefault();
-      setSelected(pairs.length - 1);
+      setSelected(characters.length - 1);
     }
   };
 
@@ -77,23 +77,25 @@ export function CharacterDeck({ onOpenAssets }: { onOpenAssets: () => void }) {
   return (
     <section
       className={styles.sanctum}
-      style={{ "--active-accent": selectedPair.accent } as CSSProperties}
+      style={{ "--active-accent": selectedCharacter.accent } as CSSProperties}
       aria-labelledby="character-sanctum-title"
     >
       <div className={styles.heading}>
         <div>
-          <p>THE SEVEN / PERSONAL COLLECTION</p>
-          <h2 id="character-sanctum-title">七柱のキャラクター神殿</h2>
+          <p>MY OTOMO / PERSONAL COLLECTION</p>
+          <h2 id="character-sanctum-title">あなたのOTOMOコレクション</h2>
         </div>
-        <span>100 SHOTS → 7 SELECTED PAIRS</span>
+        <span>DASHBOARD EXCLUSIVE / 07 CHARACTERS</span>
       </div>
+
+      <p className="sr-only" aria-live="polite">{selectedCharacter.otomo}を選択中</p>
 
       <div className={styles.content}>
         <div
           className={styles.stage}
           role="region"
-          aria-roledescription="3D character carousel"
-          aria-label="SGGキャラクターペアを選択。左右矢印キーまたはドラッグで切り替え"
+          aria-roledescription="3Dキャラクターカルーセル"
+          aria-label="SGGキャラクターを選択。左右矢印キーまたはドラッグで切り替え"
           tabIndex={0}
           onKeyDown={handleKeyDown}
           onPointerDown={handlePointerDown}
@@ -105,14 +107,15 @@ export function CharacterDeck({ onOpenAssets }: { onOpenAssets: () => void }) {
         >
           <div className={styles.portal} aria-hidden="true"><i /><i /><i /></div>
           <div className={styles.cards}>
-            {pairs.map((pair, index) => {
+            {characters.map((character, index) => {
               const slot = relativeSlot(index, selected);
               return (
                 <button
                   className={`${styles.card}${slot === 0 ? ` ${styles.activeCard}` : ""}`}
                   data-slot={slot}
                   type="button"
-                  key={pair.id}
+                  key={character.id}
+                  tabIndex={slot === 0 ? 0 : -1}
                   onClick={() => {
                     if (pointerDragged.current) {
                       pointerDragged.current = false;
@@ -121,20 +124,20 @@ export function CharacterDeck({ onOpenAssets }: { onOpenAssets: () => void }) {
                     setSelected(index);
                   }}
                   aria-current={slot === 0 ? "true" : undefined}
-                  aria-label={`${pair.god}と${pair.otomo}を選択`}
-                  style={{ "--pair-accent": pair.accent } as CSSProperties}
+                  aria-label={`${character.otomo}（${character.god} LINK）を選択`}
+                  style={{ "--pair-accent": character.accent } as CSSProperties}
                 >
                   <img
-                    src={pair.image}
-                    alt={`${pair.god}と${pair.otomo}のSGGキャラクターペア`}
-                    width="560"
-                    height="700"
+                    src={character.image}
+                    alt={`${character.otomo}のダッシュボード専用3Dポートレート`}
+                    width="768"
+                    height="768"
                     loading={index === 0 ? "eager" : "lazy"}
                   />
                   <span className={styles.cardSheen} aria-hidden="true" />
                   <span className={styles.cardMeta}>
-                    <small>0{index + 1} / SEVEN PAIR</small>
-                    <strong>{pair.otomo}</strong>
+                    <small>0{index + 1} / SEVEN</small>
+                    <strong>{character.otomo}</strong>
                   </span>
                 </button>
               );
@@ -143,14 +146,14 @@ export function CharacterDeck({ onOpenAssets }: { onOpenAssets: () => void }) {
           <p className={styles.dragHint}>DRAG / ← →</p>
         </div>
 
-        <aside className={styles.detail} aria-live="polite">
+        <aside className={styles.detail}>
           <p className={styles.detailIndex}>0{selected + 1} <span>/ 07</span></p>
-          <p className={styles.detailKicker}>SELECTED SGG PAIR</p>
-          <h3>{selectedPair.otomo}</h3>
-          <span className={styles.godLink}>{selectedPair.god} LINK</span>
+          <p className={styles.detailKicker}>SELECTED SGG CHARACTER</p>
+          <h3>{selectedCharacter.otomo}</h3>
+          <span className={styles.godLink}>{selectedCharacter.god} LINK</span>
           <dl>
-            <div><dt>STATUS</dt><dd>{selectedPair.status}</dd></div>
-            <div><dt>OWNED FORMS</dt><dd>{selectedPair.forms} / 3</dd></div>
+            <div><dt>STATUS</dt><dd>{selectedCharacter.status}</dd></div>
+            <div><dt>OWNED FORMS</dt><dd>{selectedCharacter.forms} / 3</dd></div>
             <div><dt>WALLET</dt><dd>VERIFIED</dd></div>
           </dl>
           <p className={styles.detailCopy}>
@@ -161,17 +164,17 @@ export function CharacterDeck({ onOpenAssets }: { onOpenAssets: () => void }) {
       </div>
 
       <div className={styles.selector} aria-label="キャラクター一覧">
-        {pairs.map((pair, index) => (
+        {characters.map((character, index) => (
           <button
             type="button"
-            key={pair.id}
+            key={character.id}
             className={index === selected ? styles.selectedSelector : ""}
             onClick={() => setSelected(index)}
-            aria-label={`${pair.otomo}を表示`}
+            aria-label={`${character.otomo}を表示`}
             aria-pressed={index === selected}
           >
-            <i style={{ background: pair.accent }} aria-hidden="true" />
-            <span>{pair.otomo}</span>
+            <i style={{ background: character.accent }} aria-hidden="true" />
+            <span>{character.otomo}</span>
           </button>
         ))}
       </div>
