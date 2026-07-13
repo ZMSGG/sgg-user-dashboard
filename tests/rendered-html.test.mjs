@@ -32,9 +32,12 @@ test("server-renders the SGG dashboard starter", async () => {
 
   const html = await response.text();
   assert.match(html, /MY SGG/);
-  assert.match(html, /挑戦のすべてを/);
+  assert.match(html, /七柱と歩む/);
   assert.match(html, /大会出場/);
   assert.match(html, /優勝回数/);
+  assert.match(html, /100 SHOTS/);
+  assert.match(html, /sgg-art\/hero-golden-stairway\.webp/);
+  assert.match(html, /sgg-art\/pair-taimaru\.webp/);
   assert.match(html, /STARTER KIT/);
   assert.match(html, /DEMO DATA/);
   assert.match(html, /property="og:image" content="http:\/\/localhost:3000\/og\.png"/);

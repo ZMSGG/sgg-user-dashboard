@@ -6,6 +6,7 @@ import {
   pointLedger,
   tournamentRecords,
 } from "./dashboard-data";
+import { CharacterDeck } from "./CharacterDeck";
 
 type View = "overview" | "tournaments" | "assets" | "points";
 type Dialog = "account" | "recovery" | null;
@@ -129,6 +130,10 @@ export function Dashboard() {
     };
   }, [dialog]);
 
+  useEffect(() => () => {
+    if (pointerFrameRef.current) window.cancelAnimationFrame(pointerFrameRef.current);
+  }, []);
+
   const changeView = (view: View) => {
     setActiveView(view);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -160,14 +165,24 @@ export function Dashboard() {
     const { clientX, clientY } = event;
     pointerFrameRef.current = window.requestAnimationFrame(() => {
       const bounds = target.getBoundingClientRect();
-      target.style.setProperty("--pointer-x", `${((clientX - bounds.left) / bounds.width) * 100}%`);
-      target.style.setProperty("--pointer-y", `${((clientY - bounds.top) / bounds.height) * 100}%`);
+      const x = (clientX - bounds.left) / bounds.width;
+      const y = (clientY - bounds.top) / bounds.height;
+      target.style.setProperty("--pointer-x", `${x * 100}%`);
+      target.style.setProperty("--pointer-y", `${y * 100}%`);
+      target.style.setProperty("--tilt-x", `${(0.5 - y) * 4}deg`);
+      target.style.setProperty("--tilt-y", `${(x - 0.5) * 5}deg`);
+      target.style.setProperty("--shift-x", `${(x - 0.5) * 14}px`);
+      target.style.setProperty("--shift-y", `${(y - 0.5) * 10}px`);
     });
   };
 
   const resetSanctumLight = (event: React.PointerEvent<HTMLElement>) => {
     event.currentTarget.style.setProperty("--pointer-x", "72%");
     event.currentTarget.style.setProperty("--pointer-y", "38%");
+    event.currentTarget.style.setProperty("--tilt-x", "0deg");
+    event.currentTarget.style.setProperty("--tilt-y", "0deg");
+    event.currentTarget.style.setProperty("--shift-x", "0px");
+    event.currentTarget.style.setProperty("--shift-y", "0px");
   };
 
   const notify = (message: string) => {
@@ -228,7 +243,7 @@ export function Dashboard() {
             保護設定を確認
           </button>
         </div>
-        <p className="sidebar-foot">USER DASHBOARD / SANCTUM V0.2</p>
+        <p className="sidebar-foot">USER DASHBOARD / DIMENSION V0.3</p>
       </aside>
 
       <div className="main-shell">
@@ -271,18 +286,25 @@ export function Dashboard() {
                 onPointerMove={moveSanctumLight}
                 onPointerLeave={resetSanctumLight}
               >
-                <div className="sanctum-geometry" aria-hidden="true">
-                  <div className="sanctum-ring ring-outer" />
-                  <div className="sanctum-ring ring-middle" />
-                  <div className="sanctum-ring ring-inner" />
-                  <div className="sanctum-gate"><span>七</span></div>
-                  {Array.from({ length: 7 }, (_, index) => <i key={index} className={`sanctum-node node-${index + 1}`} />)}
+                <div className="hero-world" aria-hidden="true">
+                  <div className="hero-world-back" />
+                  <img
+                    className="hero-world-art"
+                    src="/sgg-art/hero-golden-stairway.webp"
+                    alt=""
+                    width="1684"
+                    height="934"
+                    fetchPriority="high"
+                  />
+                  <div className="hero-world-halo"><i /><i /><i /></div>
+                  <div className="hero-depth-line line-a" />
+                  <div className="hero-depth-line line-b" />
                 </div>
                 <div className="hero-copy">
-                  <p className="hero-label">MY SGG / PERSONAL ARCHIVE</p>
-                  <h1 id="hero-title">あなたの軌跡は、<br />神樹に刻まれる。</h1>
+                  <p className="hero-label">ZEN_TARO / MY SGG</p>
+                  <h1 id="hero-title">七柱と歩む、<br />あなたの戦歴。</h1>
                   <p>
-                    挑戦のすべてを、ひとつの記録へ。戦績、アセット、ポイントが、あなた自身の軌跡としてつながります。
+                    大会の結果、ウォレットの資産、SGGポイント。あなたとSGGキャラクターが歩んだ軌跡を、ひとつの神域記録へ。
                   </p>
                   <div className="player-signature">
                     <span>PLAYER</span><strong>ZEN_TARO</strong><small>ID / 0007-7F3A91</small>
@@ -296,7 +318,7 @@ export function Dashboard() {
                   </div>
                 </div>
                 <div className="hero-points">
-                  <div className="core-label">PERSONAL CORE</div>
+                  <div className="core-label">PLAYER CORE / LIVE</div>
                   <p>SGG POINTS <span>DEMO</span></p>
                   <strong>12,840</strong>
                   <small>今シーズン <b>+3,420</b></small>
@@ -310,6 +332,8 @@ export function Dashboard() {
                   <span><i>{String(protectionCount).padStart(2, "0")}/03</i> 保護状態</span>
                 </div>
               </section>
+
+              <CharacterDeck onOpenAssets={() => changeView("assets")} />
 
               <div className="overview-grid">
                 <section className="panel recent-panel" aria-labelledby="recent-title">
@@ -350,6 +374,7 @@ export function Dashboard() {
               </div>
 
               <section className="next-card" aria-labelledby="next-title">
+                <img className="next-card-art" src="/sgg-art/seven-gates.webp" alt="" width="1684" height="934" loading="lazy" />
                 <div className="next-number" aria-hidden="true">07</div>
                 <div>
                   <p className="kicker">NEXT CHALLENGE</p>
@@ -420,18 +445,21 @@ export function Dashboard() {
                 <>
                   <section className="asset-grid" aria-label="ウォレット保有アセット">
                     <article className="asset-card token-card">
+                      <img className="asset-card-art" src="/sgg-art/token-orbit.webp" alt="" width="1536" height="1024" loading="lazy" />
                       <div className="asset-card-top"><span className="asset-glyph"><i>S</i></span><span className="demo-stamp">DEMO</span></div>
                       <p>SGG TOKEN</p>
                       <strong>4,277<small>.00</small></strong>
                       <span>公開前の表示サンプル</span>
                     </article>
                     <article className="asset-card gods-card">
+                      <img className="asset-card-art" src="/sgg-art/seven-gates.webp" alt="" width="1684" height="934" loading="lazy" />
                       <div className="asset-card-top"><span className="asset-glyph"><i>七</i></span><span>WALLET</span></div>
                       <p>SEVENGODS</p>
                       <strong>02<small> ASSETS</small></strong>
                       <span>所有コレクション</span>
                     </article>
                     <article className="asset-card otomo-total-card">
+                      <img className="asset-card-art" src="/sgg-art/taimaru-evolution.webp" alt="" width="1536" height="1024" loading="lazy" />
                       <div className="asset-card-top"><span className="asset-glyph"><i>O</i></span><span>WALLET</span></div>
                       <p>OTOMO TOTAL</p>
                       <strong>12<small> ASSETS</small></strong>
@@ -481,6 +509,7 @@ export function Dashboard() {
                 demo
               />
               <section className="points-hero" aria-labelledby="points-balance-title">
+                <img className="points-hero-art" src="/sgg-art/token-orbit.webp" alt="" width="1536" height="1024" loading="lazy" />
                 <div className="points-balance">
                   <p id="points-balance-title">AVAILABLE SGG POINTS</p>
                   <strong>12,840</strong>
@@ -527,7 +556,7 @@ export function Dashboard() {
         </main>
 
         <footer className="site-footer">
-          <span>MY SGG / STARTER V0.2</span>
+          <span>MY SGG / CHARACTER DIMENSION V0.3</span>
           <span>デモデータ · 本番連携前</span>
         </footer>
       </div>

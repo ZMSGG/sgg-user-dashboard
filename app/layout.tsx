@@ -39,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "大会戦績、保有アセット、SGGポイント、アカウント連携をひとつにまとめるプレイヤーダッシュボード。",
     openGraph: {
       title: "MY SGG｜ユーザーダッシュボード",
-      description: "あなたの軌跡は、神樹に刻まれる。",
+      description: "七柱と歩む、あなたの戦歴。",
       type: "website",
       locale: "ja_JP",
       images: [
@@ -47,14 +47,14 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/og.png",
           width: 1200,
           height: 630,
-          alt: "MY SGG — あなたの軌跡は、神樹に刻まれる。",
+          alt: "MY SGG — 七柱と歩む、あなたの戦歴。",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
       title: "MY SGG｜ユーザーダッシュボード",
-      description: "あなたの軌跡は、神樹に刻まれる。",
+      description: "七柱と歩む、あなたの戦歴。",
       images: ["/og.png"],
     },
   };

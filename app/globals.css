@@ -3890,3 +3890,505 @@ a:focus-visible {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   MY SGG V0.3 — Character Dimension
+   100-shot atlas curation + honest CSS 3D depth (no fake GLB claim)
+   ========================================================================== */
+
+.cosmic-field {
+  opacity: 0.35;
+}
+
+.hero-card {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --shift-x: 0px;
+  --shift-y: 0px;
+  display: block;
+  min-height: clamp(650px, calc(100svh - 132px), 810px);
+  padding: 70px 56px 112px;
+  overflow: hidden;
+  perspective: 1300px;
+  transform-style: preserve-3d;
+  background:
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(94, 217, 255, 0.12), transparent 22%),
+    #05030b;
+  isolation: isolate;
+}
+
+.hero-card::before {
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(230, 196, 111, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(230, 196, 111, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(90deg, #000, transparent 63%);
+}
+
+.hero-card::after {
+  z-index: 8;
+}
+
+.hero-world {
+  position: absolute;
+  z-index: 0;
+  inset: -2%;
+  pointer-events: none;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transform-style: preserve-3d;
+  transition: transform 180ms ease-out;
+}
+
+.hero-world-back {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 72% 28%, rgba(230, 196, 111, 0.2), transparent 30%),
+    radial-gradient(circle at 72% 58%, rgba(69, 177, 255, 0.16), transparent 35%),
+    linear-gradient(115deg, #05030b, #100721 62%, #05030b);
+  transform: translateZ(-80px) scale(1.08);
+}
+
+.hero-world-art {
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 0 auto;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.92;
+  filter: saturate(0.96) contrast(1.05) brightness(0.89);
+  transform: translate3d(var(--shift-x), var(--shift-y), 70px) scale(1.055);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.2) 27%, #000 51%);
+  transition: transform 180ms ease-out;
+}
+
+.hero-world::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(4, 2, 9, 0.98) 0%, rgba(4, 2, 9, 0.9) 26%, rgba(4, 2, 9, 0.25) 53%, transparent 72%),
+    linear-gradient(180deg, rgba(3, 2, 7, 0.12), transparent 50%, rgba(3, 2, 7, 0.7));
+  transform: translateZ(95px);
+}
+
+.hero-world-halo {
+  position: absolute;
+  z-index: 3;
+  width: min(54vw, 720px);
+  aspect-ratio: 1;
+  right: 0;
+  top: 47%;
+  transform: translate3d(var(--shift-x), calc(-50% + var(--shift-y)), 105px) rotateX(67deg);
+  border: 1px solid rgba(255, 240, 176, 0.22);
+  border-radius: 50%;
+  box-shadow: inset 0 0 60px rgba(102, 66, 174, 0.15), 0 0 60px rgba(230, 196, 111, 0.09);
+}
+
+.hero-world-halo::before,
+.hero-world-halo::after,
+.hero-world-halo i {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(230, 196, 111, 0.15);
+  border-radius: 50%;
+}
+
+.hero-world-halo::before { inset: 12%; }
+.hero-world-halo::after { inset: 26%; border-style: dashed; }
+.hero-world-halo i:nth-child(1) { inset: 7%; border-color: rgba(98, 221, 255, 0.18); }
+.hero-world-halo i:nth-child(2) { inset: 38%; }
+.hero-world-halo i:nth-child(3) {
+  inset: 48%;
+  background: var(--gold-pale);
+  border-color: var(--gold-pale);
+  box-shadow: 0 0 30px var(--gold-pale);
+}
+
+.hero-depth-line {
+  position: absolute;
+  z-index: 5;
+  width: 46%;
+  height: 1px;
+  right: 2%;
+  background: linear-gradient(90deg, transparent, rgba(255, 240, 176, 0.72), transparent);
+  transform-origin: right center;
+}
+
+.hero-depth-line::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  top: -3px;
+  right: 20%;
+  background: #fff0b0;
+  border-radius: 50%;
+  box-shadow: 0 0 18px #fff0b0;
+}
+
+.hero-depth-line.line-a { top: 22%; transform: translateZ(130px) rotate(-7deg); opacity: 0.55; }
+.hero-depth-line.line-b { top: 71%; transform: translateZ(150px) rotate(5deg); opacity: 0.3; }
+
+.hero-copy {
+  position: relative;
+  z-index: 6;
+  width: min(56%, 690px);
+  max-width: none;
+  transform: translateZ(135px);
+}
+
+.hero-copy h1 {
+  max-width: 680px;
+  margin: 18px 0 17px;
+  font-size: clamp(48px, 5vw, 76px);
+  line-height: 1.2;
+  text-shadow: 0 10px 44px rgba(0, 0, 0, 0.82);
+}
+
+.hero-copy > p:not(.hero-label) {
+  max-width: 540px;
+  color: rgba(247, 241, 231, 0.76);
+  text-shadow: 0 3px 22px rgba(0, 0, 0, 0.9);
+}
+
+.hero-points {
+  position: absolute;
+  z-index: 7;
+  right: 34px;
+  bottom: 105px;
+  width: 250px;
+  padding: 18px 20px 16px;
+  text-align: left;
+  background: linear-gradient(135deg, rgba(7, 4, 15, 0.83), rgba(22, 11, 38, 0.66));
+  border: 1px solid rgba(255, 240, 176, 0.28);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55), inset 0 0 28px rgba(117, 77, 183, 0.09);
+  backdrop-filter: blur(18px);
+  transform: translate3d(var(--shift-x), var(--shift-y), 155px);
+  filter: none;
+}
+
+.hero-points::before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  top: 14px;
+  bottom: 14px;
+  left: -1px;
+  background: var(--cyan);
+  box-shadow: 0 0 16px var(--cyan);
+}
+
+.hero-points .core-label {
+  margin: 0 0 10px;
+}
+
+.hero-points > strong {
+  font-size: clamp(42px, 5vw, 64px);
+}
+
+.hero-points button {
+  margin-top: 12px;
+}
+
+.hero-command-line {
+  z-index: 9;
+  background: linear-gradient(90deg, rgba(4, 2, 9, 0.93), rgba(12, 6, 22, 0.82));
+}
+
+.section-heading {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.section-sigil {
+  display: none;
+}
+
+.next-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #090512;
+}
+
+.next-card::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(5, 3, 10, 0.96) 0%, rgba(5, 3, 10, 0.84) 47%, rgba(5, 3, 10, 0.15));
+}
+
+.next-card-art {
+  position: absolute;
+  z-index: 0;
+  inset: 0 0 0 auto;
+  width: 64%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.68;
+  mask-image: linear-gradient(90deg, transparent, #000 34%);
+}
+
+.next-card > :not(.next-card-art) {
+  position: relative;
+  z-index: 2;
+}
+
+.asset-card {
+  display: flex;
+  min-height: 286px;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+  background: #090512;
+}
+
+.asset-card::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 2, 8, 0.02) 18%, rgba(4, 2, 8, 0.75) 60%, rgba(4, 2, 8, 0.98));
+}
+
+.asset-card::after {
+  display: none;
+}
+
+.asset-card-art {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.78;
+  transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 500ms ease;
+}
+
+.asset-card:hover .asset-card-art {
+  filter: saturate(1.12) brightness(1.06);
+  transform: scale(1.045);
+}
+
+.asset-card > :not(.asset-card-art) {
+  position: relative;
+  z-index: 3;
+}
+
+.asset-card .asset-card-top {
+  position: absolute;
+  z-index: 4;
+  top: 18px;
+  right: 18px;
+  left: 18px;
+}
+
+.asset-card > p {
+  margin: 0;
+  color: rgba(247, 241, 231, 0.7);
+}
+
+.asset-card > strong {
+  color: #fff0b0;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.75);
+}
+
+.asset-card > span {
+  color: rgba(247, 241, 231, 0.62);
+}
+
+.points-hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #07040f;
+}
+
+.points-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(6, 3, 13, 0.98) 0%, rgba(6, 3, 13, 0.87) 44%, rgba(6, 3, 13, 0.26));
+}
+
+.points-hero-art {
+  position: absolute;
+  z-index: 0;
+  inset: 0 0 0 auto;
+  width: 62%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  mask-image: linear-gradient(90deg, transparent, #000 32%);
+}
+
+.points-hero > :not(.points-hero-art) {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 1240px) {
+  .hero-card {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+
+  .hero-world-art {
+    object-position: 57% center;
+    opacity: 0.86;
+  }
+
+  .hero-world::after {
+    background:
+      linear-gradient(90deg, rgba(4, 2, 9, 0.99) 0%, rgba(4, 2, 9, 0.91) 33%, rgba(4, 2, 9, 0.32) 62%, transparent 84%),
+      linear-gradient(180deg, rgba(3, 2, 7, 0.12), transparent 50%, rgba(3, 2, 7, 0.72));
+  }
+
+  .hero-copy {
+    width: 61%;
+  }
+
+  .hero-points {
+    width: 220px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-copy h1 {
+    font-size: clamp(42px, 6vw, 60px);
+  }
+
+  .hero-world-art {
+    object-position: 63% center;
+    opacity: 0.75;
+  }
+
+  .hero-copy {
+    width: 68%;
+  }
+
+  .hero-points {
+    width: 190px;
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-card {
+    display: block;
+    min-height: 890px;
+    padding: 365px 20px 178px;
+    perspective: none;
+  }
+
+  .hero-world {
+    inset: 0 0 auto;
+    height: 385px;
+    transform: none;
+  }
+
+  .hero-world-art {
+    object-position: 66% center;
+    opacity: 0.96;
+    transform: scale(1.04);
+    mask-image: linear-gradient(180deg, #000 0%, #000 62%, transparent 100%);
+  }
+
+  .hero-world::after {
+    background:
+      linear-gradient(90deg, rgba(4, 2, 9, 0.16), transparent 66%),
+      linear-gradient(180deg, transparent 35%, rgba(4, 2, 9, 0.98));
+    transform: none;
+  }
+
+  .hero-world-halo,
+  .hero-depth-line {
+    display: none;
+  }
+
+  .hero-copy {
+    width: 100%;
+    transform: none;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(34px, 10vw, 43px);
+  }
+
+  .hero-points {
+    width: 176px;
+    right: 14px;
+    bottom: auto;
+    left: auto;
+    top: 244px;
+    padding: 11px 13px;
+    text-align: left;
+    transform: none;
+  }
+
+  .hero-points .core-label {
+    display: block;
+    font-size: 7px;
+  }
+
+  .hero-points > strong {
+    font-size: 36px;
+  }
+
+  .hero-points > small,
+  .hero-points button {
+    display: none;
+  }
+
+  .next-card-art {
+    width: 100%;
+    opacity: 0.36;
+  }
+
+  .asset-card {
+    min-height: 250px;
+  }
+
+  .points-hero-art {
+    width: 100%;
+    opacity: 0.38;
+  }
+
+  .points-hero::before {
+    background: rgba(6, 3, 13, 0.66);
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-card {
+    min-height: 920px;
+    padding-top: 345px;
+  }
+
+  .hero-world {
+    height: 365px;
+  }
+
+  .hero-points {
+    top: 228px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-world,
+  .hero-world-art,
+  .asset-card-art {
+    transition: none;
+    transform: none;
+  }
+}
