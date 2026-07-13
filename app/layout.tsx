@@ -32,14 +32,14 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(origin),
     title: {
-      default: "SGG PLAYER ARCHIVE",
-      template: "%s | SGG PLAYER ARCHIVE",
+      default: "MY SGG｜ユーザーダッシュボード",
+      template: "%s | MY SGG",
     },
     description:
       "大会戦績、保有アセット、SGGポイント、アカウント連携をひとつにまとめるプレイヤーダッシュボード。",
     openGraph: {
-      title: "SGG PLAYER ARCHIVE",
-      description: "あなたの挑戦と資産を、ひとつの記録へ。",
+      title: "MY SGG｜ユーザーダッシュボード",
+      description: "あなたの軌跡は、神樹に刻まれる。",
       type: "website",
       locale: "ja_JP",
       images: [
@@ -47,14 +47,14 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/og.png",
           width: 1200,
           height: 630,
-          alt: "SGG PLAYER ARCHIVE — 挑戦のすべてを、ひとつの記録へ。",
+          alt: "MY SGG — あなたの軌跡は、神樹に刻まれる。",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "SGG PLAYER ARCHIVE",
-      description: "あなたの挑戦と資産を、ひとつの記録へ。",
+      title: "MY SGG｜ユーザーダッシュボード",
+      description: "あなたの軌跡は、神樹に刻まれる。",
       images: ["/og.png"],
     },
   };

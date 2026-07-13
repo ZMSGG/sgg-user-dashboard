@@ -31,7 +31,7 @@ test("server-renders the SGG dashboard starter", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /SGG PLAYER ARCHIVE/);
+  assert.match(html, /MY SGG/);
   assert.match(html, /挑戦のすべてを/);
   assert.match(html, /大会出場/);
   assert.match(html, /優勝回数/);

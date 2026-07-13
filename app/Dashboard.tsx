@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   otomoForms,
   pointLedger,
@@ -32,8 +32,8 @@ function BrandMark({ compact = false }: { compact?: boolean }) {
       </span>
       {!compact && (
         <span className="brand-type">
-          <strong>SGG</strong>
-          <small>PLAYER ARCHIVE</small>
+          <strong>MY SGG</strong>
+          <small>USER DASHBOARD</small>
         </span>
       )}
     </div>
@@ -53,9 +53,10 @@ function SectionHeading({
 }) {
   return (
     <div className="section-heading">
+      <span className="section-sigil" aria-hidden="true"><i>七</i></span>
       <div>
         <p className="kicker">{kicker}</p>
-        <h2>{title}</h2>
+        <h1 data-view-heading>{title}</h1>
         <p className="section-description">{description}</p>
       </div>
       {demo && <span className="demo-stamp">DEMO DATA</span>}
@@ -74,6 +75,12 @@ export function Dashboard() {
   const [walletConnected, setWalletConnected] = useState(true);
   const [passkeyEnabled, setPasskeyEnabled] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
+  const [lastSync, setLastSync] = useState("09:42");
+  const modalRef = useRef<HTMLElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const pointerFrameRef = useRef<number | null>(null);
 
   const activeItem = navItems.find((item) => item.id === activeView) ?? navItems[0];
   const protectionCount = Number(discordConnected) + Number(walletConnected) + Number(passkeyEnabled);
@@ -81,20 +88,86 @@ export function Dashboard() {
   useEffect(() => {
     if (!dialog) return;
     const previousOverflow = document.body.style.overflow;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setDialog(null);
+    const background = Array.from(
+      document.querySelectorAll<HTMLElement>(".sidebar, .main-shell, .mobile-nav"),
+    );
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    background.forEach((element) => { element.inert = true; });
+
+    const handleDialogKeys = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setDialog(null);
+        return;
+      }
+      if (event.key !== "Tab" || !modalRef.current) return;
+      const focusable = Array.from(
+        modalRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("keydown", handleDialogKeys);
+    window.requestAnimationFrame(() => {
+      modalRef.current?.querySelector<HTMLElement>(".modal-close")?.focus();
+    });
     return () => {
       document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("keydown", handleDialogKeys);
+      background.forEach((element) => { element.inert = false; });
+      previousFocusRef.current?.focus();
     };
   }, [dialog]);
 
   const changeView = (view: View) => {
     setActiveView(view);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+  };
+
+  const syncArchive = () => {
+    if (syncing) return;
+    setSyncing(true);
+    window.setTimeout(() => {
+      const now = new Intl.DateTimeFormat("ja-JP", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }).format(new Date());
+      setLastSync(now);
+      setSyncing(false);
+      setToast("プレイヤー記録を同期しました（デモ）");
+    }, 760);
+  };
+
+  const moveSanctumLight = (event: React.PointerEvent<HTMLElement>) => {
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    ) return;
+    if (pointerFrameRef.current) window.cancelAnimationFrame(pointerFrameRef.current);
+    const target = event.currentTarget;
+    const { clientX, clientY } = event;
+    pointerFrameRef.current = window.requestAnimationFrame(() => {
+      const bounds = target.getBoundingClientRect();
+      target.style.setProperty("--pointer-x", `${((clientX - bounds.left) / bounds.width) * 100}%`);
+      target.style.setProperty("--pointer-y", `${((clientY - bounds.top) / bounds.height) * 100}%`);
+    });
+  };
+
+  const resetSanctumLight = (event: React.PointerEvent<HTMLElement>) => {
+    event.currentTarget.style.setProperty("--pointer-x", "72%");
+    event.currentTarget.style.setProperty("--pointer-y", "38%");
   };
 
   const notify = (message: string) => {
@@ -120,7 +193,10 @@ export function Dashboard() {
   };
 
   return (
-    <div className="dashboard-shell">
+    <div className={`dashboard-shell${syncing ? " is-syncing" : ""}`}>
+      <div className="cosmic-field" aria-hidden="true">
+        {Array.from({ length: 7 }, (_, index) => <i key={index} className={`cosmic-star star-${index + 1}`} />)}
+      </div>
       <aside className="sidebar" aria-label="メインナビゲーション">
         <BrandMark />
         <div className="sidebar-rule" />
@@ -145,14 +221,14 @@ export function Dashboard() {
         <div className="sidebar-account">
           <p className="kicker">ACCOUNT SHIELD</p>
           <strong>{protectionCount} / 3 保護済み</strong>
-          <div className="protection-track" aria-label={`アカウント保護 ${protectionCount}/3`}>
+          <div className="protection-track" role="progressbar" aria-valuemin={0} aria-valuemax={3} aria-valuenow={protectionCount} aria-label={`アカウント保護 ${protectionCount}/3`}>
             <span style={{ width: `${(protectionCount / 3) * 100}%` }} />
           </div>
           <button type="button" onClick={() => setDialog("recovery")}>
             保護設定を確認
           </button>
         </div>
-        <p className="sidebar-foot">STARTER / V0.1</p>
+        <p className="sidebar-foot">USER DASHBOARD / SANCTUM V0.2</p>
       </aside>
 
       <div className="main-shell">
@@ -164,11 +240,11 @@ export function Dashboard() {
             <strong>{activeItem.label}</strong>
           </div>
           <div className="topbar-actions">
-            <div className="sync-status" aria-label="最終同期 2026年7月13日 9時42分">
-              <ConnectionDot active />
-              <span><small>LAST SYNC</small>09:42</span>
-            </div>
-            <button className="profile-button" type="button" onClick={() => setDialog("account")}>
+            <button className="sync-status" type="button" onClick={syncArchive} aria-busy={syncing} aria-label={syncing ? "プレイヤー記録を同期中" : `プレイヤー記録を同期。最終同期 ${lastSync}`}>
+              <ConnectionDot active={!syncing} />
+              <span><small>{syncing ? "SYNCING" : "LAST SYNC"}</small>{syncing ? "···" : lastSync}</span>
+            </button>
+            <button className="profile-button" type="button" onClick={() => setDialog("account")} aria-label="ユーザーアカウントと連携設定を開く">
               <span className="avatar" aria-hidden="true">ZT</span>
               <span className="profile-copy">
                 <strong>{discordConnected ? "ZEN_TARO" : "未接続"}</strong>
@@ -180,6 +256,7 @@ export function Dashboard() {
         </header>
 
         <main className="page-content">
+          <p className="sr-only" aria-live="polite">{activeItem.label}ビューを表示中</p>
           <div className="demo-notice" role="note">
             <span>STARTER KIT / DEMO DATA</span>
             画面内の戦績・残高・ポイントは、連携前のデモデータです。
@@ -187,44 +264,51 @@ export function Dashboard() {
 
           {activeView === "overview" && (
             <div className="view-stack overview-view">
-              <section className="hero-card" aria-labelledby="hero-title">
-                <div className="hero-orbit orbit-one" aria-hidden="true" />
-                <div className="hero-orbit orbit-two" aria-hidden="true" />
+              <section
+                className="hero-card"
+                aria-labelledby="hero-title"
+                ref={heroRef}
+                onPointerMove={moveSanctumLight}
+                onPointerLeave={resetSanctumLight}
+              >
+                <div className="sanctum-geometry" aria-hidden="true">
+                  <div className="sanctum-ring ring-outer" />
+                  <div className="sanctum-ring ring-middle" />
+                  <div className="sanctum-ring ring-inner" />
+                  <div className="sanctum-gate"><span>七</span></div>
+                  {Array.from({ length: 7 }, (_, index) => <i key={index} className={`sanctum-node node-${index + 1}`} />)}
+                </div>
                 <div className="hero-copy">
-                  <p className="hero-label">PLAYER RECORD / 0007-7F3A91</p>
-                  <h1 id="hero-title">挑戦のすべてを、<br />ひとつの記録へ。</h1>
+                  <p className="hero-label">MY SGG / PERSONAL ARCHIVE</p>
+                  <h1 id="hero-title">あなたの軌跡は、<br />神樹に刻まれる。</h1>
                   <p>
-                    おかえりなさい、ZEN_TARO。大会、アセット、ポイントの現在地をまとめました。
+                    挑戦のすべてを、ひとつの記録へ。戦績、アセット、ポイントが、あなた自身の軌跡としてつながります。
                   </p>
+                  <div className="player-signature">
+                    <span>PLAYER</span><strong>ZEN_TARO</strong><small>ID / 0007-7F3A91</small>
+                  </div>
                   <div className="identity-row">
-                    <span><ConnectionDot active={discordConnected} /> Discord</span>
-                    <span><ConnectionDot active={walletConnected} /> Wallet</span>
-                    <span className={!passkeyEnabled ? "is-muted" : ""}>
+                    <button type="button" onClick={() => setDialog("account")} aria-label={`Discord ${discordConnected ? "接続済み" : "未接続"}。連携設定を開く`}><ConnectionDot active={discordConnected} /> Discord</button>
+                    <button type="button" onClick={() => setDialog("account")} aria-label={`Wallet ${walletConnected ? "接続済み" : "未接続"}。連携設定を開く`}><ConnectionDot active={walletConnected} /> Wallet</button>
+                    <button type="button" onClick={() => setDialog("recovery")} className={!passkeyEnabled ? "is-muted" : ""} aria-label={`Passkey ${passkeyEnabled ? "登録済み" : "未設定"}。復旧設定を開く`}>
                       <ConnectionDot active={passkeyEnabled} /> Passkey
-                    </span>
+                    </button>
                   </div>
                 </div>
                 <div className="hero-points">
+                  <div className="core-label">PERSONAL CORE</div>
                   <p>SGG POINTS <span>DEMO</span></p>
                   <strong>12,840</strong>
                   <small>今シーズン <b>+3,420</b></small>
                   <button type="button" onClick={() => changeView("points")}>明細を見る <span aria-hidden="true">→</span></button>
                 </div>
-              </section>
-
-              <section className="stats-grid" aria-label="プレイヤー概要">
-                <article className="stat-card">
-                  <p>TOURNAMENTS</p><strong>14</strong><span>大会出場</span>
-                </article>
-                <article className="stat-card">
-                  <p>CHAMPIONS</p><strong>05</strong><span>優勝回数</span>
-                </article>
-                <article className="stat-card">
-                  <p>WIN RATE</p><strong>35.7<small>%</small></strong><span>通算優勝率</span>
-                </article>
-                <article className="stat-card is-featured">
-                  <p>BEST RANK</p><strong>#01</strong><span>シーズン最高順位</span>
-                </article>
+                <div className="hero-command-line" aria-label="プレイヤー状態">
+                  <span><i>14</i> 大会出場</span>
+                  <span><i>05</i> 優勝回数</span>
+                  <span><i>35.7%</i> 優勝率</span>
+                  <span><i>#01</i> 最高順位</span>
+                  <span><i>{String(protectionCount).padStart(2, "0")}/03</i> 保護状態</span>
+                </div>
               </section>
 
               <div className="overview-grid">
@@ -291,7 +375,7 @@ export function Dashboard() {
                 <div><small>ENTRIES</small><strong>14</strong></div>
                 <div><small>CHAMPIONS</small><strong>05</strong></div>
                 <div><small>BEST RANK</small><strong>#01</strong></div>
-                <button type="button">全期間 <span aria-hidden="true">⌄</span></button>
+                <span className="filter-static">全期間</span>
               </section>
               <section className="records-panel" aria-label="大会履歴一覧">
                 <div className="record-labels" aria-hidden="true">
@@ -413,7 +497,7 @@ export function Dashboard() {
 
               <div className="points-layout">
                 <section className="panel ledger-panel" aria-labelledby="ledger-title">
-                  <div className="panel-head"><div><p className="kicker">TRANSACTIONS</p><h2 id="ledger-title">ポイント明細</h2></div><button className="filter-button" type="button">すべて <span aria-hidden="true">⌄</span></button></div>
+                  <div className="panel-head"><div><p className="kicker">TRANSACTIONS</p><h2 id="ledger-title">ポイント明細</h2></div><span className="filter-button">すべて</span></div>
                   <div className="ledger-list">
                     {pointLedger.map((item) => (
                       <article className="ledger-row" key={item.id}>
@@ -443,7 +527,7 @@ export function Dashboard() {
         </main>
 
         <footer className="site-footer">
-          <span>SGG PLAYER ARCHIVE / STARTER V0.1</span>
+          <span>MY SGG / STARTER V0.2</span>
           <span>デモデータ · 本番連携前</span>
         </footer>
       </div>
@@ -458,7 +542,7 @@ export function Dashboard() {
 
       {dialog && (
         <div className="modal-backdrop" onMouseDown={() => setDialog(null)}>
-          <section className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onMouseDown={(event) => event.stopPropagation()}>
+          <section ref={modalRef} className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="modal-close" type="button" onClick={() => setDialog(null)} aria-label="閉じる">×</button>
             {dialog === "account" ? (
               <>
