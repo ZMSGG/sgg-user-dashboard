@@ -2,18 +2,20 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+type Availability = "online" | "unavailable";
+
 type OracleEntry = {
-  rank?: number;
-  displayName?: string;
-  score?: number;
-  outcome?: string;
+  rank?: unknown;
+  displayName?: unknown;
+  score?: unknown;
+  outcome?: unknown;
 };
 
 type QuestEntry = {
-  rank?: number;
-  username?: string;
-  rankingPoints?: number;
-  favoriteOtomo?: string;
+  rank?: unknown;
+  username?: unknown;
+  rankingPoints?: unknown;
+  favoriteOtomo?: unknown;
 };
 
 type PublicRanking = {
@@ -23,9 +25,16 @@ type PublicRanking = {
   meta: string;
 };
 
-const SOURCES = {
-  oracle: "https://otomooracle.sevengodsgames.com/api/ranking?scope=daily&day=1",
+const RANKING_SOURCES = {
+  oracle: "https://otomooracle.sevengodsgames.com/api/ranking?scope=daily",
   quest: "https://otomoquest.sevengodsgames.com/api/ranking",
+} as const;
+
+const RUNTIME_SOURCES = {
+  oracle: "https://otomooracle.sevengodsgames.com/",
+  quest: "https://otomoquest.sevengodsgames.com/",
+  farm: "https://otomofarm.sevengodsgames.com/",
+  taiyo: "https://emberveil.sevengodsgames.com/",
 } as const;
 
 async function fetchJson(url: string) {
@@ -45,91 +54,140 @@ async function fetchJson(url: string) {
   }
 }
 
-function sanitizeOracleEntries(value: unknown): PublicRanking[] {
-  if (!value || typeof value !== "object") return [];
-  const entries = (value as { entries?: unknown }).entries;
-  if (!Array.isArray(entries)) return [];
+async function checkRuntime(url: string): Promise<Availability> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 4_500);
 
-  return entries.slice(0, 7).flatMap((entry: OracleEntry) => {
-    if (
-      typeof entry.rank !== "number" ||
-      typeof entry.displayName !== "string" ||
-      typeof entry.score !== "number"
-    ) return [];
-    return [{
-      rank: entry.rank,
-      name: entry.displayName.slice(0, 48),
-      score: entry.score,
-      meta: entry.outcome === "completed" ? "COMPLETED" : "TIMED OUT",
-    }];
-  });
+  try {
+    const response = await fetch(url, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    return response.ok ? "online" : "unavailable";
+  } catch {
+    return "unavailable";
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
-function sanitizeQuest(value: unknown) {
-  if (!value || typeof value !== "object") {
-    return { season: null, entries: [] as PublicRanking[], participants: 0 };
-  }
+function parseOracle(value: unknown): { day: number; entries: PublicRanking[] } | null {
+  if (!value || typeof value !== "object") return null;
+  const payload = value as {
+    ok?: unknown;
+    scope?: unknown;
+    day?: unknown;
+    entries?: unknown;
+  };
+  if (
+    payload.ok !== true ||
+    payload.scope !== "daily" ||
+    typeof payload.day !== "number" ||
+    !Array.isArray(payload.entries)
+  ) return null;
+
+  const valid = payload.entries.every((entry: OracleEntry) =>
+    typeof entry.rank === "number" &&
+    typeof entry.displayName === "string" &&
+    typeof entry.score === "number"
+  );
+  if (!valid) return null;
+
+  const entries = payload.entries.slice(0, 7).map((entry: OracleEntry) => ({
+    rank: entry.rank as number,
+    name: (entry.displayName as string).slice(0, 48),
+    score: entry.score as number,
+    meta: entry.outcome === "completed"
+      ? "COMPLETED"
+      : entry.outcome === "timed_out"
+        ? "TIMED OUT"
+        : "OUTCOME UNKNOWN",
+  }));
+
+  return { day: payload.day, entries };
+}
+
+function parseQuest(value: unknown) {
+  if (!value || typeof value !== "object") return null;
   const payload = value as {
     season?: { name?: unknown; day?: unknown; totalDays?: unknown };
     ranking?: unknown;
   };
-  const ranking = Array.isArray(payload.ranking) ? payload.ranking : [];
-  const entries = ranking.slice(0, 7).flatMap((entry: QuestEntry) => {
-    if (
-      typeof entry.rank !== "number" ||
-      typeof entry.username !== "string" ||
-      typeof entry.rankingPoints !== "number"
-    ) return [];
-    return [{
-      rank: entry.rank,
-      name: entry.username.slice(0, 48),
-      score: entry.rankingPoints,
-      meta: typeof entry.favoriteOtomo === "string"
-        ? `OTOMO ${entry.favoriteOtomo.slice(0, 24)}`
-        : "SEASON PLAYER",
-    }];
-  });
-  const season = payload.season &&
-    typeof payload.season.name === "string" &&
-    typeof payload.season.day === "number" &&
-    typeof payload.season.totalDays === "number"
-      ? {
-          name: payload.season.name.slice(0, 48),
-          day: payload.season.day,
-          totalDays: payload.season.totalDays,
-        }
-      : null;
+  if (
+    !payload.season ||
+    typeof payload.season.name !== "string" ||
+    typeof payload.season.day !== "number" ||
+    typeof payload.season.totalDays !== "number" ||
+    !Array.isArray(payload.ranking)
+  ) return null;
 
-  return { season, entries, participants: ranking.length };
+  const valid = payload.ranking.every((entry: QuestEntry) =>
+    typeof entry.rank === "number" &&
+    typeof entry.username === "string" &&
+    typeof entry.rankingPoints === "number"
+  );
+  if (!valid) return null;
+
+  const entries: PublicRanking[] = payload.ranking.slice(0, 7).map((entry: QuestEntry) => ({
+    rank: entry.rank as number,
+    name: (entry.username as string).slice(0, 48),
+    score: entry.rankingPoints as number,
+    meta: typeof entry.favoriteOtomo === "string"
+      ? `OTOMO ${entry.favoriteOtomo.slice(0, 24)}`
+      : "SEASON PLAYER",
+  }));
+
+  return {
+    season: {
+      name: payload.season.name,
+      day: payload.season.day,
+      totalDays: payload.season.totalDays,
+    },
+    entries,
+    participants: payload.ranking.length,
+  };
 }
 
 export async function GET() {
   const checkedAt = new Date().toISOString();
-  const [oracleResult, questResult] = await Promise.allSettled([
-    fetchJson(SOURCES.oracle),
-    fetchJson(SOURCES.quest),
+  const [rankingResults, runtimeEntries] = await Promise.all([
+    Promise.allSettled([
+      fetchJson(RANKING_SOURCES.oracle),
+      fetchJson(RANKING_SOURCES.quest),
+    ]),
+    Promise.all(
+      Object.entries(RUNTIME_SOURCES).map(async ([key, url]) =>
+        [key, await checkRuntime(url)] as const
+      ),
+    ),
   ]);
 
+  const [oracleResult, questResult] = rankingResults;
   const oracle = oracleResult.status === "fulfilled"
-    ? sanitizeOracleEntries(oracleResult.value)
-    : [];
+    ? parseOracle(oracleResult.value)
+    : null;
   const quest = questResult.status === "fulfilled"
-    ? sanitizeQuest(questResult.value)
-    : { season: null, entries: [] as PublicRanking[], participants: 0 };
+    ? parseQuest(questResult.value)
+    : null;
+  const runtimes = Object.fromEntries(runtimeEntries) as Record<keyof typeof RUNTIME_SOURCES, Availability>;
 
   return NextResponse.json(
     {
       checkedAt,
+      runtimes,
+      runtimeOnlineCount: Object.values(runtimes).filter((state) => state === "online").length,
       sources: {
-        oracle: oracleResult.status === "fulfilled" ? "online" : "unavailable",
-        quest: questResult.status === "fulfilled" ? "online" : "unavailable",
+        oracle: oracle ? "online" : "unavailable",
+        quest: quest ? "online" : "unavailable",
       },
-      oracle: { entries: oracle },
-      quest,
+      oracle: oracle ?? { day: null, entries: [] },
+      quest: quest ?? { season: null, entries: [], participants: 0 },
     },
     {
       headers: {
-        "Cache-Control": "public, max-age=30, stale-while-revalidate=90",
+        "Cache-Control": "no-store",
         "X-Content-Type-Options": "nosniff",
       },
     },

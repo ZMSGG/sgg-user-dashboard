@@ -20,7 +20,11 @@ function requestOrigin(host: string | null, forwardedProto: string | null) {
     forwardedProto === "http" || safeHost.startsWith("localhost")
       ? "http"
       : "https";
-  return `${protocol}://${safeHost}`;
+  try {
+    return new URL(`${protocol}://${safeHost}`).origin;
+  } catch {
+    return "http://localhost:3000";
+  }
 }
 
 export async function generateMetadata(): Promise<Metadata> {

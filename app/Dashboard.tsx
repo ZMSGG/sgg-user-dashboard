@@ -1,7 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
+} from "react";
 import {
   assetSources,
   characterPairs,
@@ -23,11 +31,19 @@ import styles from "./Dashboard.module.css";
 type View = "home" | "games" | "arena" | "collection" | "mysgg" | "community";
 type GameFilter = "ALL" | ReleaseState;
 type FormFilter = "SPIRIT" | "INCARNATE" | "DOJI";
+type SourceState = "online" | "unavailable" | "checking";
 type LiveRanking = { rank: number; name: string; score: number; meta: string };
 type LiveData = {
   checkedAt: string;
   sources: { oracle: "online" | "unavailable"; quest: "online" | "unavailable" };
-  oracle: { entries: LiveRanking[] };
+  runtimes: {
+    oracle: "online" | "unavailable";
+    quest: "online" | "unavailable";
+    farm: "online" | "unavailable";
+    taiyo: "online" | "unavailable";
+  };
+  runtimeOnlineCount: number;
+  oracle: { day: number | null; entries: LiveRanking[] };
   quest: {
     season: { name: string; day: number; totalDays: number } | null;
     entries: LiveRanking[];
@@ -47,13 +63,17 @@ const navItems: readonly { id: View; label: string; eyebrow: string; glyph: stri
 const emptyLiveData: LiveData = {
   checkedAt: "",
   sources: { oracle: "unavailable", quest: "unavailable" },
-  oracle: { entries: [] },
+  runtimes: { oracle: "unavailable", quest: "unavailable", farm: "unavailable", taiyo: "unavailable" },
+  runtimeOnlineCount: 0,
+  oracle: { day: null, entries: [] },
   quest: { season: null, entries: [], participants: 0 },
 };
 
-async function requestLiveData(): Promise<LiveData> {
-  const response = await fetch("/api/live", {
+async function requestLiveData(force = false): Promise<LiveData> {
+  const endpoint = force ? `/api/live?refresh=${Date.now()}` : "/api/live";
+  const response = await fetch(endpoint, {
     headers: { accept: "application/json" },
+    cache: "no-store",
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return await response.json() as LiveData;
@@ -61,6 +81,12 @@ async function requestLiveData(): Promise<LiveData> {
 
 const views = new Set<View>(navItems.map((item) => item.id));
 const number = new Intl.NumberFormat("ja-JP");
+const runtimeKeyByGameId: Partial<Record<string, keyof LiveData["runtimes"]>> = {
+  "otomo-oracle-7": "oracle",
+  "otomo-quest-77": "quest",
+  "otomo-farm-77": "farm",
+  "taiyo-action-rpg": "taiyo",
+};
 
 function viewFromHash(): View {
   if (typeof window === "undefined") return "home";
@@ -135,11 +161,13 @@ function ExternalLink({ href, children, className }: { href: string; children: R
 
 function GameCard({
   game,
+  runtimeState,
   watched,
   onWatch,
   featured = false,
 }: {
   game: GameSummary;
+  runtimeState: SourceState;
   watched: boolean;
   onWatch: (id: string) => void;
   featured?: boolean;
@@ -148,8 +176,9 @@ function GameCard({
     <article className={featured ? styles.gameCardFeatured : styles.gameCard} data-tone={game.accent}>
       <div className={styles.gameCardTop}>
         <StatusPill accent={game.accent}>
-          {game.releaseState === "LIVE" && <Dot active />}
+          {game.releaseState === "LIVE" && <Dot active={runtimeState === "online"} />}
           {releaseStateLabels[game.releaseState]}
+          {game.releaseState === "LIVE" && ` · ${runtimeState === "online" ? "ONLINE" : runtimeState === "checking" ? "CHECKING" : "稼働確認不可"}`}
         </StatusPill>
         <span>{game.duration === "ACTION" ? "ACTION" : `${game.duration} DAY`}</span>
       </div>
@@ -185,11 +214,13 @@ function GameCard({
   );
 }
 
-function CompetitionCard({ competition }: { competition: Competition }) {
+function CompetitionCard({ competition, runtimeState }: { competition: Competition; runtimeState: SourceState }) {
   return (
     <article className={styles.competitionCard} data-tone={competition.accent}>
       <div>
-        <StatusPill accent={competition.accent}><Dot active />公開ランキング</StatusPill>
+        <StatusPill accent={competition.accent}>
+          <Dot active={runtimeState === "online"} />公開ランキング · {runtimeState === "online" ? "ONLINE" : runtimeState === "checking" ? "CHECKING" : "稼働確認不可"}
+        </StatusPill>
         <span>{competition.cadence}</span>
       </div>
       <p>{competition.game}</p>
@@ -217,14 +248,14 @@ function Leaderboard({
   title: string;
   subtitle: string;
   entries: LiveRanking[];
-  state: "online" | "unavailable";
+  state: SourceState;
   accent: Accent;
 }) {
   return (
     <section className={styles.leaderboard} data-tone={accent}>
       <div className={styles.leaderboardHead}>
         <div><p>LIVE PUBLIC DATA</p><h3>{title}</h3><span>{subtitle}</span></div>
-        <StatusPill accent={accent}><Dot active={state === "online"} />{state === "online" ? "同期済み" : "一時取得不可"}</StatusPill>
+        <StatusPill accent={accent}><Dot active={state === "online"} />{state === "online" ? "同期済み" : state === "checking" ? "同期中" : "一時取得不可"}</StatusPill>
       </div>
       {entries.length ? (
         <ol>
@@ -239,7 +270,11 @@ function Leaderboard({
       ) : (
         <div className={styles.inlineEmpty}>
           <span aria-hidden="true">↻</span>
-          <p>公開ランキングを取得できませんでした。公式ページでは引き続き確認できます。</p>
+          <p>{state === "online"
+            ? "この番付には、まだ公開記録がありません。"
+            : state === "checking"
+              ? "公開ランキングを同期しています。"
+              : "公開ランキングを取得できませんでした。公式ページでは引き続き確認できます。"}</p>
         </div>
       )}
     </section>
@@ -252,6 +287,7 @@ export function Dashboard() {
   const [formFilter, setFormFilter] = useState<FormFilter>("SPIRIT");
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  const [activeSearchIndex, setActiveSearchIndex] = useState(0);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [watchedIds, setWatchedIds] = useState<Set<string>>(new Set());
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
@@ -266,7 +302,12 @@ export function Dashboard() {
   const unread = systemNotifications.filter((item) => !readIds.has(item.id));
 
   const persistSet = useCallback((key: string, next: Set<string>) => {
-    window.localStorage.setItem(key, JSON.stringify([...next]));
+    try {
+      window.localStorage.setItem(key, JSON.stringify([...next]));
+      return true;
+    } catch {
+      return false;
+    }
   }, []);
 
   useEffect(() => {
@@ -287,10 +328,11 @@ export function Dashboard() {
   const loadLiveData = useCallback(async () => {
     setLiveState("loading");
     try {
-      const payload = await requestLiveData();
+      const payload = await requestLiveData(true);
       setLiveData(payload);
       setLiveState("ready");
     } catch {
+      setLiveData(emptyLiveData);
       setLiveState("error");
     }
   }, []);
@@ -365,21 +407,25 @@ export function Dashboard() {
     if (next.has(id)) next.delete(id);
     else next.add(id);
     setWatchedIds(next);
-    persistSet("my-sgg-watched", next);
-    setToast(next.has(id) ? "ウォッチ設定をこの端末に保存しました" : "ウォッチ設定を解除しました");
+    const saved = persistSet("my-sgg-watched", next);
+    setToast(saved
+      ? next.has(id) ? "ウォッチ設定をこの端末に保存しました" : "ウォッチ設定を解除しました"
+      : "この端末ではウォッチ設定を保存できません");
   };
 
   const markRead = (id: string, target: View) => {
     const next = new Set(readIds).add(id);
     setReadIds(next);
-    persistSet("my-sgg-read", next);
+    const saved = persistSet("my-sgg-read", next);
+    if (!saved) setToast("この端末では既読状態を保存できません");
     changeView(target);
   };
 
   const markAllRead = () => {
     const next = new Set(systemNotifications.map((item) => item.id));
     setReadIds(next);
-    persistSet("my-sgg-read", next);
+    const saved = persistSet("my-sgg-read", next);
+    if (!saved) setToast("この端末では既読状態を保存できません");
   };
 
   const toggleChannel = (channel: string) => {
@@ -387,8 +433,10 @@ export function Dashboard() {
     if (next.has(channel)) next.delete(channel);
     else next.add(channel);
     setFollowedChannels(next);
-    persistSet("my-sgg-followed", next);
-    setToast(next.has(channel) ? `${channel}の購読希望をこの端末に保存しました` : `${channel}の購読希望を解除しました`);
+    const saved = persistSet("my-sgg-followed", next);
+    setToast(saved
+      ? next.has(channel) ? `${channel}の購読希望をこの端末に保存しました` : `${channel}の購読希望を解除しました`
+      : "この端末では購読希望を保存できません");
   };
 
   const searchResults = useMemo(() => {
@@ -418,9 +466,54 @@ export function Dashboard() {
     return results.slice(0, 8);
   }, [search]);
 
+  const activeResultIndex = searchResults.length
+    ? Math.min(activeSearchIndex, searchResults.length - 1)
+    : -1;
+
+  const selectSearchResult = (index: number) => {
+    const result = searchResults[index];
+    if (result) changeView(result.view);
+  };
+
+  const handleSearchKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+    if (!searchOpen || !searchResults.length) {
+      if (event.key === "Escape") setSearchOpen(false);
+      return;
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveSearchIndex((current) => (current + 1) % searchResults.length);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveSearchIndex((current) => (current - 1 + searchResults.length) % searchResults.length);
+    } else if (event.key === "Enter" && activeResultIndex >= 0) {
+      event.preventDefault();
+      selectSearchResult(activeResultIndex);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      setSearchOpen(false);
+    }
+  };
+
   const filteredGames = games.filter((game) => gameFilter === "ALL" || game.releaseState === gameFilter);
-  const featuredGame = games.find((game) => game.featured) ?? games[0];
+  const featuredGame = filteredGames.find((game) => game.featured) ?? filteredGames[0];
+  const libraryGames = featuredGame
+    ? filteredGames.filter((game) => game.id !== featuredGame.id)
+    : filteredGames;
   const currentForm = otomoForms.find((form) => form.code === formFilter) ?? otomoForms[0];
+  const getRuntimeState = (gameId: string): SourceState => {
+    const runtimeKey = runtimeKeyByGameId[gameId];
+    if (liveState === "loading") return "checking";
+    if (liveState === "error" || !runtimeKey) return "unavailable";
+    return liveData.runtimes[runtimeKey];
+  };
+  const oracleSourceState: SourceState = liveState === "loading" ? "checking" : liveData.sources.oracle;
+  const questSourceState: SourceState = liveState === "loading" ? "checking" : liveData.sources.quest;
+  const runtimeSummary = liveState === "loading"
+    ? "CHECKING"
+    : liveState === "error"
+      ? "HEALTH UNAVAILABLE"
+      : `${liveData.runtimeOnlineCount} / 4 ONLINE`;
 
   return (
     <div className={styles.app}>
@@ -445,7 +538,7 @@ export function Dashboard() {
           ))}
         </nav>
         <section className={styles.sidebarStatus}>
-          <span><Dot active />4 PUBLIC RUNTIMES</span>
+          <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount === 4} />{runtimeSummary}</span>
           <small>PLAYER DATA BRIDGE · NOT CONNECTED</small>
         </section>
       </aside>
@@ -465,17 +558,28 @@ export function Dashboard() {
               aria-expanded={searchOpen && Boolean(search)}
               aria-controls="global-search-results"
               aria-autocomplete="list"
+              aria-activedescendant={searchOpen && activeResultIndex >= 0 ? `global-search-option-${activeResultIndex}` : undefined}
               placeholder="ゲーム・番付・キャラクター・更新を検索"
               value={search}
               onFocus={() => setSearchOpen(true)}
-              onChange={(event) => { setSearch(event.target.value); setSearchOpen(true); }}
+              onChange={(event) => { setSearch(event.target.value); setSearchOpen(true); setActiveSearchIndex(0); }}
+              onKeyDown={handleSearchKeyDown}
             />
             <kbd>⌘ K</kbd>
             {searchOpen && search && (
               <div id="global-search-results" className={styles.searchResults} role="listbox" aria-label="検索結果">
                 <p>SEARCH / {searchResults.length} RESULTS</p>
-                {searchResults.length ? searchResults.map((result) => (
-                  <button key={`${result.category}-${result.id}`} type="button" role="option" aria-selected="false" onClick={() => changeView(result.view)}>
+                {searchResults.length ? searchResults.map((result, index) => (
+                  <button
+                    id={`global-search-option-${index}`}
+                    key={`${result.category}-${result.id}`}
+                    type="button"
+                    role="option"
+                    tabIndex={-1}
+                    aria-selected={activeResultIndex === index}
+                    onMouseEnter={() => setActiveSearchIndex(index)}
+                    onClick={() => selectSearchResult(index)}
+                  >
                     <span>{result.category}</span><strong>{result.title}</strong><small>{result.meta}</small>
                   </button>
                 )) : <div className={styles.searchEmpty}>一致する公開情報はありません</div>}
@@ -510,7 +614,7 @@ export function Dashboard() {
         <main id="main-content" ref={mainRef} tabIndex={-1} className={styles.content}>
           <p className={styles.srOnly} aria-live="polite">{activeNav.label}を表示中</p>
           <div className={styles.truthBanner} role="status">
-            <span><Dot active />LIVE SOURCES</span>
+            <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount > 0} />LIVE SOURCES</span>
             <p>公開確認済みのゲーム・ランキング・投稿だけを表示。個人データは共通認証が接続されるまで「未接続」です。</p>
             <small>SYNC {formatSyncTime(liveData.checkedAt)}</small>
           </div>
@@ -530,7 +634,7 @@ export function Dashboard() {
                   </div>
                 </div>
                 <div className={styles.heroSignal}>
-                  <small>NETWORK</small><strong>4 / 4 ONLINE</strong><span>2026.07.14 VERIFIED</span>
+                  <small>NETWORK</small><strong>{runtimeSummary}</strong><span>LIVE HEALTH · {formatSyncTime(liveData.checkedAt)}</span>
                 </div>
               </section>
 
@@ -544,20 +648,21 @@ export function Dashboard() {
               <section className={styles.todaySection}>
                 <SectionTitle kicker="TODAY / PLAY NOW" title="いま戻る場所" copy="ログイン後の進行は各ゲームで安全に確認。公開プレイはここから直接起動できます。" action={<button type="button" className={styles.textButton} onClick={() => changeView("games")}>全ゲームを見る →</button>} />
                 <div className={styles.todayGrid}>
-                  {games.filter((game) => game.releaseState === "LIVE").map((game) => (
-                    <article key={game.id} data-tone={game.accent}>
+                  {games.filter((game) => game.releaseState === "LIVE").map((game) => {
+                    const runtimeState = getRuntimeState(game.id);
+                    return <article key={game.id} data-tone={game.accent}>
                       <div className={styles.todayGlyph} aria-hidden="true">{game.glyph}</div>
-                      <span><Dot active />{game.shortTitle}</span>
+                      <span><Dot active={runtimeState === "online"} />{game.shortTitle} · {runtimeState === "online" ? "ONLINE" : runtimeState === "checking" ? "CHECKING" : "稼働確認不可"}</span>
                       <h3>{game.nextAction}</h3>
                       <p>{game.nextActionMeta}</p>
                       {game.officialUrl && <ExternalLink href={game.officialUrl}>{game.primaryAction}</ExternalLink>}
-                    </article>
-                  ))}
+                    </article>;
+                  })}
                 </div>
               </section>
 
               <div className={styles.homeGrid}>
-                <Leaderboard title="神託番付" subtitle="OTOMO ORACLE 7 · DAY 1" entries={liveData.oracle.entries} state={liveData.sources.oracle} accent="cyan" />
+                <Leaderboard title="神託番付" subtitle={`OTOMO ORACLE 7 · DAY ${liveData.oracle.day ?? "—"}`} entries={liveData.oracle.entries} state={oracleSourceState} accent="cyan" />
                 <section className={styles.feedPreview}>
                   <SectionTitle kicker="OFFICIAL FEED" title="公開済みアップデート" copy="公開台帳が確認できた投稿のみ。" />
                   {communityItems.filter((item) => item.status === "PUBLISHED").map((item) => (
@@ -587,11 +692,11 @@ export function Dashboard() {
                   </button>
                 ))}
               </div>
-              <GameCard game={featuredGame} watched={watchedIds.has(featuredGame.id)} onWatch={toggleWatched} featured />
+              {featuredGame && <GameCard game={featuredGame} runtimeState={getRuntimeState(featuredGame.id)} watched={watchedIds.has(featuredGame.id)} onWatch={toggleWatched} featured />}
               <section>
                 <SectionTitle kicker="VERIFIED CATALOG" title="ゲームライブラリ" copy={`${filteredGames.length}タイトルを表示`} />
                 <div className={styles.gameGrid}>
-                  {filteredGames.map((game) => <GameCard key={game.id} game={game} watched={watchedIds.has(game.id)} onWatch={toggleWatched} />)}
+                  {libraryGames.map((game) => <GameCard key={game.id} game={game} runtimeState={getRuntimeState(game.id)} watched={watchedIds.has(game.id)} onWatch={toggleWatched} />)}
                 </div>
               </section>
               <section className={styles.timeAxes}>
@@ -609,18 +714,18 @@ export function Dashboard() {
                 <button type="button" className={styles.refreshButton} onClick={() => void loadLiveData()} disabled={liveState === "loading"}>{liveState === "loading" ? "同期中…" : "公開データを再同期"}</button>
               </header>
               <div className={styles.arenaBoards}>
-                <Leaderboard title="神託番付" subtitle="ORACLE DAILY / RAW SCORE" entries={liveData.oracle.entries} state={liveData.sources.oracle} accent="cyan" />
+                <Leaderboard title="神託番付" subtitle={`ORACLE DAY ${liveData.oracle.day ?? "—"} / RAW SCORE`} entries={liveData.oracle.entries} state={oracleSourceState} accent="cyan" />
                 <Leaderboard
                   title="シーズン序列"
                   subtitle={liveData.quest.season ? `${liveData.quest.season.name} · DAY ${liveData.quest.season.day}/${liveData.quest.season.totalDays} · ${liveData.quest.participants} PLAYERS` : "QUEST 77 / GAME PROGRESS METRIC"}
                   entries={liveData.quest.entries}
-                  state={liveData.sources.quest}
+                  state={questSourceState}
                   accent="violet"
                 />
               </div>
               <section>
                 <SectionTitle kicker="PUBLIC BOARDS" title="公開ランキング" copy="順位の意味はゲームごとに異なり、SGG_GAME_POINTSや資産保有とは分離されます。" />
-                <div className={styles.competitionGrid}>{competitions.map((item) => <CompetitionCard key={item.id} competition={item} />)}</div>
+                <div className={styles.competitionGrid}>{competitions.map((item) => <CompetitionCard key={item.id} competition={item} runtimeState={getRuntimeState(item.gameId)} />)}</div>
               </section>
               <section className={styles.eventEmpty}>
                 <span aria-hidden="true">冠</span>

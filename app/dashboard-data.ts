@@ -420,8 +420,8 @@ export const systemNotifications = [
   {
     id: "notice-live-games",
     kind: "PLAY",
-    title: "4タイトルの公開状態を確認しました",
-    detail: "ORACLE / QUEST / FARM / TAIYO",
+    title: "4タイトルの公開URLをカタログ化しました",
+    detail: "稼働状態はlive healthで確認",
     target: "games" as const,
   },
   {

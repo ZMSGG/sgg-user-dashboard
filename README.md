@@ -15,8 +15,8 @@ SEVENGODS Gamesの公開ゲーム、公開ランキング、キャラクター�
 
 画面は存在しない大会、参加人数、資産、残高、ポイント、イベントを生成しません。
 
-- 公開状態はSGG migration audit、project state、実URL healthを分けて扱う
-- 公開ランキングは `/api/live` がOracle / Questのpublic APIから内部IDを除去して正規化
+- 公開状態はSGG migration audit、project state、4タイトルの実URL healthを分けて扱う
+- 公開ランキングは `/api/live` がOracleの現在日とQuest seasonをschema検証し、内部IDを除去して正規化
 - 個人データは共通identity bridge未接続のため「未接続」と表示
 - ゲーム資源、raw score、ranking、`SGG_GAME_POINTS`、reward、SDT、`SGG Token`を別制度として表示
 - 端末内に保存するのは通知既読、開発通知、フォローchannelなどのdevice preferenceだけ
@@ -28,6 +28,7 @@ Quest / Farmの既存 `/api/me` は参照時にゲームstateを更新するた�
 ```bash
 npm install
 npm run dev
+npm run typecheck
 npm test
 npm run lint
 ```

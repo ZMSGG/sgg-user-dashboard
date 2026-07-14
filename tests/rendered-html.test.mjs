@@ -79,14 +79,38 @@ test("exposes a same-origin live read model without internal Quest IDs", async (
   const response = await render("/api/live");
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^application\/json\b/i);
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/i);
   const body = await response.text();
   const payload = JSON.parse(body);
   assert.equal(typeof payload.checkedAt, "string");
   assert.equal(typeof payload.sources.oracle, "string");
   assert.equal(typeof payload.sources.quest, "string");
+  assert.equal(typeof payload.runtimeOnlineCount, "number");
+  assert.ok(payload.runtimeOnlineCount >= 0 && payload.runtimeOnlineCount <= 4);
+  for (const key of ["oracle", "quest", "farm", "taiyo"]) {
+    assert.match(payload.runtimes[key], /^(online|unavailable)$/);
+  }
+  assert.ok(payload.oracle.day === null || typeof payload.oracle.day === "number");
   assert.ok(Array.isArray(payload.oracle.entries));
   assert.ok(Array.isArray(payload.quest.entries));
   assert.doesNotMatch(body, /"userId"|"discordId"|"walletAddress"/);
+});
+
+test("derives current health, search selection, and filtered feature state", async () => {
+  const [dashboard, route] = await Promise.all([
+    readFile(new URL("../app/Dashboard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/live/route.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.doesNotMatch(route, /scope=daily&day=1/);
+  assert.match(route, /RUNTIME_SOURCES/);
+  assert.match(route, /payload\.entries\.every/);
+  assert.match(dashboard, /aria-activedescendant/);
+  assert.match(dashboard, /event\.key === "ArrowDown"/);
+  assert.match(dashboard, /filteredGames\.find/);
+  assert.match(dashboard, /まだ公開記録がありません/);
+  assert.match(dashboard, /稼働確認不可/);
+  assert.doesNotMatch(dashboard, />4 \/ 4 ONLINE</);
 });
 
 test("ships the finished visual surface and retires legacy demo art", async () => {

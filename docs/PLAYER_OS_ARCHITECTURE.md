@@ -19,11 +19,13 @@ optional Wallet snapshot ──────────────────�
 
 `GET /api/live` performs server-side, read-only fetches from public endpoints and returns only the fields required by the dashboard.
 
-- Oracle daily ranking: rank, pseudonymous display name, raw score, outcome
+- Oracle current daily ranking: source day, rank, pseudonymous display name, raw score, outcome
 - Quest season ranking: rank, public username, progress metric, favourite OTOMO
+- Oracle / Quest / Farm / TAIYO runtime health: current HTTP availability
 - Quest internal user IDs are removed
+- HTTP success and payload schema must both validate before a ranking source becomes online
 - Failures return an unavailable source state; mock values are never substituted
-- Responses have a short cache and a stale-while-revalidate window
+- Responses are `no-store`; the manual sync always asks for a fresh server read
 
 Farm remains a public page link because there is no side-effect-free JSON player read model. TAIYO remains a public game link; its ranking contract can be added to the same adapter after a stable public query is fixed.
 
@@ -90,7 +92,7 @@ Cross-device preferences can move to D1 only after a server-authenticated Player
 
 ## 6. Release gate
 
-- Production build and SSR tests pass.
+- TypeScript, lint, production build, and SSR/API tests pass.
 - No mock user, wallet fragment, balance, tournament, participant count, or event appears as live data.
 - Public game URLs and ranking adapters fail closed.
 - Search metadata is `noindex, nofollow` while the site remains a private preview.

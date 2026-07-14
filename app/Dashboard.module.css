@@ -499,7 +499,8 @@
 }
 
 .searchResults > button:hover,
-.searchResults > button:focus-visible {
+.searchResults > button:focus-visible,
+.searchResults > button[aria-selected="true"] {
   background: rgba(255, 255, 255, 0.055);
 }
 
