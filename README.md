@@ -1,44 +1,42 @@
-# SGG PLAYER ARCHIVE
+# MY SGG — Player OS
 
-SEVENGODS Games のプレイヤーダッシュボード用スターターです。公開LPとは役割を分け、Discord、任意ウォレット、大会履歴、保有アセット、SGGポイント、アカウント保護をまとめるログイン後の体験を想定しています。
+SEVENGODS Gamesの公開ゲーム、公開ランキング、キャラクター図鑑、公式アップデート、将来のプレイヤーデータ統合を一つの操作面へまとめるユーザーダッシュボードです。
 
-現時点はフロントエンドのデモです。画面内のユーザー、戦績、残高、ポイントはすべて `DEMO DATA` で、実アカウント・実ウォレット・実トークンには接続しません。
+## 現在実装しているもの
 
-## 起動
+- `PLAY`: 公開確認済み4タイトルと開発中1タイトルの正本連動カタログ
+- `ARENA`: Oracle / Questのpublic APIをserver-sideで正規化したライブ番付、Farmの公開番付導線
+- `COLLECTION`: 7 GODS × 7 OTOMO × 3形態の正規カタログと資産ソース境界
+- `MY SGG`: Discord identity、任意Wallet、記録・ポイント・報酬・Tokenを混ぜないPlayer Passport
+- `COMMUNITY`: publish ledgerで公開確認できた公式X投稿、準備中channel、公開イベントの安全な空状態
+- `TODAY`: 公開中ゲームの次アクション、検索、通知、deep link、端末内のフォロー設定
+
+## データの扱い
+
+画面は存在しない大会、参加人数、資産、残高、ポイント、イベントを生成しません。
+
+- 公開状態はSGG migration audit、project state、実URL healthを分けて扱う
+- 公開ランキングは `/api/live` がOracle / Questのpublic APIから内部IDを除去して正規化
+- 個人データは共通identity bridge未接続のため「未接続」と表示
+- ゲーム資源、raw score、ranking、`SGG_GAME_POINTS`、reward、SDT、`SGG Token`を別制度として表示
+- 端末内に保存するのは通知既読、開発通知、フォローchannelなどのdevice preferenceだけ
+
+Quest / Farmの既存 `/api/me` は参照時にゲームstateを更新するため、Dashboardからpollしません。本番の個人データ統合には、各ゲームへside-effect-freeな署名済み `GET /api/integration/v1/player-snapshot` を追加します。詳細は `docs/PLAYER_OS_ARCHITECTURE.md` を参照してください。
+
+## ローカル確認
 
 ```bash
 npm install
 npm run dev
-```
-
-ローカルでは `http://localhost:3000` を開きます。
-
-## 確認
-
-```bash
-npm run build
 npm test
+npm run lint
 ```
 
-## スターターに含まれるもの
+## 主要な状態
 
-- 概要、大会、資産、ポイントのレスポンシブUI
-- Discord・ウォレット・Passkeyの接続状態デモ
-- 大会履歴、OTOMO三形態、SEVENGODS、SGG Tokenの表示例
-- GAME / COMMUNITY を分けたポイント台帳
-- 未接続・0件・確認中の状態
-- 320pxからデスクトップまでのレイアウト
-- モックデータを分離した `app/dashboard-data.ts`
+- `PUBLIC`: 公開URLまたはpublic APIが確認できる情報
+- `AUTH_REQUIRED`: ゲーム側のDiscord sessionが必要な個人情報
+- `UNAVAILABLE`: 公開・統合条件が未成立
+- `PLANNED`: 仕様・値・日程を確定表示しない構想
 
-## 本番連携前に必要なもの
-
-このスターターは外部認証や資産取得を偽装しません。本番化にはDiscord OAuth、サーバーセッション、共有DB、SIWE/WalletConnect、オンチェーンindexer、ポイント台帳、大会結果API、監査ログを実装してください。設計境界は [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) にまとめています。
-
-## 正式表記
-
-- `SGG Token` — トークン。`SGG_GAME_POINTS`とは別。
-- `SGG_GAME_POINTS` — 生結果と順位の確定後に計算するゲームポイント。
-- `SPIRIT / INCARNATE / DOJI` — `精霊体 / 受肉体 / 童子`。
-- `SEVENGODS` — ウォレット保有カテゴリ。
-
-公開前に、チェーン、コントラクト、ポイント制度、Discord由来ポイントの加算方針、アカウント復旧ポリシーをオーナー承認で固定してください。
+サイトはprivate previewとして運用し、検索indexを拒否します。

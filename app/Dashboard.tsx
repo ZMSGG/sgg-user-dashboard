@@ -1,630 +1,764 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
+  assetSources,
+  characterPairs,
+  communityItems,
+  competitions,
+  games,
+  ledgerSystems,
   otomoForms,
-  pointLedger,
-  tournamentRecords,
+  releaseStateCounts,
+  releaseStateLabels,
+  systemNotifications,
+  type Accent,
+  type Competition,
+  type GameSummary,
+  type ReleaseState,
 } from "./dashboard-data";
-import { CharacterDeck } from "./CharacterDeck";
+import styles from "./Dashboard.module.css";
 
-type View = "overview" | "tournaments" | "assets" | "points";
-type Dialog = "account" | "recovery" | null;
+type View = "home" | "games" | "arena" | "collection" | "mysgg" | "community";
+type GameFilter = "ALL" | ReleaseState;
+type FormFilter = "SPIRIT" | "INCARNATE" | "DOJI";
+type LiveRanking = { rank: number; name: string; score: number; meta: string };
+type LiveData = {
+  checkedAt: string;
+  sources: { oracle: "online" | "unavailable"; quest: "online" | "unavailable" };
+  oracle: { entries: LiveRanking[] };
+  quest: {
+    season: { name: string; day: number; totalDays: number } | null;
+    entries: LiveRanking[];
+    participants: number;
+  };
+};
 
-const navItems: Array<{
-  id: View;
-  label: string;
-  eyebrow: string;
-  glyph: string;
-}> = [
-  { id: "overview", label: "概要", eyebrow: "OVERVIEW", glyph: "七" },
-  { id: "tournaments", label: "大会", eyebrow: "ARENA", glyph: "杯" },
-  { id: "assets", label: "資産", eyebrow: "ASSETS", glyph: "宝" },
-  { id: "points", label: "ポイント", eyebrow: "LEDGER", glyph: "点" },
-];
+const navItems: readonly { id: View; label: string; eyebrow: string; glyph: string }[] = [
+  { id: "home", label: "ホーム", eyebrow: "TODAY", glyph: "七" },
+  { id: "games", label: "プレイ", eyebrow: "PLAY", glyph: "遊" },
+  { id: "arena", label: "アリーナ", eyebrow: "ARENA", glyph: "冠" },
+  { id: "collection", label: "コレクション", eyebrow: "VAULT", glyph: "宝" },
+  { id: "community", label: "コミュニティ", eyebrow: "FEED", glyph: "繋" },
+  { id: "mysgg", label: "マイSGG", eyebrow: "PASSPORT", glyph: "我" },
+] as const;
 
-const formatPoints = (value: number) => new Intl.NumberFormat("ja-JP").format(value);
+const emptyLiveData: LiveData = {
+  checkedAt: "",
+  sources: { oracle: "unavailable", quest: "unavailable" },
+  oracle: { entries: [] },
+  quest: { season: null, entries: [], participants: 0 },
+};
 
-function BrandMark({ compact = false }: { compact?: boolean }) {
+async function requestLiveData(): Promise<LiveData> {
+  const response = await fetch("/api/live", {
+    headers: { accept: "application/json" },
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return await response.json() as LiveData;
+}
+
+const views = new Set<View>(navItems.map((item) => item.id));
+const number = new Intl.NumberFormat("ja-JP");
+
+function viewFromHash(): View {
+  if (typeof window === "undefined") return "home";
+  const candidate = window.location.hash.slice(1) as View;
+  return views.has(candidate) ? candidate : "home";
+}
+
+function formatSyncTime(value: string) {
+  if (!value) return "未同期";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "未同期";
+  return new Intl.DateTimeFormat("ja-JP", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Kuala_Lumpur",
+  }).format(date);
+}
+
+function Brand({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={`brand-lockup${compact ? " is-compact" : ""}`}>
-      <span className="brand-mark" aria-hidden="true">
-        <span>七</span>
-      </span>
+    <span className={styles.brand}>
+      <span className={styles.brandMark} aria-hidden="true">七</span>
       {!compact && (
-        <span className="brand-type">
+        <span className={styles.brandText}>
           <strong>MY SGG</strong>
-          <small>USER DASHBOARD</small>
+          <small>PLAYER OS</small>
         </span>
       )}
-    </div>
+    </span>
   );
 }
 
-function SectionHeading({
+function Dot({ active = false }: { active?: boolean }) {
+  return <span className={active ? styles.dotActive : styles.dot} aria-hidden="true" />;
+}
+
+function StatusPill({ children, accent = "cyan" }: { children: ReactNode; accent?: Accent }) {
+  return <span className={styles.statusPill} data-tone={accent}>{children}</span>;
+}
+
+function SectionTitle({
   kicker,
   title,
-  description,
-  demo = false,
+  copy,
+  action,
 }: {
   kicker: string;
   title: string;
-  description: string;
-  demo?: boolean;
+  copy?: string;
+  action?: ReactNode;
 }) {
   return (
-    <div className="section-heading">
-      <span className="section-sigil" aria-hidden="true"><i>七</i></span>
+    <div className={styles.sectionTitle}>
       <div>
-        <p className="kicker">{kicker}</p>
-        <h1 data-view-heading>{title}</h1>
-        <p className="section-description">{description}</p>
+        <p>{kicker}</p>
+        <h2>{title}</h2>
+        {copy && <span>{copy}</span>}
       </div>
-      {demo && <span className="demo-stamp">DEMO DATA</span>}
+      {action}
     </div>
   );
 }
 
-function ConnectionDot({ active }: { active: boolean }) {
-  return <span className={`connection-dot${active ? " is-active" : ""}`} aria-hidden="true" />;
+function ExternalLink({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
+  return (
+    <a className={className} href={href} target="_blank" rel="noopener noreferrer">
+      {children}<span aria-hidden="true">↗</span>
+    </a>
+  );
+}
+
+function GameCard({
+  game,
+  watched,
+  onWatch,
+  featured = false,
+}: {
+  game: GameSummary;
+  watched: boolean;
+  onWatch: (id: string) => void;
+  featured?: boolean;
+}) {
+  return (
+    <article className={featured ? styles.gameCardFeatured : styles.gameCard} data-tone={game.accent}>
+      <div className={styles.gameCardTop}>
+        <StatusPill accent={game.accent}>
+          {game.releaseState === "LIVE" && <Dot active />}
+          {releaseStateLabels[game.releaseState]}
+        </StatusPill>
+        <span>{game.duration === "ACTION" ? "ACTION" : `${game.duration} DAY`}</span>
+      </div>
+      <div className={styles.gameGlyph} aria-hidden="true">{game.glyph}</div>
+      <div className={styles.gameBody}>
+        <p>{game.genre}</p>
+        <h3>{game.title}</h3>
+        <strong>{game.subtitle}</strong>
+        <span>{game.description}</span>
+      </div>
+      <div className={styles.truthLine}>
+        <small>{game.releaseLabel}</small>
+        <span>{game.sourceLabel}</span>
+      </div>
+      <div className={styles.nextAction}>
+        <span>NEXT</span>
+        <div><strong>{game.nextAction}</strong><small>{game.nextActionMeta}</small></div>
+      </div>
+      <div className={styles.cardActions}>
+        {game.officialUrl ? (
+          <ExternalLink href={game.officialUrl} className={styles.primaryAction}>
+            {game.primaryAction}
+          </ExternalLink>
+        ) : (
+          <button type="button" className={styles.primaryAction} onClick={() => onWatch(game.id)}>
+            {watched ? "ウォッチ中" : game.primaryAction}<span aria-hidden="true">{watched ? "✓" : "+"}</span>
+          </button>
+        )}
+        {game.rankingUrl && <ExternalLink href={game.rankingUrl}>ランキング</ExternalLink>}
+        {game.guideUrl && <ExternalLink href={game.guideUrl}>ガイド</ExternalLink>}
+      </div>
+    </article>
+  );
+}
+
+function CompetitionCard({ competition }: { competition: Competition }) {
+  return (
+    <article className={styles.competitionCard} data-tone={competition.accent}>
+      <div>
+        <StatusPill accent={competition.accent}><Dot active />公開ランキング</StatusPill>
+        <span>{competition.cadence}</span>
+      </div>
+      <p>{competition.game}</p>
+      <h3>{competition.title}</h3>
+      <dl>
+        <div><dt>RULE</dt><dd>{competition.rule}</dd></div>
+        <div><dt>DATA</dt><dd>{competition.integrity}</dd></div>
+      </dl>
+      {competition.href && (
+        <ExternalLink href={competition.href} className={styles.primaryAction}>
+          {competition.actionLabel}
+        </ExternalLink>
+      )}
+    </article>
+  );
+}
+
+function Leaderboard({
+  title,
+  subtitle,
+  entries,
+  state,
+  accent,
+}: {
+  title: string;
+  subtitle: string;
+  entries: LiveRanking[];
+  state: "online" | "unavailable";
+  accent: Accent;
+}) {
+  return (
+    <section className={styles.leaderboard} data-tone={accent}>
+      <div className={styles.leaderboardHead}>
+        <div><p>LIVE PUBLIC DATA</p><h3>{title}</h3><span>{subtitle}</span></div>
+        <StatusPill accent={accent}><Dot active={state === "online"} />{state === "online" ? "同期済み" : "一時取得不可"}</StatusPill>
+      </div>
+      {entries.length ? (
+        <ol>
+          {entries.slice(0, 5).map((entry) => (
+            <li key={`${entry.rank}-${entry.name}`}>
+              <span>{String(entry.rank).padStart(2, "0")}</span>
+              <div><strong>{entry.name}</strong><small>{entry.meta}</small></div>
+              <b>{number.format(entry.score)}</b>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <div className={styles.inlineEmpty}>
+          <span aria-hidden="true">↻</span>
+          <p>公開ランキングを取得できませんでした。公式ページでは引き続き確認できます。</p>
+        </div>
+      )}
+    </section>
+  );
 }
 
 export function Dashboard() {
-  const [activeView, setActiveView] = useState<View>("overview");
-  const [dialog, setDialog] = useState<Dialog>(null);
-  const [discordConnected, setDiscordConnected] = useState(true);
-  const [walletConnected, setWalletConnected] = useState(true);
-  const [passkeyEnabled, setPasskeyEnabled] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
-  const [syncing, setSyncing] = useState(false);
-  const [lastSync, setLastSync] = useState("09:42");
-  const modalRef = useRef<HTMLElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
-  const heroRef = useRef<HTMLElement>(null);
-  const pointerFrameRef = useRef<number | null>(null);
+  const [activeView, setActiveView] = useState<View>("home");
+  const [gameFilter, setGameFilter] = useState<GameFilter>("ALL");
+  const [formFilter, setFormFilter] = useState<FormFilter>("SPIRIT");
+  const [search, setSearch] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [watchedIds, setWatchedIds] = useState<Set<string>>(new Set());
+  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const [followedChannels, setFollowedChannels] = useState<Set<string>>(new Set(["X"]));
+  const [liveData, setLiveData] = useState<LiveData>(emptyLiveData);
+  const [liveState, setLiveState] = useState<"loading" | "ready" | "error">("loading");
+  const [toast, setToast] = useState("");
+  const mainRef = useRef<HTMLElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
-  const activeItem = navItems.find((item) => item.id === activeView) ?? navItems[0];
-  const protectionCount = Number(discordConnected) + Number(walletConnected) + Number(passkeyEnabled);
+  const activeNav = navItems.find((item) => item.id === activeView) ?? navItems[0];
+  const unread = systemNotifications.filter((item) => !readIds.has(item.id));
+
+  const persistSet = useCallback((key: string, next: Set<string>) => {
+    window.localStorage.setItem(key, JSON.stringify([...next]));
+  }, []);
 
   useEffect(() => {
-    if (!dialog) return;
-    const previousOverflow = document.body.style.overflow;
-    const background = Array.from(
-      document.querySelectorAll<HTMLElement>(".sidebar, .main-shell, .mobile-nav"),
-    );
-    previousFocusRef.current = document.activeElement as HTMLElement | null;
-    background.forEach((element) => { element.inert = true; });
-
-    const handleDialogKeys = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setDialog(null);
-        return;
+    for (const [key, setter] of [
+      ["my-sgg-watched", setWatchedIds],
+      ["my-sgg-read", setReadIds],
+      ["my-sgg-followed", setFollowedChannels],
+    ] as const) {
+      try {
+        const stored = window.localStorage.getItem(key);
+        if (stored) setter(new Set(JSON.parse(stored) as string[]));
+      } catch {
+        // Device-local preferences are optional; malformed storage is ignored.
       }
-      if (event.key !== "Tab" || !modalRef.current) return;
-      const focusable = Array.from(
-        modalRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        ),
-      );
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleDialogKeys);
-    window.requestAnimationFrame(() => {
-      modalRef.current?.querySelector<HTMLElement>(".modal-close")?.focus();
-    });
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleDialogKeys);
-      background.forEach((element) => { element.inert = false; });
-      previousFocusRef.current?.focus();
-    };
-  }, [dialog]);
-
-  useEffect(() => () => {
-    if (pointerFrameRef.current) window.cancelAnimationFrame(pointerFrameRef.current);
+    }
   }, []);
+
+  const loadLiveData = useCallback(async () => {
+    setLiveState("loading");
+    try {
+      const payload = await requestLiveData();
+      setLiveData(payload);
+      setLiveState("ready");
+    } catch {
+      setLiveState("error");
+    }
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void requestLiveData()
+      .then((payload) => {
+        if (cancelled) return;
+        setLiveData(payload);
+        setLiveState("ready");
+      })
+      .catch(() => {
+        if (!cancelled) setLiveState("error");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const syncHash = () => setActiveView(viewFromHash());
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        searchRef.current?.focus();
+        setSearchOpen(true);
+      }
+      if (event.key === "Escape") {
+        setSearchOpen(false);
+        setNotificationsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  useEffect(() => {
+    document.title = `${activeNav.label} | MY SGG`;
+  }, [activeNav.label]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = window.setTimeout(() => setToast(""), 3600);
+    return () => window.clearTimeout(timer);
+  }, [toast]);
 
   const changeView = (view: View) => {
     setActiveView(view);
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    setSearch("");
+    setSearchOpen(false);
+    setNotificationsOpen(false);
+    if (window.location.hash !== `#${view}`) window.history.pushState(null, "", `#${view}`);
+    window.requestAnimationFrame(() => mainRef.current?.focus());
+    window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   };
 
-  const syncArchive = () => {
-    if (syncing) return;
-    setSyncing(true);
-    window.setTimeout(() => {
-      const now = new Intl.DateTimeFormat("ja-JP", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }).format(new Date());
-      setLastSync(now);
-      setSyncing(false);
-      setToast("プレイヤー記録を同期しました（デモ）");
-    }, 760);
+  const toggleWatched = (id: string) => {
+    const next = new Set(watchedIds);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setWatchedIds(next);
+    persistSet("my-sgg-watched", next);
+    setToast(next.has(id) ? "ウォッチ設定をこの端末に保存しました" : "ウォッチ設定を解除しました");
   };
 
-  const moveSanctumLight = (event: React.PointerEvent<HTMLElement>) => {
-    if (
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
-    ) return;
-    if (pointerFrameRef.current) window.cancelAnimationFrame(pointerFrameRef.current);
-    const target = event.currentTarget;
-    const { clientX, clientY } = event;
-    pointerFrameRef.current = window.requestAnimationFrame(() => {
-      const bounds = target.getBoundingClientRect();
-      const x = (clientX - bounds.left) / bounds.width;
-      const y = (clientY - bounds.top) / bounds.height;
-      target.style.setProperty("--pointer-x", `${x * 100}%`);
-      target.style.setProperty("--pointer-y", `${y * 100}%`);
-      target.style.setProperty("--tilt-x", `${(0.5 - y) * 4}deg`);
-      target.style.setProperty("--tilt-y", `${(x - 0.5) * 5}deg`);
-      target.style.setProperty("--shift-x", `${(x - 0.5) * 14}px`);
-      target.style.setProperty("--shift-y", `${(y - 0.5) * 10}px`);
-    });
+  const markRead = (id: string, target: View) => {
+    const next = new Set(readIds).add(id);
+    setReadIds(next);
+    persistSet("my-sgg-read", next);
+    changeView(target);
   };
 
-  const resetSanctumLight = (event: React.PointerEvent<HTMLElement>) => {
-    event.currentTarget.style.setProperty("--pointer-x", "72%");
-    event.currentTarget.style.setProperty("--pointer-y", "38%");
-    event.currentTarget.style.setProperty("--tilt-x", "0deg");
-    event.currentTarget.style.setProperty("--tilt-y", "0deg");
-    event.currentTarget.style.setProperty("--shift-x", "0px");
-    event.currentTarget.style.setProperty("--shift-y", "0px");
+  const markAllRead = () => {
+    const next = new Set(systemNotifications.map((item) => item.id));
+    setReadIds(next);
+    persistSet("my-sgg-read", next);
   };
 
-  const notify = (message: string) => {
-    setToast(message);
-    setDialog(null);
+  const toggleChannel = (channel: string) => {
+    const next = new Set(followedChannels);
+    if (next.has(channel)) next.delete(channel);
+    else next.add(channel);
+    setFollowedChannels(next);
+    persistSet("my-sgg-followed", next);
+    setToast(next.has(channel) ? `${channel}の購読希望をこの端末に保存しました` : `${channel}の購読希望を解除しました`);
   };
 
-  const toggleWallet = () => {
-    const next = !walletConnected;
-    setWalletConnected(next);
-    notify(next ? "デモウォレットを接続しました" : "デモウォレットを切断しました");
-  };
+  const searchResults = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase("ja");
+    if (!query) return [];
+    const results: { id: string; category: string; title: string; meta: string; view: View }[] = [];
+    for (const game of games) {
+      if (`${game.title} ${game.subtitle}`.toLocaleLowerCase("ja").includes(query)) {
+        results.push({ id: game.id, category: "PLAY", title: game.title, meta: game.subtitle, view: "games" });
+      }
+    }
+    for (const item of competitions) {
+      if (`${item.title} ${item.game}`.toLocaleLowerCase("ja").includes(query)) {
+        results.push({ id: item.id, category: "ARENA", title: item.title, meta: item.game, view: "arena" });
+      }
+    }
+    for (const pair of characterPairs) {
+      if (`${pair.godName} ${pair.godId} ${pair.otomoName} ${pair.otomoId}`.toLocaleLowerCase("ja").includes(query)) {
+        results.push({ id: pair.otomoId, category: "COLLECTION", title: `${pair.godName} × ${pair.otomoName}`, meta: `${pair.godId} / ${pair.otomoId}`, view: "collection" });
+      }
+    }
+    for (const item of communityItems) {
+      if (`${item.title} ${item.channel}`.toLocaleLowerCase("ja").includes(query)) {
+        results.push({ id: item.id, category: "FEED", title: item.title, meta: item.channel, view: "community" });
+      }
+    }
+    return results.slice(0, 8);
+  }, [search]);
 
-  const toggleDiscord = () => {
-    const next = !discordConnected;
-    setDiscordConnected(next);
-    notify(next ? "Discordを再接続しました" : "Discordを切断しました（デモ）");
-  };
-
-  const enablePasskey = () => {
-    setPasskeyEnabled(true);
-    notify("この端末にパスキーを登録しました（デモ）");
-  };
+  const filteredGames = games.filter((game) => gameFilter === "ALL" || game.releaseState === gameFilter);
+  const featuredGame = games.find((game) => game.featured) ?? games[0];
+  const currentForm = otomoForms.find((form) => form.code === formFilter) ?? otomoForms[0];
 
   return (
-    <div className={`dashboard-shell${syncing ? " is-syncing" : ""}`}>
-      <div className="cosmic-field" aria-hidden="true">
-        {Array.from({ length: 7 }, (_, index) => <i key={index} className={`cosmic-star star-${index + 1}`} />)}
-      </div>
-      <aside className="sidebar" aria-label="メインナビゲーション">
-        <BrandMark />
-        <div className="sidebar-rule" />
-        <nav className="side-nav">
+    <div className={styles.app}>
+      <a href="#main-content" className={styles.skipLink}>メインコンテンツへ移動</a>
+
+      <aside className={styles.sidebar} aria-label="メインナビゲーション">
+        <Brand />
+        <p className={styles.sidebarTagline}>ALL OF SGG.<br />ONE PLAYER OS.</p>
+        <nav className={styles.sideNav}>
           {navItems.map((item, index) => (
-            <button
+            <a
               key={item.id}
-              type="button"
-              className={`nav-button${activeView === item.id ? " is-active" : ""}`}
-              onClick={() => changeView(item.id)}
+              href={`#${item.id}`}
+              className={activeView === item.id ? styles.navActive : styles.navLink}
               aria-current={activeView === item.id ? "page" : undefined}
+              onClick={(event) => { event.preventDefault(); changeView(item.id); }}
             >
-              <span className="nav-glyph" aria-hidden="true"><i>{item.glyph}</i></span>
-              <span>
-                <small>0{index + 1} / {item.eyebrow}</small>
-                <strong>{item.label}</strong>
-              </span>
-            </button>
+              <span className={styles.navNumber}>{String(index + 1).padStart(2, "0")}</span>
+              <span className={styles.navGlyph} aria-hidden="true">{item.glyph}</span>
+              <span><small>{item.eyebrow}</small><strong>{item.label}</strong></span>
+            </a>
           ))}
         </nav>
-
-        <div className="sidebar-account">
-          <p className="kicker">ACCOUNT SHIELD</p>
-          <strong>{protectionCount} / 3 保護済み</strong>
-          <div className="protection-track" role="progressbar" aria-valuemin={0} aria-valuemax={3} aria-valuenow={protectionCount} aria-label={`アカウント保護 ${protectionCount}/3`}>
-            <span style={{ width: `${(protectionCount / 3) * 100}%` }} />
-          </div>
-          <button type="button" onClick={() => setDialog("recovery")}>
-            保護設定を確認
-          </button>
-        </div>
-        <p className="sidebar-foot">USER DASHBOARD / EXCLUSIVE V0.4</p>
+        <section className={styles.sidebarStatus}>
+          <span><Dot active />4 PUBLIC RUNTIMES</span>
+          <small>PLAYER DATA BRIDGE · NOT CONNECTED</small>
+        </section>
       </aside>
 
-      <div className="main-shell">
-        <header className="topbar">
-          <div className="mobile-brand"><BrandMark compact /></div>
-          <div className="breadcrumb">
-            <span>MY SGG</span>
-            <i aria-hidden="true">/</i>
-            <strong>{activeItem.label}</strong>
+      <div className={styles.shell}>
+        <header className={styles.topbar}>
+          <div className={styles.mobileBrand}><Brand compact /></div>
+          <div className={styles.breadcrumb}><span>MY SGG</span><i>/</i><strong>{activeNav.label}</strong></div>
+          <div className={styles.searchBox}>
+            <label className={styles.srOnly} htmlFor="global-search">SGG全体を検索</label>
+            <span aria-hidden="true">⌕</span>
+            <input
+              ref={searchRef}
+              id="global-search"
+              type="search"
+              role="combobox"
+              aria-expanded={searchOpen && Boolean(search)}
+              aria-controls="global-search-results"
+              aria-autocomplete="list"
+              placeholder="ゲーム・番付・キャラクター・更新を検索"
+              value={search}
+              onFocus={() => setSearchOpen(true)}
+              onChange={(event) => { setSearch(event.target.value); setSearchOpen(true); }}
+            />
+            <kbd>⌘ K</kbd>
+            {searchOpen && search && (
+              <div id="global-search-results" className={styles.searchResults} role="listbox" aria-label="検索結果">
+                <p>SEARCH / {searchResults.length} RESULTS</p>
+                {searchResults.length ? searchResults.map((result) => (
+                  <button key={`${result.category}-${result.id}`} type="button" role="option" aria-selected="false" onClick={() => changeView(result.view)}>
+                    <span>{result.category}</span><strong>{result.title}</strong><small>{result.meta}</small>
+                  </button>
+                )) : <div className={styles.searchEmpty}>一致する公開情報はありません</div>}
+              </div>
+            )}
           </div>
-          <div className="topbar-actions">
-            <button className="sync-status" type="button" onClick={syncArchive} aria-busy={syncing} aria-label={syncing ? "プレイヤー記録を同期中" : `プレイヤー記録を同期。最終同期 ${lastSync}`}>
-              <ConnectionDot active={!syncing} />
-              <span><small>{syncing ? "SYNCING" : "LAST SYNC"}</small>{syncing ? "···" : lastSync}</span>
+          <div className={styles.topActions}>
+            <button type="button" className={styles.iconButton} onClick={() => void loadLiveData()} aria-label="公開データを再同期" aria-busy={liveState === "loading"}>
+              <span aria-hidden="true">{liveState === "loading" ? "···" : "↻"}</span>
             </button>
-            <button className="profile-button" type="button" onClick={() => setDialog("account")} aria-label="ユーザーアカウントと連携設定を開く">
-              <span className="avatar" aria-hidden="true">ZT</span>
-              <span className="profile-copy">
-                <strong>{discordConnected ? "ZEN_TARO" : "未接続"}</strong>
-                <small>{discordConnected ? "Discord linked" : "Sign in required"}</small>
-              </span>
-              <span className="chevron" aria-hidden="true">⌄</span>
+            <div className={styles.notificationWrap}>
+              <button type="button" className={styles.iconButton} aria-label={`通知 ${unread.length}件`} aria-expanded={notificationsOpen} onClick={() => setNotificationsOpen((open) => !open)}>
+                <span aria-hidden="true">◌</span>{unread.length > 0 && <b>{unread.length}</b>}
+              </button>
+              {notificationsOpen && (
+                <div className={styles.notificationPanel}>
+                  <div><strong>アクション通知</strong><button type="button" onClick={markAllRead}>すべて既読</button></div>
+                  {systemNotifications.map((item) => (
+                    <button key={item.id} type="button" className={readIds.has(item.id) ? "" : styles.notificationUnread} onClick={() => markRead(item.id, item.target)}>
+                      <span>{item.kind}</span><strong>{item.title}</strong><small>{item.detail}</small>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <button type="button" className={styles.profileButton} onClick={() => changeView("mysgg")}>
+              <span aria-hidden="true">MY</span><div><small>PLAYER PASSPORT</small><strong>未接続</strong></div>
             </button>
           </div>
         </header>
 
-        <main className="page-content">
-          <p className="sr-only" aria-live="polite">{activeItem.label}ビューを表示中</p>
-          <div className="demo-notice" role="note">
-            <span>STARTER KIT / DEMO DATA</span>
-            画面内の戦績・残高・ポイントは、連携前のデモデータです。
+        <main id="main-content" ref={mainRef} tabIndex={-1} className={styles.content}>
+          <p className={styles.srOnly} aria-live="polite">{activeNav.label}を表示中</p>
+          <div className={styles.truthBanner} role="status">
+            <span><Dot active />LIVE SOURCES</span>
+            <p>公開確認済みのゲーム・ランキング・投稿だけを表示。個人データは共通認証が接続されるまで「未接続」です。</p>
+            <small>SYNC {formatSyncTime(liveData.checkedAt)}</small>
           </div>
 
-          {activeView === "overview" && (
-            <div className="view-stack overview-view">
-              <section
-                className="hero-card"
-                aria-labelledby="hero-title"
-                ref={heroRef}
-                onPointerMove={moveSanctumLight}
-                onPointerLeave={resetSanctumLight}
-              >
-                <div className="hero-world" aria-hidden="true">
-                  <div className="hero-world-back" />
-                  <img
-                    className="hero-world-art"
-                    src="/dashboard-art/hero-taimaru-command.png"
-                    alt=""
-                    width="1600"
-                    height="843"
-                    fetchPriority="high"
-                  />
-                  <div className="hero-world-halo"><i /><i /><i /></div>
-                  <div className="hero-depth-line line-a" />
-                  <div className="hero-depth-line line-b" />
-                </div>
-                <div className="hero-copy">
-                  <p className="hero-label">ZEN_TARO / MY SGG</p>
-                  <span className="hero-equipped"><i aria-hidden="true" /> ACTIVE OTOMO / TAIMARU</span>
-                  <h1 id="hero-title">ZEN_TAROの、<br />神域記録。</h1>
-                  <p>
-                    装備中のOTOMO・鯛丸とともに、大会結果、ウォレット資産、SGGポイントを本人専用の記録として同期します。
-                  </p>
-                  <div className="player-signature">
-                    <span>PLAYER</span><strong>ZEN_TARO</strong><small>ID / 0007-7F3A91</small>
-                  </div>
-                  <div className="identity-row">
-                    <button type="button" onClick={() => setDialog("account")} aria-label={`Discord ${discordConnected ? "接続済み" : "未接続"}。連携設定を開く`}><ConnectionDot active={discordConnected} /> Discord</button>
-                    <button type="button" onClick={() => setDialog("account")} aria-label={`Wallet ${walletConnected ? "接続済み" : "未接続"}。連携設定を開く`}><ConnectionDot active={walletConnected} /> Wallet</button>
-                    <button type="button" onClick={() => setDialog("recovery")} className={!passkeyEnabled ? "is-muted" : ""} aria-label={`Passkey ${passkeyEnabled ? "登録済み" : "未設定"}。復旧設定を開く`}>
-                      <ConnectionDot active={passkeyEnabled} /> Passkey
-                    </button>
+          {activeView === "home" && (
+            <div className={styles.viewStack}>
+              <section className={styles.hero} aria-labelledby="hero-title">
+                <Image src="/dashboard-art/my-sgg-triform-candidate-v1.png" alt="鯛丸の精霊体、受肉体、童子が並ぶMY SGGの神域" fill priority sizes="(max-width: 900px) 100vw, 82vw" />
+                <div className={styles.heroShade} />
+                <div className={styles.heroCopy}>
+                  <p>SEVENGODS GAMES / PLAYER OS</p>
+                  <h1 id="hero-title">遊ぶ。競う。集める。<br /><em>すべてを、ひとつに。</em></h1>
+                  <span>公開中のゲーム、神託番付、キャラクター図鑑、公式アップデートを一つの司令席から。</span>
+                  <div>
+                    <button type="button" onClick={() => changeView("games")}>今すぐ遊ぶ<span aria-hidden="true">→</span></button>
+                    <button type="button" onClick={() => changeView("arena")}>ライブ番付を見る</button>
                   </div>
                 </div>
-                <div className="hero-points">
-                  <div className="core-label">PLAYER CORE / LIVE</div>
-                  <p>SGG POINTS <span>DEMO</span></p>
-                  <strong>12,840</strong>
-                  <small>今シーズン <b>+3,420</b></small>
-                  <button type="button" onClick={() => changeView("points")}>明細を見る <span aria-hidden="true">→</span></button>
-                </div>
-                <div className="hero-command-line" aria-label="プレイヤー状態">
-                  <span><i>14</i> 大会出場</span>
-                  <span><i>05</i> 優勝回数</span>
-                  <span><i>35.7%</i> 優勝率</span>
-                  <span><i>#01</i> 最高順位</span>
-                  <span><i>{String(protectionCount).padStart(2, "0")}/03</i> 保護状態</span>
+                <div className={styles.heroSignal}>
+                  <small>NETWORK</small><strong>4 / 4 ONLINE</strong><span>2026.07.14 VERIFIED</span>
                 </div>
               </section>
 
-              <CharacterDeck onOpenAssets={() => changeView("assets")} />
+              <section className={styles.metricStrip} aria-label="SGG公開状態">
+                <button type="button" onClick={() => changeView("games")}><small>PLAYABLE</small><strong>{releaseStateCounts.LIVE}</strong><span>公開runtime</span></button>
+                <button type="button" onClick={() => changeView("arena")}><small>LIVE BOARDS</small><strong>{competitions.length}</strong><span>公開番付</span></button>
+                <button type="button" onClick={() => changeView("collection")}><small>CANON PAIRS</small><strong>{characterPairs.length}</strong><span>GODS × OTOMO</span></button>
+                <button type="button" onClick={() => changeView("community")}><small>PUBLISHED</small><strong>02</strong><span>公式更新</span></button>
+              </section>
 
-              <div className="overview-grid">
-                <section className="panel recent-panel" aria-labelledby="recent-title">
-                  <div className="panel-head">
-                    <div><p className="kicker">RECENT ARENA</p><h2 id="recent-title">最近の大会記録</h2></div>
-                    <button type="button" className="text-button" onClick={() => changeView("tournaments")}>すべて見る <span aria-hidden="true">→</span></button>
-                  </div>
-                  <div className="compact-results">
-                    {tournamentRecords.slice(0, 3).map((record) => (
-                      <article className="compact-result" key={record.id}>
-                        <span className={`game-sigil tone-${record.accent}`} aria-hidden="true"><i>7</i></span>
-                        <div className="result-main">
-                          <strong>{record.game}</strong>
-                          <span>{record.tournament} · {record.date}</span>
-                        </div>
-                        <div className="result-rank"><strong>{record.result}</strong><span>{record.rank}</span></div>
-                        <div className="result-points"><strong>+{formatPoints(record.points)}</strong><span>PTS</span></div>
-                      </article>
-                    ))}
-                  </div>
-                </section>
+              <section className={styles.todaySection}>
+                <SectionTitle kicker="TODAY / PLAY NOW" title="いま戻る場所" copy="ログイン後の進行は各ゲームで安全に確認。公開プレイはここから直接起動できます。" action={<button type="button" className={styles.textButton} onClick={() => changeView("games")}>全ゲームを見る →</button>} />
+                <div className={styles.todayGrid}>
+                  {games.filter((game) => game.releaseState === "LIVE").map((game) => (
+                    <article key={game.id} data-tone={game.accent}>
+                      <div className={styles.todayGlyph} aria-hidden="true">{game.glyph}</div>
+                      <span><Dot active />{game.shortTitle}</span>
+                      <h3>{game.nextAction}</h3>
+                      <p>{game.nextActionMeta}</p>
+                      {game.officialUrl && <ExternalLink href={game.officialUrl}>{game.primaryAction}</ExternalLink>}
+                    </article>
+                  ))}
+                </div>
+              </section>
 
-                <section className="panel security-panel" aria-labelledby="security-title">
-                  <div className="panel-head">
-                    <div><p className="kicker">ACCOUNT SHIELD</p><h2 id="security-title">アカウントを守る</h2></div>
-                    <span className="shield-score"><i>{protectionCount}/3</i></span>
-                  </div>
-                  <p className="security-copy">
-                    Discordを失った場合に備えて、独立した復旧手段を追加しておくのがおすすめです。
-                  </p>
-                  <ul className="security-list">
-                    <li className={discordConnected ? "is-complete" : ""}><span>{discordConnected ? "✓" : "!"}</span><div><strong>Discord</strong><small>{discordConnected ? "接続済み" : "未接続"}</small></div></li>
-                    <li className={walletConnected ? "is-complete" : ""}><span>{walletConnected ? "✓" : "!"}</span><div><strong>ウォレット署名</strong><small>{walletConnected ? "所有確認済み" : "未設定"}</small></div></li>
-                    <li className={passkeyEnabled ? "is-complete" : ""}><span>{passkeyEnabled ? "✓" : "+"}</span><div><strong>パスキー</strong><small>{passkeyEnabled ? "この端末に登録済み" : "未設定・推奨"}</small></div></li>
-                  </ul>
-                  <button className="primary-button full-width" type="button" onClick={() => setDialog("recovery")}>復旧手段を設定</button>
+              <div className={styles.homeGrid}>
+                <Leaderboard title="神託番付" subtitle="OTOMO ORACLE 7 · DAY 1" entries={liveData.oracle.entries} state={liveData.sources.oracle} accent="cyan" />
+                <section className={styles.feedPreview}>
+                  <SectionTitle kicker="OFFICIAL FEED" title="公開済みアップデート" copy="公開台帳が確認できた投稿のみ。" />
+                  {communityItems.filter((item) => item.status === "PUBLISHED").map((item) => (
+                    <article key={item.id} data-tone={item.accent}>
+                      <span>{item.channel} · {item.dateLabel}</span>
+                      <h3>{item.title}</h3>
+                      <p>{item.description}</p>
+                      {item.href && <ExternalLink href={item.href}>{item.actionLabel}</ExternalLink>}
+                    </article>
+                  ))}
+                  <button type="button" className={styles.textButton} onClick={() => changeView("community")}>コミュニティセンターへ →</button>
                 </section>
               </div>
-
-              <section className="next-card" aria-labelledby="next-title">
-                <div className="next-scene" aria-hidden="true">
-                  <span className="next-gate"><i /></span>
-                  <img src="/dashboard-characters/momokatsu-3d.webp" alt="" width="768" height="768" loading="lazy" />
-                </div>
-                <div className="next-number" aria-hidden="true">07</div>
-                <div>
-                  <p className="kicker">NEXT CHALLENGE</p>
-                  <h2 id="next-title">次の大会へ</h2>
-                  <p>OTOMO ORACLE 7 — ORACLE OPEN #08</p>
-                </div>
-                <div className="next-date"><small>ENTRY CLOSES</small><strong>07.18</strong><span>あと5日</span></div>
-                <button type="button" onClick={() => changeView("tournaments")}>大会情報を見る <span aria-hidden="true">→</span></button>
-              </section>
             </div>
           )}
 
-          {activeView === "tournaments" && (
-            <div className="view-stack">
-              <SectionHeading
-                kicker="ARENA ARCHIVE"
-                title="大会の記録"
-                description="出場した大会と、サーバーで確定した生結果・順位の履歴です。"
-                demo
-              />
-              <section className="season-strip" aria-label="シーズンサマリー">
-                <div><small>SEASON</small><strong>2026 / SUMMER</strong></div>
-                <div><small>ENTRIES</small><strong>14</strong></div>
-                <div><small>CHAMPIONS</small><strong>05</strong></div>
-                <div><small>BEST RANK</small><strong>#01</strong></div>
-                <span className="filter-static">全期間</span>
-              </section>
-              <section className="records-panel" aria-label="大会履歴一覧">
-                <div className="record-labels" aria-hidden="true">
-                  <span>GAME / TOURNAMENT</span><span>RESULT</span><span>RAW RESULT</span><span>SGG POINTS</span>
-                </div>
-                {tournamentRecords.map((record) => (
-                  <article className="record-row" key={record.id}>
-                    <div className="record-game">
-                      <span className={`game-sigil tone-${record.accent}`} aria-hidden="true"><i>7</i></span>
-                      <div><strong>{record.game}</strong><span>{record.tournament} · {record.date}</span></div>
-                    </div>
-                    <div className="record-cell"><small>RESULT</small><strong>{record.result}</strong><span>{record.rank}</span></div>
-                    <div className="record-cell"><small>{record.rawLabel}</small><strong>{record.rawValue}</strong><span>FINALIZED</span></div>
-                    <div className="record-cell record-point"><small>SGG POINTS</small><strong>+{formatPoints(record.points)}</strong><span>確定</span></div>
-                  </article>
+          {activeView === "games" && (
+            <div className={styles.viewStack}>
+              <header className={styles.pageHeader}>
+                <div><p>PLAY / GAME UNIVERSE</p><h1>SGGを遊ぶ</h1><span>公開状態、進行タイプ、公式URLを正本とlive healthから統合。</span></div>
+                <div className={styles.pageStats}><span><b>{releaseStateCounts.LIVE}</b>PLAYABLE</span><span><b>{releaseStateCounts.DRAFT}</b>IN DEVELOPMENT</span><span><b>7·77·777</b>TIME AXES</span></div>
+              </header>
+              <div className={styles.filterBar} aria-label="ゲーム公開状態フィルター">
+                {(["ALL", "LIVE", "DRAFT"] as GameFilter[]).map((filter) => (
+                  <button key={filter} type="button" aria-pressed={gameFilter === filter} className={gameFilter === filter ? styles.filterActive : ""} onClick={() => setGameFilter(filter)}>
+                    {filter === "ALL" ? "すべて" : releaseStateLabels[filter]}
+                  </button>
                 ))}
+              </div>
+              <GameCard game={featuredGame} watched={watchedIds.has(featuredGame.id)} onWatch={toggleWatched} featured />
+              <section>
+                <SectionTitle kicker="VERIFIED CATALOG" title="ゲームライブラリ" copy={`${filteredGames.length}タイトルを表示`} />
+                <div className={styles.gameGrid}>
+                  {filteredGames.map((game) => <GameCard key={game.id} game={game} watched={watchedIds.has(game.id)} onWatch={toggleWatched} />)}
+                </div>
               </section>
-              <p className="data-footnote">順位はウォレット保有やSGGポイントの影響を受けず、各ゲームの生結果だけで確定する設計です。</p>
+              <section className={styles.timeAxes}>
+                <article><span>7</span><div><strong>熱狂</strong><p>短時間の挑戦・競争・更新</p></div></article>
+                <article><span>77</span><div><strong>物語</strong><p>育成・待機・探索・シーズン</p></div></article>
+                <article><span>777</span><div><strong>未来</strong><p>共同で積み重ねる長期構想</p></div></article>
+              </section>
             </div>
           )}
 
-          {activeView === "assets" && (
-            <div className="view-stack">
-              <SectionHeading
-                kicker="ASSET VAULT"
-                title="保有アセット"
-                description="ウォレット上の保有物と、ゲーム内で獲得したものを分けて表示します。"
-                demo
-              />
-              <section className="wallet-banner" aria-labelledby="wallet-title">
-                <div className="wallet-glyph" aria-hidden="true"><span>◇</span></div>
-                <div>
-                  <p className="kicker">CONNECTED WALLET</p>
-                  <h2 id="wallet-title">{walletConnected ? "0x7E7A ··· A3D9" : "ウォレット未接続"}</h2>
-                  <p>{walletConnected ? "所有権確認済み · 最終同期 2026.07.13 09:42" : "接続しなくても大会履歴とランキングは利用できます。"}</p>
-                </div>
-                <span className={`status-badge${walletConnected ? " is-online" : ""}`}><ConnectionDot active={walletConnected} />{walletConnected ? "CONNECTED" : "OPTIONAL"}</span>
-                <button type="button" onClick={toggleWallet}>{walletConnected ? "接続を管理" : "ウォレットを接続"}</button>
+          {activeView === "arena" && (
+            <div className={styles.viewStack}>
+              <header className={styles.pageHeader}>
+                <div><p>ARENA / VERIFIED COMPETITION</p><h1>アリーナ</h1><span>公開APIと公開ページで確認できる競争だけを表示します。</span></div>
+                <button type="button" className={styles.refreshButton} onClick={() => void loadLiveData()} disabled={liveState === "loading"}>{liveState === "loading" ? "同期中…" : "公開データを再同期"}</button>
+              </header>
+              <div className={styles.arenaBoards}>
+                <Leaderboard title="神託番付" subtitle="ORACLE DAILY / RAW SCORE" entries={liveData.oracle.entries} state={liveData.sources.oracle} accent="cyan" />
+                <Leaderboard
+                  title="シーズン序列"
+                  subtitle={liveData.quest.season ? `${liveData.quest.season.name} · DAY ${liveData.quest.season.day}/${liveData.quest.season.totalDays} · ${liveData.quest.participants} PLAYERS` : "QUEST 77 / GAME PROGRESS METRIC"}
+                  entries={liveData.quest.entries}
+                  state={liveData.sources.quest}
+                  accent="violet"
+                />
+              </div>
+              <section>
+                <SectionTitle kicker="PUBLIC BOARDS" title="公開ランキング" copy="順位の意味はゲームごとに異なり、SGG_GAME_POINTSや資産保有とは分離されます。" />
+                <div className={styles.competitionGrid}>{competitions.map((item) => <CompetitionCard key={item.id} competition={item} />)}</div>
               </section>
-
-              {walletConnected ? (
-                <>
-                  <section className="asset-grid" aria-label="ウォレット保有アセット">
-                    <article className="asset-card token-card">
-                      <div className="asset-relic token-relic" aria-hidden="true"><i>SGG</i><span /></div>
-                      <div className="asset-card-top"><span className="asset-glyph"><i>S</i></span><span className="demo-stamp">DEMO</span></div>
-                      <p>SGG TOKEN</p>
-                      <strong>4,277<small>.00</small></strong>
-                      <span>公開前の表示サンプル</span>
-                    </article>
-                    <article className="asset-card gods-card">
-                      <div className="asset-relic gods-relic" aria-hidden="true"><i>七</i>{Array.from({ length: 7 }, (_, index) => <span key={index} />)}</div>
-                      <div className="asset-card-top"><span className="asset-glyph"><i>七</i></span><span>WALLET</span></div>
-                      <p>SEVENGODS</p>
-                      <strong>02<small> ASSETS</small></strong>
-                      <span>所有コレクション</span>
-                    </article>
-                    <article className="asset-card otomo-total-card">
-                      <div className="asset-character-stack" aria-hidden="true">
-                        <img src="/dashboard-characters/juka-3d.webp" alt="" width="768" height="768" loading="lazy" />
-                        <img src="/dashboard-characters/haku-3d.webp" alt="" width="768" height="768" loading="lazy" />
-                      </div>
-                      <div className="asset-card-top"><span className="asset-glyph"><i>O</i></span><span>WALLET</span></div>
-                      <p>OTOMO TOTAL</p>
-                      <strong>12<small> ASSETS</small></strong>
-                      <span>3形態の合計</span>
-                    </article>
-                  </section>
-
-                  <section className="panel forms-panel" aria-labelledby="forms-title">
-                    <div className="panel-head">
-                      <div><p className="kicker">OTOMO FORMS</p><h2 id="forms-title">OTOMO・形態別</h2></div>
-                      <span className="snapshot-label">LIVE BALANCE · DEMO</span>
-                    </div>
-                    <div className="form-grid">
-                      {otomoForms.map((form) => (
-                        <article className={`form-card tone-${form.tone}`} key={form.code}>
-                          <div className="form-symbol" aria-hidden="true">{form.code.slice(0, 1)}</div>
-                          <div><small>{form.code}</small><strong>{form.label}</strong></div>
-                          <b>{form.count}<small>体</small></b>
-                        </article>
-                      ))}
-                    </div>
-                  </section>
-                </>
-              ) : (
-                <section className="empty-state">
-                  <span className="empty-glyph" aria-hidden="true"><i>◇</i></span>
-                  <h2>アセットはまだ読み込まれていません</h2>
-                  <p>ウォレットを接続すると、SGG Token・OTOMO・SEVENGODSの保有数を確認できます。</p>
-                  <button className="primary-button" type="button" onClick={toggleWallet}>デモウォレットを接続</button>
-                </section>
-              )}
-
-              <section className="panel game-assets-panel" aria-labelledby="game-assets-title">
-                <div className="panel-head"><div><p className="kicker">IN-GAME ITEMS</p><h2 id="game-assets-title">ゲーム内獲得アセット</h2></div><span className="snapshot-label">WALLETとは別管理</span></div>
-                <div className="empty-inline"><span aria-hidden="true">＋</span><div><strong>獲得アセットはまだありません</strong><p>称号やゲーム内アイテムは、ここにウォレット資産と分けて表示します。</p></div></div>
+              <section className={styles.eventEmpty}>
+                <span aria-hidden="true">冠</span>
+                <div><p>PUBLISHED EVENTS</p><h2>現在、公開確認済みの大会はありません</h2><span>公式発表と参加導線が確認されると、受付・締切・戦績がここに表示されます。</span></div>
               </section>
-              <p className="data-footnote">ライブ残高と、大会結果確定時の保有スナップショットは別データとして扱います。</p>
+              <aside className={styles.integrityNote}><strong>FAIR PLAY</strong><p>raw gameplay → ranking → SGG_GAME_POINTS → reward candidateを別々に扱います。Walletや保有資産で順位を変えません。</p></aside>
             </div>
           )}
 
-          {activeView === "points" && (
-            <div className="view-stack">
-              <SectionHeading
-                kicker="POINT LEDGER"
-                title="SGGポイント"
-                description="ゲーム結果とコミュニティ活動から付与されたポイントの記録です。"
-                demo
-              />
-              <section className="points-hero" aria-labelledby="points-balance-title">
-                <div className="points-core-art" aria-hidden="true">
-                  <span className="points-orbit orbit-a" /><span className="points-orbit orbit-b" /><span className="points-orbit orbit-c" />
-                  <i className="points-gem" />
-                  <img src="/dashboard-characters/shofuku-3d.webp" alt="" width="768" height="768" loading="lazy" />
-                </div>
-                <div className="points-balance">
-                  <p id="points-balance-title">AVAILABLE SGG POINTS</p>
-                  <strong>12,840</strong>
-                  <span>確定残高 · DEMO</span>
-                </div>
-                <div className="points-season">
-                  <div><small>2026 SUMMER</small><strong>+3,420</strong><span>今シーズン獲得</span></div>
-                  <div><small>NEXT ARCHIVE TIER</small><strong>1,160</strong><span>次の区切りまで</span></div>
-                </div>
-                <div className="tier-arc" aria-label="次の区切りまで92パーセント">
-                  <span>92%</span><small>ARCHIVE<br />PROGRESS</small>
+          {activeView === "collection" && (
+            <div className={styles.viewStack}>
+              <header className={styles.pageHeader}>
+                <div><p>COLLECTION / SOURCE-AWARE VAULT</p><h1>コレクション</h1><span>オンチェーン保有、ゲーム内資産、公式キャラクター図鑑を混ぜずに統合。</span></div>
+                <div className={styles.pageStats}><span><b>7</b>PAIRS</span><span><b>3</b>FORMS</span><span><b>未接続</b>MY ASSETS</span></div>
+              </header>
+              <section className={styles.connectionEmpty}>
+                <div className={styles.connectionIcon} aria-hidden="true">◇</div>
+                <div><p>MY ASSET BRIDGE</p><h2>あなたの保有データはまだ接続されていません</h2><span>共通Discord identityと署名済みplayer snapshot APIが接続されると、Walletと各ゲームの資産がここへ集約されます。</span></div>
+                <StatusPill accent="gold">WALLET OPTIONAL</StatusPill>
+              </section>
+              <section>
+                <SectionTitle kicker="ASSET SOURCES" title="接続する資産ソース" copy="missingを0件と表示せず、未接続・要ログイン・利用可能を区別します。" />
+                <div className={styles.sourceGrid}>
+                  {assetSources.map((source) => (
+                    <article key={source.id} data-tone={source.accent}>
+                      <span>{source.kind}</span><h3>{source.label}</h3><p>{source.description}</p>
+                      <StatusPill accent={source.accent}>{source.status}</StatusPill>
+                      {source.href ? <ExternalLink href={source.href}>ゲームで確認</ExternalLink> : <button type="button" disabled>{source.status === "CONNECT" ? "共通Wallet連携を準備中" : "この画面で確認"}</button>}
+                    </article>
+                  ))}
                 </div>
               </section>
+              <section>
+                <SectionTitle
+                  kicker="CANON CATALOG"
+                  title="7 GODS × 7 OTOMO"
+                  copy={`${currentForm.code} / ${currentForm.label} — ${currentForm.description}`}
+                  action={<div className={styles.formTabs} aria-label="OTOMO形態">
+                    {otomoForms.map((form) => <button key={form.code} type="button" aria-pressed={formFilter === form.code} className={formFilter === form.code ? styles.filterActive : ""} onClick={() => setFormFilter(form.code)}>{form.code}<small>{form.label}</small></button>)}
+                  </div>}
+                />
+                <div className={styles.pairGrid}>
+                  {characterPairs.map((pair, index) => (
+                    <article key={pair.otomoId} data-tone={pair.accent}>
+                      <span className={styles.pairNumber}>PAIR {String(index + 1).padStart(2, "0")}</span>
+                      <div className={styles.pairGlyph} aria-hidden="true">{pair.glyph}</div>
+                      <div><small>{pair.godId}</small><h3>{pair.godName}</h3></div>
+                      <i aria-hidden="true">×</i>
+                      <div><small>{pair.otomoId}</small><h3>{pair.otomoName}</h3></div>
+                      <StatusPill accent={pair.accent}>{formFilter} · {currentForm.label}</StatusPill>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            </div>
+          )}
 
-              <div className="points-layout">
-                <section className="panel ledger-panel" aria-labelledby="ledger-title">
-                  <div className="panel-head"><div><p className="kicker">TRANSACTIONS</p><h2 id="ledger-title">ポイント明細</h2></div><span className="filter-button">すべて</span></div>
-                  <div className="ledger-list">
-                    {pointLedger.map((item) => (
-                      <article className="ledger-row" key={item.id}>
-                        <span className={`source-icon is-${item.source.toLowerCase()}`} aria-hidden="true">{item.source === "GAME" ? "G" : "C"}</span>
-                        <div className="ledger-main"><strong>{item.title}</strong><span>{item.detail} · {item.date}</span></div>
-                        <span className={`source-tag is-${item.source.toLowerCase()}`}>{item.source}</span>
-                        <div className="ledger-amount"><strong>+{formatPoints(item.amount)}</strong><span className={item.status === "確定" ? "is-confirmed" : ""}>{item.status}</span></div>
+          {activeView === "mysgg" && (
+            <div className={styles.viewStack}>
+              <header className={styles.pageHeader}>
+                <div><p>MY SGG / PLAYER PASSPORT</p><h1>マイSGG</h1><span>本人、履歴、ポイント、報酬、セキュリティを一つに。制度は混ぜません。</span></div>
+                <StatusPill accent="coral">PLAYER BRIDGE · NOT CONNECTED</StatusPill>
+              </header>
+              <section className={styles.passportHero}>
+                <div className={styles.passportMark} aria-hidden="true">MY</div>
+                <div><small>UNIFIED PLAYER ID</small><h2>SGG Player Passport</h2><p>正式identityはDiscord user ID。Walletは任意で、未接続でもゲームとraw rankingへ参加できます。</p></div>
+                <div className={styles.passportStatus}>
+                  <span><Dot />Discord<strong>未接続</strong></span>
+                  <span><Dot />Wallet<strong>任意</strong></span>
+                  <span><Dot />Passkey<strong>準備中</strong></span>
+                </div>
+              </section>
+              <div className={styles.identityGrid}>
+                <article data-tone="violet"><span>01</span><h3>Discord Identity</h3><p>ゲームごとに分かれたsessionを、server-sideの署名済みassertionで一人のプレイヤーへ統合。</p><StatusPill accent="violet">CENTRAL BRIDGE REQUIRED</StatusPill></article>
+                <article data-tone="gold"><span>02</span><h3>Optional Wallet</h3><p>1 Discord ↔ 1 Wallet。保有確認はsnapshot時刻とchain基準点を記録します。</p><StatusPill accent="gold">PLAY WITHOUT WALLET</StatusPill></article>
+                <article data-tone="cyan"><span>03</span><h3>Account Protection</h3><p>Passkey、復旧コード、再認証、待機期間、session失効、append-only監査を設計。</p><StatusPill accent="cyan">SECURITY FIRST</StatusPill></article>
+              </div>
+              <section>
+                <SectionTitle kicker="TRUSTED LEDGER" title="記録と経済の境界" copy="未接続の値を0にせず、取得元・制度・確定状態を明示します。" />
+                <div className={styles.ledgerGrid}>
+                  {ledgerSystems.map((system) => (
+                    <article key={system.id} data-tone={system.accent}>
+                      <div><span>{system.category}</span><StatusPill accent={system.accent}>{system.status}</StatusPill></div>
+                      <h3>{system.label}</h3><p>{system.description}</p><small>SOURCE / {system.source}</small>
+                    </article>
+                  ))}
+                </div>
+              </section>
+              <aside className={styles.tokenBoundary}><span aria-hidden="true">!</span><div><strong>SGG TokenはPLANNEDです</strong><p>chain、contract、供給量、公開日、価格は未確定。ポイント残高や報酬からToken価値を推測しません。</p></div></aside>
+            </div>
+          )}
+
+          {activeView === "community" && (
+            <div className={styles.viewStack}>
+              <header className={styles.pageHeader}>
+                <div><p>COMMUNITY / OFFICIAL SIGNALS</p><h1>コミュニティ</h1><span>公開済みニュース、参加導線、学び、貢献を一つのフィードへ。</span></div>
+                <div className={styles.pageStats}><span><b>02</b>PUBLISHED</span><span><b>02</b>PREPARING</span><span><b>01</b>MVP DEMO</span></div>
+              </header>
+              <div className={styles.communityLayout}>
+                <section>
+                  <SectionTitle kicker="OFFICIAL & COMMUNITY HUB" title="コミュニティハブ" copy="公開済み、準備中、MVP／DEMOを状態ラベルで分離して掲載。" />
+                  <div className={styles.communityFeed}>
+                    {communityItems.map((item) => (
+                      <article key={item.id} data-tone={item.accent}>
+                        <div><StatusPill accent={item.accent}>{item.status}</StatusPill><span>{item.channel} · {item.dateLabel}</span></div>
+                        <h3>{item.title}</h3><p>{item.description}</p>
+                        {item.href ? <ExternalLink href={item.href}>{item.actionLabel}</ExternalLink> : <button type="button" disabled>{item.actionLabel}</button>}
                       </article>
                     ))}
                   </div>
                 </section>
-
-                <aside className="points-aside">
-                  <section className="panel breakdown-panel">
-                    <p className="kicker">SOURCE BREAKDOWN</p><h2>獲得元</h2>
-                    <div className="donut" aria-label="ゲーム78%、コミュニティ22%"><span><strong>78%</strong><small>GAME</small></span></div>
-                    <div className="legend"><span><i className="game" />ゲーム結果 <b>2,880</b></span><span><i className="community" />コミュニティ <b>820</b></span></div>
-                  </section>
-                  <section className="points-note">
-                    <span aria-hidden="true">i</span>
-                    <div><strong>SGG Tokenとは別です</strong><p>SGGポイントは活動記録です。トークン残高、順位、報酬資格を意味しません。</p></div>
-                  </section>
+                <aside className={styles.followPanel}>
+                  <p>MY SIGNALS</p><h2>購読希望</h2><span>この端末だけに保存する希望設定です。外部通知はまだ配信しません。</span>
+                  {["X", "DISCORD", "SUBSTACK", "SEVENDAO"].map((channel) => (
+                    <label key={channel}><input type="checkbox" checked={followedChannels.has(channel)} onChange={() => toggleChannel(channel)} /><span>{channel}</span><small>{followedChannels.has(channel) ? "ON" : "OFF"}</small></label>
+                  ))}
                 </aside>
               </div>
+              <section className={styles.eventEmpty}>
+                <span aria-hidden="true">暦</span><div><p>COMMUNITY EVENTS</p><h2>現在、公開確認済みのイベントはありません</h2><span>公式発表が確認されると、日時・参加方法・チェックインがここに表示されます。</span></div>
+              </section>
+              <aside className={styles.integrityNote}><strong>PUBLICATION RULE</strong><p>APPROVEDやREVIEWは公開済みではありません。Xは公開台帳、Discordは送信記録、Dispatchは公開URLを確認してから表示します。</p></aside>
             </div>
           )}
         </main>
 
-        <footer className="site-footer">
-          <span>MY SGG / DASHBOARD EXCLUSIVE V0.4</span>
-          <span>デモデータ · 本番連携前</span>
-        </footer>
+        <footer className={styles.footer}><span>MY SGG / ALL OF SGG, ONE PLAYER OS</span><span>PUBLIC TRUTH · PRIVATE PREFERENCES · NO FABRICATED DATA</span></footer>
       </div>
 
-      <nav className="mobile-nav" aria-label="モバイルナビゲーション">
+      <nav className={styles.mobileNav} aria-label="モバイルナビゲーション">
         {navItems.map((item) => (
-          <button key={item.id} type="button" className={activeView === item.id ? "is-active" : ""} onClick={() => changeView(item.id)} aria-current={activeView === item.id ? "page" : undefined}>
+          <a key={item.id} href={`#${item.id}`} className={activeView === item.id ? styles.mobileNavActive : ""} aria-current={activeView === item.id ? "page" : undefined} onClick={(event) => { event.preventDefault(); changeView(item.id); }}>
             <span aria-hidden="true">{item.glyph}</span><strong>{item.label}</strong>
-          </button>
+          </a>
         ))}
       </nav>
 
-      {dialog && (
-        <div className="modal-backdrop" onMouseDown={() => setDialog(null)}>
-          <section ref={modalRef} className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onMouseDown={(event) => event.stopPropagation()}>
-            <button className="modal-close" type="button" onClick={() => setDialog(null)} aria-label="閉じる">×</button>
-            {dialog === "account" ? (
-              <>
-                <p className="kicker">IDENTITY LINKS</p><h2 id="modal-title">アカウント連携</h2>
-                <p className="modal-intro">表示名ではなく、確認済みの連携情報をプレイヤー記録に結びつけます。</p>
-                <div className="modal-identities">
-                  <div><span className="identity-icon discord">D</span><div><strong>Discord</strong><small>{discordConnected ? "ZEN_TARO · 接続済み" : "未接続"}</small></div><button type="button" onClick={toggleDiscord}>{discordConnected ? "切断" : "接続"}</button></div>
-                  <div><span className="identity-icon wallet">W</span><div><strong>Wallet</strong><small>{walletConnected ? "0x7E7A ··· A3D9 · 確認済み" : "未接続・任意"}</small></div><button type="button" onClick={toggleWallet}>{walletConnected ? "管理" : "接続"}</button></div>
-                  <div><span className="identity-icon passkey">P</span><div><strong>Passkey</strong><small>{passkeyEnabled ? "この端末に登録済み" : "未設定・復旧用"}</small></div><button type="button" onClick={() => setDialog("recovery")}>{passkeyEnabled ? "確認" : "追加"}</button></div>
-                </div>
-                <p className="modal-warning">本番ではDiscordの差し替え・紛失復旧に、再認証、待機期間、監査ログを必須にします。</p>
-              </>
-            ) : (
-              <>
-                <p className="kicker">ACCOUNT RECOVERY</p><h2 id="modal-title">復旧手段を設定</h2>
-                <p className="modal-intro">Discordに入れなくなった場合に備え、別の端末認証を追加します。</p>
-                <div className="recovery-score">
-                  <span className="shield-score"><i>{protectionCount}/3</i></span>
-                  <div><strong>{protectionCount === 3 ? "保護設定は完了です" : "あと1つ追加をおすすめします"}</strong><p>Discord・ウォレット所有確認・パスキー</p></div>
-                </div>
-                <ul className="recovery-rules">
-                  <li>秘密鍵やシードフレーズは預かりません</li>
-                  <li>ウォレット署名だけで自動的にアカウントを移行しません</li>
-                  <li>重要な変更は再認証・待機期間・通知の対象です</li>
-                </ul>
-                {passkeyEnabled ? (
-                  <button className="primary-button full-width" type="button" onClick={() => notify("パスキー設定を確認しました")}>登録済みパスキーを確認</button>
-                ) : (
-                  <button className="primary-button full-width" type="button" onClick={enablePasskey}>この端末にパスキーを追加</button>
-                )}
-                <p className="demo-action-note">この操作は画面確認用のデモです。</p>
-              </>
-            )}
-          </section>
-        </div>
-      )}
-
-      {toast && (
-        <div className="toast" role="status" aria-live="polite">
-          <span aria-hidden="true">✓</span>{toast}<button type="button" onClick={() => setToast(null)} aria-label="通知を閉じる">×</button>
-        </div>
-      )}
+      {toast && <div className={styles.toast} role="status" aria-live="polite"><span aria-hidden="true">✓</span>{toast}<button type="button" onClick={() => setToast("")} aria-label="通知を閉じる">×</button></div>}
     </div>
   );
 }
