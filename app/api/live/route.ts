@@ -60,12 +60,15 @@ async function checkRuntime(url: string): Promise<Availability> {
 
   try {
     const response = await fetch(url, {
-      method: "HEAD",
+      method: "GET",
+      headers: { accept: "text/html,application/xhtml+xml" },
       redirect: "follow",
       signal: controller.signal,
       cache: "no-store",
     });
-    return response.ok ? "online" : "unavailable";
+    const status = response.ok ? "online" : "unavailable";
+    await response.body?.cancel().catch(() => undefined);
+    return status;
   } catch {
     return "unavailable";
   } finally {
