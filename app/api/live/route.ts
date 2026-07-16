@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
+import type { Availability, LiveData, LiveRanking } from "../../live-contract";
 
 export const dynamic = "force-dynamic";
-
-type Availability = "online" | "unavailable";
 
 type OracleEntry = {
   rank?: unknown;
@@ -18,12 +17,7 @@ type QuestEntry = {
   favoriteOtomo?: unknown;
 };
 
-type PublicRanking = {
-  rank: number;
-  name: string;
-  score: number;
-  meta: string;
-};
+type LiveSnapshot = Omit<LiveData, "servedFrom" | "cacheAgeSeconds">;
 
 const RANKING_SOURCES = {
   oracle: "https://otomooracle.sevengodsgames.com/api/ranking?scope=daily",
@@ -36,6 +30,14 @@ const RUNTIME_SOURCES = {
   farm: "https://otomofarm.sevengodsgames.com/",
   taiyo: "https://emberveil.sevengodsgames.com/",
 } as const;
+
+// Snapshot reuse protects the upstream games from one fetch fan-out per
+// dashboard visitor. The manual sync button sends ?refresh and always
+// reads upstream again; passive loads may share a recent snapshot.
+const SNAPSHOT_TTL_MS = 45_000;
+
+let storedSnapshot: { snapshot: LiveSnapshot; storedAt: number } | null = null;
+let inFlightRead: Promise<LiveSnapshot> | null = null;
 
 async function fetchJson(url: string) {
   const controller = new AbortController();
@@ -76,7 +78,7 @@ async function checkRuntime(url: string): Promise<Availability> {
   }
 }
 
-function parseOracle(value: unknown): { day: number; entries: PublicRanking[] } | null {
+function parseOracle(value: unknown): { day: number; entries: LiveRanking[] } | null {
   if (!value || typeof value !== "object") return null;
   const payload = value as {
     ok?: unknown;
@@ -133,7 +135,7 @@ function parseQuest(value: unknown) {
   );
   if (!valid) return null;
 
-  const entries: PublicRanking[] = payload.ranking.slice(0, 7).map((entry: QuestEntry) => ({
+  const entries: LiveRanking[] = payload.ranking.slice(0, 7).map((entry: QuestEntry) => ({
     rank: entry.rank as number,
     name: (entry.username as string).slice(0, 48),
     score: entry.rankingPoints as number,
@@ -153,7 +155,7 @@ function parseQuest(value: unknown) {
   };
 }
 
-export async function GET() {
+async function readUpstream(): Promise<LiveSnapshot> {
   const checkedAt = new Date().toISOString();
   const [rankingResults, runtimeEntries] = await Promise.all([
     Promise.allSettled([
@@ -176,23 +178,49 @@ export async function GET() {
     : null;
   const runtimes = Object.fromEntries(runtimeEntries) as Record<keyof typeof RUNTIME_SOURCES, Availability>;
 
-  return NextResponse.json(
-    {
-      checkedAt,
-      runtimes,
-      runtimeOnlineCount: Object.values(runtimes).filter((state) => state === "online").length,
-      sources: {
-        oracle: oracle ? "online" : "unavailable",
-        quest: quest ? "online" : "unavailable",
-      },
-      oracle: oracle ?? { day: null, entries: [] },
-      quest: quest ?? { season: null, entries: [], participants: 0 },
+  return {
+    checkedAt,
+    runtimes,
+    runtimeOnlineCount: Object.values(runtimes).filter((state) => state === "online").length,
+    sources: {
+      oracle: oracle ? "online" : "unavailable",
+      quest: quest ? "online" : "unavailable",
     },
-    {
-      headers: {
-        "Cache-Control": "no-store",
-        "X-Content-Type-Options": "nosniff",
-      },
+    oracle: oracle ?? { day: null, entries: [] },
+    quest: quest ?? { season: null, entries: [], participants: 0 },
+  };
+}
+
+function respond(payload: LiveData) {
+  return NextResponse.json(payload, {
+    headers: {
+      "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
     },
-  );
+  });
+}
+
+export async function GET(request: Request) {
+  const forceRefresh = new URL(request.url).searchParams.has("refresh");
+  const now = Date.now();
+
+  if (!forceRefresh && storedSnapshot && now - storedSnapshot.storedAt < SNAPSHOT_TTL_MS) {
+    return respond({
+      ...storedSnapshot.snapshot,
+      servedFrom: "cache",
+      cacheAgeSeconds: Math.max(0, Math.round((now - storedSnapshot.storedAt) / 1000)),
+    });
+  }
+
+  // Single-flight: concurrent visitors share one upstream fan-out instead
+  // of multiplying requests against the public game endpoints.
+  if (!inFlightRead) {
+    inFlightRead = readUpstream().finally(() => {
+      inFlightRead = null;
+    });
+  }
+  const snapshot = await inFlightRead;
+  storedSnapshot = { snapshot, storedAt: Date.now() };
+
+  return respond({ ...snapshot, servedFrom: "origin", cacheAgeSeconds: 0 });
 }

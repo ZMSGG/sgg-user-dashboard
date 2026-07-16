@@ -805,7 +805,10 @@
   overflow: hidden;
   border: 1px solid rgba(230, 196, 111, 0.18);
   border-radius: 4px 34px 4px 34px;
-  background: #13111b;
+  background:
+    radial-gradient(ellipse at 72% 20%, rgba(92, 50, 158, 0.28), transparent 55%),
+    radial-gradient(ellipse at 18% 88%, rgba(230, 196, 111, 0.12), transparent 45%),
+    #13111b;
   box-shadow: var(--shadow);
 }
 
@@ -3370,5 +3373,69 @@
   .heroCopy button,
   .primaryAction {
     transform: none !important;
+  }
+}
+
+.leaderboardSkeleton strong,
+.leaderboardSkeleton small,
+.leaderboardSkeleton b {
+  height: 9px;
+  border-radius: 4px;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.05) 30%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.05) 70%
+  );
+  background-size: 220% 100%;
+  animation: skeleton-sheen 1.4s ease-in-out infinite;
+}
+
+.leaderboardSkeleton strong {
+  width: min(160px, 58%);
+}
+
+.leaderboardSkeleton small {
+  width: min(96px, 38%);
+  margin-top: 6px;
+}
+
+.leaderboardSkeleton b {
+  width: 44px;
+}
+
+.leaderboardSkeleton li > span {
+  animation: skeleton-sheen 1.4s ease-in-out infinite;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+@keyframes skeleton-sheen {
+  from {
+    background-position: 120% 0;
+  }
+
+  to {
+    background-position: -120% 0;
+  }
+}
+
+.spin {
+  display: inline-block;
+  animation: sync-spin 900ms linear infinite;
+}
+
+@keyframes sync-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaderboardSkeleton strong,
+  .leaderboardSkeleton small,
+  .leaderboardSkeleton b,
+  .leaderboardSkeleton li > span,
+  .spin {
+    animation: none;
   }
 }

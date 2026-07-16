@@ -25,7 +25,9 @@ optional Wallet snapshot ──────────────────�
 - Quest internal user IDs are removed
 - HTTP success and payload schema must both validate before a ranking source becomes online
 - Failures return an unavailable source state; mock values are never substituted
-- Responses are `no-store`; the manual sync always asks for a fresh server read
+- Responses are `no-store` for the browser; the server keeps a 45-second shared snapshot with single-flight deduplication so concurrent visitors do not multiply upstream reads
+- `?refresh` (the manual sync button) bypasses the snapshot and always reads upstream again; every payload reports `servedFrom` (`origin` / `cache`) and `cacheAgeSeconds`
+- The client auto re-syncs visible tabs every 90 seconds, stays quiet while hidden, and keeps the last verified snapshot when a re-sync fails
 
 Farm remains a public page link because there is no side-effect-free JSON player read model. TAIYO remains a public game link; its ranking contract can be added to the same adapter after a stable public query is fixed.
 

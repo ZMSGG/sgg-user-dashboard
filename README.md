@@ -17,6 +17,8 @@ SEVENGODS Gamesの公開ゲーム、公開ランキング、キャラクター�
 
 - 公開状態はSGG migration audit、project state、4タイトルの実URL healthを分けて扱う
 - 公開ランキングは `/api/live` がOracleの現在日とQuest seasonをschema検証し、内部IDを除去して正規化
+- `/api/live` は45秒の共有snapshotとsingle-flightで上流ゲームへの負荷を抑え、手動再同期(`?refresh`)は常に上流を再読込。応答は `servedFrom` / `cacheAgeSeconds` で取得経路を明示
+- 画面は可視タブのみ90秒間隔で自動再同期し、再同期失敗時は前回の確認済みデータを保持して失敗を通知
 - 個人データは共通identity bridge未接続のため「未接続」と表示
 - ゲーム資源、raw score、ranking、`SGG_GAME_POINTS`、reward、SDT、`SGG Token`を別制度として表示
 - 端末内に保存するのは通知既読、開発通知、フォローchannelなどのdevice preferenceだけ

@@ -43,10 +43,19 @@ export default defineConfig(async () => {
   // Wrangler snapshots its log path while the Cloudflare plugin is imported.
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
+  // Preview harnesses assign a port via PORT; honor it so localhost:3000
+  // collisions with sibling SGG dev servers cannot hijack the preview.
+  const assignedPort = Number(process.env.PORT);
+
   return {
-    server: isCodexSeatbeltSandbox
-      ? { watch: { useFsEvents: false, usePolling: true } }
-      : undefined,
+    server: {
+      ...(Number.isInteger(assignedPort) && assignedPort > 0
+        ? { port: assignedPort }
+        : {}),
+      ...(isCodexSeatbeltSandbox
+        ? { watch: { useFsEvents: false, usePolling: true } }
+        : {}),
+    },
     plugins: [
       vinext(),
       sites(),

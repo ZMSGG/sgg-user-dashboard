@@ -26,30 +26,13 @@ import {
   type GameSummary,
   type ReleaseState,
 } from "./dashboard-data";
+import { emptyLiveData, type LiveData, type LiveRanking } from "./live-contract";
 import styles from "./Dashboard.module.css";
 
 type View = "home" | "games" | "arena" | "collection" | "mysgg" | "community";
 type GameFilter = "ALL" | ReleaseState;
 type FormFilter = "SPIRIT" | "INCARNATE" | "DOJI";
 type SourceState = "online" | "unavailable" | "checking";
-type LiveRanking = { rank: number; name: string; score: number; meta: string };
-type LiveData = {
-  checkedAt: string;
-  sources: { oracle: "online" | "unavailable"; quest: "online" | "unavailable" };
-  runtimes: {
-    oracle: "online" | "unavailable";
-    quest: "online" | "unavailable";
-    farm: "online" | "unavailable";
-    taiyo: "online" | "unavailable";
-  };
-  runtimeOnlineCount: number;
-  oracle: { day: number | null; entries: LiveRanking[] };
-  quest: {
-    season: { name: string; day: number; totalDays: number } | null;
-    entries: LiveRanking[];
-    participants: number;
-  };
-};
 
 const navItems: readonly { id: View; label: string; eyebrow: string; glyph: string }[] = [
   { id: "home", label: "ホーム", eyebrow: "TODAY", glyph: "七" },
@@ -60,14 +43,9 @@ const navItems: readonly { id: View; label: string; eyebrow: string; glyph: stri
   { id: "mysgg", label: "マイSGG", eyebrow: "PASSPORT", glyph: "我" },
 ] as const;
 
-const emptyLiveData: LiveData = {
-  checkedAt: "",
-  sources: { oracle: "unavailable", quest: "unavailable" },
-  runtimes: { oracle: "unavailable", quest: "unavailable", farm: "unavailable", taiyo: "unavailable" },
-  runtimeOnlineCount: 0,
-  oracle: { day: null, entries: [] },
-  quest: { season: null, entries: [], participants: 0 },
-};
+// Passive loads may reuse the server-side snapshot; forced syncs always
+// re-read upstream. Auto re-sync keeps a visible tab close to this age.
+const AUTO_SYNC_INTERVAL_MS = 90_000;
 
 async function requestLiveData(force = false): Promise<LiveData> {
   const endpoint = force ? `/api/live?refresh=${Date.now()}` : "/api/live";
@@ -104,6 +82,17 @@ function formatSyncTime(value: string) {
     hour12: false,
     timeZone: "Asia/Kuala_Lumpur",
   }).format(date);
+}
+
+function formatSyncAge(value: string, now: number) {
+  if (!value) return "未同期";
+  const timestamp = new Date(value).getTime();
+  if (Number.isNaN(timestamp)) return "未同期";
+  const elapsedSeconds = Math.max(0, Math.floor((now - timestamp) / 1000));
+  if (elapsedSeconds < 45) return "たった今";
+  if (elapsedSeconds < 90) return "1分前";
+  if (elapsedSeconds < 3600) return `${Math.round(elapsedSeconds / 60)}分前`;
+  return formatSyncTime(value);
 }
 
 function Brand({ compact = false }: { compact?: boolean }) {
@@ -267,14 +256,20 @@ function Leaderboard({
             </li>
           ))}
         </ol>
+      ) : state === "checking" ? (
+        <ol className={styles.leaderboardSkeleton} aria-hidden="true">
+          {Array.from({ length: 5 }, (_, index) => (
+            <li key={index}>
+              <span /><div><strong /><small /></div><b />
+            </li>
+          ))}
+        </ol>
       ) : (
         <div className={styles.inlineEmpty}>
           <span aria-hidden="true">↻</span>
           <p>{state === "online"
             ? "この番付には、まだ公開記録がありません。"
-            : state === "checking"
-              ? "公開ランキングを同期しています。"
-              : "公開ランキングを取得できませんでした。公式ページでは引き続き確認できます。"}</p>
+            : "公開ランキングを取得できませんでした。公式ページでは引き続き確認できます。"}</p>
         </div>
       )}
     </section>
@@ -294,9 +289,14 @@ export function Dashboard() {
   const [followedChannels, setFollowedChannels] = useState<Set<string>>(new Set(["X"]));
   const [liveData, setLiveData] = useState<LiveData>(emptyLiveData);
   const [liveState, setLiveState] = useState<"loading" | "ready" | "error">("loading");
+  const [syncing, setSyncing] = useState(false);
+  const [clock, setClock] = useState(0);
   const [toast, setToast] = useState("");
   const mainRef = useRef<HTMLElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const searchBoxRef = useRef<HTMLDivElement>(null);
+  const notificationRef = useRef<HTMLDivElement>(null);
+  const checkedAtRef = useRef("");
 
   const activeNav = navItems.find((item) => item.id === activeView) ?? navItems[0];
   const unread = systemNotifications.filter((item) => !readIds.has(item.id));
@@ -325,33 +325,66 @@ export function Dashboard() {
     }
   }, []);
 
-  const loadLiveData = useCallback(async () => {
-    setLiveState("loading");
+  const syncLiveData = useCallback(async (options?: { force?: boolean; announceFailure?: boolean }) => {
+    setSyncing(true);
     try {
-      const payload = await requestLiveData(true);
+      const payload = await requestLiveData(options?.force ?? true);
       setLiveData(payload);
       setLiveState("ready");
     } catch {
-      setLiveData(emptyLiveData);
-      setLiveState("error");
+      // Keep the last verified snapshot on screen; a failed re-sync must
+      // not erase previously confirmed public data.
+      setLiveState((current) => (current === "ready" ? "ready" : "error"));
+      if (options?.announceFailure) {
+        setToast(checkedAtRef.current
+          ? "再同期に失敗しました。前回の同期結果を表示しています"
+          : "公開データを取得できませんでした");
+      }
+    } finally {
+      setSyncing(false);
     }
   }, []);
 
+  const loadLiveData = useCallback(
+    () => syncLiveData({ force: true, announceFailure: true }),
+    [syncLiveData],
+  );
+
   useEffect(() => {
-    let cancelled = false;
+    checkedAtRef.current = liveData.checkedAt;
+  }, [liveData.checkedAt]);
 
-    void requestLiveData()
-      .then((payload) => {
-        if (cancelled) return;
-        setLiveData(payload);
-        setLiveState("ready");
-      })
-      .catch(() => {
-        if (!cancelled) setLiveState("error");
-      });
+  useEffect(() => {
+    const timeout = window.setTimeout(() => void syncLiveData({ force: false }), 0);
+    return () => window.clearTimeout(timeout);
+  }, [syncLiveData]);
 
+  // A visible tab re-syncs on a fixed cadence; a hidden tab stays quiet and
+  // catches up as soon as it becomes visible again with a stale snapshot.
+  useEffect(() => {
+    const syncIfStale = () => {
+      if (document.visibilityState !== "visible") return;
+      const checkedAt = new Date(checkedAtRef.current).getTime();
+      if (Number.isNaN(checkedAt) || Date.now() - checkedAt >= AUTO_SYNC_INTERVAL_MS) {
+        void syncLiveData({ force: false });
+      }
+    };
+    const interval = window.setInterval(syncIfStale, AUTO_SYNC_INTERVAL_MS);
+    document.addEventListener("visibilitychange", syncIfStale);
     return () => {
-      cancelled = true;
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", syncIfStale);
+    };
+  }, [syncLiveData]);
+
+  // Low-frequency clock so「たった今 / N分前」stays honest without re-fetching.
+  useEffect(() => {
+    const tick = () => setClock(Date.now());
+    const timeout = window.setTimeout(tick, 0);
+    const interval = window.setInterval(tick, 30_000);
+    return () => {
+      window.clearTimeout(timeout);
+      window.clearInterval(interval);
     };
   }, []);
 
@@ -367,11 +400,22 @@ export function Dashboard() {
   }, []);
 
   useEffect(() => {
+    const isTypingTarget = (target: EventTarget | null) =>
+      target instanceof HTMLElement &&
+      (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
+
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         searchRef.current?.focus();
         setSearchOpen(true);
+        return;
+      }
+      if (event.key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey && !isTypingTarget(event.target)) {
+        event.preventDefault();
+        searchRef.current?.focus();
+        setSearchOpen(true);
+        return;
       }
       if (event.key === "Escape") {
         setSearchOpen(false);
@@ -380,6 +424,21 @@ export function Dashboard() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  // Popovers close on outside interaction, matching standard menu behavior.
+  useEffect(() => {
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (notificationRef.current && !notificationRef.current.contains(target)) {
+        setNotificationsOpen(false);
+      }
+      if (searchBoxRef.current && !searchBoxRef.current.contains(target)) {
+        setSearchOpen(false);
+      }
+    };
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => window.removeEventListener("pointerdown", onPointerDown);
   }, []);
 
   useEffect(() => {
@@ -444,12 +503,12 @@ export function Dashboard() {
     if (!query) return [];
     const results: { id: string; category: string; title: string; meta: string; view: View }[] = [];
     for (const game of games) {
-      if (`${game.title} ${game.subtitle}`.toLocaleLowerCase("ja").includes(query)) {
+      if (`${game.title} ${game.subtitle} ${game.genre} ${game.description}`.toLocaleLowerCase("ja").includes(query)) {
         results.push({ id: game.id, category: "PLAY", title: game.title, meta: game.subtitle, view: "games" });
       }
     }
     for (const item of competitions) {
-      if (`${item.title} ${item.game}`.toLocaleLowerCase("ja").includes(query)) {
+      if (`${item.title} ${item.game} ${item.rule}`.toLocaleLowerCase("ja").includes(query)) {
         results.push({ id: item.id, category: "ARENA", title: item.title, meta: item.game, view: "arena" });
       }
     }
@@ -459,7 +518,7 @@ export function Dashboard() {
       }
     }
     for (const item of communityItems) {
-      if (`${item.title} ${item.channel}`.toLocaleLowerCase("ja").includes(query)) {
+      if (`${item.title} ${item.channel} ${item.description}`.toLocaleLowerCase("ja").includes(query)) {
         results.push({ id: item.id, category: "FEED", title: item.title, meta: item.channel, view: "community" });
       }
     }
@@ -547,7 +606,7 @@ export function Dashboard() {
         <header className={styles.topbar}>
           <div className={styles.mobileBrand}><Brand compact /></div>
           <div className={styles.breadcrumb}><span>MY SGG</span><i>/</i><strong>{activeNav.label}</strong></div>
-          <div className={styles.searchBox}>
+          <div className={styles.searchBox} ref={searchBoxRef}>
             <label className={styles.srOnly} htmlFor="global-search">SGG全体を検索</label>
             <span aria-hidden="true">⌕</span>
             <input
@@ -587,10 +646,10 @@ export function Dashboard() {
             )}
           </div>
           <div className={styles.topActions}>
-            <button type="button" className={styles.iconButton} onClick={() => void loadLiveData()} aria-label="公開データを再同期" aria-busy={liveState === "loading"}>
-              <span aria-hidden="true">{liveState === "loading" ? "···" : "↻"}</span>
+            <button type="button" className={styles.iconButton} onClick={() => void loadLiveData()} aria-label="公開データを再同期" aria-busy={syncing} disabled={syncing}>
+              <span aria-hidden="true" className={syncing ? styles.spin : undefined}>↻</span>
             </button>
-            <div className={styles.notificationWrap}>
+            <div className={styles.notificationWrap} ref={notificationRef}>
               <button type="button" className={styles.iconButton} aria-label={`通知 ${unread.length}件`} aria-expanded={notificationsOpen} onClick={() => setNotificationsOpen((open) => !open)}>
                 <span aria-hidden="true">◌</span>{unread.length > 0 && <b>{unread.length}</b>}
               </button>
@@ -616,7 +675,10 @@ export function Dashboard() {
           <div className={styles.truthBanner} role="status">
             <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount > 0} />LIVE SOURCES</span>
             <p>公開確認済みのゲーム・ランキング・投稿だけを表示。個人データは共通認証が接続されるまで「未接続」です。</p>
-            <small>SYNC {formatSyncTime(liveData.checkedAt)}</small>
+            <small title={liveData.checkedAt ? `同期時刻 ${formatSyncTime(liveData.checkedAt)} MYT` : undefined}>
+              SYNC {formatSyncAge(liveData.checkedAt, clock)}
+              {liveData.servedFrom === "cache" && " · 共有snapshot"}
+            </small>
           </div>
 
           {activeView === "home" && (
@@ -711,7 +773,7 @@ export function Dashboard() {
             <div className={styles.viewStack}>
               <header className={styles.pageHeader}>
                 <div><p>ARENA / VERIFIED COMPETITION</p><h1>アリーナ</h1><span>公開APIと公開ページで確認できる競争だけを表示します。</span></div>
-                <button type="button" className={styles.refreshButton} onClick={() => void loadLiveData()} disabled={liveState === "loading"}>{liveState === "loading" ? "同期中…" : "公開データを再同期"}</button>
+                <button type="button" className={styles.refreshButton} onClick={() => void loadLiveData()} disabled={syncing}>{syncing ? "同期中…" : "公開データを再同期"}</button>
               </header>
               <div className={styles.arenaBoards}>
                 <Leaderboard title="神託番付" subtitle={`ORACLE DAY ${liveData.oracle.day ?? "—"} / RAW SCORE`} entries={liveData.oracle.entries} state={oracleSourceState} accent="cyan" />

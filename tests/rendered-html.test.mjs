@@ -83,6 +83,8 @@ test("exposes a same-origin live read model without internal Quest IDs", async (
   const body = await response.text();
   const payload = JSON.parse(body);
   assert.equal(typeof payload.checkedAt, "string");
+  assert.match(payload.servedFrom, /^(origin|cache)$/);
+  assert.equal(typeof payload.cacheAgeSeconds, "number");
   assert.equal(typeof payload.sources.oracle, "string");
   assert.equal(typeof payload.sources.quest, "string");
   assert.equal(typeof payload.runtimeOnlineCount, "number");
@@ -111,6 +113,52 @@ test("derives current health, search selection, and filtered feature state", asy
   assert.match(dashboard, /まだ公開記録がありません/);
   assert.match(dashboard, /稼働確認不可/);
   assert.doesNotMatch(dashboard, />4 \/ 4 ONLINE</);
+});
+
+test("shares one live contract and keeps re-sync failures non-destructive", async () => {
+  const [dashboard, route, contract] = await Promise.all([
+    readFile(new URL("../app/Dashboard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/live/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/live-contract.ts", import.meta.url), "utf8"),
+  ]);
+
+  // Server and client import the same payload shape instead of duplicating it.
+  assert.match(contract, /export type LiveData/);
+  assert.match(dashboard, /from "\.\/live-contract"/);
+  assert.match(route, /from "\.\.\/\.\.\/live-contract"/);
+
+  // Upstream protection: snapshot reuse plus single-flight, manual refresh bypass.
+  assert.match(route, /SNAPSHOT_TTL_MS/);
+  assert.match(route, /inFlightRead/);
+  assert.match(route, /searchParams\.has\("refresh"\)/);
+
+  // A failed re-sync keeps the last verified snapshot instead of wiping it.
+  assert.doesNotMatch(dashboard, /setLiveData\(emptyLiveData\)/);
+  assert.match(dashboard, /前回の同期結果を表示しています/);
+
+  // Background freshness: visible tabs re-sync, hidden tabs stay quiet.
+  assert.match(dashboard, /visibilitychange/);
+  assert.match(dashboard, /AUTO_SYNC_INTERVAL_MS/);
+});
+
+test("degrades image optimization gracefully without Cloudflare bindings", async () => {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `image-${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+  const response = await worker.fetch(
+    new Request("http://localhost/_vinext/image?url=%2Fdashboard-art%2Fmy-sgg-triform-candidate-v1.png&w=1080&q=75"),
+    {},
+    { waitUntil() {}, passThroughOnException() {} },
+  );
+  assert.equal(response.status, 302);
+  assert.equal(response.headers.get("location"), "/dashboard-art/my-sgg-triform-candidate-v1.png");
+
+  const rejected = await worker.fetch(
+    new Request("http://localhost/_vinext/image?url=https%3A%2F%2Fevil.example%2Fx.png"),
+    {},
+    { waitUntil() {}, passThroughOnException() {} },
+  );
+  assert.equal(rejected.status, 400);
 });
 
 test("ships the finished visual surface and retires legacy demo art", async () => {
