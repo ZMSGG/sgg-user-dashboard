@@ -1,6 +1,6 @@
 # MY SGG Architecture
 
-Status: `PLAYER OS V1 / PRIVATE PREVIEW`
+Status: `PLAYER OS V1 / OWNER-ONLY PRIVATE DEPLOYMENT`
 
 MY SGGは、公開情報と個人情報を同じ確度で扱わないユーザー向け統合面です。
 
@@ -12,6 +12,7 @@ MY SGGは、公開情報と個人情報を同じ確度で扱わないユーザ�
 - GODS / OTOMO / formの正規カタログ
 - ゲーム、ランキング、ポイント、報酬、Tokenの意味分離
 - hash deep link、検索、通知、端末内preferences、mobile navigation
+- revocable Discord session、one-time Wallet challenge、append-only SGG point ledger
 
 ## 個人データの境界
 

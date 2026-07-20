@@ -26,10 +26,23 @@ optional Wallet snapshot ──────────────────�
 - HTTP success and payload schema must both validate before a ranking source becomes online
 - Failures return an unavailable source state; mock values are never substituted
 - Responses are `no-store` for the browser; the server keeps a 45-second shared snapshot with single-flight deduplication so concurrent visitors do not multiply upstream reads
-- `?refresh` (the manual sync button) bypasses the snapshot and always reads upstream again; every payload reports `servedFrom` (`origin` / `cache`) and `cacheAgeSeconds`
+- `?refresh` (the manual sync button) may bypass a normal snapshot, with a 15-second server cooldown preventing rapid sequential fan-out; every payload reports `servedFrom` (`origin` / `cache`) and `cacheAgeSeconds`
 - The client auto re-syncs visible tabs every 90 seconds, stays quiet while hidden, and keeps the last verified snapshot when a re-sync fails
 
-Farm remains a public page link because there is no side-effect-free JSON player read model. TAIYO remains a public game link; its ranking contract can be added to the same adapter after a stable public query is fixed.
+Farm links to the verified Vercel runtime while its custom domain remains pending. TAIYO remains visibly `NOT_DEPLOYED` because the deployment ledger records its runtime as private/403; it is not exposed as a playable public link.
+
+## 2.5 Implemented Player Passport (Discord identity + points ledger)
+
+The dashboard now has its own authenticated PlayerAccount:
+
+- `GET /api/auth/discord` starts the Discord authorization-code flow (scope `identify`); the callback exchanges the code server-side and issues a purpose-bound HMAC-signed, HttpOnly, SameSite=Lax session cookie. The random session ID must also resolve to an active D1 row, so logout and incident response can revoke it.
+- `GET /api/passport` is the read-only model for the signed-in player: identity, optional wallet, SGG point balance, and grant history. Anonymous or unconfigured environments return `connected: false` — endpoints fail closed.
+- Wallet linking is optional and EVM-based: `POST /api/wallet/challenge` persists a one-time challenge bound to session, canonical origin, and requested address; `POST /api/wallet/link` atomically consumes it, verifies `personal_sign` (viem), and enforces 1 Discord ↔ 1 wallet. Signatures prove address ownership only.
+- SGG points live in D1: `point_grants` is append-only with payload fingerprints, retry-stable idempotency keys, and actor attribution; ledger and `audit_events` writes are one D1 batch. Balances are derived sums — never stored or edited.
+- Grants are restricted to Discord IDs listed in `ADMIN_DISCORD_IDS`, require authentication within the previous 15 minutes, and are issued from the in-dashboard admin panel. Corrections are negative grants, not edits.
+- `APP_ORIGIN` allowlists OAuth and Wallet origins. `DISCORD_CLIENT_SECRET` and `SESSION_SECRET` are Sites secrets; `DISCORD_CLIENT_ID` and `ADMIN_DISCORD_IDS` are Sites runtime values. Logical D1 wiring remains only in `.openai/hosting.json`.
+
+This SGG point ledger is the dashboard's own participation-reward system. It remains separate from per-game `SGG_GAME_POINTS`, raw scores, rankings, rewards, SDT, and `SGG Token`.
 
 ## 3. Required player snapshot contract
 

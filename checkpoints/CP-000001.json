@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000001",
+  "state_version": 1,
+  "created_at": "2026-07-20T22:35:18+08:00",
+  "previous_checkpoint_id": null,
+  "summary": "Command-center scaffold created from a validated structured intake; implementation has not been claimed.",
+  "project_basis_sha256": "7259c798ea96c270795a7205c437461697ab0dea52a336562875535651550989",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 1,
+    "updated_at": "2026-07-20T22:35:18+08:00",
+    "updated_by": "new_sgg_project.py 1.0.0",
+    "status": "DRAFT",
+    "phase": "KICKOFF",
+    "current_objective": "公開ゲームハブ、稼働状態、ランキング、大会の空状態、コレクションの接続状態、コミュニティ、Discord Player Passport、任意Wallet連携、append-only SGGポイント台帳を一つのresponsive Web UIで安全に利用できるvertical slice。",
+    "last_summary": "Command-center scaffold created from a validated structured intake; implementation has not been claimed.",
+    "last_checkpoint_id": "CP-000001",
+    "last_checkpoint_path": "checkpoints/CP-000001.json",
+    "active_work": {
+      "work_id": "ACT-001",
+      "objective": "Confirm the structured intake, policy locks, scope, and first vertical slice against the project files.",
+      "status": "READY",
+      "acceptance_criteria": [
+        "PROJECT_PROFILE matches the intended objective, audience, scope, and success decision.",
+        "Policy locks and canonical character IDs resolve without drift.",
+        "Any discrepancy is recorded in DECISIONS.md and a new checkpoint."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-001",
+        "order": 1,
+        "action": "Confirm the structured intake, policy locks, scope, and first vertical slice against the project files.",
+        "owner": "SGG product owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-002",
+        "order": 2,
+        "action": "Confirm character source identity, derivative-use rights, and asset-level evidence.",
+        "owner": "SGG creative and release approver",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-RIGHTS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-003",
+        "order": 3,
+        "action": "Build and verify only the declared first vertical slice, then create a durable checkpoint.",
+        "owner": "SGG product owner",
+        "status": "READY",
+        "blocker_ids": []
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-RIGHTS-001",
+        "scope": "PUBLIC_CREATIVE",
+        "severity": "P0_AT_CREATIVE_PHASE",
+        "description": "Character derivative-use rights are PENDING.",
+        "owner": "SGG creative and release approver",
+        "status": "OPEN",
+        "resolution_required": "Record approved source asset IDs, hashes, rights scope, approver, and evidence before public derivative generation."
+      }
+    ],
+    "decisions_needed": [],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "publish, send, deploy, production change",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "57bb675a2afd3fe67f5ab7daff69b031353700e0cfcbf84e5d905007fb0123c5",
+        "reason": "Initial scaffold"
+      },
+      {
+        "path": "PROJECT_PROFILE.json",
+        "sha256": "c4585d7d5a8b11a1f3c8f0b2edd1b1ccf2a887b69149759d9a6ed9a1fa2ef826",
+        "reason": "Initial scaffold"
+      },
+      {
+        "path": "DECISIONS.md",
+        "sha256": "041e5456f1fc555d3311be78715afebec552500c1aac88c4ca48d3979b652f5f",
+        "reason": "Initial scaffold"
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-001",
+      "instruction": "Read the authoritative files and latest immutable checkpoint, verify the recorded fingerprints, then execute ACT-001 only.",
+      "do_not_assume": [
+        "Any unrecorded requirement or approval exists.",
+        "PENDING character rights permit public derivative generation.",
+        "Folder creation means implementation, publication, or deployment is complete."
+      ]
+    }
+  },
+  "resulting_state_sha256": "71d09d6263aac389bbbd2a7a56947ea75443d6a3d35bd94c67fe2ed1714dc845"
+}

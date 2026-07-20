@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000002",
+  "state_version": 2,
+  "created_at": "2026-07-20T22:48:58+08:00",
+  "previous_checkpoint_id": "CP-000001",
+  "summary": "Adopted the existing MY SGG repository in place under command-center durable state, preserved the dirty implementation, completed the Player Passport security vertical slice, aligned public game claims to the deployment ledger, and passed the full application, migration, lint, and production dependency checks without claiming public release.",
+  "project_basis_sha256": "b97e5b2ae1252f5b8d331c53945143db540057cbdf9cea6d63e6297c513fd4fe",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 2,
+    "updated_at": "2026-07-20T22:48:58+08:00",
+    "updated_by": "Codex MY SGG migration and security integrator",
+    "status": "REVIEW",
+    "phase": "MIGRATION_COMPLETE",
+    "current_objective": "Commit and push the exact validated source to the existing private Sites repository, deploy it owner-only with its D1 migrations, and record deployment and actual-screen evidence without expanding access.",
+    "last_summary": "Adopted the existing MY SGG repository in place under command-center durable state, preserved the dirty implementation, completed the Player Passport security vertical slice, aligned public game claims to the deployment ledger, and passed the full application, migration, lint, and production dependency checks without claiming public release.",
+    "last_checkpoint_id": "CP-000002",
+    "last_checkpoint_path": "checkpoints/CP-000002.json",
+    "active_work": {
+      "work_id": "ACT-004",
+      "objective": "Publish the exact validated source as an owner-only private Sites version and verify the deployed shell, access boundary, D1 migration result, and setup-required Passport state.",
+      "status": "READY",
+      "acceptance_criteria": [
+        "The commit contains the validated application, generated migrations, tests, durable state, and no local secret values.",
+        "The source branch is pushed to the existing private Sites repository and the saved version references the pushed commit SHA.",
+        "Sites confirms exactly one allowed owner, zero allowed groups, and a successful owner-only deployment.",
+        "The deployed page renders in the Codex in-app browser without replacing or closing any existing tab, and the changed MY SGG states are visible.",
+        "Discord authentication remains visibly setup-required until its missing credentials are explicitly configured."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-004",
+        "order": 1,
+        "action": "Commit, push, save, and deploy the exact validated source through Sites with owner-only access, then record deployment and browser evidence.",
+        "owner": "SGG product owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-005",
+        "order": 2,
+        "action": "Configure the approved Discord OAuth client ID, client secret, redirect URL, and administrator Discord IDs in Sites, then execute two-user and administrator isolation tests.",
+        "owner": "SGG identity administrator",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PASSPORT-CREDENTIALS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 3,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing personal progress or assets.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-007",
+        "order": 4,
+        "action": "Record asset-specific rights, character IDs and forms, crop QA, approver, time, version, and hashes for every release visual.",
+        "owner": "SGG creative and release approver",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-RIGHTS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 5,
+        "action": "Request and record separate authority before public/shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-PASSPORT-CREDENTIALS-001",
+        "scope": "DISCORD_PASSPORT_RUNTIME",
+        "severity": "P1",
+        "description": "The local and hosted configurations do not contain an approved Discord client ID, Discord client secret, or administrator Discord IDs; only a strong local session secret exists.",
+        "owner": "SGG identity administrator",
+        "status": "OPEN",
+        "resolution_required": "Create or select the approved Discord application, register the exact callback origin, configure its values through Sites without exposing them, and run real identity-isolation and administrator tests."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so personal progress and holdings remain intentionally unconnected.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting personal data."
+      },
+      {
+        "blocker_id": "BLK-RIGHTS-001",
+        "scope": "PUBLIC_CREATIVE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "The current dashboard hero is a candidate and the release icon, key visual, and social card do not have complete asset-specific rights, character, final-crop, approver, and hash evidence.",
+        "owner": "SGG creative and release approver",
+        "status": "OPEN",
+        "resolution_required": "Approve exact asset versions and hashes with source rights, visible character IDs and OTOMO forms, display and crop QA, reviewer, and timezone-aware approval time before public release."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Owner-only private deployment is authorized, but public/shared access, custom domain attachment, search indexing, extra viewers or groups, and public creative approval are not authorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release creative, identity, privacy, domain, rollback, and actual-screen gates before any audience expansion."
+      }
+    ],
+    "decisions_needed": [],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "COMMAND_CENTER_LINK.json",
+        "sha256": "fc565d15f2e863d4238e97d5f4b76417e8f864f53afd7b2427bb404f4eaaca58",
+        "reason": "Links the in-place project to command-center filesystem authority."
+      },
+      {
+        "path": "PROJECT_PROFILE.json",
+        "sha256": "de9fd6c7a5cdf131d6a4b476cb47ec906caf1fe60f4634f60695e22d7abede59",
+        "reason": "Records the canonical managed path and validated structured intake."
+      },
+      {
+        "path": "migration/MIGRATION_EVIDENCE.md",
+        "sha256": "92e11c010211b603a6952e32eab01b012d6124208c71c522a0af4348df1b8345",
+        "reason": "Preserves pre-migration Git, inode, dirty-file, secret, and external-state evidence."
+      },
+      {
+        "path": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json",
+        "sha256": "86d3173ee5ca8283193931135c59b5d13874f1b3f8546b5209714729bef5ab95",
+        "reason": "Records the exact owner-only commit, push, D1 migration, and private deploy authorization boundary."
+      },
+      {
+        "path": "app/Dashboard.tsx",
+        "sha256": "585e5b91d1a9cce556e07e45ad90209a2447c2c06521d253670b6830029fa730",
+        "reason": "Implements resilient Passport and admin states, retry-safe points, Wallet confirmation, and accessible notification behavior."
+      },
+      {
+        "path": "app/Dashboard.module.css",
+        "sha256": "f60dcf1d0fb2244519797f2a22dd7f2aff81bd034b1999cf039dddb4b6774ebe",
+        "reason": "Implements Player Passport visuals, safe areas, visible focus, and mobile form protections."
+      },
+      {
+        "path": "app/dashboard-data.ts",
+        "sha256": "14abaf5349a6b9e2fcb5e8ba8cf686185f40a8bd3d2e22c44097fb8fdba7df2e",
+        "reason": "Aligns TAIYO and Farm claims and links with the authoritative deployment ledger."
+      },
+      {
+        "path": "server/auth.ts",
+        "sha256": "ddf906b02a1366781c26d682fbaca1616b86ea241e2f0fb8f80a9cfa043c6b4f",
+        "reason": "Implements purpose-bound tokens, canonical origins, revocable sessions, strict configuration, and recent-admin-auth checks."
+      },
+      {
+        "path": "server/passport-db.ts",
+        "sha256": "8d2ef1f0ba330ad76571cd422cab758a2b6b0723e10aeec9333bd8439c17f0df",
+        "reason": "Implements atomic audited D1 operations and one-time Wallet challenge consumption."
+      },
+      {
+        "path": "db/schema.ts",
+        "sha256": "3d413d50aa42f3299cd343d060f7f9ef68f8eee95d81ad586f5abcf0a894fe7e",
+        "reason": "Adds session and challenge state, point fingerprints, foreign keys, and query indexes."
+      },
+      {
+        "path": "drizzle/0001_majestic_boomer.sql",
+        "sha256": "0cecfd06265ad9e84e3507868163e4f12b9ee2abcbe225caa544a76b79429dff",
+        "reason": "Stores the generated migration for the hardened Passport schema."
+      },
+      {
+        "path": "worker/index.ts",
+        "sha256": "a5d7a76c37478b3fb907228c0d2ad7f71fe11f46e8f1b7b9ae68d4369b6f4ab4",
+        "reason": "Blocks degraded-image open redirects and adds global browser security headers."
+      },
+      {
+        "path": "app/api/live/route.ts",
+        "sha256": "c43a8b279b10414e375853bba82a69b69df9c5714ff6ff7f1505f190334fb7af",
+        "reason": "Adds a manual refresh cooldown and uses the verified Farm runtime."
+      },
+      {
+        "path": "package.json",
+        "sha256": "eafdfd50a945f5f08835cfd6ebb0337a002cd0b311b7081daf0f3cb430016526",
+        "reason": "Removes direct Wrangler deployment, broadens tests, adds migration checks, and pins patched production transitive dependencies."
+      },
+      {
+        "path": "tests/passport-security.test.mjs",
+        "sha256": "d689876cbfbe8f1eba6a6532a297bf2fbe0a21fa15fdc1519c19e630794403d4",
+        "reason": "Verifies token purpose, secrets, origin, Wallet binding, grant fingerprints, races, and recent administrator authentication."
+      },
+      {
+        "path": "tests/dashboard-resilience.test.mjs",
+        "sha256": "efd06d817046d4076d1a8bcf894dd1abf61601c6dd40ce31049fb3667bc8907b",
+        "reason": "Verifies account state separation, retry safety, confirmation, focus, and safe-area guards."
+      },
+      {
+        "path": "tests/rendered-html.test.mjs",
+        "sha256": "ea513d6f236599b41d5dfba58442d8659f57e864c6b046bb5327fa846436bddd",
+        "reason": "Verifies rendered truth, security headers, image redirect rejection, publication alignment, and anonymous fail-closed behavior."
+      },
+      {
+        "path": "docs/PLAYER_OS_ARCHITECTURE.md",
+        "sha256": "c28bcd71429b4756731f7e89e616fd6d7986f431add9a7f7b7c28cb25d9cde90",
+        "reason": "Documents the implemented trust, D1, Wallet, points, and deployment boundaries."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-004",
+      "instruction": "Read the profile, CP-000002, validation report, private-deploy authorization, migration evidence, Sites access policy, and exact Git diff; then commit and deploy only the validated owner-only build and record the result.",
+      "do_not_assume": [
+        "Private deployment grants public/shared access, a custom domain, search indexing, or extra viewers and groups.",
+        "Candidate or reference media is approved public creative.",
+        "Missing Discord credentials may be invented, discovered in another project, or replaced with OpenAI identity.",
+        "An unconnected game bridge contains zero progress, assets, points, or rewards.",
+        "A successful build proves deployed browser rendering or a working Discord callback."
+      ]
+    }
+  },
+  "resulting_state_sha256": "8d1c9f29dd00064ff7363fc3c7a5f91e2a1ec568a9e591d9747e5bf55410cb11"
+}

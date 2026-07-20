@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_VALIDATION_REPORT",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "state_version": 6,
+  "checkpoint_id": "CP-000006",
+  "recorded_at": "2026-07-20T22:54:41+08:00",
+  "mode": "kickoff",
+  "status": "PASS",
+  "readiness_score": 100,
+  "errors": [],
+  "command": [
+    "python3",
+    "../SGG　司令塔/launches/tools/validate_sgg_project.py",
+    ".",
+    "--kickoff",
+    "--record"
+  ],
+  "fingerprints": {
+    "PROJECT_PROFILE.json": "de9fd6c7a5cdf131d6a4b476cb47ec906caf1fe60f4634f60695e22d7abede59",
+    "PROJECT_STATE.json": "4d2a43130b14b6c7ceee3cdeca3c92a191eb77445017e7f22e7f96bbf2f48e9b",
+    "COMMAND_CENTER_LINK.json": "fc565d15f2e863d4238e97d5f4b76417e8f864f53afd7b2427bb404f4eaaca58",
+    "assets/ASSET_MANIFEST.csv": "d44cdb2b48abf683425048a3bba756cc9b1c5647606e8c1f5347c20380d56d84",
+    "checkpoints/CP-000006.json": "1a28729c0d74faac94d67016f9fa41dd5c1171832aa5b2651658e988f2aa5fb3",
+    "__project_basis__": "8dd845952e70c91facf38efc3267466ebbaf37e9d2b146030deabd864d0a2c5b"
+  }
+}

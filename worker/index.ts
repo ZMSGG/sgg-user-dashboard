@@ -32,12 +32,56 @@ interface ExecutionContext {
  */
 function serveUnoptimizedImage(url: URL): Response {
   const source = url.searchParams.get("url") ?? "";
-  if (!source.startsWith("/") || source.startsWith("//")) {
+  if (
+    !source.startsWith("/") ||
+    source.startsWith("//") ||
+    source.includes("\\") ||
+    /%5c/i.test(source) ||
+    /[\u0000-\u001f\u007f]/.test(source)
+  ) {
     return new Response("Unsupported image source", { status: 400 });
   }
+
+  const target = new URL(source, url.origin);
+  if (target.origin !== url.origin || !target.pathname.startsWith("/")) {
+    return new Response("Unsupported image source", { status: 400 });
+  }
+
   return new Response(null, {
     status: 302,
-    headers: { location: source, "cache-control": "no-store" },
+    headers: {
+      location: `${target.pathname}${target.search}`,
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+    },
+  });
+}
+
+function withSecurityHeaders(request: Request, response: Response): Response {
+  const headers = new Headers(response.headers);
+  headers.set("Content-Security-Policy", [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "connect-src 'self'",
+    "font-src 'self' data:",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "img-src 'self' data: https://cdn.discordapp.com",
+    "object-src 'none'",
+    "script-src 'self' 'unsafe-inline'",
+    "style-src 'self' 'unsafe-inline'",
+  ].join("; "));
+  headers.set("Permissions-Policy", "camera=(), geolocation=(), microphone=(), payment=()");
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("X-Frame-Options", "DENY");
+  if (new URL(request.url).protocol === "https:") {
+    headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
   });
 }
 
@@ -47,18 +91,19 @@ const worker = {
 
     if (url.pathname === "/_vinext/image") {
       const { ASSETS: assets, IMAGES: images } = env;
-      if (!assets || !images) return serveUnoptimizedImage(url);
+      if (!assets || !images) return withSecurityHeaders(request, serveUnoptimizedImage(url));
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
-      return handleImageOptimization(request, {
+      const response = await handleImageOptimization(request, {
         fetchAsset: (path) => assets.fetch(new Request(new URL(path, request.url))),
         transformImage: async (body, { width, format, quality }) => {
           const result = await images.input(body).transform(width > 0 ? { width } : {}).output({ format, quality });
           return result.response();
         },
       }, allowedWidths);
+      return withSecurityHeaders(request, response);
     }
 
-    return handler.fetch(request, env, ctx);
+    return withSecurityHeaders(request, await handler.fetch(request, env, ctx));
   },
 };
 

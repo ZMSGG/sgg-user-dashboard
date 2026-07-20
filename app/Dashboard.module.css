@@ -3439,3 +3439,431 @@
     animation: none;
   }
 }
+
+/* ---- Player Passport (Discord / Wallet / SGG points) ---- */
+
+.profileAvatar {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(230, 196, 111, 0.45);
+  border-radius: 4px 10px 4px 10px;
+  object-fit: cover;
+}
+
+.passportAvatar {
+  width: 106px;
+  height: 106px;
+  border: 1px solid rgba(230, 196, 111, 0.45);
+  border-radius: 4px 30px 4px 30px;
+  box-shadow: 0 20px 50px rgba(230, 196, 111, 0.12);
+  object-fit: cover;
+}
+
+.passportActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.passportGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 11px;
+}
+
+.pointsCard,
+.walletCard,
+.adminPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(20px, 2.6vw, 30px);
+  border: 1px solid rgba(var(--tone-rgb), 0.22);
+  border-radius: 4px 24px 4px 24px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(var(--tone-rgb), 0.08), transparent 38%),
+    var(--surface-solid);
+}
+
+.pointsHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pointsHead p {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.pointsHead h3 {
+  margin-top: 5px;
+  color: #ece7e0;
+  font-size: 15px;
+}
+
+.pointsBalance {
+  color: var(--gold-pale);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.pointsBalance small {
+  margin-left: 8px;
+  color: #817c88;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.grantList {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  list-style: none;
+}
+
+.grantList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 2px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.grantList li:last-child {
+  border-bottom: 0;
+}
+
+.grantList li > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.grantList strong {
+  color: #d9d4dc;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.grantList small {
+  overflow: hidden;
+  color: #74707c;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grantList b {
+  color: var(--green);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 13px;
+}
+
+.grantList b[data-negative] {
+  color: var(--coral);
+}
+
+.grantEmpty {
+  color: #74707c;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.walletCard p {
+  color: #817c88;
+  font-size: 10px;
+  line-height: 1.75;
+}
+
+.walletCard .primaryAction,
+.grantForm .primaryAction {
+  justify-content: center;
+}
+
+.walletAddress {
+  overflow: hidden;
+  padding: 10px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 4px 12px 4px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--cyan);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grantForm {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: 11px;
+}
+
+.grantForm label {
+  display: grid;
+  gap: 6px;
+}
+
+.grantForm label span {
+  color: #817c88;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.grantForm input {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--hairline-bright);
+  border-radius: 4px 10px 4px 10px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.grantForm input:focus-visible {
+  border-color: rgba(var(--tone-rgb), 0.5);
+  outline: none;
+}
+
+.grantNote {
+  grid-column: span 2;
+}
+
+.adminRoster p {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.adminRoster ul {
+  display: grid;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adminRoster li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.adminRoster li:last-child {
+  border-bottom: 0;
+}
+
+.adminRoster li > div:first-child {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.adminRoster strong {
+  color: #d9d4dc;
+  font-size: 12px;
+}
+
+.adminRoster small {
+  overflow: hidden;
+  color: #74707c;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.adminRosterRight {
+  display: grid;
+  flex-shrink: 0;
+  justify-items: end;
+  gap: 4px;
+}
+
+.adminRosterRight b {
+  color: var(--gold);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .passportGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grantForm {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grantNote {
+    grid-column: auto;
+  }
+}
+
+/* ---- Resilient account states + accessibility baseline ---- */
+
+.resilienceNotice,
+.inlineRetry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 120, 109, 0.3);
+  border-radius: 4px 14px 4px 14px;
+  background: rgba(255, 120, 109, 0.055);
+}
+
+.resilienceNotice > div {
+  display: grid;
+  gap: 4px;
+}
+
+.resilienceNotice strong {
+  color: #f2d5d2;
+  font-size: 12px;
+}
+
+.resilienceNotice p,
+.inlineRetry span {
+  color: #9b8588;
+  font-size: 10px;
+  line-height: 1.65;
+}
+
+.resilienceNotice button,
+.inlineRetry button {
+  min-height: 44px;
+  flex: 0 0 auto;
+}
+
+.inlineRetry {
+  margin-top: 10px;
+  padding-block: 10px;
+}
+
+.notificationPanel:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+.app :is(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+.grantForm input {
+  min-height: 44px;
+}
+
+/* Keep controls and content clear of iOS notches without flattening the
+   existing responsive spacing scale. */
+.skipLink {
+  top: calc(12px + env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+}
+
+.sidebar {
+  padding-top: calc(27px + env(safe-area-inset-top));
+  padding-left: max(18px, env(safe-area-inset-left));
+}
+
+.topbar {
+  padding-top: calc(12px + env(safe-area-inset-top));
+  padding-right: max(clamp(20px, 2.5vw, 42px), env(safe-area-inset-right));
+  padding-left: max(clamp(20px, 2.5vw, 42px), env(safe-area-inset-left));
+}
+
+.content {
+  padding-right: max(clamp(20px, 3.1vw, 54px), env(safe-area-inset-right));
+  padding-left: max(clamp(20px, 3.1vw, 54px), env(safe-area-inset-left));
+}
+
+.toast {
+  right: max(24px, env(safe-area-inset-right));
+}
+
+@media (max-width: 1040px) {
+  .topbar {
+    padding-top: calc(10px + env(safe-area-inset-top));
+    padding-right: max(18px, env(safe-area-inset-right));
+    padding-left: max(18px, env(safe-area-inset-left));
+  }
+
+  .content {
+    padding-right: max(22px, env(safe-area-inset-right));
+    padding-left: max(22px, env(safe-area-inset-left));
+  }
+
+  .toast {
+    right: max(16px, env(safe-area-inset-right));
+  }
+}
+
+@media (max-width: 900px) {
+  .searchBox input,
+  .grantForm input {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 780px) {
+  .topbar {
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-left: max(12px, env(safe-area-inset-left));
+  }
+
+  .content {
+    padding-right: max(14px, env(safe-area-inset-right));
+    padding-left: max(14px, env(safe-area-inset-left));
+  }
+
+  .resilienceNotice,
+  .inlineRetry {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding-top: calc(7px + env(safe-area-inset-top));
+    padding-right: max(9px, env(safe-area-inset-right));
+    padding-left: max(9px, env(safe-area-inset-left));
+  }
+
+  .content {
+    padding-right: max(10px, env(safe-area-inset-right));
+    padding-left: max(10px, env(safe-area-inset-left));
+  }
+
+  .notificationPanel {
+    right: max(8px, env(safe-area-inset-right));
+    left: max(8px, env(safe-area-inset-left));
+    width: auto;
+  }
+
+  .toast {
+    right: max(8px, env(safe-area-inset-right));
+  }
+}

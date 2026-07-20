@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "authorizationId": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+  "projectId": "PRJ-202607-sgg-user-dashboard",
+  "authorizedBy": "SGG project owner",
+  "authorizedAt": "2026-07-20T22:47:24+08:00",
+  "requestEvidence": "コミットして、デプロイして、プッシュして、もちろんプライベートで",
+  "authorizedActions": [
+    {
+      "action": "git commit and push",
+      "target": "existing private Sites source repository",
+      "visibility": "PRIVATE"
+    },
+    {
+      "action": "production deployment",
+      "target": "existing MY SGG Sites project",
+      "visibility": "OWNER_ONLY",
+      "allowedUsers": "current project owner only",
+      "allowedGroups": []
+    },
+    {
+      "action": "apply packaged D1 migrations",
+      "target": "the logical DB binding declared by the exact validated Sites build",
+      "visibility": "OWNER_ONLY"
+    }
+  ],
+  "artifactScope": "The exact validated MY SGG Player OS source, generated D1 migrations, and owner-only private deployment build current at execution time.",
+  "notAuthorized": [
+    "public or shared deployment",
+    "public source repository visibility",
+    "adding viewers or groups",
+    "custom domains",
+    "public approval of candidate or reference creative",
+    "standalone asset redistribution",
+    "inventing or retrieving missing Discord credentials"
+  ],
+  "conditions": [
+    "Run typecheck, build, route tests, lint, migration validation, production dependency audit, and durable-state validation before saving the Sites version.",
+    "Use Sites private deployment only when owner-only access is verified and no groups are allowed.",
+    "Keep Discord Passport visibly in setup-required state until its client ID and secret are explicitly configured.",
+    "Record the resulting commit, push, environment revision, version, deployment, and access evidence in a new durable checkpoint."
+  ],
+  "status": "GRANTED"
+}

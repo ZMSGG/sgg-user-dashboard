@@ -1,17 +1,33 @@
-<!-- SGG_DURABLE_STATE_REQUIRED -->
-> **MIGRATION_REQUIRED — filesystem state gate:** チャット、context window、会話要約、モデルmemoryは正本ではない。現在このfolderには司令塔管理の `PROJECT_STATE.json`、不変checkpoint、鮮度確認済み `VALIDATION_REPORT.json` がないため、履歴を上書きせずにdurable-state移行を先に完了する。移行前は引き継ぎ可能・完了・公開可能と報告しない。
+# SGG project instructions
 
-# SGGビジュアルクリエイティブ指示
+This file applies to this folder and everything below it.
 
-`{SGG_COMMAND_CENTER}` は固定絶対pathやshell変数ではない。現在地から親folderを辿り、`.sgg-command-center.json` を持つ最寄りのfolderを司令塔rootとして読み替える。見つからなければ制作・承認・公開を止める。
+## Required read order
 
-この指示は、このフォルダと配下のすべてに適用します。
+1. `COMMAND_CENTER_LINK.json`
+2. `PROJECT_PROFILE.json`
+3. `PROJECT_STATE.json`
+4. the file named by `PROJECT_STATE.json:last_checkpoint_path`
+5. `VALIDATION_REPORT.json`
+6. `START_HERE.md`
+7. `WORLD_AND_CHARACTER_BRIEF.md`
+8. `DECISIONS.md`
 
-作業前に、正本 `{SGG_COMMAND_CENTER}/standards/SGG_CREATIVE_CHARACTER_INCLUSION_V1.md` を必ず読み、従ってください。正本が見つからない、または適用判断ができない場合は、制作・承認・公開を止めて不足を報告します。
+Resolve the command center with `COMMAND_CENTER_LINK.json`; do not embed or rely on a personal absolute path. Follow `SGG_ZERO_TO_ONE_GATEWAY_V1`, `SGG_DURABLE_PROJECT_STATE_V1`, `SGG_CREATIVE_CHARACTER_INCLUSION_V1`, and `OTOMO_FORM_BALANCE_V1`. If the command center, state checkpoint, policy lock, or canon cannot be resolved, stop and report the missing source.
 
-- 新規作成または改訂するSGGの各ビジュアルcreative出力には、次のいずれかを最終cropでも識別できる大きさで含めます: 正規かつ用途承認済みのGODSを1柱以上、OTOMOを1体以上、またはその両方。
-- 文字、ロゴ、キャラクター名、metadataだけの記載、極小表示、背景への隠蔽では要件を満たしません。
-- private原画を公開物へ直貼りしません。canon、出典、権利範囲、用途別の公開承認を確認した素材または承認済み派生表現だけを使います。
-- OTOMOを使う場合は `SPIRIT / INCARNATE / DOJI` のformを明記し、`OTOMO_FORM_BALANCE_V1.md` の配分・監査規則に従います。
-- promptとbriefにも本要件を明記し、成果物metadataへキャラクターID、種別、OTOMO form（該当時）、参照元、権利・承認状態を記録します。
-- 未達の出力は承認、公開、完成扱いにしません。既存の非準拠出力は、再利用・改訂・再公開するときに本指示へ適合させ、必要な再承認を行います。
+The chat, context window, conversation summary, and model memory are disposable interfaces and are never project authority. Before the first mutation, reconstruct the task from the filesystem state. After every material decision, milestone, blocker change, or work stoppage, create a new immutable checkpoint with `checkpoint_project.py`, then run `validate_sgg_project.py --record`. Do not end changed work with unrecorded state.
+
+## Non-negotiable creative rule
+
+- Every new or revised SGG visual output must visibly contain at least one canonical, use-authorized GODS character, at least one canonical, use-authorized OTOMO, or both.
+- A name, logo, metadata, tiny placement, crop loss, or heavy concealment does not satisfy the rule.
+- Record character family, canonical ID, reference, OTOMO form, rights, final-crop visual check, reviewer, timezone-aware review time, version, and final hash.
+- Do not paste private source art into public work. Do not generate or approve public derivatives while rights are `PENDING`.
+- Do not mark a non-compliant visual approved, complete, deliverable, or publishable.
+
+## Canon and delivery boundaries
+
+- Do not invent official ages, histories, abilities, relationships, enemies, religion, token terms, reward values, or season dates.
+- Keep project-only assumptions separate from verified canon in `DECISIONS.md`.
+- Creating this folder does not authorize publishing, sending, deploying, or production changes.
+- Start with the vertical slice in `EXPERIENCE_BLUEPRINT.md`; do not claim unimplemented work is complete.

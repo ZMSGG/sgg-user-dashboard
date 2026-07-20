@@ -1,4 +1,99 @@
-// Intentionally empty by default.
-// Add Drizzle tables here when the site actually needs a database.
-// See examples/d1/db/schema.ts for an opt-in example.
-export {};
+import { sql } from "drizzle-orm";
+import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+
+/**
+ * Player OS persistence. Rules from docs/PLAYER_OS_ARCHITECTURE.md:
+ * Discord user ID is the only identity key, wallets are optional and
+ * 1:1 per player, and every point movement is an append-only ledger row
+ * written through an authenticated server session with an idempotency key.
+ */
+
+export const players = sqliteTable("players", {
+  discordId: text("discord_id").primaryKey(),
+  discordUsername: text("discord_username").notNull(),
+  discordGlobalName: text("discord_global_name"),
+  discordAvatarHash: text("discord_avatar_hash"),
+  walletAddress: text("wallet_address"),
+  walletLinkedAt: text("wallet_linked_at"),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  lastLoginAt: text("last_login_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+  uniqueIndex("players_wallet_address_unique")
+    .on(table.walletAddress)
+    .where(sql`wallet_address IS NOT NULL`),
+  index("players_last_login_at_idx").on(table.lastLoginAt),
+]);
+
+/**
+ * Server-side session registry. The signed browser cookie carries a random
+ * session id, while only its SHA-256 digest is stored here. A valid signature
+ * is therefore necessary but not sufficient: the row must also be active.
+ */
+export const authSessions = sqliteTable("auth_sessions", {
+  id: text("id").primaryKey(),
+  discordId: text("discord_id")
+    .notNull()
+    .references(() => players.discordId, { onDelete: "cascade", onUpdate: "cascade" }),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  expiresAt: integer("expires_at").notNull(),
+  revokedAt: text("revoked_at"),
+}, (table) => [
+  index("auth_sessions_discord_id_idx").on(table.discordId),
+  index("auth_sessions_expires_at_idx").on(table.expiresAt),
+]);
+
+/**
+ * Wallet challenges are persisted so they can be atomically consumed once.
+ * The address and canonical origin are part of both this row and the signed
+ * browser token, preventing substitution after the player has signed.
+ */
+export const walletChallenges = sqliteTable("wallet_challenges", {
+  id: text("id").primaryKey(),
+  sessionId: text("session_id")
+    .notNull()
+    .references(() => authSessions.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  discordId: text("discord_id")
+    .notNull()
+    .references(() => players.discordId, { onDelete: "cascade", onUpdate: "cascade" }),
+  address: text("address").notNull(),
+  nonce: text("nonce").notNull(),
+  origin: text("origin").notNull(),
+  issuedAt: text("issued_at").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+  consumedAt: text("consumed_at"),
+}, (table) => [
+  index("wallet_challenges_session_id_idx").on(table.sessionId),
+  index("wallet_challenges_discord_id_idx").on(table.discordId),
+  index("wallet_challenges_expires_at_idx").on(table.expiresAt),
+]);
+
+export const pointGrants = sqliteTable("point_grants", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  discordId: text("discord_id")
+    .notNull()
+    .references(() => players.discordId, { onDelete: "restrict", onUpdate: "cascade" }),
+  amount: integer("amount").notNull(),
+  reasonCode: text("reason_code").notNull(),
+  note: text("note"),
+  grantedBy: text("granted_by")
+    .notNull()
+    .references(() => players.discordId, { onDelete: "restrict", onUpdate: "cascade" }),
+  idempotencyKey: text("idempotency_key").notNull().unique(),
+  requestFingerprint: text("request_fingerprint").notNull().default(""),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+  index("point_grants_discord_created_idx").on(table.discordId, table.createdAt),
+  index("point_grants_granted_by_created_idx").on(table.grantedBy, table.createdAt),
+]);
+
+export const auditEvents = sqliteTable("audit_events", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  actor: text("actor").notNull(),
+  action: text("action").notNull(),
+  subject: text("subject").notNull(),
+  detail: text("detail"),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+  index("audit_events_actor_created_idx").on(table.actor, table.createdAt),
+  index("audit_events_subject_created_idx").on(table.subject, table.createdAt),
+]);

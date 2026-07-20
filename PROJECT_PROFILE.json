@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "title": "MY SGG — Player OS",
+  "slug": "sgg-user-dashboard",
+  "folder_name": "sgg-user-dashboard",
+  "project_type": "ui",
+  "lifecycle": "IMPLEMENTATION",
+  "owner": "SGG product owner",
+  "approver": "SGG creative and release approver",
+  "concept": "新作ゲーム、開催中の大会、自分のアセット、ランキング、コミュニティ、本人確認とSGGポイントを一つに統合し、プレイヤーがSGGを楽しむための行動をここだけで完結させるユーザー向けPlayer OS。",
+  "audience": "SEVENGODS Gamesを遊び、競い、集め、コミュニティへ参加する既存および新規プレイヤー。",
+  "problem": "ゲーム、稼働状態、大会、ランキング、保有情報、本人確認、ポイント、公式情報が別々の場所に分散し、プレイヤーが次に何を楽しめるか判断しづらい。",
+  "value_proposition": "公開確認済み情報と本人だけのPlayer Passportを安全に分離しながら、SGGで遊ぶための発見、参加、確認、管理を一つのresponsive dashboardへ統合する。",
+  "first_release": "公開ゲームハブ、稼働状態、ランキング、大会の空状態、コレクションの接続状態、コミュニティ、Discord Player Passport、任意Wallet連携、append-only SGGポイント台帳を一つのresponsive Web UIで安全に利用できるvertical slice。",
+  "primary_action": "現在利用可能なゲームまたは大会を確認して参加し、必要な場合だけDiscord Player Passportへ接続する。",
+  "scope": {
+    "in": [
+      "公開確認済みゲーム、稼働状態、ランキング、公式情報を一画面へ集約する",
+      "Discord user IDを正式identityとするPlayer Passportを実装する",
+      "任意Walletの署名連携と1 Discord対1 Walletを実装する",
+      "管理者だけが操作できるappend-onlyかつ冪等なSGGポイント台帳を実装する",
+      "loading、empty、error、success、未接続、準備中を区別する",
+      "mobile、keyboard、focus、contrast、safe areaへ対応する"
+    ],
+    "out": [
+      "明示承認のない公開、deploy、production DB変更、外部送信",
+      "各ゲームの未実装player bridgeを接続済みと表現すること",
+      "存在しない大会、保有asset、reward、ranking、ユーザー数を捏造すること",
+      "raw gameplay score、ranking、SGG_GAME_POINTS、外部reward、SGG Tokenを混同すること",
+      "未承認creative、private原画、secret、個人データをpublic bundleへ含めること"
+    ]
+  },
+  "time_horizon": "77",
+  "success": {
+    "metric": "主要Player OS導線の完了率とtruthful-state coverage",
+    "target": "6つの主要viewとPassport認証・Wallet・ポイント導線でloading、empty、error、successを100%区別し、公開情報に出典状態を表示する",
+    "guardrail": "架空LIVE値0件、identity越境0件、重複ポイント付与0件、secret漏えい0件、character非準拠visual 0件",
+    "decision_date": "2026-07-27"
+  },
+  "character_plan": {
+    "family": "OTOMO",
+    "gods": [],
+    "otomo": [
+      "taimaru"
+    ],
+    "otomo_forms": {
+      "taimaru": "DOJI"
+    },
+    "reference": "SGG createve/canon/characters.json",
+    "rights_status": "PENDING",
+    "rights_evidence": ""
+  },
+  "vertical_slice": "公開hub → live状態とranking → 大会とcollectionのtruthful state → Discord Passport → 任意Wallet → append-only points → mobile and security review",
+  "tone": [
+    "神話的",
+    "プレイヤー中心",
+    "高密度だが明快",
+    "truthful",
+    "mobile first"
+  ],
+  "must_include": [
+    "最終cropでも識別できる正規OTOMO visualとform metadata",
+    "公開情報と個人情報の明確な境界",
+    "LIVE、SNAPSHOT、DEMO、PREPARING、UNKNOWNの明示",
+    "大会または保有情報が無い場合の正直なempty state",
+    "keyboard、focus、contrast、mobile safe area対応"
+  ],
+  "must_avoid": [
+    "generic dashboardの量産",
+    "未承認creativeの公開",
+    "未接続値を0として表示すること",
+    "Wallet必須化または署名を送金承認と誤認させること",
+    "未確定Token、報酬、release日程、保有assetの追加"
+  ],
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "created_at": "2026-07-20T22:35:18+08:00",
+  "provenance": {
+    "command_center_id": "SGG-COMMAND-CENTER",
+    "protocol_id": "SGG_ZERO_TO_ONE_GATEWAY_V1",
+    "generator": "launches/tools/new_sgg_project.py",
+    "generator_version": "1.0.0",
+    "generated_at": "2026-07-20T22:35:18+08:00",
+    "project_path": "../sgg-user-dashboard",
+    "command_center_relative": "../SGG　司令塔"
+  },
+  "readiness": {
+    "minimum": 80,
+    "score": 100,
+    "breakdown": {
+      "concept": 10,
+      "audience": 10,
+      "problem": 5,
+      "value_proposition": 10,
+      "first_release": 10,
+      "primary_action": 5,
+      "scope_in": 5,
+      "scope_out": 5,
+      "time_horizon": 5,
+      "metric": 4,
+      "target": 4,
+      "guardrail": 4,
+      "decision_date": 3,
+      "character_plan": 15,
+      "owner": 2,
+      "approver": 3
+    },
+    "blockers": []
+  }
+}

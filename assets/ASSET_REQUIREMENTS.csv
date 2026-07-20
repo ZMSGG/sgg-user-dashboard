@@ -1,0 +1,4 @@
+role,minimum_dimensions,required_for_launch,notes
+square-icon,512x512,yes,GODSまたはOTOMOを含め円形cropと32px・64px表示で視認性を確認する
+key-visual,1600x900,yes,GODSまたはOTOMOを含め16対9前後のmobile cropで視認性を確認する
+social-og,1200x630,yes,GODSまたはOTOMOを含めOGPとSNS previewで文字・safe area・視認性を確認する

@@ -26,11 +26,14 @@ test("server-renders the truthful SGG Player OS", async () => {
   assert.match(html, /QUEST 77/);
   assert.match(html, /FARM 77/);
   assert.match(html, /ORACLE 7/);
-  assert.match(html, /TAIYO/);
   assert.match(html, /公開確認済みのゲーム・ランキング・投稿だけを表示/);
   assert.match(html, /name="robots" content="noindex, nofollow"/);
   assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/og\.png"/);
   assert.match(html, /name="twitter:image" content="http:\/\/localhost(?::3000)?\/og\.png"/);
+  assert.match(response.headers.get("content-security-policy") ?? "", /frame-ancestors 'none'/);
+  assert.equal(response.headers.get("x-frame-options"), "DENY");
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+  assert.equal(response.headers.get("referrer-policy"), "strict-origin-when-cross-origin");
 });
 
 test("does not ship fabricated player, asset, tournament, or release data", async () => {
@@ -131,6 +134,8 @@ test("shares one live contract and keeps re-sync failures non-destructive", asyn
   assert.match(route, /SNAPSHOT_TTL_MS/);
   assert.match(route, /inFlightRead/);
   assert.match(route, /searchParams\.has\("refresh"\)/);
+  assert.match(route, /MANUAL_REFRESH_COOLDOWN_MS/);
+  assert.match(route, /manualRefreshCoolingDown/);
 
   // A failed re-sync keeps the last verified snapshot instead of wiping it.
   assert.doesNotMatch(dashboard, /setLiveData\(emptyLiveData\)/);
@@ -139,6 +144,44 @@ test("shares one live contract and keeps re-sync failures non-destructive", asyn
   // Background freshness: visible tabs re-sync, hidden tabs stay quiet.
   assert.match(dashboard, /visibilitychange/);
   assert.match(dashboard, /AUTO_SYNC_INTERVAL_MS/);
+});
+
+test("passport endpoints fail closed and identity never comes from the browser", async () => {
+  const [passportRoute, callbackRoute, walletLink, adminGrants, authLib] = await Promise.all([
+    readFile(new URL("../app/api/passport/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/discord/callback/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/wallet/link/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/admin/grants/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../server/auth.ts", import.meta.url), "utf8"),
+  ]);
+
+  // Session is an HMAC-signed HttpOnly cookie; the Discord ID comes from it.
+  assert.match(authLib, /HttpOnly/);
+  assert.match(authLib, /SameSite=Lax/);
+  assert.match(authLib, /crypto\.subtle\.verify/);
+  assert.match(passportRoute, /readSession/);
+  assert.doesNotMatch(passportRoute, /searchParams\.get\("discordId"\)/);
+
+  // OAuth callback validates state and exchanges the code server-side.
+  assert.match(callbackRoute, /stateClaims\.state !== state/);
+  assert.match(callbackRoute, /discord\.com\/api\/oauth2\/token/);
+
+  // Wallet link requires a signature over a server-issued challenge.
+  assert.match(walletLink, /verifyMessage/);
+  assert.match(walletLink, /WALLET_TAKEN/);
+
+  // Grants are admin-only, idempotent, append-only.
+  assert.match(adminGrants, /await adminDiscordIds\(\)\)\.has\(session\.sub\)/);
+  assert.match(adminGrants, /idempotencyKey/);
+  assert.doesNotMatch(adminGrants, /\.delete\(|\.update\(/);
+});
+
+test("serves an anonymous passport read model without bindings", async () => {
+  const response = await render("/api/passport");
+  assert.equal(response.status, 200);
+  const payload = JSON.parse(await response.text());
+  assert.equal(payload.connected, false);
+  assert.equal(payload.authConfigured, false);
 });
 
 test("degrades image optimization gracefully without Cloudflare bindings", async () => {
@@ -159,6 +202,25 @@ test("degrades image optimization gracefully without Cloudflare bindings", async
     { waitUntil() {}, passThroughOnException() {} },
   );
   assert.equal(rejected.status, 400);
+
+  for (const source of ["/\\\\evil.example/x.png", "/%5C%5Cevil.example/x.png"]) {
+    const encoded = encodeURIComponent(source);
+    const backslashRedirect = await worker.fetch(
+      new Request(`http://localhost/_vinext/image?url=${encoded}`),
+      {},
+      { waitUntil() {}, passThroughOnException() {} },
+    );
+    assert.equal(backslashRedirect.status, 400);
+    assert.equal(backslashRedirect.headers.get("location"), null);
+  }
+});
+
+test("keeps publication claims aligned with the deployment registry", async () => {
+  const data = await readFile(new URL("../app/dashboard-data.ts", import.meta.url), "utf8");
+  assert.match(data, /otomo-farm-77\.vercel\.app/);
+  assert.match(data, /PRIVATE RUNTIME · PUBLIC RELEASE PENDING/);
+  assert.match(data, /id: "taiyo-action-rpg"[\s\S]*?releaseState: "NOT_DEPLOYED"/);
+  assert.doesNotMatch(data, /id: "taiyo-action-rpg"[\s\S]*?releaseLabel: "PUBLIC RUNTIME/);
 });
 
 test("ships the finished visual surface and retires legacy demo art", async () => {

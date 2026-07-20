@@ -7,6 +7,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
@@ -27,12 +28,14 @@ import {
   type ReleaseState,
 } from "./dashboard-data";
 import { emptyLiveData, type LiveData, type LiveRanking } from "./live-contract";
+import type { AdminPlayerRow, PassportData } from "./passport-contract";
 import styles from "./Dashboard.module.css";
 
 type View = "home" | "games" | "arena" | "collection" | "mysgg" | "community";
 type GameFilter = "ALL" | ReleaseState;
 type FormFilter = "SPIRIT" | "INCARNATE" | "DOJI";
 type SourceState = "online" | "unavailable" | "checking";
+type LoadState = "idle" | "loading" | "ready" | "error";
 
 const navItems: readonly { id: View; label: string; eyebrow: string; glyph: string }[] = [
   { id: "home", label: "ホーム", eyebrow: "TODAY", glyph: "七" },
@@ -55,6 +58,57 @@ async function requestLiveData(force = false): Promise<LiveData> {
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return await response.json() as LiveData;
+}
+
+type EthereumProvider = {
+  request(args: { method: string; params?: unknown[] }): Promise<unknown>;
+};
+
+async function postJson<T>(path: string, body?: object): Promise<T> {
+  const response = await fetch(path, {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-sgg-request": "1" },
+    body: JSON.stringify(body ?? {}),
+  });
+  const payload = await response.json().catch(() => null) as (T & { message?: string }) | null;
+  if (!response.ok) {
+    throw new Error(payload?.message ?? `HTTP ${response.status}`);
+  }
+  return payload as T;
+}
+
+async function requestPassport(): Promise<PassportData> {
+  const response = await fetch("/api/passport", {
+    headers: { accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return await response.json() as PassportData;
+}
+
+function shortAddress(address: string) {
+  return `${address.slice(0, 6)}…${address.slice(-4)}`;
+}
+
+const AUTH_ERROR_MESSAGES: Record<string, string> = {
+  not_configured: "Discord連携は現在準備中です",
+  state_mismatch: "認証セッションが切れました。もう一度お試しください",
+  discord_exchange_failed: "Discord認証に失敗しました。もう一度お試しください",
+  persistence_failed: "認証情報を保存できませんでした。時間をおいて再度お試しください",
+};
+
+function formatGrantDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Kuala_Lumpur",
+  }).format(date);
 }
 
 const views = new Set<View>(navItems.map((item) => item.id));
@@ -290,13 +344,24 @@ export function Dashboard() {
   const [liveData, setLiveData] = useState<LiveData>(emptyLiveData);
   const [liveState, setLiveState] = useState<"loading" | "ready" | "error">("loading");
   const [syncing, setSyncing] = useState(false);
+  const [passport, setPassport] = useState<PassportData | null>(null);
+  const [passportState, setPassportState] = useState<Exclude<LoadState, "idle">>("loading");
+  const [walletBusy, setWalletBusy] = useState(false);
+  const [adminPlayers, setAdminPlayers] = useState<AdminPlayerRow[] | null>(null);
+  const [adminRosterState, setAdminRosterState] = useState<LoadState>("idle");
+  const [grantForm, setGrantForm] = useState({ discordId: "", amount: "", reasonCode: "TESTER_FEEDBACK", note: "" });
+  const [grantBusy, setGrantBusy] = useState(false);
   const [clock, setClock] = useState(0);
   const [toast, setToast] = useState("");
   const mainRef = useRef<HTMLElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const notificationTriggerRef = useRef<HTMLButtonElement>(null);
+  const notificationPanelRef = useRef<HTMLDivElement>(null);
   const checkedAtRef = useRef("");
+  const adminRosterRequestRef = useRef(0);
+  const grantAttemptRef = useRef<{ fingerprint: string; idempotencyKey: string } | null>(null);
 
   const activeNav = navItems.find((item) => item.id === activeView) ?? navItems[0];
   const unread = systemNotifications.filter((item) => !readIds.has(item.id));
@@ -377,6 +442,152 @@ export function Dashboard() {
     };
   }, [syncLiveData]);
 
+  const refreshPassport = useCallback(async (options?: { showLoading?: boolean }) => {
+    if (options?.showLoading) setPassportState("loading");
+    try {
+      setPassport(await requestPassport());
+      setPassportState("ready");
+    } catch {
+      // Preserve a previously verified Passport while clearly exposing that
+      // the refresh itself failed. A network error is not "auth unconfigured".
+      setPassportState("error");
+    }
+  }, []);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      void refreshPassport();
+      const errorCookie = document.cookie.match(/(?:^|; )sgg_auth_error=([^;]+)/);
+      if (errorCookie) {
+        document.cookie = "sgg_auth_error=; Path=/; Max-Age=0";
+        setToast(AUTH_ERROR_MESSAGES[errorCookie[1]] ?? "Discord認証に失敗しました");
+      }
+    }, 0);
+    return () => window.clearTimeout(timeout);
+  }, [refreshPassport]);
+
+  const isAdmin = passport?.connected === true && passport.isAdmin;
+
+  const loadAdminPlayers = useCallback(async () => {
+    const requestId = ++adminRosterRequestRef.current;
+    setAdminRosterState("loading");
+    try {
+      const response = await fetch("/api/admin/players", { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json() as { players: AdminPlayerRow[] };
+      if (requestId !== adminRosterRequestRef.current) return;
+      setAdminPlayers(data.players);
+      setAdminRosterState("ready");
+    } catch {
+      if (requestId !== adminRosterRequestRef.current) return;
+      setAdminRosterState("error");
+    }
+  }, []);
+
+  // Admin roster loads lazily, only on the passport view for admins.
+  useEffect(() => {
+    if (activeView !== "mysgg" || !isAdmin || adminRosterState !== "idle") return;
+    const timeout = window.setTimeout(() => void loadAdminPlayers(), 0);
+    return () => window.clearTimeout(timeout);
+  }, [activeView, adminRosterState, isAdmin, loadAdminPlayers]);
+
+  const logout = async () => {
+    try {
+      await postJson("/api/auth/logout");
+      setPassport({ connected: false, authConfigured: passport?.authConfigured ?? false });
+      setPassportState("ready");
+      adminRosterRequestRef.current += 1;
+      setAdminPlayers(null);
+      setAdminRosterState("idle");
+      setToast("ログアウトしました");
+    } catch {
+      setToast("ログアウトに失敗しました");
+    }
+  };
+
+  const linkWallet = async () => {
+    const ethereum = (window as { ethereum?: EthereumProvider }).ethereum;
+    if (!ethereum) {
+      setToast("対応するWallet拡張が見つかりません(MetaMask等をインストールしてください)");
+      return;
+    }
+    setWalletBusy(true);
+    try {
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" }) as string[];
+      const address = accounts?.[0];
+      if (!address) throw new Error("Walletアカウントを取得できませんでした");
+      const challenge = await postJson<{ message: string }>("/api/wallet/challenge", { address });
+      const signature = await ethereum.request({
+        method: "personal_sign",
+        params: [challenge.message, address],
+      }) as string;
+      await postJson("/api/wallet/link", { address, signature });
+      setToast("Walletを連携しました");
+      await refreshPassport();
+    } catch (error) {
+      setToast(error instanceof Error && error.message ? error.message : "Wallet連携に失敗しました");
+    } finally {
+      setWalletBusy(false);
+    }
+  };
+
+  const unlinkWallet = async () => {
+    const linkedAddress = passport?.connected ? passport.player.walletAddress : null;
+    if (!linkedAddress || !window.confirm(`${shortAddress(linkedAddress)} のWallet連携を解除しますか？\nポイント履歴とDiscord連携は維持されます。`)) {
+      return;
+    }
+    setWalletBusy(true);
+    try {
+      await postJson("/api/wallet/unlink");
+      setToast("Wallet連携を解除しました");
+      await refreshPassport();
+    } catch {
+      setToast("Wallet連携の解除に失敗しました");
+    } finally {
+      setWalletBusy(false);
+    }
+  };
+
+  const submitGrant = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const amount = Number(grantForm.amount);
+    if (!Number.isInteger(amount) || amount === 0) {
+      setToast("付与量は0以外の整数で入力してください");
+      return;
+    }
+    const grantPayload = {
+      discordId: grantForm.discordId.trim(),
+      amount,
+      reasonCode: grantForm.reasonCode.trim(),
+      note: grantForm.note.trim() || undefined,
+    };
+    const fingerprint = JSON.stringify(grantPayload);
+    if (!grantAttemptRef.current || grantAttemptRef.current.fingerprint !== fingerprint) {
+      grantAttemptRef.current = { fingerprint, idempotencyKey: crypto.randomUUID() };
+    }
+    setGrantBusy(true);
+    try {
+      const result = await postJson<{ alreadyGranted: boolean; balance: number }>("/api/admin/grants", {
+        ...grantPayload,
+        idempotencyKey: grantAttemptRef.current.idempotencyKey,
+      });
+      // The server confirmed this exact attempt, so the retry key can rotate.
+      grantAttemptRef.current = null;
+      setToast(result.alreadyGranted
+        ? "同じ付与がすでに記録されています"
+        : `付与を記録しました(新残高 ${number.format(result.balance)} pt)`);
+      setGrantForm((current) => ({ ...current, amount: "", note: "" }));
+      setAdminPlayers(null);
+      setAdminRosterState("idle");
+      await refreshPassport();
+    } catch (error) {
+      const message = error instanceof Error && error.message ? error.message : "付与に失敗しました";
+      setToast(`${message}。同じ内容のまま安全に再試行できます`);
+    } finally {
+      setGrantBusy(false);
+    }
+  };
+
   // Low-frequency clock so「たった今 / N分前」stays honest without re-fetching.
   useEffect(() => {
     const tick = () => setClock(Date.now());
@@ -419,12 +630,21 @@ export function Dashboard() {
       }
       if (event.key === "Escape") {
         setSearchOpen(false);
-        setNotificationsOpen(false);
+        if (notificationsOpen) {
+          setNotificationsOpen(false);
+          notificationTriggerRef.current?.focus();
+        }
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [notificationsOpen]);
+
+  useEffect(() => {
+    if (!notificationsOpen) return;
+    const frame = window.requestAnimationFrame(() => notificationPanelRef.current?.focus());
+    return () => window.cancelAnimationFrame(frame);
+  }, [notificationsOpen]);
 
   // Popovers close on outside interaction, matching standard menu behavior.
   useEffect(() => {
@@ -573,6 +793,24 @@ export function Dashboard() {
     : liveState === "error"
       ? "HEALTH UNAVAILABLE"
       : `${liveData.runtimeOnlineCount} / 4 ONLINE`;
+  const passportBridgeLabel = passportState === "loading" && !passport
+    ? "PLAYER BRIDGE · CHECKING"
+    : passportState === "error" && !passport
+      ? "PLAYER BRIDGE · UNAVAILABLE"
+      : passport?.connected
+        ? "PLAYER BRIDGE · CONNECTED"
+        : passport?.authConfigured === false
+          ? "PLAYER BRIDGE · SETUP REQUIRED"
+          : "PLAYER BRIDGE · NOT CONNECTED";
+  const passportProfileLabel = passportState === "loading" && !passport
+    ? "確認中"
+    : passportState === "error" && !passport
+      ? "取得不可"
+      : passport?.connected
+        ? (passport.player.globalName ?? passport.player.username)
+        : passport?.authConfigured === false
+          ? "準備中"
+          : "未接続";
 
   return (
     <div className={styles.app}>
@@ -650,12 +888,29 @@ export function Dashboard() {
               <span aria-hidden="true" className={syncing ? styles.spin : undefined}>↻</span>
             </button>
             <div className={styles.notificationWrap} ref={notificationRef}>
-              <button type="button" className={styles.iconButton} aria-label={`通知 ${unread.length}件`} aria-expanded={notificationsOpen} onClick={() => setNotificationsOpen((open) => !open)}>
+              <button
+                ref={notificationTriggerRef}
+                type="button"
+                className={styles.iconButton}
+                aria-label={`通知 ${unread.length}件`}
+                aria-expanded={notificationsOpen}
+                aria-controls="notification-panel"
+                aria-haspopup="dialog"
+                onClick={() => setNotificationsOpen((open) => !open)}
+              >
                 <span aria-hidden="true">◌</span>{unread.length > 0 && <b>{unread.length}</b>}
               </button>
               {notificationsOpen && (
-                <div className={styles.notificationPanel}>
-                  <div><strong>アクション通知</strong><button type="button" onClick={markAllRead}>すべて既読</button></div>
+                <div
+                  id="notification-panel"
+                  ref={notificationPanelRef}
+                  className={styles.notificationPanel}
+                  role="dialog"
+                  aria-modal="false"
+                  aria-labelledby="notification-title"
+                  tabIndex={-1}
+                >
+                  <div><strong id="notification-title">アクション通知</strong><button type="button" onClick={markAllRead}>すべて既読</button></div>
                   {systemNotifications.map((item) => (
                     <button key={item.id} type="button" className={readIds.has(item.id) ? "" : styles.notificationUnread} onClick={() => markRead(item.id, item.target)}>
                       <span>{item.kind}</span><strong>{item.title}</strong><small>{item.detail}</small>
@@ -665,7 +920,17 @@ export function Dashboard() {
               )}
             </div>
             <button type="button" className={styles.profileButton} onClick={() => changeView("mysgg")}>
-              <span aria-hidden="true">MY</span><div><small>PLAYER PASSPORT</small><strong>未接続</strong></div>
+              {passport?.connected && passport.player.avatarUrl ? (
+                // Discord CDN avatars are session-specific; next/image optimization is unnecessary here.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className={styles.profileAvatar} src={passport.player.avatarUrl} alt="" width={30} height={30} />
+              ) : (
+                <span aria-hidden="true">MY</span>
+              )}
+              <div>
+                <small>PLAYER PASSPORT</small>
+                <strong>{passportProfileLabel}</strong>
+              </div>
             </button>
           </div>
         </header>
@@ -849,17 +1114,115 @@ export function Dashboard() {
             <div className={styles.viewStack}>
               <header className={styles.pageHeader}>
                 <div><p>MY SGG / PLAYER PASSPORT</p><h1>マイSGG</h1><span>本人、履歴、ポイント、報酬、セキュリティを一つに。制度は混ぜません。</span></div>
-                <StatusPill accent="coral">PLAYER BRIDGE · NOT CONNECTED</StatusPill>
+                <StatusPill accent="coral">{passportBridgeLabel}</StatusPill>
               </header>
-              <section className={styles.passportHero}>
-                <div className={styles.passportMark} aria-hidden="true">MY</div>
-                <div><small>UNIFIED PLAYER ID</small><h2>SGG Player Passport</h2><p>正式identityはDiscord user ID。Walletは任意で、未接続でもゲームとraw rankingへ参加できます。</p></div>
+              <section className={styles.passportHero} aria-busy={passportState === "loading"}>
+                {passport?.connected && passport.player.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img className={styles.passportAvatar} src={passport.player.avatarUrl.replace("size=64", "size=128")} alt="" width={64} height={64} />
+                ) : (
+                  <div className={styles.passportMark} aria-hidden="true">MY</div>
+                )}
+                <div>
+                  <small>UNIFIED PLAYER ID</small>
+                  <h2>{passportState === "loading" && !passport
+                    ? "Player Passportを確認中"
+                    : passportState === "error" && !passport
+                      ? "Passportを読み込めません"
+                      : passport?.connected
+                        ? (passport.player.globalName ?? passport.player.username)
+                        : "SGG Player Passport"}</h2>
+                  <p>{passport?.connected
+                    ? `Discord @${passport.player.username} として接続中。この本人確認にSGGポイントが記録されます。`
+                    : passportState === "loading"
+                      ? "Discord連携状況とポイント台帳を安全に確認しています。"
+                      : passportState === "error"
+                        ? "ネットワークエラーのため連携状況を確認できません。ゲームと公開ランキングは引き続き利用できます。"
+                        : passport?.authConfigured === false
+                          ? "Discord認証は現在セットアップ中です。ゲームと公開ランキングは未接続のまま利用できます。"
+                          : "正式identityはDiscord user ID。Walletは任意で、未接続でもゲームとraw rankingへ参加できます。"}</p>
+                  <div className={styles.passportActions}>
+                    {passportState === "loading" && !passport ? (
+                      <button type="button" className={styles.primaryAction} disabled>Passportを確認中…</button>
+                    ) : passportState === "error" && !passport ? (
+                      <button type="button" className={styles.primaryAction} onClick={() => void refreshPassport({ showLoading: true })}>もう一度確認する</button>
+                    ) : passport?.connected ? (
+                      <button type="button" className={styles.textButton} onClick={() => void logout()}>ログアウト</button>
+                    ) : passport?.authConfigured === false ? (
+                      <button type="button" className={styles.primaryAction} disabled>Discord連携を準備中</button>
+                    ) : (
+                      <a className={styles.primaryAction} href="/api/auth/discord">Discordで連携する<span aria-hidden="true">→</span></a>
+                    )}
+                  </div>
+                </div>
                 <div className={styles.passportStatus}>
-                  <span><Dot />Discord<strong>未接続</strong></span>
-                  <span><Dot />Wallet<strong>任意</strong></span>
+                  <span><Dot active={passport?.connected === true} />Discord<strong>{passportState === "loading" && !passport ? "確認中" : passportState === "error" && !passport ? "取得不可" : passport?.connected ? "接続済み" : passport?.authConfigured === false ? "準備中" : "未接続"}</strong></span>
+                  <span><Dot active={passport?.connected === true && Boolean(passport.player.walletAddress)} />Wallet<strong>{passportState === "loading" && !passport ? "確認中" : passport?.connected && passport.player.walletAddress ? shortAddress(passport.player.walletAddress) : "任意"}</strong></span>
                   <span><Dot />Passkey<strong>準備中</strong></span>
                 </div>
               </section>
+              {passportState === "error" && (
+                <div className={styles.resilienceNotice} role="alert">
+                  <div>
+                    <strong>Passport情報を取得できませんでした</strong>
+                    <p>{passport
+                      ? "前回確認できたPassportを表示しています。最新状態を確認するには再試行してください。"
+                      : "接続状態を未接続や準備中と決めつけず、確認できない状態として表示しています。"}</p>
+                  </div>
+                  <button type="button" className={styles.textButton} onClick={() => void refreshPassport({ showLoading: true })}>再試行</button>
+                </div>
+              )}
+              {passport?.connected && (
+                <div className={styles.passportGrid}>
+                  <section className={styles.pointsCard} data-tone="gold">
+                    <div className={styles.pointsHead}>
+                      <div><p>SGG POINTS</p><h3>ポイント残高</h3></div>
+                      <StatusPill accent="gold">PASSPORT LEDGER</StatusPill>
+                    </div>
+                    <strong className={styles.pointsBalance}>{number.format(passport.points.balance)}<small>pt</small></strong>
+                    {passport.points.grants.length ? (
+                      <ul className={styles.grantList}>
+                        {passport.points.grants.map((grant, index) => (
+                          <li key={`${grant.createdAt}-${index}`}>
+                            <div>
+                              <strong>{grant.reasonCode}</strong>
+                              {grant.note && <small>{grant.note}</small>}
+                              <small>{formatGrantDate(grant.createdAt)}</small>
+                            </div>
+                            <b data-negative={grant.amount < 0 || undefined}>
+                              {grant.amount > 0 ? "+" : ""}{number.format(grant.amount)}
+                            </b>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className={styles.grantEmpty}>まだ付与履歴はありません。テスター報奨が付与されるとここに記録されます。</p>
+                    )}
+                  </section>
+                  <section className={styles.walletCard} data-tone="cyan">
+                    <div className={styles.pointsHead}>
+                      <div><p>OPTIONAL WALLET</p><h3>Wallet連携</h3></div>
+                      <StatusPill accent="cyan">{passport.player.walletAddress ? "LINKED" : "OPTIONAL"}</StatusPill>
+                    </div>
+                    {passport.player.walletAddress ? (
+                      <>
+                        <code className={styles.walletAddress}>{passport.player.walletAddress}</code>
+                        <p>署名によるアドレス所有証明のみを記録しています。送金・トークン承認は行いません。</p>
+                        <button type="button" className={styles.textButton} onClick={() => void unlinkWallet()} disabled={walletBusy}>
+                          {walletBusy ? "処理中…" : "連携を解除"}
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <p>EVM系Wallet(MetaMask等)の署名でアドレス所有を証明します。Walletが無くてもポイント付与に影響はありません。</p>
+                        <button type="button" className={styles.primaryAction} onClick={() => void linkWallet()} disabled={walletBusy}>
+                          {walletBusy ? "署名を待っています…" : "Walletを連携する"}
+                        </button>
+                      </>
+                    )}
+                  </section>
+                </div>
+              )}
               <div className={styles.identityGrid}>
                 <article data-tone="violet"><span>01</span><h3>Discord Identity</h3><p>ゲームごとに分かれたsessionを、server-sideの署名済みassertionで一人のプレイヤーへ統合。</p><StatusPill accent="violet">CENTRAL BRIDGE REQUIRED</StatusPill></article>
                 <article data-tone="gold"><span>02</span><h3>Optional Wallet</h3><p>1 Discord ↔ 1 Wallet。保有確認はsnapshot時刻とchain基準点を記録します。</p><StatusPill accent="gold">PLAY WITHOUT WALLET</StatusPill></article>
@@ -877,6 +1240,86 @@ export function Dashboard() {
                 </div>
               </section>
               <aside className={styles.tokenBoundary}><span aria-hidden="true">!</span><div><strong>SGG TokenはPLANNEDです</strong><p>chain、contract、供給量、公開日、価格は未確定。ポイント残高や報酬からToken価値を推測しません。</p></div></aside>
+              {isAdmin && (
+                <section className={styles.adminPanel} data-tone="coral">
+                  <SectionTitle kicker="ADMIN / POINT OPERATIONS" title="ポイント付与(管理者)" copy="付与はappend-onlyの台帳と監査recordに記録されます。取り消しはマイナス付与で行います。" />
+                  <form className={styles.grantForm} onSubmit={submitGrant}>
+                    <label>
+                      <span>付与先 Discord ID</span>
+                      <input
+                        required
+                        value={grantForm.discordId}
+                        onChange={(event) => setGrantForm((current) => ({ ...current, discordId: event.target.value }))}
+                        placeholder="000000000000000000"
+                        pattern="\d{5,25}"
+                      />
+                    </label>
+                    <label>
+                      <span>付与量(整数・負数可)</span>
+                      <input
+                        required
+                        value={grantForm.amount}
+                        onChange={(event) => setGrantForm((current) => ({ ...current, amount: event.target.value }))}
+                        placeholder="100"
+                        inputMode="numeric"
+                        pattern="-?\d+"
+                      />
+                    </label>
+                    <label>
+                      <span>理由コード</span>
+                      <input
+                        required
+                        value={grantForm.reasonCode}
+                        onChange={(event) => setGrantForm((current) => ({ ...current, reasonCode: event.target.value.toUpperCase() }))}
+                        placeholder="TESTER_FEEDBACK"
+                        pattern="[A-Z0-9_]{3,64}"
+                      />
+                    </label>
+                    <label className={styles.grantNote}>
+                      <span>メモ(任意)</span>
+                      <input
+                        value={grantForm.note}
+                        onChange={(event) => setGrantForm((current) => ({ ...current, note: event.target.value }))}
+                        placeholder="2026.07 プレビューテスト参加"
+                      />
+                    </label>
+                    <button type="submit" className={styles.primaryAction} disabled={grantBusy}>
+                      {grantBusy ? "記録中…" : "ポイントを付与"}
+                    </button>
+                  </form>
+                  <div className={styles.adminRoster} aria-busy={adminRosterState === "loading"}>
+                    <p>REGISTERED PLAYERS / {adminRosterState === "ready" ? (adminPlayers?.length ?? 0) : adminRosterState === "error" ? "取得不可" : "…"}</p>
+                    {adminRosterState === "idle" || adminRosterState === "loading" ? (
+                      <span className={styles.grantEmpty} role="status">プレイヤー一覧を読み込み中…</span>
+                    ) : adminRosterState === "error" ? (
+                      <div className={styles.inlineRetry} role="alert">
+                        <span>プレイヤー一覧を取得できませんでした。空の一覧としては扱っていません。</span>
+                        <button type="button" className={styles.textButton} onClick={() => void loadAdminPlayers()}>再試行</button>
+                      </div>
+                    ) : !adminPlayers?.length ? (
+                      <span className={styles.grantEmpty}>まだDiscord連携したプレイヤーがいません。</span>
+                    ) : (
+                      <ul>
+                        {adminPlayers.map((row) => (
+                          <li key={row.discordId}>
+                            <div>
+                              <strong>{row.globalName ?? row.username}</strong>
+                              <small>@{row.username} · {row.discordId}</small>
+                              <small>{row.walletLabel ? `Wallet ${row.walletLabel}` : "Wallet未連携"}</small>
+                            </div>
+                            <div className={styles.adminRosterRight}>
+                              <b>{number.format(row.balance)} pt</b>
+                              <button type="button" className={styles.textButton} onClick={() => setGrantForm((current) => ({ ...current, discordId: row.discordId }))}>
+                                付与先にセット
+                              </button>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </section>
+              )}
             </div>
           )}
 

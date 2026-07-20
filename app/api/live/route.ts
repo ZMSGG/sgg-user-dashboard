@@ -27,17 +27,19 @@ const RANKING_SOURCES = {
 const RUNTIME_SOURCES = {
   oracle: "https://otomooracle.sevengodsgames.com/",
   quest: "https://otomoquest.sevengodsgames.com/",
-  farm: "https://otomofarm.sevengodsgames.com/",
+  farm: "https://otomo-farm-77.vercel.app/",
   taiyo: "https://emberveil.sevengodsgames.com/",
 } as const;
 
-// Snapshot reuse protects the upstream games from one fetch fan-out per
-// dashboard visitor. The manual sync button sends ?refresh and always
-// reads upstream again; passive loads may share a recent snapshot.
+// Snapshot reuse protects upstream games from one fetch fan-out per visitor.
+// Manual sync can bypass a normal snapshot, but a server-side cooldown prevents
+// rapid sequential refreshes from becoming an amplification endpoint.
 const SNAPSHOT_TTL_MS = 45_000;
+const MANUAL_REFRESH_COOLDOWN_MS = 15_000;
 
 let storedSnapshot: { snapshot: LiveSnapshot; storedAt: number } | null = null;
 let inFlightRead: Promise<LiveSnapshot> | null = null;
+let lastManualRefreshAt = 0;
 
 async function fetchJson(url: string) {
   const controller = new AbortController();
@@ -201,16 +203,24 @@ function respond(payload: LiveData) {
 }
 
 export async function GET(request: Request) {
-  const forceRefresh = new URL(request.url).searchParams.has("refresh");
+  const manualRefreshRequested = new URL(request.url).searchParams.has("refresh");
   const now = Date.now();
+  const manualRefreshCoolingDown = manualRefreshRequested &&
+    lastManualRefreshAt > 0 &&
+    now - lastManualRefreshAt < MANUAL_REFRESH_COOLDOWN_MS;
 
-  if (!forceRefresh && storedSnapshot && now - storedSnapshot.storedAt < SNAPSHOT_TTL_MS) {
+  if (
+    storedSnapshot &&
+    (manualRefreshCoolingDown || (!manualRefreshRequested && now - storedSnapshot.storedAt < SNAPSHOT_TTL_MS))
+  ) {
     return respond({
       ...storedSnapshot.snapshot,
       servedFrom: "cache",
       cacheAgeSeconds: Math.max(0, Math.round((now - storedSnapshot.storedAt) / 1000)),
     });
   }
+
+  if (manualRefreshRequested) lastManualRefreshAt = now;
 
   // Single-flight: concurrent visitors share one upstream fan-out instead
   // of multiplying requests against the public game endpoints.
