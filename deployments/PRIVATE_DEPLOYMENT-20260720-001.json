@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PRIVATE_DEPLOYMENT_EVIDENCE",
+  "evidence_id": "PRIVATE_DEPLOYMENT-20260720-001",
+  "recorded_at": "2026-07-20T23:02:24+08:00",
+  "recorded_by": "Codex MY SGG private deployment operator",
+  "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+  "scope": "Owner-only production deployment of the MY SGG Player OS through Sites",
+  "source": {
+    "commit_sha": "eef3518498d4d5536a683c0a83c0fabe4ba05a14",
+    "branch": "main",
+    "repository": "appgprj_6a54d2460e7c8191a92c00900d810ab1",
+    "push_result": "SUCCEEDED",
+    "secret_scan_findings": 0
+  },
+  "sites": {
+    "project_id": "appgprj_6a54d2460e7c8191a92c00900d810ab1",
+    "version_id": "appgprj_6a54d2460e7c8191a92c00900d810ab1~appgver_544432a528448191bcb021da2cfbaaa7",
+    "version_number": 8,
+    "deployment_id": "appgdep_6a5e37c16d3481918858c7821ada3803",
+    "deployment_status": "SUCCEEDED",
+    "environment_revision": 1,
+    "url": "https://sgg-player-archive.axie-b-ac.chatgpt.site",
+    "access_mode": "custom",
+    "allowed_owner_count": 1,
+    "allowed_group_count": 0,
+    "public_access": false
+  },
+  "configuration": {
+    "app_origin_configured": true,
+    "session_secret_configured_as_secret": true,
+    "discord_client_id_configured": false,
+    "discord_client_secret_configured": false,
+    "admin_discord_ids_configured": false,
+    "expected_passport_state": "SETUP_REQUIRED"
+  },
+  "verification": {
+    "local": {
+      "typecheck": "PASS",
+      "build": "PASS",
+      "tests_passed": 22,
+      "tests_failed": 0,
+      "production_dependency_vulnerabilities": 0
+    },
+    "production_smoke": {
+      "home_status": 200,
+      "home_contains_my_sgg": true,
+      "passport_status": 200,
+      "passport_connected": false,
+      "passport_auth_configured": false,
+      "live_api_status": 200,
+      "live_api_json": true,
+      "external_image_source_status": 400,
+      "content_security_policy_present": true,
+      "x_frame_options_present": true,
+      "x_content_type_options_nosniff": true,
+      "unexpected_worker_error_count": 0
+    },
+    "deployment_screenshot": {
+      "status": "RENDERED_SCREENSHOT_VERIFIED",
+      "dimensions": "1200x750",
+      "sha256": "3424402823d63e2a904d222349ae46393dd45739db7eb7b52b520ee763cbfa42",
+      "visible_checks": [
+        "MY SGG Player OS shell",
+        "navigation rail",
+        "search and account controls",
+        "canonical hero composition",
+        "Japanese primary call to action",
+        "live-source status surface"
+      ],
+      "limitation": "The Sites screenshot proves deployed rendering but does not replace interactive Codex in-app browser or console verification."
+    },
+    "codex_in_app_browser": {
+      "status": "BLOCKED_TOOL_UNAVAILABLE",
+      "protected_existing_tab_preserved": true,
+      "protected_existing_url": "https://auth.openai.com/mfa-challenge/69f7221f204c819199481c6548bcfe22",
+      "required_follow_up": "Open the exact live URL in a new Codex in-app browser tab, inspect the changed MY SGG and setup-required Passport states, confirm no major console errors, and keep the tab as handoff."
+    }
+  },
+  "boundaries": {
+    "public_or_shared_release_authorized": false,
+    "custom_domain_authorized": false,
+    "search_indexing_authorized": false,
+    "creative_public_release_approved": false
+  }
+}

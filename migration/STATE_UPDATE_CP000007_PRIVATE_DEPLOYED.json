@@ -1,16 +1,11 @@
 {
   "schema_version": 1,
-  "authority": "SGG_PROJECT_STATE",
-  "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 7,
-  "updated_at": "2026-07-20T23:03:52+08:00",
+  "expected_state_version": 6,
   "updated_by": "Codex MY SGG private deployment recorder",
+  "summary": "Committed and pushed the validated source, deployed Sites Version 8 with owner-only access and environment revision 1, passed production smoke and rendered-screenshot checks, and preserved the existing MFA tab; interactive Codex in-app browser handoff remains blocked because browser control is unavailable in this session.",
   "status": "REVIEW",
   "phase": "PRIVATE_DEPLOYED",
   "current_objective": "Open the exact live URL in a new Codex in-app browser tab without replacing the protected MFA tab, verify the MY SGG and setup-required Passport states plus console health, and retain the new tab as the delivery handoff.",
-  "last_summary": "Committed and pushed the validated source, deployed Sites Version 8 with owner-only access and environment revision 1, passed production smoke and rendered-screenshot checks, and preserved the existing MFA tab; interactive Codex in-app browser handoff remains blocked because browser control is unavailable in this session.",
-  "last_checkpoint_id": "CP-000007",
-  "last_checkpoint_path": "checkpoints/CP-000007.json",
   "active_work": {
     "work_id": "ACT-004",
     "objective": "Finish the owner-only private deployment acceptance gate with interactive Codex in-app browser verification and handoff.",
@@ -23,45 +18,6 @@
       "Discord authentication remains visibly setup-required until its missing credentials are explicitly configured."
     ]
   },
-  "recently_completed": [
-    {
-      "action_id": "BOOTSTRAP-001",
-      "result": "Initial zero-to-one scaffold generated atomically.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "COMMAND_CENTER_LINK.json",
-        "QUALITY_SCORECARD.md"
-      ]
-    },
-    {
-      "action_id": "ACT-001",
-      "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "migration/INTAKE.json",
-        "migration/MIGRATION_EVIDENCE.md",
-        "COMMAND_CENTER_LINK.json"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-003",
-      "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
-      "evidence": [
-        "app/Dashboard.tsx",
-        "server/auth.ts",
-        "server/passport-db.ts",
-        "db/schema.ts",
-        "drizzle/0001_majestic_boomer.sql",
-        "tests/passport-security.test.mjs",
-        "tests/dashboard-resilience.test.mjs",
-        "tests/rendered-html.test.mjs"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    }
-  ],
   "next_actions": [
     {
       "action_id": "ACT-004",
@@ -162,62 +118,15 @@
     }
   ],
   "decisions_needed": [],
-  "authorizations": [
-    {
-      "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
-      "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
-      "status": "GRANTED",
-      "granted_by": "SGG project owner",
-      "granted_at": "2026-07-20T22:47:24+08:00",
-      "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
-    },
-    {
-      "authorization_id": "AUTH-EXTERNAL-ACTIONS",
-      "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
-      "status": "NOT_GRANTED",
-      "granted_by": "",
-      "granted_at": "",
-      "evidence": ""
-    }
-  ],
-  "changed_files": [
+  "changed_paths": [
     {
       "path": "deployments/PRIVATE_DEPLOYMENT-20260720-001.json",
-      "sha256": "4833cacddce812b3525cc3eced7e5e0009a0e769296d4480841bf8d5e097d869",
       "reason": "Records exact private deployment provenance, access boundaries, environment revision, smoke checks, screenshot evidence, and the outstanding in-app browser gate without storing credentials."
     },
     {
       "path": "migration/STATE_UPDATE_CP000007_PRIVATE_DEPLOYED.json",
-      "sha256": "1810720108e24e9ea2b7a3b860a695808ebbe2f5db407fee94da365b56b89875",
       "reason": "Provides the immutable state transition input for the private-deployed milestone and remaining browser handoff blocker."
     }
-  ],
-  "last_known_good": {
-    "validation_report": "VALIDATION_REPORT.json",
-    "commands": [
-      [
-        "python3",
-        "../../launches/tools/validate_sgg_project.py",
-        ".",
-        "--kickoff",
-        "--record"
-      ],
-      [
-        "python3",
-        "../../launches/tools/validate_pack.py",
-        "."
-      ]
-    ]
-  },
-  "authoritative_files": [
-    "AGENTS.md",
-    "COMMAND_CENTER_LINK.json",
-    "PROJECT_PROFILE.json",
-    "PROJECT_STATE.json",
-    "DECISIONS.md",
-    "CANON_AND_COPY.md",
-    "WORLD_AND_CHARACTER_BRIEF.md",
-    "VALIDATION_REPORT.json"
   ],
   "resume": {
     "action_id": "ACT-004",
