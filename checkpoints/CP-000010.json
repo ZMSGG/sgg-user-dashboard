@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000010",
+  "state_version": 10,
+  "created_at": "2026-07-22T00:04:28+08:00",
+  "previous_checkpoint_id": "CP-000009",
+  "summary": "Added a theme-toned inline SVG wallet icon to the passport wallet card heading and link button so the optional wallet feature is visually identifiable, verified in the running dev UI after a dev-server restart (the Vite watcher had missed a case-variant CSS edit), with lint, typecheck, build, and all 27 tests passing. The owner's wallet link attempt remains pending at the MetaMask signature step; ACT-010 secret rotation and Sites configuration remain the production path.",
+  "project_basis_sha256": "1f1e0a6c65ffc9d593008ebbf567de36bf048267bf1ea17d32a5929d8baf2b06",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 10,
+    "updated_at": "2026-07-22T00:04:28+08:00",
+    "updated_by": "Claude Code wallet UI clarity implementer",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Rotate the bot token and client secret owner-side, configure all identity, guild, and integration values in Sites without exposing them, deploy the updated build with migration 0002 owner-only, and run the deployed-environment gate checklist including a second-account isolation test.",
+    "last_summary": "Added a theme-toned inline SVG wallet icon to the passport wallet card heading and link button so the optional wallet feature is visually identifiable, verified in the running dev UI after a dev-server restart (the Vite watcher had missed a case-variant CSS edit), with lint, typecheck, build, and all 27 tests passing. The owner's wallet link attempt remains pending at the MetaMask signature step; ACT-010 secret rotation and Sites configuration remain the production path.",
+    "last_checkpoint_id": "CP-000010",
+    "last_checkpoint_path": "checkpoints/CP-000010.json",
+    "active_work": {
+      "work_id": "ACT-009",
+      "objective": "Enable community membership sync and automated point grants on the owner-only private deployment.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Local dev environment fully verified end-to-end including the wallet card visual affordance.",
+        "Bot token and client secret rotated after the in-session exposure, and all values configured in Sites without exposing them.",
+        "The updated build and migration 0002 deployed owner-only through Sites.",
+        "Deployed-environment gate tests pass, including a second Discord account isolation test."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-010",
+        "order": 1,
+        "action": "Owner rotates the Discord bot token and client secret, then configures DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, ADMIN_DISCORD_IDS, DISCORD_BOT_TOKEN, DISCORD_GUILD_ID, INTEGRATION_GRANT_SECRET, and INTEGRATION_ACTOR_ID in Sites per docs/DISCORD_OPERATIONS.md.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-009",
+        "order": 2,
+        "action": "Deploy the updated build with migration 0002 owner-only through Sites, then run the docs/DISCORD_OPERATIONS.md section-8 gate checklist including a two-account isolation test.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PASSPORT-CREDENTIALS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 3,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing personal progress or assets.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-007",
+        "order": 4,
+        "action": "Record asset-specific rights, character IDs and forms, crop QA, approver, time, version, and hashes for every release visual.",
+        "owner": "SGG creative and release approver",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-RIGHTS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 5,
+        "action": "Request and record separate authority before public/shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-PASSPORT-CREDENTIALS-001",
+        "scope": "DISCORD_PASSPORT_RUNTIME",
+        "severity": "P1",
+        "description": "Local development credentials are fully configured and verified end-to-end, but the hosted Sites environment still has no Discord or integration values, and the working bot token and client secret must be rotated before production use because the bot token appeared in a session screenshot.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Rotate both secrets owner-side, configure all values through Sites without exposing them, deploy, and pass the deployed-environment gate tests including a second-account isolation test."
+      },
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "The deployed URL has not been interactively verified; local dev verification is complete but does not substitute for the deployed environment.",
+        "owner": "Codex runtime capability",
+        "status": "OPEN",
+        "resolution_required": "After the next deployment, open the live URL in a new tab preserving the protected MFA tab and complete interactive dashboard, Passport, responsive, and console verification."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so personal progress and holdings remain intentionally unconnected.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting personal data."
+      },
+      {
+        "blocker_id": "BLK-RIGHTS-001",
+        "scope": "PUBLIC_CREATIVE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "The current dashboard hero is a candidate and the release icon, key visual, and social card do not have complete asset-specific rights, character, final-crop, approver, and hash evidence.",
+        "owner": "SGG creative and release approver",
+        "status": "OPEN",
+        "resolution_required": "Approve exact asset versions and hashes with source rights, visible character IDs and OTOMO forms, display and crop QA, reviewer, and timezone-aware approval time before public release."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Owner-only private deployment is authorized and active, but public/shared access, custom domain attachment, search indexing, extra viewers or groups, and public creative approval are not authorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release creative, identity, privacy, domain, rollback, and actual-screen gates before any audience expansion."
+      }
+    ],
+    "decisions_needed": [],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "app/Dashboard.tsx",
+        "sha256": "b814ef9d2dddc77e990507cf616e5c57176907c6922f56a11e4232b4ad5e85c3",
+        "reason": "WalletIcon inline SVG component shown in the wallet card heading and link button."
+      },
+      {
+        "path": "app/Dashboard.module.css",
+        "sha256": "27b76e576611b8ceac57987eaaf18a40aa2dd6fabdd3d2a66f2d3a59a5a24ae5",
+        "reason": "Icon sizing, tone color, and heading alignment for the wallet icon."
+      },
+      {
+        "path": "migration/STATE_UPDATE_CP000010_WALLET_ICON.json",
+        "sha256": "32bc85d2a428e643fc6c540ef911cc92e38d17a4fa661c826ccdf31364bf99a8",
+        "reason": "Immutable state transition input for the wallet icon clarity change."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-010",
+      "instruction": "Read CP-000010; the owner rotates the bot token and client secret, configures all identity, guild, and integration values in Sites, then deploy with migration 0002 and run the section-8 gate checklist including a second-account isolation test before closing ACT-009.",
+      "do_not_assume": [
+        "The dev-verified bot token or client secret may be reused in production; both were session-exposed or dev-scoped and must be rotated.",
+        "Local end-to-end success substitutes for deployed-environment gate tests.",
+        "The owner's wallet is linked; the MetaMask signature step was not completed."
+      ]
+    }
+  },
+  "resulting_state_sha256": "58927cd3348a5d66e7deed132b2ebab6d2025965187cb4fb7f919b6afce951fc"
+}

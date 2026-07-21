@@ -3594,6 +3594,20 @@
   grid-column: 1 / -1;
 }
 
+.walletIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin-right: 8px;
+  vertical-align: -2px;
+  color: var(--tone);
+}
+
+.walletCard h3 {
+  display: inline-flex;
+  align-items: center;
+}
+
 .walletCard .primaryAction,
 .grantForm .primaryAction {
   justify-content: center;

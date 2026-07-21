@@ -167,6 +167,24 @@ function Dot({ active = false }: { active?: boolean }) {
   return <span className={active ? styles.dotActive : styles.dot} aria-hidden="true" />;
 }
 
+function WalletIcon() {
+  return (
+    <svg
+      className={styles.walletIcon}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M19 7V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H4" />
+      <circle cx="16.5" cy="13.5" r="1.2" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 function StatusPill({ children, accent = "cyan" }: { children: ReactNode; accent?: Accent }) {
   return <span className={styles.statusPill} data-tone={accent}>{children}</span>;
 }
@@ -1228,7 +1246,7 @@ export function Dashboard() {
                   </section>
                   <section className={styles.walletCard} data-tone="cyan">
                     <div className={styles.pointsHead}>
-                      <div><p>OPTIONAL WALLET</p><h3>Wallet連携</h3></div>
+                      <div><p>OPTIONAL WALLET</p><h3><WalletIcon />Wallet連携</h3></div>
                       <StatusPill accent="cyan">{passport.player.walletAddress ? "LINKED" : "OPTIONAL"}</StatusPill>
                     </div>
                     {passport.player.walletAddress ? (
@@ -1243,7 +1261,7 @@ export function Dashboard() {
                       <>
                         <p>EVM系Wallet(MetaMask等)の署名でアドレス所有を証明します。Walletが無くてもポイント付与に影響はありません。</p>
                         <button type="button" className={styles.primaryAction} onClick={() => void linkWallet()} disabled={walletBusy}>
-                          {walletBusy ? "署名を待っています…" : "Walletを連携する"}
+                          <WalletIcon />{walletBusy ? "署名を待っています…" : "Walletを連携する"}
                         </button>
                       </>
                     )}
