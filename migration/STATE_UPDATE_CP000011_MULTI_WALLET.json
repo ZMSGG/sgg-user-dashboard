@@ -1,16 +1,11 @@
 {
   "schema_version": 1,
-  "authority": "SGG_PROJECT_STATE",
-  "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 11,
-  "updated_at": "2026-07-22T00:24:03+08:00",
+  "expected_state_version": 10,
   "updated_by": "Claude Code multi-wallet support implementer",
+  "summary": "Replaced the window.ethereum-only wallet flow with EIP-6963 multi-provider discovery and an in-card wallet picker, so Rabby, Phantom, MetaMask, Brave and any other announcing extension can be chosen explicitly instead of racing over window.ethereum. Verified live: the picker listed Rabby Wallet, MetaMask, and Brave, and the owner completed a real Rabby connect-and-sign, linking wallet 0x24fa54b3e99240c4c7b4b4a68f3f33f01eedec64 1:1 to their Discord identity with the LINKED state shown in the passport UI. Lint, typecheck, build, and all 27 tests pass. Phantom appears automatically once its extension is installed with EVM support; no code change needed.",
   "status": "REVIEW",
   "phase": "PRIVATE_DEPLOYED",
   "current_objective": "Rotate the bot token and client secret owner-side, configure all identity, guild, and integration values in Sites without exposing them, deploy the updated build with migration 0002 owner-only, and run the deployed-environment gate checklist including a second-account isolation test.",
-  "last_summary": "Replaced the window.ethereum-only wallet flow with EIP-6963 multi-provider discovery and an in-card wallet picker, so Rabby, Phantom, MetaMask, Brave and any other announcing extension can be chosen explicitly instead of racing over window.ethereum. Verified live: the picker listed Rabby Wallet, MetaMask, and Brave, and the owner completed a real Rabby connect-and-sign, linking wallet 0x24fa54b3e99240c4c7b4b4a68f3f33f01eedec64 1:1 to their Discord identity with the LINKED state shown in the passport UI. Lint, typecheck, build, and all 27 tests pass. Phantom appears automatically once its extension is installed with EVM support; no code change needed.",
-  "last_checkpoint_id": "CP-000011",
-  "last_checkpoint_path": "checkpoints/CP-000011.json",
   "active_work": {
     "work_id": "ACT-009",
     "objective": "Enable community membership sync and automated point grants on the owner-only private deployment.",
@@ -24,41 +19,8 @@
   },
   "recently_completed": [
     {
-      "action_id": "BOOTSTRAP-001",
-      "result": "Initial zero-to-one scaffold generated atomically.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "COMMAND_CENTER_LINK.json",
-        "QUALITY_SCORECARD.md"
-      ]
-    },
-    {
-      "action_id": "ACT-001",
-      "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "migration/INTAKE.json",
-        "migration/MIGRATION_EVIDENCE.md",
-        "COMMAND_CENTER_LINK.json"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-003",
-      "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
-      "evidence": [
-        "app/Dashboard.tsx",
-        "server/auth.ts",
-        "server/passport-db.ts",
-        "db/schema.ts",
-        "drizzle/0001_majestic_boomer.sql",
-        "tests/passport-security.test.mjs",
-        "tests/dashboard-resilience.test.mjs",
-        "tests/rendered-html.test.mjs"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
+      "work_id": "ACT-012-MULTI-WALLET",
+      "summary": "EIP-6963 discovery helper and wallet picker in app/Dashboard.tsx with picker styles in app/Dashboard.module.css; live verification listed Rabby/MetaMask/Brave and the owner linked a Rabby address end-to-end (challenge, personal_sign, viem verification, 1:1 constraint, LINKED UI)."
     }
   ],
   "next_actions": [
@@ -159,67 +121,19 @@
     }
   ],
   "decisions_needed": [],
-  "authorizations": [
-    {
-      "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
-      "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
-      "status": "GRANTED",
-      "granted_by": "SGG project owner",
-      "granted_at": "2026-07-20T22:47:24+08:00",
-      "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
-    },
-    {
-      "authorization_id": "AUTH-EXTERNAL-ACTIONS",
-      "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
-      "status": "NOT_GRANTED",
-      "granted_by": "",
-      "granted_at": "",
-      "evidence": ""
-    }
-  ],
-  "changed_files": [
+  "changed_paths": [
     {
       "path": "app/Dashboard.tsx",
-      "sha256": "116376c1e821c049ecb6153af443856316b0835ff361c3ec0c520c8a84167abd",
       "reason": "EIP-6963 provider discovery, wallet picker state and UI, and provider-parameterized link flow."
     },
     {
       "path": "app/Dashboard.module.css",
-      "sha256": "e50fbca9f321aa3f138c2d0868374757197caa362fe3b8be2ca73b8e9a02b06f",
       "reason": "Wallet picker list styling within the wallet card tone system."
     },
     {
       "path": "migration/STATE_UPDATE_CP000011_MULTI_WALLET.json",
-      "sha256": "58aad90bc26fe7155c6be76fe2ff9bd24a3594b6e631abd025452357c2a6fc8b",
       "reason": "Immutable state transition input for the multi-wallet discovery milestone."
     }
-  ],
-  "last_known_good": {
-    "validation_report": "VALIDATION_REPORT.json",
-    "commands": [
-      [
-        "python3",
-        "../../launches/tools/validate_sgg_project.py",
-        ".",
-        "--kickoff",
-        "--record"
-      ],
-      [
-        "python3",
-        "../../launches/tools/validate_pack.py",
-        "."
-      ]
-    ]
-  },
-  "authoritative_files": [
-    "AGENTS.md",
-    "COMMAND_CENTER_LINK.json",
-    "PROJECT_PROFILE.json",
-    "PROJECT_STATE.json",
-    "DECISIONS.md",
-    "CANON_AND_COPY.md",
-    "WORLD_AND_CHARACTER_BRIEF.md",
-    "VALIDATION_REPORT.json"
   ],
   "resume": {
     "action_id": "ACT-010",

@@ -64,6 +64,39 @@ type EthereumProvider = {
   request(args: { method: string; params?: unknown[] }): Promise<unknown>;
 };
 
+/** EIP-6963 announced wallet: Rabby, Phantom, MetaMask等が自己申告する。 */
+type WalletProviderDetail = {
+  info: { uuid: string; name: string; icon: string; rdns: string };
+  provider: EthereumProvider;
+};
+
+/**
+ * EIP-6963 multi-wallet discovery. Announcements arrive synchronously after
+ * the request event in practice; the short timeout is only a safety margin.
+ * Avoids the window.ethereum race where one extension impersonates another.
+ */
+function discoverWalletProviders(timeoutMs = 250): Promise<WalletProviderDetail[]> {
+  return new Promise((resolve) => {
+    const found: WalletProviderDetail[] = [];
+    const onAnnounce = (event: Event) => {
+      const detail = (event as CustomEvent<WalletProviderDetail>).detail;
+      if (
+        detail?.info?.uuid &&
+        typeof detail.provider?.request === "function" &&
+        !found.some((entry) => entry.info.uuid === detail.info.uuid)
+      ) {
+        found.push(detail);
+      }
+    };
+    window.addEventListener("eip6963:announceProvider", onAnnounce);
+    window.dispatchEvent(new Event("eip6963:requestProvider"));
+    window.setTimeout(() => {
+      window.removeEventListener("eip6963:announceProvider", onAnnounce);
+      resolve(found);
+    }, timeoutMs);
+  });
+}
+
 async function postJson<T>(path: string, body?: object): Promise<T> {
   const response = await fetch(path, {
     method: "POST",
@@ -365,6 +398,7 @@ export function Dashboard() {
   const [passport, setPassport] = useState<PassportData | null>(null);
   const [passportState, setPassportState] = useState<Exclude<LoadState, "idle">>("loading");
   const [walletBusy, setWalletBusy] = useState(false);
+  const [walletChoices, setWalletChoices] = useState<WalletProviderDetail[] | null>(null);
   const [guildBusy, setGuildBusy] = useState(false);
   const [adminPlayers, setAdminPlayers] = useState<AdminPlayerRow[] | null>(null);
   const [adminRosterState, setAdminRosterState] = useState<LoadState>("idle");
@@ -524,19 +558,30 @@ export function Dashboard() {
     }
   };
 
-  const linkWallet = async () => {
-    const ethereum = (window as { ethereum?: EthereumProvider }).ethereum;
-    if (!ethereum) {
-      setToast("対応するWallet拡張が見つかりません(MetaMask等をインストールしてください)");
+  const linkWallet = async (chosen?: EthereumProvider) => {
+    let provider = chosen ?? null;
+    if (!provider) {
+      const discovered = await discoverWalletProviders();
+      if (discovered.length > 1) {
+        // 複数ウォレット(Rabby、Phantom等)が居るときはユーザーに選ばせる。
+        setWalletChoices(discovered);
+        return;
+      }
+      provider = discovered[0]?.provider ??
+        (window as { ethereum?: EthereumProvider }).ethereum ?? null;
+    }
+    if (!provider) {
+      setToast("対応するWallet拡張が見つかりません(Rabby、Phantom、MetaMask等をインストールしてください)");
       return;
     }
+    setWalletChoices(null);
     setWalletBusy(true);
     try {
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" }) as string[];
+      const accounts = await provider.request({ method: "eth_requestAccounts" }) as string[];
       const address = accounts?.[0];
       if (!address) throw new Error("Walletアカウントを取得できませんでした");
       const challenge = await postJson<{ message: string }>("/api/wallet/challenge", { address });
-      const signature = await ethereum.request({
+      const signature = await provider.request({
         method: "personal_sign",
         params: [challenge.message, address],
       }) as string;
@@ -1259,10 +1304,31 @@ export function Dashboard() {
                       </>
                     ) : (
                       <>
-                        <p>EVM系Wallet(MetaMask等)の署名でアドレス所有を証明します。Walletが無くてもポイント付与に影響はありません。</p>
-                        <button type="button" className={styles.primaryAction} onClick={() => void linkWallet()} disabled={walletBusy}>
-                          <WalletIcon />{walletBusy ? "署名を待っています…" : "Walletを連携する"}
-                        </button>
+                        <p>EVM系Wallet(Rabby、Phantom、MetaMask等)の署名でアドレス所有を証明します。Walletが無くてもポイント付与に影響はありません。</p>
+                        {walletChoices ? (
+                          <div className={styles.walletPicker} role="group" aria-label="使用するWalletを選択">
+                            <p>使用するWalletを選択してください</p>
+                            {walletChoices.map((choice) => (
+                              <button
+                                key={choice.info.uuid}
+                                type="button"
+                                onClick={() => void linkWallet(choice.provider)}
+                                disabled={walletBusy}
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={choice.info.icon} alt="" width={18} height={18} />
+                                {choice.info.name}
+                              </button>
+                            ))}
+                            <button type="button" className={styles.textButton} onClick={() => setWalletChoices(null)}>
+                              キャンセル
+                            </button>
+                          </div>
+                        ) : (
+                          <button type="button" className={styles.primaryAction} onClick={() => void linkWallet()} disabled={walletBusy}>
+                            <WalletIcon />{walletBusy ? "署名を待っています…" : "Walletを連携する"}
+                          </button>
+                        )}
                       </>
                     )}
                   </section>

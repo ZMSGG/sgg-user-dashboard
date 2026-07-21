@@ -3,8 +3,8 @@
 > Derived view. `PROJECT_STATE.json` and its immutable checkpoint are authoritative.
 
 Project ID: `PRJ-202607-sgg-user-dashboard`  
-State version: `10`  
-Updated: `2026-07-22T00:04:28+08:00`  
+State version: `11`  
+Updated: `2026-07-22T00:24:03+08:00`  
 Status: `REVIEW`  
 Phase: `PRIVATE_DEPLOYED`
 
@@ -14,8 +14,8 @@ Rotate the bot token and client secret owner-side, configure all identity, guild
 
 ## Last checkpoint
 
-- ID: `CP-000010`
-- Summary: Added a theme-toned inline SVG wallet icon to the passport wallet card heading and link button so the optional wallet feature is visually identifiable, verified in the running dev UI after a dev-server restart (the Vite watcher had missed a case-variant CSS edit), with lint, typecheck, build, and all 27 tests passing. The owner's wallet link attempt remains pending at the MetaMask signature step; ACT-010 secret rotation and Sites configuration remain the production path.
+- ID: `CP-000011`
+- Summary: Replaced the window.ethereum-only wallet flow with EIP-6963 multi-provider discovery and an in-card wallet picker, so Rabby, Phantom, MetaMask, Brave and any other announcing extension can be chosen explicitly instead of racing over window.ethereum. Verified live: the picker listed Rabby Wallet, MetaMask, and Brave, and the owner completed a real Rabby connect-and-sign, linking wallet 0x24fa54b3e99240c4c7b4b4a68f3f33f01eedec64 1:1 to their Discord identity with the LINKED state shown in the passport UI. Lint, typecheck, build, and all 27 tests pass. Phantom appears automatically once its extension is installed with EVM support; no code change needed.
 
 ## Blockers
 
@@ -35,4 +35,4 @@ Rotate the bot token and client secret owner-side, configure all identity, guild
 
 ## Resume exactly here
 
-`ACT-010` — Read CP-000010; the owner rotates the bot token and client secret, configures all identity, guild, and integration values in Sites, then deploy with migration 0002 and run the section-8 gate checklist including a second-account isolation test before closing ACT-009.
+`ACT-010` — Read CP-000011; the owner rotates the bot token and client secret, configures all identity, guild, and integration values in Sites, then deploy with migration 0002 and run the section-8 gate checklist including a second-account isolation test before closing ACT-009.
