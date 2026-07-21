@@ -179,6 +179,42 @@ export async function unlinkWalletWithAudit(db: Db, input: {
   ]);
 }
 
+/** Persists a successful guild sync snapshot. Failed syncs never call this. */
+export async function updateGuildMembership(db: Db, input: {
+  discordId: string;
+  member: boolean;
+  joinedAt: string | null;
+  roles: string[];
+  syncedAt: string;
+}) {
+  await db
+    .update(players)
+    .set({
+      guildMember: input.member ? 1 : 0,
+      guildJoinedAt: input.joinedAt,
+      guildRoles: JSON.stringify(input.roles),
+      guildSyncedAt: input.syncedAt,
+    })
+    .where(eq(players.discordId, input.discordId));
+}
+
+/**
+ * The integration actor is the service's own Discord bot user. The ledger's
+ * granted_by column requires an existing player row, so the actor is
+ * registered once, idempotently, before its first automated grant.
+ */
+export async function ensureIntegrationActor(db: Db, actorId: string) {
+  await db
+    .insert(players)
+    .values({
+      discordId: actorId,
+      discordUsername: "sgg-integration-service",
+      createdAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString(),
+    })
+    .onConflictDoNothing({ target: players.discordId });
+}
+
 export async function getPlayer(db: Db, discordId: string) {
   const rows = await db.select().from(players).where(eq(players.discordId, discordId)).limit(1);
   return rows[0] ?? null;

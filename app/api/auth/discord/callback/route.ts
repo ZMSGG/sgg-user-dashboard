@@ -12,7 +12,12 @@ import {
   resolveAppOrigin,
   verifyPurposeToken,
 } from "../../../../../server/auth";
-import { establishDiscordSession, getDb } from "../../../../../server/passport-db";
+import { fetchGuildMember, guildSyncConfigFromEnv } from "../../../../../server/discord-guild";
+import {
+  establishDiscordSession,
+  getDb,
+  updateGuildMembership,
+} from "../../../../../server/passport-db";
 import { OAUTH_STATE_COOKIE } from "../route";
 
 export const dynamic = "force-dynamic";
@@ -123,6 +128,26 @@ export async function GET(request: Request) {
     });
   } catch {
     return redirectWithError(origin, secure, "persistence_failed");
+  }
+
+  // Best-effort guild membership snapshot: sync failures must never block
+  // login, and they keep the previous durable state instead of guessing.
+  const guildConfig = guildSyncConfigFromEnv(env);
+  if (guildConfig) {
+    try {
+      const snapshot = await fetchGuildMember(guildConfig, profile.id, 5_000);
+      if (snapshot) {
+        await updateGuildMembership(db, {
+          discordId: profile.id,
+          member: snapshot.member,
+          joinedAt: snapshot.joinedAt,
+          roles: snapshot.roles,
+          syncedAt: new Date().toISOString(),
+        });
+      }
+    } catch {
+      // Ignore: the manual /api/guild/sync endpoint can retry later.
+    }
   }
 
   const headers = new Headers({

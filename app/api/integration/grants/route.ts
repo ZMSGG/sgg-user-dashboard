@@ -1,58 +1,55 @@
-import {
-  adminDiscordIds,
-  hasJsonRequestHeader,
-  hasRecentAuthentication,
-  jsonError,
-  readSession,
-} from "../../../../server/auth";
+import { grantRequestFingerprint, jsonError, playerOsEnv } from "../../../../server/auth";
 import { parseGrantPayload } from "../../../../server/grant-validation";
 import {
+  integrationConfigFromEnv,
+  verifyIntegrationRequest,
+} from "../../../../server/integration-auth";
+import {
   appendPointGrantWithAudit,
+  ensureIntegrationActor,
   getDb,
   getGrantByIdempotencyKey,
   getPlayer,
   getPointBalance,
-  grantRequestFingerprint,
   isUniqueConstraintError,
 } from "../../../../server/passport-db";
 
 export const dynamic = "force-dynamic";
 
 /**
- * Append-only point grant. Idempotency keys make retries safe; corrections
- * are new negative rows with their own reason, never edits or deletions.
+ * Server-to-server point grant for automated campaigns (login rewards,
+ * tournament payouts). No cookies are involved: authentication is an
+ * HMAC signature over the raw body plus a bounded timestamp, and the same
+ * append-only, idempotent ledger rules as the admin endpoint apply.
  */
 export async function POST(request: Request) {
-  if (!hasJsonRequestHeader(request)) {
-    return jsonError(403, "BAD_REQUEST_HEADER", "不正なリクエストです。");
-  }
+  const env = await playerOsEnv();
+  const config = integrationConfigFromEnv(env);
   const db = await getDb();
-  const session = await readSession(request);
-  if (!db || !session) return jsonError(401, "NOT_AUTHENTICATED", "Discord連携が必要です。");
-  if (!(await adminDiscordIds()).has(session.sub)) {
-    return jsonError(403, "NOT_ADMIN", "管理者権限がありません。");
-  }
-  if (!hasRecentAuthentication(session)) {
-    return jsonError(
-      403,
-      "RECENT_AUTH_REQUIRED",
-      "安全のため、ログアウト後にDiscordへ再接続してから付与してください。",
-    );
+  if (!config || !db) {
+    return jsonError(503, "INTEGRATION_NOT_CONFIGURED", "自動付与連携は現在準備中です。");
   }
 
-  let body: {
-    discordId?: unknown;
-    amount?: unknown;
-    reasonCode?: unknown;
-    note?: unknown;
-    idempotencyKey?: unknown;
-  };
+  const rawBody = await request.text();
+  if (rawBody.length > 4096) {
+    return jsonError(413, "BODY_TOO_LARGE", "リクエスト本文が大きすぎます。");
+  }
+  const verification = await verifyIntegrationRequest(
+    config.secret,
+    request.headers.get("x-sgg-timestamp"),
+    request.headers.get("x-sgg-signature"),
+    rawBody,
+  );
+  if (!verification.ok) {
+    return jsonError(401, verification.reason, "リクエスト署名を検証できませんでした。");
+  }
+
+  let body: Parameters<typeof parseGrantPayload>[0];
   try {
-    body = await request.json() as typeof body;
+    body = JSON.parse(rawBody) as typeof body;
   } catch {
     return jsonError(400, "BAD_JSON", "リクエスト本文を読み取れません。");
   }
-
   const parsed = parseGrantPayload(body);
   if (!parsed.ok) return jsonError(400, parsed.code, parsed.message);
   const grant = parsed.value;
@@ -62,8 +59,9 @@ export async function POST(request: Request) {
     return jsonError(404, "PLAYER_NOT_FOUND", "対象プレイヤーはまだDiscord連携していません。");
   }
 
+  await ensureIntegrationActor(db, config.actorId);
   const requestFingerprint = await grantRequestFingerprint({
-    actor: session.sub,
+    actor: config.actorId,
     discordId: grant.discordId,
     amount: grant.amount,
     reasonCode: grant.reasonCode,
@@ -77,7 +75,7 @@ export async function POST(request: Request) {
       amount: grant.amount,
       reasonCode: grant.reasonCode,
       note: grant.note,
-      grantedBy: session.sub,
+      grantedBy: config.actorId,
       idempotencyKey: grant.idempotencyKey,
       requestFingerprint,
     });
@@ -86,14 +84,7 @@ export async function POST(request: Request) {
 
     const existing = await getGrantByIdempotencyKey(db, grant.idempotencyKey);
     if (!existing) throw error;
-    const legacyPayloadMatches =
-      !existing.requestFingerprint &&
-      existing.grantedBy === session.sub &&
-      existing.discordId === grant.discordId &&
-      existing.amount === grant.amount &&
-      existing.reasonCode === grant.reasonCode &&
-      existing.note === grant.note;
-    if (existing.requestFingerprint !== requestFingerprint && !legacyPayloadMatches) {
+    if (existing.requestFingerprint !== requestFingerprint) {
       return jsonError(
         409,
         "IDEMPOTENCY_CONFLICT",

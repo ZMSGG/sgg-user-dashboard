@@ -3474,6 +3474,7 @@
 
 .pointsCard,
 .walletCard,
+.guildCard,
 .adminPanel {
   display: flex;
   flex-direction: column;
@@ -3582,10 +3583,15 @@
   line-height: 1.7;
 }
 
-.walletCard p {
+.walletCard p,
+.guildCard p {
   color: #817c88;
   font-size: 10px;
   line-height: 1.75;
+}
+
+.guildCard {
+  grid-column: 1 / -1;
 }
 
 .walletCard .primaryAction,

@@ -347,6 +347,7 @@ export function Dashboard() {
   const [passport, setPassport] = useState<PassportData | null>(null);
   const [passportState, setPassportState] = useState<Exclude<LoadState, "idle">>("loading");
   const [walletBusy, setWalletBusy] = useState(false);
+  const [guildBusy, setGuildBusy] = useState(false);
   const [adminPlayers, setAdminPlayers] = useState<AdminPlayerRow[] | null>(null);
   const [adminRosterState, setAdminRosterState] = useState<LoadState>("idle");
   const [grantForm, setGrantForm] = useState({ discordId: "", amount: "", reasonCode: "TESTER_FEEDBACK", note: "" });
@@ -545,6 +546,19 @@ export function Dashboard() {
       setToast("Wallet連携の解除に失敗しました");
     } finally {
       setWalletBusy(false);
+    }
+  };
+
+  const syncGuild = async () => {
+    setGuildBusy(true);
+    try {
+      await postJson("/api/guild/sync");
+      setToast("コミュニティ参加状態を更新しました");
+      await refreshPassport();
+    } catch (error) {
+      setToast(error instanceof Error && error.message ? error.message : "参加状態を確認できませんでした");
+    } finally {
+      setGuildBusy(false);
     }
   };
 
@@ -1158,6 +1172,19 @@ export function Dashboard() {
                 <div className={styles.passportStatus}>
                   <span><Dot active={passport?.connected === true} />Discord<strong>{passportState === "loading" && !passport ? "確認中" : passportState === "error" && !passport ? "取得不可" : passport?.connected ? "接続済み" : passport?.authConfigured === false ? "準備中" : "未接続"}</strong></span>
                   <span><Dot active={passport?.connected === true && Boolean(passport.player.walletAddress)} />Wallet<strong>{passportState === "loading" && !passport ? "確認中" : passport?.connected && passport.player.walletAddress ? shortAddress(passport.player.walletAddress) : "任意"}</strong></span>
+                  <span><Dot active={passport?.connected === true && passport.guild.member === true} />コミュニティ<strong>{passportState === "loading" && !passport
+                    ? "確認中"
+                    : passport?.connected
+                      ? (!passport.guild.configured
+                        ? "準備中"
+                        : passport.guild.member === true
+                          ? "参加済み"
+                          : passport.guild.member === false
+                            ? "未参加"
+                            : "未確認")
+                      : passport?.authConfigured === false
+                        ? "準備中"
+                        : "Discord連携後"}</strong></span>
                   <span><Dot />Passkey<strong>準備中</strong></span>
                 </div>
               </section>
@@ -1219,6 +1246,36 @@ export function Dashboard() {
                           {walletBusy ? "署名を待っています…" : "Walletを連携する"}
                         </button>
                       </>
+                    )}
+                  </section>
+                  <section className={styles.guildCard} data-tone="violet">
+                    <div className={styles.pointsHead}>
+                      <div><p>COMMUNITY</p><h3>Discordサーバー</h3></div>
+                      <StatusPill accent="violet">{!passport.guild.configured
+                        ? "SETUP REQUIRED"
+                        : passport.guild.member === true
+                          ? "JOINED"
+                          : passport.guild.member === false
+                            ? "NOT JOINED"
+                            : "UNVERIFIED"}</StatusPill>
+                    </div>
+                    {!passport.guild.configured ? (
+                      <p>コミュニティ参加確認は現在準備中です。Bot設定の完了後、SGG Discordサーバーの参加状態がここに表示されます。</p>
+                    ) : passport.guild.member === true ? (
+                      <p>
+                        SGG Discordサーバーに参加済みです（ロール {number.format(passport.guild.roleCount)} 件）。
+                        {passport.guild.syncedAt ? ` 最終確認 ${formatGrantDate(passport.guild.syncedAt)}。` : ""}
+                        参加状態はキャンペーン参加条件の判定に使われます。
+                      </p>
+                    ) : passport.guild.member === false ? (
+                      <p>SGG Discordサーバーへの参加が確認できませんでした。サーバー参加後に再確認してください。</p>
+                    ) : (
+                      <p>参加状態はまだ確認されていません。再確認を実行すると最新の参加状態を取得します。</p>
+                    )}
+                    {passport.guild.configured && (
+                      <button type="button" className={styles.textButton} onClick={() => void syncGuild()} disabled={guildBusy}>
+                        {guildBusy ? "確認中…" : "参加状態を再確認"}
+                      </button>
                     )}
                   </section>
                 </div>

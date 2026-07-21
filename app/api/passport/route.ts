@@ -4,6 +4,7 @@ import {
   playerOsEnv,
   readSession,
 } from "../../../server/auth";
+import { guildSyncConfigFromEnv, parseGuildRoles } from "../../../server/discord-guild";
 import { getDb, getPlayer, getPointBalance, getRecentGrants } from "../../../server/passport-db";
 
 export const dynamic = "force-dynamic";
@@ -47,6 +48,13 @@ export async function GET(request: Request) {
           : null,
         walletAddress: player.walletAddress,
         walletLinkedAt: player.walletLinkedAt,
+      },
+      guild: {
+        configured: Boolean(guildSyncConfigFromEnv(env)),
+        member: player.guildMember === null ? null : player.guildMember === 1,
+        joinedAt: player.guildJoinedAt,
+        roleCount: parseGuildRoles(player.guildRoles).length,
+        syncedAt: player.guildSyncedAt,
       },
       points: { balance, grants },
       isAdmin: (await adminDiscordIds()).has(player.discordId),

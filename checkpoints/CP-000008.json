@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000008",
+  "state_version": 8,
+  "created_at": "2026-07-21T19:01:27+08:00",
+  "previous_checkpoint_id": "CP-000007",
+  "summary": "Implemented the Discord community and automation enablement slice in source: bot-token guild membership sync with truthful NULL-means-unverified snapshots (login-time best-effort plus a cooldown-guarded manual re-sync endpoint), an HMAC-signed server-to-server automated point grant endpoint reusing the append-only idempotent ledger rules through a shared grant validator, passport guild read model and community card UI with loading, setup-required, unverified, joined, and not-joined states, generated D1 migration 0002, refreshed .dev.vars.example, and Discord operations plus point reason-code documentation. Lint, typecheck, build, and all 27 tests pass, and local in-app browser verification confirmed the fail-closed states; the new build is not yet deployed and no credentials were created or configured.",
+  "project_basis_sha256": "a8d5e508538f977fe7f178911c2651d81dccd24d724387082b7959a041ae53de",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 8,
+    "updated_at": "2026-07-21T19:01:27+08:00",
+    "updated_by": "Claude Code community and automation enablement implementer",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Configure the approved Discord application credentials (OAuth client, bot token, guild ID, administrator IDs) and the integration grant secret and actor ID through Sites without exposing values, then deploy the updated build with migration 0002 owner-only and run identity-isolation, guild-sync, and automated-grant gate tests.",
+    "last_summary": "Implemented the Discord community and automation enablement slice in source: bot-token guild membership sync with truthful NULL-means-unverified snapshots (login-time best-effort plus a cooldown-guarded manual re-sync endpoint), an HMAC-signed server-to-server automated point grant endpoint reusing the append-only idempotent ledger rules through a shared grant validator, passport guild read model and community card UI with loading, setup-required, unverified, joined, and not-joined states, generated D1 migration 0002, refreshed .dev.vars.example, and Discord operations plus point reason-code documentation. Lint, typecheck, build, and all 27 tests pass, and local in-app browser verification confirmed the fail-closed states; the new build is not yet deployed and no credentials were created or configured.",
+    "last_checkpoint_id": "CP-000008",
+    "last_checkpoint_path": "checkpoints/CP-000008.json",
+    "active_work": {
+      "work_id": "ACT-009",
+      "objective": "Enable community membership sync and automated point grants on the owner-only private deployment.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Source implements guild membership sync, the automated grant endpoint, shared grant validation, migration 0002, and truthful passport community states with all checks passing.",
+        "The approved Discord application, bot, guild ID, administrator IDs, integration secret, and integration actor ID are configured through Sites without exposing secret values.",
+        "The updated build and migration 0002 are deployed owner-only through Sites.",
+        "Two-account identity isolation, guild joined and not-joined states, fail-closed unset-credential states, signature-rejection, and idempotent replay tests pass against the deployment."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-005",
+        "order": 1,
+        "action": "Configure the approved Discord OAuth client ID, client secret, redirect URL, administrator Discord IDs, bot token, guild ID, integration grant secret, and integration actor ID in Sites per docs/DISCORD_OPERATIONS.md, then execute two-user and administrator isolation tests.",
+        "owner": "SGG identity administrator",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PASSPORT-CREDENTIALS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-009",
+        "order": 2,
+        "action": "Deploy the updated build with migration 0002 owner-only through Sites after credentials exist, then run the guild-sync, automated-grant signature, and idempotent replay gate tests recorded in docs/DISCORD_OPERATIONS.md section 8.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PASSPORT-CREDENTIALS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-004",
+        "order": 3,
+        "action": "Open the deployed URL in a new in-app browser tab, verify the dashboard and setup-required Passport state, inspect console health, preserve the existing MFA tab, and keep the new tab as handoff.",
+        "owner": "Codex delivery operator",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-IN-APP-BROWSER-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 4,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing personal progress or assets.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-007",
+        "order": 5,
+        "action": "Record asset-specific rights, character IDs and forms, crop QA, approver, time, version, and hashes for every release visual.",
+        "owner": "SGG creative and release approver",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-RIGHTS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 6,
+        "action": "Request and record separate authority before public/shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-PASSPORT-CREDENTIALS-001",
+        "scope": "DISCORD_PASSPORT_RUNTIME",
+        "severity": "P1",
+        "description": "The local and hosted configurations do not contain an approved Discord client ID, client secret, administrator Discord IDs, bot token, guild ID, integration grant secret, or integration actor ID; a strong session secret and canonical app origin are configured, and every dependent feature fails closed to a setup-required state.",
+        "owner": "SGG identity administrator",
+        "status": "OPEN",
+        "resolution_required": "Create or select the approved Discord application and bot, register the exact callback origin, invite the bot to the guild with no permissions, configure all values through Sites without exposing them per docs/DISCORD_OPERATIONS.md, and run real identity-isolation, guild-sync, and automated-grant tests."
+      },
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "The deployed URL has not been interactively verified in an in-app browser tab alongside the protected MFA tab; this session interactively verified the new build on the local dev server only, not the private deployment.",
+        "owner": "Codex runtime capability",
+        "status": "OPEN",
+        "resolution_required": "Open the live URL in a new tab without navigating or closing the protected MFA tab and complete interactive dashboard, Passport, responsive, and console verification against the deployment."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so personal progress and holdings remain intentionally unconnected.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting personal data."
+      },
+      {
+        "blocker_id": "BLK-RIGHTS-001",
+        "scope": "PUBLIC_CREATIVE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "The current dashboard hero is a candidate and the release icon, key visual, and social card do not have complete asset-specific rights, character, final-crop, approver, and hash evidence.",
+        "owner": "SGG creative and release approver",
+        "status": "OPEN",
+        "resolution_required": "Approve exact asset versions and hashes with source rights, visible character IDs and OTOMO forms, display and crop QA, reviewer, and timezone-aware approval time before public release."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Owner-only private deployment is authorized and active, but public/shared access, custom domain attachment, search indexing, extra viewers or groups, and public creative approval are not authorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release creative, identity, privacy, domain, rollback, and actual-screen gates before any audience expansion."
+      }
+    ],
+    "decisions_needed": [],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "server/discord-guild.ts",
+        "sha256": "af320ea3985feb6cfb39becb497dcab926fd68c918fef859740f096794791f7c",
+        "reason": "Bot-token guild membership snapshot fetch with fail-closed configuration, definitive-404 semantics, cooldown guard, and stored-role parsing."
+      },
+      {
+        "path": "server/integration-auth.ts",
+        "sha256": "ecf65a87dcc882a3e180c8528593b99cac22ef0d5ab17b4627f94af06087201f",
+        "reason": "Constant-time HMAC signature scheme with bounded timestamps for server-to-server automated point grants."
+      },
+      {
+        "path": "server/grant-validation.ts",
+        "sha256": "4a6f3dc0b36b79ec610226841120e8b418f48979ea9de5c4e632619731a25741",
+        "reason": "Shared strict grant payload validation so the admin and integration ledger paths cannot drift."
+      },
+      {
+        "path": "server/passport-db.ts",
+        "sha256": "4f2ea1e3b9e2a34171c44052c6ba4538121e85cbba7194299091bd090da02a66",
+        "reason": "Guild snapshot persistence and idempotent integration actor registration."
+      },
+      {
+        "path": "app/api/guild/sync/route.ts",
+        "sha256": "8f1d4ff138ad06d9035626a80ad5b64c068adc86e38ba8f2accceb1e6173b48b",
+        "reason": "Session-bound manual guild re-sync endpoint with cooldown and truthful failure handling."
+      },
+      {
+        "path": "app/api/integration/grants/route.ts",
+        "sha256": "4cc6c49ca40cf4afa3e520110244363bb5832479d7da4f62d34581ac56d62ec7",
+        "reason": "Signed server-to-server grant endpoint reusing the append-only idempotent ledger rules."
+      },
+      {
+        "path": "app/api/admin/grants/route.ts",
+        "sha256": "b736288eab1d695ee538fa0a1f1ecf8140440bf8ad457128ae339c7d6f3e1f67",
+        "reason": "Refactored onto the shared grant validator with unchanged behavior."
+      },
+      {
+        "path": "app/api/auth/discord/callback/route.ts",
+        "sha256": "3e1cc4c3566ee062814a6092bfa3ec849b1312c8dde296f2be439a3a0ece7ca4",
+        "reason": "Best-effort login-time guild snapshot that never blocks login or overwrites durable state on failure."
+      },
+      {
+        "path": "app/api/passport/route.ts",
+        "sha256": "df4ec4d374fede203e7483d2a2bc2d337639efc7e050d37b0f691d0cce71d73c",
+        "reason": "Guild read model added to the passport response."
+      },
+      {
+        "path": "app/passport-contract.ts",
+        "sha256": "02147553aed2321462cf0da316e0b4fc174bb4aaeb23b57b92048de2974a9225",
+        "reason": "PassportGuild contract with explicit member-null-means-unverified semantics."
+      },
+      {
+        "path": "app/Dashboard.tsx",
+        "sha256": "192a9005507676f762ddea972ea6e65331f1e7273e78c1e958cad1188e090556",
+        "reason": "Community status row and community card with loading, setup-required, unverified, joined, and not-joined states plus manual re-sync action."
+      },
+      {
+        "path": "app/dashboard.module.css",
+        "sha256": "166d9d1b6df754e6965d773c13e78743fdb92f4db168377fddbf6a2ee8586151",
+        "reason": "Guild card styling reusing the existing card system."
+      },
+      {
+        "path": "db/schema.ts",
+        "sha256": "ca88e462a506b4ca45526794e5d84bc285d264f8828777521cd1a40daa9cddec",
+        "reason": "Nullable guild membership snapshot columns on players."
+      },
+      {
+        "path": "drizzle/0002_bent_spiral.sql",
+        "sha256": "e3ec5dd4313d2d8f5c6b8311e139ba448a3d8e6fa0a44de778c1b1a724ce3f95",
+        "reason": "Generated D1 migration adding the guild snapshot columns."
+      },
+      {
+        "path": "tests/integration-security.test.mjs",
+        "sha256": "797bbf24e3549204b80d2934ff8fed89414c3b43f3baffc17e4b3ec6d69f6405",
+        "reason": "Signature binding, timestamp window, fail-closed configuration, cooldown, and shared validation tests."
+      },
+      {
+        "path": ".dev.vars.example",
+        "sha256": "9c1de323a30454b14c549cfaf863c9e4fc5dfbcaac83fa62109e86c12a6faffc",
+        "reason": "Documents the new optional guild and integration environment values without secret material."
+      },
+      {
+        "path": "docs/DISCORD_OPERATIONS.md",
+        "sha256": "6b336c74f130ba70615d1db00c3abfe0fbeccc72e84c639e0766e689652ac7bb",
+        "reason": "Owner runbook for Discord application, bot, secrets, rotation, reconciliation, and pre-production gate checks."
+      },
+      {
+        "path": "docs/POINT_REASON_CODES.md",
+        "sha256": "0a40688df1df49f5b553664bb1f3e56ca74f2445882ac0b51cc1d1661b47b164",
+        "reason": "Formal reason-code vocabulary and idempotency-key conventions for the point ledger."
+      },
+      {
+        "path": "migration/STATE_UPDATE_CP000008_COMMUNITY_AUTOMATION.json",
+        "sha256": "8b500cc3ddfec51e276c04a9225a03d79895dad9b9cb13ca59807c6223bac34e",
+        "reason": "Immutable state transition input for the community and automation enablement milestone."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-005",
+      "instruction": "Read CP-000008 and docs/DISCORD_OPERATIONS.md, have the owner create the approved Discord application and bot and configure all identity, guild, and integration values through Sites without exposing them, then deploy the updated build with migration 0002 owner-only and run the section-8 gate checklist before marking ACT-009 complete.",
+      "do_not_assume": [
+        "Source-level completion or local browser verification substitutes for deployed-environment gate tests.",
+        "Guild membership NULL may be displayed or treated as not-a-member.",
+        "The integration grant secret may be shared beyond approved game or campaign backends.",
+        "Private deployment grants public/shared access, a custom domain, search indexing, or additional viewers."
+      ]
+    }
+  },
+  "resulting_state_sha256": "6f70953a00490d846120a95a24352056767114db3ec3358a63994356d8108d1e"
+}

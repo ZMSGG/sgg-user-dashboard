@@ -13,6 +13,10 @@ export type PlayerOsEnv = {
   DISCORD_CLIENT_SECRET?: string;
   SESSION_SECRET?: string;
   ADMIN_DISCORD_IDS?: string;
+  DISCORD_BOT_TOKEN?: string;
+  DISCORD_GUILD_ID?: string;
+  INTEGRATION_GRANT_SECRET?: string;
+  INTEGRATION_ACTOR_ID?: string;
 };
 
 let cachedEnv: PlayerOsEnv | null = null;

@@ -15,6 +15,12 @@ export const players = sqliteTable("players", {
   discordAvatarHash: text("discord_avatar_hash"),
   walletAddress: text("wallet_address"),
   walletLinkedAt: text("wallet_linked_at"),
+  // Guild membership is a synced snapshot, never an assertion: NULL means the
+  // membership has not been determined yet, 0/1 only after a successful sync.
+  guildMember: integer("guild_member"),
+  guildJoinedAt: text("guild_joined_at"),
+  guildRoles: text("guild_roles"),
+  guildSyncedAt: text("guild_synced_at"),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   lastLoginAt: text("last_login_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 }, (table) => [
