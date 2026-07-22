@@ -189,12 +189,12 @@ test("degrades image optimization gracefully without Cloudflare bindings", async
   workerUrl.searchParams.set("test", `image-${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
   const response = await worker.fetch(
-    new Request("http://localhost/_vinext/image?url=%2Fdashboard-art%2Fmy-sgg-triform-candidate-v1.png&w=1080&q=75"),
+    new Request("http://localhost/_vinext/image?url=%2Fdashboard-art%2Fmy-sgg-key-visual-v002.png&w=1080&q=75"),
     {},
     { waitUntil() {}, passThroughOnException() {} },
   );
   assert.equal(response.status, 302);
-  assert.equal(response.headers.get("location"), "/dashboard-art/my-sgg-triform-candidate-v1.png");
+  assert.equal(response.headers.get("location"), "/dashboard-art/my-sgg-key-visual-v002.png");
 
   const rejected = await worker.fetch(
     new Request("http://localhost/_vinext/image?url=https%3A%2F%2Fevil.example%2Fx.png"),
@@ -224,15 +224,19 @@ test("keeps publication claims aligned with the deployment registry", async () =
 });
 
 test("ships the finished visual surface and retires legacy demo art", async () => {
-  const og = await readFile(new URL("../public/og.png", import.meta.url));
+  const og = await readFile(new URL("../public/my-sgg-social-og-v002.png", import.meta.url));
   assert.equal(og.toString("ascii", 1, 4), "PNG");
   assert.equal(og.readUInt32BE(16), 1200);
   assert.equal(og.readUInt32BE(20), 630);
 
-  await access(new URL("../public/dashboard-art/my-sgg-triform-candidate-v1.png", import.meta.url));
+  await access(new URL("../public/dashboard-art/my-sgg-key-visual-v002.png", import.meta.url));
+  await access(new URL("../public/my-sgg-icon-v003.png", import.meta.url));
   await access(new URL("../app/Dashboard.module.css", import.meta.url));
   await access(new URL("../docs/PLAYER_OS_ARCHITECTURE.md", import.meta.url));
   await assert.rejects(access(new URL("../app/CharacterDeck.tsx", import.meta.url)));
+  await assert.rejects(access(new URL("../public/og.png", import.meta.url)));
+  await assert.rejects(access(new URL("../public/my-sgg-icon-v002.png", import.meta.url)));
+  await assert.rejects(access(new URL("../public/dashboard-art/my-sgg-triform-candidate-v1.png", import.meta.url)));
   await assert.rejects(access(new URL("../public/dashboard-art/hero-taimaru-command.png", import.meta.url)));
   await assert.rejects(access(new URL("../public/dashboard-characters", import.meta.url)));
 });

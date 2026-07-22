@@ -42,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description:
       "公開中のSGGゲーム、ランキング、キャラクター図鑑、公式アップデート、プレイヤー記録をひとつに束ねるSGG Player OS。",
-    icons: { icon: "/my-sgg-icon-v002.png" },
+    icons: { icon: "/my-sgg-icon-v003.png" },
     robots: { index: false, follow: false },
     openGraph: {
       title: "MY SGG｜All of SGG. One Player OS.",

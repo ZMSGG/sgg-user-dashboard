@@ -1,7 +1,7 @@
 # References: MY SGG — Player OS
 
 Project ID: `PRJ-202607-sgg-user-dashboard`
-Locked at: `2026-07-20T22:35:18+08:00`
+Locked at: `2026-07-22T15:59:34+08:00`
 
 Paths are relative to this project so the command center can move as one workspace. Hash drift requires a policy-diff review; do not silently refresh it.
 

@@ -34,4 +34,4 @@ This file separates verified SGG facts from project proposals. A project proposa
 - Unapproved numbers, dates, URLs, reward or token promises
 - Invented ages, histories, powers, weaknesses, relationships, enemies, religion, or permanent lore
 - Private source art, secrets, personal data, or rights-pending derivatives
-- Any visual output without a visible approved GODS or OTOMO character
+- Any visual output whose recorded `character_usage` selection, source rights, Image 2.0 provenance, or approval evidence does not satisfy `SGG_CREATIVE_CHARACTER_USAGE_V2`

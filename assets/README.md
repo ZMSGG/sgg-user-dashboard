@@ -18,7 +18,7 @@ Project ID: `PRJ-202607-sgg-user-dashboard`
 
 各assetは用途に応じて `NONE / GODS / OTOMO / BOTH` を選びます。環境・system visualへ装飾目的のキャラクターを強制しません。production画像はImage 2.0生成元、prompt、権利、承認、最終hashを記録します。
 
-今回のv002 release setは `character_family: NONE` です。制作と承認の完全な記録は `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json`、現行正本は `standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md` です。
+今回のrelease setは `character_family: NONE` です。v002 key visual／social cardとv003 iconの制作・承認記録は `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json` および `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-002.json`、現行正本は `standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md` です。
 
 ## Folder policy
 

@@ -16,11 +16,11 @@
 - Family: `OTOMO`
 - OTOMO: `taimaru` (`DOJI`)
 - Canon reference: `SGG createve/canon/characters.json`
-- Creative rights: `APPROVED` for recorded Taimaru Creator Kit exports; current v002 release visuals use `character_usage: NONE`.
+- Creative rights: `APPROVED` for recorded Taimaru Creator Kit exports; the current v002 key visual／social card and v003 icon use `character_usage: NONE`.
 
 ## Character usage
 
-Follow `SGG_CREATIVE_CHARACTER_USAGE_V2`. The v002 icon, key visual, and social card are environment/system visuals with `character_usage: NONE`; no decorative character is required. Character-bearing outputs remain subject to canonical identity, form, rights, and crop review.
+Follow `SGG_CREATIVE_CHARACTER_USAGE_V2`. The v002 key visual／social card and v003 icon are environment/system visuals with `character_usage: NONE`; no decorative character is required. Character-bearing outputs remain subject to canonical identity, form, rights, and crop review.
 
 ## No-invention boundary
 
@@ -28,4 +28,4 @@ Do not promote unverified ages, histories, family, permanent powers, weaknesses,
 
 ## Rights gate
 
-The exact Taimaru Creator Kit export rights evidence and the three character-free Image 2.0 release-asset approvals are recorded in `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json`. This approval does not authorize deployment or public/shared access.
+The exact Taimaru Creator Kit export rights evidence and the character-free Image 2.0 release-asset approvals are recorded in `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json` and `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-002.json`. These approvals do not authorize deployment or public/shared access.

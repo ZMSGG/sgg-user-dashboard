@@ -3,7 +3,7 @@
   "command_center_id": "SGG-COMMAND-CENTER",
   "protocol_id": "SGG_ZERO_TO_ONE_GATEWAY_V1",
   "generator_version": "1.0.0",
-  "locked_at": "2026-07-20T22:35:18+08:00",
+  "locked_at": "2026-07-22T15:59:34+08:00",
   "sources": {
     "standards/SGG_ZERO_TO_ONE_GATEWAY_V1.md": "2b7365ece7afe570454f758a9e5cddabea78897d5b10c744149485fd07254147",
     "standards/SGG_DURABLE_PROJECT_STATE_V1.md": "edad7d10789cf1e4d1a4751ef852531796989d9460410862bdc3ee950d66c885",

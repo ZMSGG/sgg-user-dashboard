@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000013",
+  "state_version": 13,
+  "created_at": "2026-07-22T16:30:13+08:00",
+  "previous_checkpoint_id": "CP-000012",
+  "summary": "Completed the owner-only predeployment hardening pass: synchronized creative V2 evidence, added per-asset generation and review timestamps, replaced the ambiguous v002 icon with an exact seven-gateway Image 2.0 v003 asset, removed every legacy unapproved public asset, made Discord guild 404 handling fail closed, added migration and real Drizzle/D1 atomicity tests, and documented the non-production-reachable Sharp advisory. Lint, typecheck, build, all 40 tests, migration validation, and secret scanning pass. The rotated bot token authenticates, but the local OAuth client secret still returns invalid_client and remains the deployment blocker.",
+  "project_basis_sha256": "1b366d9a17667a556db36f56445ccb7ce38f07ecb3a1e20a59692a6e0b9ca747",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 13,
+    "updated_at": "2026-07-22T16:30:13+08:00",
+    "updated_by": "Codex",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Validate a newly rotated Discord OAuth client secret, configure all identity, guild, and integration values in Sites without exposing them, deploy the updated build with migration 0002 owner-only, and run the deployed-environment gate checklist including a second-account isolation test.",
+    "last_summary": "Completed the owner-only predeployment hardening pass: synchronized creative V2 evidence, added per-asset generation and review timestamps, replaced the ambiguous v002 icon with an exact seven-gateway Image 2.0 v003 asset, removed every legacy unapproved public asset, made Discord guild 404 handling fail closed, added migration and real Drizzle/D1 atomicity tests, and documented the non-production-reachable Sharp advisory. Lint, typecheck, build, all 40 tests, migration validation, and secret scanning pass. The rotated bot token authenticates, but the local OAuth client secret still returns invalid_client and remains the deployment blocker.",
+    "last_checkpoint_id": "CP-000013",
+    "last_checkpoint_path": "checkpoints/CP-000013.json",
+    "active_work": {
+      "work_id": "ACT-009",
+      "objective": "Enable community membership sync and automated point grants on the owner-only private deployment.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Local dev environment fully verified end-to-end including multi-wallet discovery and a real wallet link.",
+        "Bot token and client secret rotated after the in-session exposure, live-validated, and configured in Sites without exposing them.",
+        "The updated build and migration 0002 deployed owner-only through Sites.",
+        "Deployed-environment gate tests pass, including a second Discord account isolation test."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-010",
+        "order": 1,
+        "action": "Owner resets the Discord OAuth2 Client Secret, saves it locally with scripts/set-dev-secrets.sh client-secret, and Codex live-validates it without exposing the value.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-009",
+        "order": 2,
+        "action": "Configure the validated identity, guild, and integration values in Sites, deploy migration 0002 owner-only, then run the section-8 gate checklist including two-account isolation.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PASSPORT-CREDENTIALS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 3,
+        "action": "Upgrade to stable Next and Cloudflare/Miniflare versions that officially support patched Sharp, then remove the temporary non-reachable exception.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 4,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing personal progress or assets.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 5,
+        "action": "Request and record separate authority before public/shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-PASSPORT-CREDENTIALS-001",
+        "scope": "DISCORD_PASSPORT_RUNTIME",
+        "severity": "P1",
+        "description": "The newly rotated bot token authenticates as the approved MY SGG bot, but the local OAuth2 Client Secret still fails Discord client-credentials validation with invalid_client. Hosted Sites still contains no Discord or integration values.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Reset and copy the OAuth2 Client Secret from the approved Discord application, save it without disclosure, pass live validation, configure Sites, deploy, and pass the two-account isolation gate."
+      },
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "The next deployed version has not been interactively verified in the Codex in-app browser.",
+        "owner": "Codex runtime capability",
+        "status": "OPEN",
+        "resolution_required": "After deployment, open the live URL in a new tab without navigating the protected Discord tab and complete dashboard, Passport, responsive, asset, and console verification."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp/libvips import and the application has no untrusted image-processing path, so an owner-only non-reachable exception is recorded.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare/Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so personal progress and holdings remain intentionally unconnected.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting personal data."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Owner-only private deployment is authorized and active, but public/shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, and actual-screen gates before any audience expansion."
+      }
+    ],
+    "decisions_needed": [],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "CANON_AND_COPY.md",
+        "sha256": "7d90a19e169f491cc0713f3aba42729c04a55ea6d683289aa42666582c2468e2",
+        "reason": "Align visual publication boundaries with the purpose-based creative V2 policy."
+      },
+      {
+        "path": "CREATIVE_DIRECTION.md",
+        "sha256": "b94ea7bb3ed6134a6e15af81d6cc2205ee097d89d6ee83aa1d7a19e0d133a4b2",
+        "reason": "Make character metadata conditional on character use and require Image 2.0 production evidence for every image."
+      },
+      {
+        "path": "DECISIONS.md",
+        "sha256": "790c7b5b08f5d973e4deee1502148fe8d62db84194585cbc635d49d5c66eaccc",
+        "reason": "Record the v003 icon replacement and removal of legacy public assets."
+      },
+      {
+        "path": "WORLD_AND_CHARACTER_BRIEF.md",
+        "sha256": "9a299fe1da0e1c1cd5c0f859384a1af4fc1361b7d14812d9a4dc3ed60379ee4f",
+        "reason": "Identify the current v002 key visual/social card and v003 icon release set under creative V2."
+      },
+      {
+        "path": "app/layout.tsx",
+        "sha256": "0d107aee1d67a249c12e10c3c95b1f5f9063f627bc1d1d11b0c9105da02fba06",
+        "reason": "Use the exact seven-gateway v003 Image 2.0 application icon."
+      },
+      {
+        "path": "assets/ASSET_MANIFEST.csv",
+        "sha256": "fb8d50596698d5d9cf1667baf541a4ac4c56e6776477a5774a1640c5c1c15748",
+        "reason": "Retire the visually mismatched v002 icon and approve the exact v003 file and hash."
+      },
+      {
+        "path": "assets/README.md",
+        "sha256": "fc1b025c0ac4823101d0340035d11584c0bb9fcea752f69ff83c3916e8267eab",
+        "reason": "Document the current mixed v002/v003 release set and both approval records."
+      },
+      {
+        "path": "assets/approved/media-my-sgg-icon-v003.png",
+        "sha256": "4bfd8a19e3b74ea23ebc22655abc82d842e977d916d2c9748e4e2968f748a69f",
+        "reason": "Final 512px exact seven-gateway Image 2.0 icon."
+      },
+      {
+        "path": "assets/source/image2-v003/my-sgg-icon-source.png",
+        "sha256": "9d1fa6891e242081a28bd66d1cf16251407c672300aa7784ebee7cf324463fa2",
+        "reason": "Original built-in Image 2.0 edit output retained as the v003 source record."
+      },
+      {
+        "path": "public/my-sgg-icon-v003.png",
+        "sha256": "4bfd8a19e3b74ea23ebc22655abc82d842e977d916d2c9748e4e2968f748a69f",
+        "reason": "Only current approved icon copied into the deployable public surface."
+      },
+      {
+        "path": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+        "sha256": "936327032494c046ae8ade05ee701d20323c6b360ea8e86a04dd510de7f94cee",
+        "reason": "Add per-asset generation/review evidence and retire the v002 icon after visual recount."
+      },
+      {
+        "path": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-002.json",
+        "sha256": "0cdd1c77f9fec14a5f761d854fef7d0b28aa911877661774d9535b0bb1a38e3d",
+        "reason": "Record v003 Image 2.0 reference-edit provenance, rights, exact count, crop QA, reviewer, timestamps, and hashes."
+      },
+      {
+        "path": "server/discord-guild.ts",
+        "sha256": "d0e4c46a1d1b7a7e812e6d67b0ea35d5362a1aef7865c5a1068a5dc1b7fc0762",
+        "reason": "Treat only Discord code 10007 Unknown Member as a definitive non-member and fail closed for ambiguous responses."
+      },
+      {
+        "path": "scripts/set-dev-secrets.sh",
+        "sha256": "9f61189ccfc5ada80b89416d70a1c98dd3f2c62fcc6c3539943529e296bdb473",
+        "reason": "Support client-secret-only rotation and keep secret values out of child-process arguments."
+      },
+      {
+        "path": "tests/discord-guild.test.mjs",
+        "sha256": "c6852dce913d755d272d62c1e25da15b5be282348cb334984320d944c3bcebc5",
+        "reason": "Cover member, confirmed non-member, ambiguous 404, upstream, timeout, malformed, and identity mismatch outcomes."
+      },
+      {
+        "path": "tests/migration-0002.test.mjs",
+        "sha256": "a982150a45f6b56f9d7105dc36b9e81b2a99fdc4c22946510c6d455c1eb71e7d",
+        "reason": "Verify the deployed migration chain preserves existing data and adds nullable guild fields exactly once."
+      },
+      {
+        "path": "tests/helpers/sqlite-d1.mjs",
+        "sha256": "c70cbf025facb9590eaa4041004cec6fa6b32291415a2992574ca8b4ae9aedf4",
+        "reason": "Provide an atomic D1-compatible in-memory test adapter over Node SQLite."
+      },
+      {
+        "path": "tests/passport-db-d1.test.mjs",
+        "sha256": "fa41895bac99df6d02d2cd3f2d9145273915d65c297ad5bff4c1ec93ef5d2c0d",
+        "reason": "Exercise actual Drizzle grant, audit, idempotency, foreign-key, and balance behavior."
+      },
+      {
+        "path": "tests/rendered-html.test.mjs",
+        "sha256": "b30e9b5bc987e2e3d7d63a8d89a8bb8be55bc5a6eb227315b72b5e33cff0e9d8",
+        "reason": "Require the current approved visual files and the absence of retired public assets."
+      },
+      {
+        "path": "package.json",
+        "sha256": "0baa7dce194879a5f460584d897268c2db51db60805e9808c93eedfa688d78cb",
+        "reason": "Declare the TypeScript test loader directly instead of relying on a transitive dependency."
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "a0a3fe6fdff6c85a429ec3f7f2486829cde7c3ba9f21e536e2a810c426809e12",
+        "reason": "Lock the explicit test-loader dependency."
+      },
+      {
+        "path": "docs/DEPENDENCY_RISK_ASSESSMENT.md",
+        "sha256": "bab7c222496abf187b7cca5d033f962d3685c0fa65d3005e711a75f996d0682c",
+        "reason": "Document the production audit, non-reachability evidence, temporary owner-only exception, and mandatory upgrade trigger."
+      },
+      {
+        "path": "references/SOURCE_LOCK.json",
+        "sha256": "e5510b1d651a781f9107f3a37d0ede4d7c4641ef7261bcd428b6f1840d7f703a",
+        "reason": "Align the V2 policy-lock timestamp with the reviewed source lock."
+      },
+      {
+        "path": "references/README.md",
+        "sha256": "74bc2c39b1fd0539c7d0ebe945851c22721176c0add0748ded49f3f9a8b7ddb4",
+        "reason": "Align the human-readable source-lock timestamp with SOURCE_LOCK.json."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-010",
+      "instruction": "Read CP-000013. The owner resets the Discord OAuth2 Client Secret and runs scripts/set-dev-secrets.sh client-secret; Codex validates it without disclosure, configures Sites, deploys owner-only with migration 0002, and runs the deployed gate checklist.",
+      "do_not_assume": [
+        "The current local Client Secret is valid; the last live check returned invalid_client.",
+        "The documented Sharp exception authorizes public/shared release or untrusted image processing.",
+        "Local tests substitute for deployed two-account isolation or actual-screen verification."
+      ]
+    }
+  },
+  "resulting_state_sha256": "4f195e5bc27645a1e0bd79eb8062fe0c424c882c849ac5f407af9661993b3a04"
+}

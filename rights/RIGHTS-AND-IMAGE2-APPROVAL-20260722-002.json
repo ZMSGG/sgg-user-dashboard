@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_ASSET_RIGHTS_AND_IMAGE2_APPROVAL",
+  "evidence_id": "RIGHTS-AND-IMAGE2-APPROVAL-20260722-002",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "recorded_at": "2026-07-22T16:21:17+08:00",
+  "recorded_by": "Codex MY SGG release QA",
+  "approved_by": "SGG project owner",
+  "approval_basis": "Current project authority to resolve creative blockers and complete the owner-only private deployment, followed by an exact visual recount and production-asset QA.",
+  "deployment_authorized": false,
+  "active_policy": {
+    "id": "SGG_CREATIVE_CHARACTER_USAGE_V2",
+    "path": "../SGG　司令塔/standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md",
+    "sha256": "e9b45204e2644f62d6975a07d44d3c7eda4b69c16370acd4c128a00283b4b4e1"
+  },
+  "character_usage": {
+    "selection": "NONE",
+    "reason": "The square icon represents the MY SGG system architecture and player hub; no character is the subject.",
+    "character_rights_dependency": false
+  },
+  "image2_production": {
+    "tool": "OpenAI Image 2.0 via Codex built-in image generation",
+    "mode": "SUBSTANTIVE_REFERENCE_EDIT",
+    "generated_at": "2026-07-22T16:20:45+08:00",
+    "reference_input": {
+      "role": "style and composition reference only",
+      "file": "assets/approved/media-my-sgg-icon-v002.png",
+      "sha256": "dd052b84f1a04688d0d34928d34a0d807d051cce773dbb0655551f41f432678b",
+      "rights": "Original Image 2.0 MY SGG asset recorded in RIGHTS-AND-IMAGE2-APPROVAL-20260722-001; no third-party or private source art."
+    },
+    "asset": {
+      "asset_id": "MEDIA-my-sgg-icon-v003",
+      "role": "square-icon",
+      "purpose": "MY SGG favicon and application identity for the dashboard release",
+      "prompt_summary": "Substantively reconstruct the radial emblem as exactly seven individually countable celestial gateway motifs around one violet-blue player crystal, using seven-fold geometry and clear dark gaps.",
+      "substantive_reconstruction": "Rebuilt the complete outer motif geometry, spacing, silhouette, internal ornaments, and central-to-outer relationship; this is not a crop, resize, filter, or minor retouch.",
+      "source_file": "assets/source/image2-v003/my-sgg-icon-source.png",
+      "source_sha256": "9d1fa6891e242081a28bd66d1cf16251407c672300aa7784ebee7cf324463fa2",
+      "source_dimensions": "1254x1254",
+      "final_file": "assets/approved/media-my-sgg-icon-v003.png",
+      "public_file": "public/my-sgg-icon-v003.png",
+      "final_sha256": "4bfd8a19e3b74ea23ebc22655abc82d842e977d916d2c9748e4e2968f748a69f",
+      "final_dimensions": "512x512",
+      "replaces": "MEDIA-my-sgg-icon-v002",
+      "qa": {
+        "status": "PASS",
+        "exact_motif_count": 7,
+        "final_crop": "PASS: all seven gateway motifs and the centered crystal remain fully visible with a rounded-square safe margin.",
+        "icon_scale": "PASS: central crystal and seven-part silhouette remain distinguishable at application-icon scale.",
+        "content": "PASS: no character, text, copied logo, signature, watermark, or eighth radial segment is visible.",
+        "reviewed_by": "Codex visual QA",
+        "reviewed_at": "2026-07-22T16:21:17+08:00"
+      }
+    }
+  },
+  "rights": {
+    "generated_asset_scope": "Approved for the MY SGG project UI and metadata. Deployment and audience expansion remain separately gated.",
+    "private_source_directly_embedded": false,
+    "third_party_image_input": false
+  },
+  "approval": {
+    "status": "APPROVED",
+    "approved_at": "2026-07-22T16:21:17+08:00",
+    "approved_hash": "4bfd8a19e3b74ea23ebc22655abc82d842e977d916d2c9748e4e2968f748a69f",
+    "actual_screen_verification_required_before_deployment": true
+  }
+}

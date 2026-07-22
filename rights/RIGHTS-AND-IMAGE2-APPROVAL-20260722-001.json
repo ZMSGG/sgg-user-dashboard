@@ -28,18 +28,29 @@
     "assets": [
       {
         "asset_id": "MEDIA-my-sgg-icon-v002",
+        "status": "SUPERSEDED_QA_MISMATCH",
+        "generated_at": "2026-07-22T15:58:10+08:00",
+        "reviewed_by": "Codex visual QA",
+        "reviewed_at": "2026-07-22T16:21:17+08:00",
+        "rights_scope": "Original Image 2.0 MY SGG asset with no third-party or private image input; retained as superseded history only.",
         "role": "square-icon",
         "prompt_summary": "Original centered seven-fold celestial gateway emblem around a player-orbit crystal; premium 3D game UI mark; character_usage NONE; no text.",
         "source_file": "assets/source/image2-v002/my-sgg-icon-source.png",
         "source_sha256": "104b9b35d588f92a95cc2ceb502d24638714eba727ea15447ac7f260c01dba28",
         "final_file": "assets/approved/media-my-sgg-icon-v002.png",
-        "public_file": "public/my-sgg-icon-v002.png",
+        "former_public_file": "public/my-sgg-icon-v002.png",
         "final_sha256": "dd052b84f1a04688d0d34928d34a0d807d051cce773dbb0655551f41f432678b",
         "dimensions": "512x512",
-        "qa": "PASS: centered emblem, safe margin, no character, no text, readable silhouette at icon scale, no visible watermark."
+        "qa": "SUPERSEDED: a later visual recount found eight radial motifs while the recorded design required seven. This file is retained as production history but removed from public output and replaced by MEDIA-my-sgg-icon-v003.",
+        "superseded_by": "MEDIA-my-sgg-icon-v003"
       },
       {
         "asset_id": "MEDIA-my-sgg-key-visual-v002",
+        "status": "APPROVED",
+        "generated_at": "2026-07-22T15:58:10+08:00",
+        "reviewed_by": "SGG project owner",
+        "reviewed_at": "2026-07-22T15:59:34+08:00",
+        "rights_scope": "Original Image 2.0 MY SGG asset approved for project UI, metadata, and social preview; no third-party or private image input.",
         "role": "key-visual",
         "prompt_summary": "Original cinematic celestial command sanctuary with seven architectural gateways converging on a player crystal; left-side UI negative space; character_usage NONE.",
         "source_file": "assets/source/image2-v002/my-sgg-key-visual-source.png",
@@ -52,6 +63,11 @@
       },
       {
         "asset_id": "MEDIA-my-sgg-social-og-v002",
+        "status": "APPROVED",
+        "generated_at": "2026-07-22T15:58:10+08:00",
+        "reviewed_by": "SGG project owner",
+        "reviewed_at": "2026-07-22T15:59:34+08:00",
+        "rights_scope": "Original Image 2.0 MY SGG asset approved for project UI, metadata, and social preview; no third-party or private image input.",
         "role": "social-og",
         "prompt_summary": "Original social composition with seven abstract game portals linked to a player crystal and calm left typography area; character_usage NONE.",
         "source_file": "assets/source/image2-v002/my-sgg-social-og-source.png",
@@ -77,10 +93,9 @@
     }
   },
   "approval": {
-    "status": "APPROVED",
+    "status": "APPROVED_WITH_ICON_SUPERSEDED",
     "approved_at": "2026-07-22T15:59:34+08:00",
     "approved_hashes": [
-      "dd052b84f1a04688d0d34928d34a0d807d051cce773dbb0655551f41f432678b",
       "8cd32cd3eadf39ff03b610991417618179271b1e106fad45ffec011a29553e4f",
       "25b25daa98de59ccd989b4eddf96edfa4711fa9be21ed64185a48e1e860800d5"
     ],

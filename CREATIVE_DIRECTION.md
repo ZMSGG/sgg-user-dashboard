@@ -17,7 +17,7 @@
 
 ## Must include
 
-- 最終cropでも識別できる正規OTOMO visualとform metadata
+- 用途別の `character_usage` 選択。OTOMOを使用する場合は、最終cropでも識別できる正規visualとform metadata
 - 公開情報と個人情報の明確な境界
 - LIVE、SNAPSHOT、DEMO、PREPARING、UNKNOWNの明示
 - 大会または保有情報が無い場合の正直なempty state
@@ -33,14 +33,13 @@
 
 ## Per-output production record
 
-Every output must record:
+Every production image must record:
 
-- `character_family`
-- canonical `god_ids` and/or `otomo_ids`
-- `character_reference`
-- OTOMO `form` when applicable
+- `character_usage`: `NONE / GODS / OTOMO / BOTH` and its purpose rationale
+- `character_family`, canonical IDs, reference, and OTOMO form only when a character is used
 - source asset ID, source SHA-256, rights record, and rights scope
-- final-crop, 32px, 64px, mobile, and major-scene visual checks as applicable
+- Image 2.0 generation/edit timestamp and substantive production summary
+- final-crop, icon-scale, mobile, and major-scene visual checks as applicable
 - reviewer, timezone-aware review time, final version, and final SHA-256
 
-Character usage follows `SGG_CREATIVE_CHARACTER_USAGE_V2`. The v002 release set is intentionally `NONE`; character-bearing outputs must remain recognizable in the real display and final crop and require their own recorded rights evidence.
+Character usage follows `SGG_CREATIVE_CHARACTER_USAGE_V2`. The current v002 key visual／social card and v003 icon are intentionally `NONE`; character-bearing outputs must remain recognizable in the real display and final crop and require their own recorded rights evidence.
