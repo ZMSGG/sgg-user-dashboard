@@ -42,6 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description:
       "公開中のSGGゲーム、ランキング、キャラクター図鑑、公式アップデート、プレイヤー記録をひとつに束ねるSGG Player OS。",
+    icons: { icon: "/my-sgg-icon-v002.png" },
     robots: { index: false, follow: false },
     openGraph: {
       title: "MY SGG｜All of SGG. One Player OS.",
@@ -50,7 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "ja_JP",
       images: [
         {
-          url: "/og.png",
+          url: "/my-sgg-social-og-v002.png",
           width: 1200,
           height: 630,
           alt: "MY SGG — All of SGG. One Player OS.",
@@ -61,7 +62,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: "MY SGG｜All of SGG. One Player OS.",
       description: "遊ぶ。競う。集める。すべてのSGGを、ひとつに。",
-      images: ["/og.png"],
+      images: ["/my-sgg-social-og-v002.png"],
     },
   };
 }

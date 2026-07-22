@@ -1026,7 +1026,7 @@ export function Dashboard() {
           {activeView === "home" && (
             <div className={styles.viewStack}>
               <section className={styles.hero} aria-labelledby="hero-title">
-                <Image src="/dashboard-art/my-sgg-triform-candidate-v1.png" alt="鯛丸の精霊体、受肉体、童子が並ぶMY SGGの神域" fill priority sizes="(max-width: 900px) 100vw, 82vw" />
+                <Image src="/dashboard-art/my-sgg-key-visual-v002.png" alt="七つのゲートがプレイヤークリスタルへ接続するMY SGGの神域" fill priority sizes="(max-width: 900px) 100vw, 82vw" />
                 <div className={styles.heroShade} />
                 <div className={styles.heroCopy}>
                   <p>SEVENGODS GAMES / PLAYER OS</p>

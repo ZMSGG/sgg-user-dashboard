@@ -28,8 +28,8 @@ test("server-renders the truthful SGG Player OS", async () => {
   assert.match(html, /ORACLE 7/);
   assert.match(html, /公開確認済みのゲーム・ランキング・投稿だけを表示/);
   assert.match(html, /name="robots" content="noindex, nofollow"/);
-  assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/og\.png"/);
-  assert.match(html, /name="twitter:image" content="http:\/\/localhost(?::3000)?\/og\.png"/);
+  assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v002\.png"/);
+  assert.match(html, /name="twitter:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v002\.png"/);
   assert.match(response.headers.get("content-security-policy") ?? "", /frame-ancestors 'none'/);
   assert.equal(response.headers.get("x-frame-options"), "DENY");
   assert.equal(response.headers.get("x-content-type-options"), "nosniff");

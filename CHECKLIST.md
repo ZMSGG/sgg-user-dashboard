@@ -13,8 +13,8 @@ Project ID: `PRJ-202607-sgg-user-dashboard`
 ## Asset gate
 
 - [ ] 案件固有の正方形アイコン、横長キービジュアル、1200×630のsocial／OG画像が揃っている。
-- [ ] 各SGG visual creativeに、正規かつ用途承認済みのGODSまたはOTOMO、あるいは両方が最低1体、最終cropでも視認できる。ロゴ、名称、metadata、極小・見切れ・隠れた配置だけでは代替していない。
-- [ ] 各素材のcharacter family、名称／ID、正規reference、OTOMO形態、`character_presence_confirmed: true`、確認者、確認日時、最終hash／versionが制作記録にある。
+- [ ] 各SGG visual creativeのcharacter usageが `NONE / GODS / OTOMO / BOTH` から用途に基づき選ばれている。
+- [ ] 全production画像にImage 2.0制作・権利・承認・最終hash記録があり、character採用時だけID、reference、OTOMO形態、目視確認も記録されている。
 - [ ] source、candidates、approvedが分離されている。
 - [ ] 各素材にasset ID、version、用途、寸法、status、出典、権利範囲、hash、alt textがある。
 - [ ] 円形crop、32px・64px表示、mobile表示で主要要素を確認した。
@@ -33,7 +33,7 @@ Project ID: `PRJ-202607-sgg-user-dashboard`
 ## Launch／handoff gate
 
 - [ ] 使用する全素材のmanifest statusが `APPROVED` である。
-- [ ] `COMMAND_CENTER_LINK.json` で解決した司令塔rootの `standards/SGG_CREATIVE_CHARACTER_INCLUSION_V1.md` のcharacter inclusion gateに全素材が適合している。
+- [ ] `COMMAND_CENTER_LINK.json` で解決した司令塔rootの `standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md` の用途別character gateに全素材が適合している。
 - [ ] Approver、approved_at、承認対象hashが記録されている。
 - [ ] 公開URL、担当、日時、rollback／停止方法が決まっている。
 - [ ] dry-runまたはpreviewを確認した。

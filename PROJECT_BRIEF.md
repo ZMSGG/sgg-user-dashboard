@@ -52,7 +52,7 @@ Created: `2026-07-20T22:35:18+08:00`
 - Family: `OTOMO`
 - OTOMO: `taimaru` (`DOJI`)
 - Canon reference: `SGG createve/canon/characters.json`
-- Creative rights: `PENDING`
+- Creative rights: `APPROVED` with evidence in `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json`
 
 ## Type contract
 

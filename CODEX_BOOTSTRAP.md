@@ -4,4 +4,4 @@ Work from this project root with no reliance on any earlier conversation. First 
 
 Use the structured profile as the stable brief and the durable state as the only current-work authority. Do not fill gaps from model memory or by inventing official canon. Execute only `resume.action_id`, verify it in proportion to risk, checkpoint every material result, and record the validator report before stopping.
 
-For every visual output, include the declared canonical GODS or OTOMO character visibly in the final crop, record form and reference, and stop before production creative if rights remain `PENDING`. Folder creation does not authorize publishing or deployment.
+For every visual output, select `NONE / GODS / OTOMO / BOTH` from purpose under `SGG_CREATIVE_CHARACTER_USAGE_V2`, record Image 2.0 provenance and rights, and add character form/reference evidence only when characters are used. Folder creation does not authorize publishing or deployment.

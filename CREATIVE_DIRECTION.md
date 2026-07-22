@@ -5,7 +5,7 @@
 - Family: `OTOMO`
 - OTOMO: `taimaru` (`DOJI`)
 - Canon reference: `SGG createve/canon/characters.json`
-- Creative rights: `PENDING`
+- Creative rights: `APPROVED` with evidence in `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json`
 
 ## Tone
 
@@ -43,4 +43,4 @@ Every output must record:
 - final-crop, 32px, 64px, mobile, and major-scene visual checks as applicable
 - reviewer, timezone-aware review time, final version, and final SHA-256
 
-The character must remain recognizable in the real display and final crop. A set cannot compensate for a character-free individual output. `PENDING` rights allow planning only, not public derivative generation or approval.
+Character usage follows `SGG_CREATIVE_CHARACTER_USAGE_V2`. The v002 release set is intentionally `NONE`; character-bearing outputs must remain recognizable in the real display and final crop and require their own recorded rights evidence.

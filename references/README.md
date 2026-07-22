@@ -11,7 +11,7 @@ Paths are relative to this project so the command center can move as one workspa
 | `standards/SGG_DURABLE_PROJECT_STATE_V1.md` | `../SGG　司令塔/standards/SGG_DURABLE_PROJECT_STATE_V1.md` | `edad7d10789cf1e4d1a4751ef852531796989d9460410862bdc3ee950d66c885` |
 | `standards/sgg-project-profile.schema.json` | `../SGG　司令塔/standards/sgg-project-profile.schema.json` | `0094ec22c4ae5f63241070f72e324e0da5a68ca89f0aab19402d7c6ffa823da9` |
 | `standards/sgg-project-state.schema.json` | `../SGG　司令塔/standards/sgg-project-state.schema.json` | `de2c13754affdc1f0d9d1f5ae9815fcf23e774ce8a6fbc6a53d5622558284539` |
-| `standards/SGG_CREATIVE_CHARACTER_INCLUSION_V1.md` | `../SGG　司令塔/standards/SGG_CREATIVE_CHARACTER_INCLUSION_V1.md` | `eca461cc9ba3837f4571355694cc1cbe5dc60ab2d628c877cadcdd0900a719a5` |
+| `standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md` | `../SGG　司令塔/standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md` | `e9b45204e2644f62d6975a07d44d3c7eda4b69c16370acd4c128a00283b4b4e1` |
 | `standards/OTOMO_FORM_BALANCE_V1.md` | `../SGG　司令塔/standards/OTOMO_FORM_BALANCE_V1.md` | `113a17609a8b1fc8618cfc9f7c856d5e6f2a1329fe8a33ea52fb4f363526e783` |
 | `SGG createve/canon/WORLD_SCOPE.md` | `../SGG　司令塔/SGG createve/canon/WORLD_SCOPE.md` | `1fbb038a4cb935bead8e2e17c988b15d9ee24c3a2e0e729757e6cfc969321e04` |
 | `SGG createve/canon/CONTENT_POLICY.md` | `../SGG　司令塔/SGG createve/canon/CONTENT_POLICY.md` | `1bcbf676386133181621c8fc625f1421ac5b553bd1edb07f24566a104310e75d` |

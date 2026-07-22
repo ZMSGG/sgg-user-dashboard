@@ -1,0 +1,366 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000012",
+  "state_version": 12,
+  "created_at": "2026-07-22T16:05:03+08:00",
+  "previous_checkpoint_id": "CP-000011",
+  "summary": "Unified the project creative policy lock to SGG_CREATIVE_CHARACTER_USAGE_V2, replaced the release icon, key visual, and social card with original Image 2.0 assets, recorded asset-specific rights, provenance, hashes, crop QA, and approval evidence, and closed BLK-RIGHTS-001 without deployment.",
+  "project_basis_sha256": "3eb1015851701ec1f6700c7b9dc249124dd70941641ae8150983afefa799d945",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 12,
+    "updated_at": "2026-07-22T16:05:03+08:00",
+    "updated_by": "Codex",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Rotate the bot token and client secret owner-side, configure all identity, guild, and integration values in Sites without exposing them, deploy the updated build with migration 0002 owner-only, and run the deployed-environment gate checklist including a second-account isolation test.",
+    "last_summary": "Unified the project creative policy lock to SGG_CREATIVE_CHARACTER_USAGE_V2, replaced the release icon, key visual, and social card with original Image 2.0 assets, recorded asset-specific rights, provenance, hashes, crop QA, and approval evidence, and closed BLK-RIGHTS-001 without deployment.",
+    "last_checkpoint_id": "CP-000012",
+    "last_checkpoint_path": "checkpoints/CP-000012.json",
+    "active_work": {
+      "work_id": "ACT-009",
+      "objective": "Enable community membership sync and automated point grants on the owner-only private deployment.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Local dev environment fully verified end-to-end including multi-wallet discovery and a real wallet link.",
+        "Bot token and client secret rotated after the in-session exposure, and all values configured in Sites without exposing them.",
+        "The updated build and migration 0002 deployed owner-only through Sites.",
+        "Deployed-environment gate tests pass, including a second Discord account isolation test."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-010",
+        "order": 1,
+        "action": "Owner rotates the Discord bot token and client secret, then configures DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, ADMIN_DISCORD_IDS, DISCORD_BOT_TOKEN, DISCORD_GUILD_ID, INTEGRATION_GRANT_SECRET, and INTEGRATION_ACTOR_ID in Sites per docs/DISCORD_OPERATIONS.md.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-009",
+        "order": 2,
+        "action": "Deploy the updated build with migration 0002 owner-only through Sites, then run the docs/DISCORD_OPERATIONS.md section-8 gate checklist including a two-account isolation test.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PASSPORT-CREDENTIALS-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 3,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing personal progress or assets.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 4,
+        "action": "Request and record separate authority before public/shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-PASSPORT-CREDENTIALS-001",
+        "scope": "DISCORD_PASSPORT_RUNTIME",
+        "severity": "P1",
+        "description": "Local development credentials are fully configured and verified end-to-end, but the hosted Sites environment still has no Discord or integration values, and the working bot token and client secret must be rotated before production use because the bot token appeared in a session screenshot.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Rotate both secrets owner-side, configure all values through Sites without exposing them, deploy, and pass the deployed-environment gate tests including a second-account isolation test."
+      },
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "The deployed URL has not been interactively verified; local dev verification is complete but does not substitute for the deployed environment.",
+        "owner": "Codex runtime capability",
+        "status": "OPEN",
+        "resolution_required": "After the next deployment, open the live URL in a new tab preserving the protected MFA tab and complete interactive dashboard, Passport, responsive, and console verification."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so personal progress and holdings remain intentionally unconnected.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting personal data."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Owner-only private deployment is authorized and active, but public/shared access, custom domain attachment, search indexing, extra viewers or groups, and public creative approval are not authorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release creative, identity, privacy, domain, rollback, and actual-screen gates before any audience expansion."
+      }
+    ],
+    "decisions_needed": [],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "038e0c4dda1ff33f692b2c7693e016ed2d94dbbef2f2c3a83eee4eb7eeb6b350",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "CANON_AND_COPY.md",
+        "sha256": "52cbd8dbc0c749d1c734d4e37e8ad13a31df3dc30ece94cb25adc820b8b44c2d",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "CHECKLIST.md",
+        "sha256": "c7a5f77512f462909a0b386999e3cf17a1dd6bbe07b49686a090b40c8983d0a6",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "CODEX_BOOTSTRAP.md",
+        "sha256": "c44c21c5973286a63dd76f41a55e3b9e635f8ba5e4ea20ee7c1f07d0da7207aa",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "COMMAND_CENTER_LINK.json",
+        "sha256": "777f43f7f1a19d38f20a3ad2368e231d1d775624b16983f4ac0ed6ca8228750f",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "CREATIVE_DIRECTION.md",
+        "sha256": "1ba6c7bbd78850bdbe7f9e8a7597bcb1a411484f055eba2e9fe858560bc20bbd",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "DECISIONS.md",
+        "sha256": "1345f434e22861e7bc88da943354d0806fd5caf1b9d99f4de5bb7d5df1316907",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "PROJECT_BRIEF.md",
+        "sha256": "2534e40d85bc4ba0cac5c0e663651fef49f86ccfaab2fb23e983d6f549706394",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "PROJECT_PROFILE.json",
+        "sha256": "acfc0954e819cb9f35ea9f07b94e2330f3df4e9670a66815d340e0d76f17bece",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "WORLD_AND_CHARACTER_BRIEF.md",
+        "sha256": "5825ea9036f8018bebf5776639a813789ccf042bf5571755aeac5ec422018ff6",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "STATUS.md",
+        "sha256": "ab607e660d12fa018501f1d24eed5536dc8ee8e2d7e5f4cb76e756da5f5d951d",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "app/Dashboard.tsx",
+        "sha256": "baf3c726ec25ae6f01b390efdd0b73ff1dd44872d7bc19d6d786ac03d8a2af43",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "app/layout.tsx",
+        "sha256": "9e0fd0ffc03e1c187abf3b2ac6eae4692e467ce942ac4ba2dd78dcb78708189a",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "tests/rendered-html.test.mjs",
+        "sha256": "bd871e622417c1a6eac5900206bf52d6172c6ae23a59aae119806484c8d0e79d",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "assets/ASSET_MANIFEST.csv",
+        "sha256": "55c2a6f992d68a7e8645dfa7045b4d4e88a1abc8bce87335a355ac3c9526f3bd",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "assets/ASSET_REQUIREMENTS.csv",
+        "sha256": "67187c677d8d3ecc27392a2c874581b45fe0aed7489815a327aa2a4fd298495d",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "assets/README.md",
+        "sha256": "99aa0dcac22cf05739113d535b8a3e01d22b61f14af3f89f16310a6c94c82d4a",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "assets/approved/media-my-sgg-icon-v002.png",
+        "sha256": "dd052b84f1a04688d0d34928d34a0d807d051cce773dbb0655551f41f432678b",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "assets/approved/media-my-sgg-key-visual-v002.png",
+        "sha256": "8cd32cd3eadf39ff03b610991417618179271b1e106fad45ffec011a29553e4f",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "assets/approved/media-my-sgg-social-og-v002.png",
+        "sha256": "25b25daa98de59ccd989b4eddf96edfa4711fa9be21ed64185a48e1e860800d5",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "assets/source/image2-v002/my-sgg-icon-source.png",
+        "sha256": "104b9b35d588f92a95cc2ceb502d24638714eba727ea15447ac7f260c01dba28",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "assets/source/image2-v002/my-sgg-key-visual-source.png",
+        "sha256": "aaf0c7c4f4e473614219ce12834e1cacbdd72e8a08f757a4cec9283dfa8aab1a",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "assets/source/image2-v002/my-sgg-social-og-source.png",
+        "sha256": "f756a81a6a466458febdafaa6d608209a0227068441c40f2c559a1f002106aeb",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "public/dashboard-art/my-sgg-key-visual-v002.png",
+        "sha256": "8cd32cd3eadf39ff03b610991417618179271b1e106fad45ffec011a29553e4f",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "public/my-sgg-icon-v002.png",
+        "sha256": "dd052b84f1a04688d0d34928d34a0d807d051cce773dbb0655551f41f432678b",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "public/my-sgg-social-og-v002.png",
+        "sha256": "25b25daa98de59ccd989b4eddf96edfa4711fa9be21ed64185a48e1e860800d5",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "references/README.md",
+        "sha256": "3f4126279fa03a79453090a67ebada9b5406b30372ae87653e9291a46cb68f45",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "references/SOURCE_LOCK.json",
+        "sha256": "21703f74b8e45e112760b6ba23a5a4aae8e3d1158c84281c30fa47405719625e",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      },
+      {
+        "path": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+        "sha256": "75f936a75d899d0c694650dfe3e7593e821a41420f8f3381c7bfe0158263040f",
+        "reason": "Creative policy V2 synchronization and approved Image 2.0 release evidence"
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-010",
+      "instruction": "Read CP-000012; the owner rotates the bot token and client secret, configures all identity, guild, and integration values in Sites, then deploy with migration 0002 and run the section-8 gate checklist including a second-account isolation test before closing ACT-009.",
+      "do_not_assume": [
+        "The dev-verified bot token or client secret may be reused in production; both were session-exposed or dev-scoped and must be rotated.",
+        "Local end-to-end success substitutes for deployed-environment gate tests.",
+        "Phantom is installed for every player; the picker lists only wallets that announce via EIP-6963 in that browser."
+      ]
+    }
+  },
+  "resulting_state_sha256": "af8b2b3f8b6d13af8693d941edbfe777b3c4d345e51c16cb1194e6791a79b12c"
+}

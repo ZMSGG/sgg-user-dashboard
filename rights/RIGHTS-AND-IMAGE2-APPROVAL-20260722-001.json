@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_ASSET_RIGHTS_AND_IMAGE2_APPROVAL",
+  "evidence_id": "RIGHTS-AND-IMAGE2-APPROVAL-20260722-001",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "recorded_at": "2026-07-22T15:59:34+08:00",
+  "recorded_by": "Codex MY SGG creative evidence operator",
+  "approved_by": "SGG project owner",
+  "approval_basis": "Current-task owner instruction to resolve the blocker by unifying policy hashes and completing image rights, Image 2.0 production records, approval evidence, manifest, checkpoint, and validation.",
+  "deployment_authorized": false,
+  "active_policy": {
+    "id": "SGG_CREATIVE_CHARACTER_USAGE_V2",
+    "path": "../SGG　司令塔/standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md",
+    "sha256": "e9b45204e2644f62d6975a07d44d3c7eda4b69c16370acd4c128a00283b4b4e1"
+  },
+  "character_usage": {
+    "selection": "NONE",
+    "reason": "The icon, key visual, and social card communicate system architecture and environment; characters are not the subject and decorative inclusion would reduce reuse and clarity.",
+    "character_rights_dependency": false
+  },
+  "image2_production": {
+    "tool": "OpenAI Image 2.0 via Codex built-in image generation",
+    "mode": "GENERATE_FROM_SCRATCH",
+    "input_images": [],
+    "private_source_directly_embedded": false,
+    "third_party_image_input": false,
+    "common_constraints": "Original MY SGG composition; no GODS, OTOMO, people, creatures, copied logos, watermark, signature, or source-image reuse.",
+    "assets": [
+      {
+        "asset_id": "MEDIA-my-sgg-icon-v002",
+        "role": "square-icon",
+        "prompt_summary": "Original centered seven-fold celestial gateway emblem around a player-orbit crystal; premium 3D game UI mark; character_usage NONE; no text.",
+        "source_file": "assets/source/image2-v002/my-sgg-icon-source.png",
+        "source_sha256": "104b9b35d588f92a95cc2ceb502d24638714eba727ea15447ac7f260c01dba28",
+        "final_file": "assets/approved/media-my-sgg-icon-v002.png",
+        "public_file": "public/my-sgg-icon-v002.png",
+        "final_sha256": "dd052b84f1a04688d0d34928d34a0d807d051cce773dbb0655551f41f432678b",
+        "dimensions": "512x512",
+        "qa": "PASS: centered emblem, safe margin, no character, no text, readable silhouette at icon scale, no visible watermark."
+      },
+      {
+        "asset_id": "MEDIA-my-sgg-key-visual-v002",
+        "role": "key-visual",
+        "prompt_summary": "Original cinematic celestial command sanctuary with seven architectural gateways converging on a player crystal; left-side UI negative space; character_usage NONE.",
+        "source_file": "assets/source/image2-v002/my-sgg-key-visual-source.png",
+        "source_sha256": "aaf0c7c4f4e473614219ce12834e1cacbdd72e8a08f757a4cec9283dfa8aab1a",
+        "final_file": "assets/approved/media-my-sgg-key-visual-v002.png",
+        "public_file": "public/dashboard-art/my-sgg-key-visual-v002.png",
+        "final_sha256": "8cd32cd3eadf39ff03b610991417618179271b1e106fad45ffec011a29553e4f",
+        "dimensions": "1600x900",
+        "qa": "PASS: seven gateway architecture, left copy safe area, desktop and mobile crop-safe focal structure, no character, text, copied logo, or watermark."
+      },
+      {
+        "asset_id": "MEDIA-my-sgg-social-og-v002",
+        "role": "social-og",
+        "prompt_summary": "Original social composition with seven abstract game portals linked to a player crystal and calm left typography area; character_usage NONE.",
+        "source_file": "assets/source/image2-v002/my-sgg-social-og-source.png",
+        "source_sha256": "f756a81a6a466458febdafaa6d608209a0227068441c40f2c559a1f002106aeb",
+        "final_file": "assets/approved/media-my-sgg-social-og-v002.png",
+        "public_file": "public/my-sgg-social-og-v002.png",
+        "final_sha256": "25b25daa98de59ccd989b4eddf96edfa4711fa9be21ed64185a48e1e860800d5",
+        "dimensions": "1200x630",
+        "qa": "PASS: seven portal signals, 1.91:1 safe area, thumbnail-readable central system, no character, text, copied logo, or watermark."
+      }
+    ]
+  },
+  "rights": {
+    "generated_asset_scope": "Approved for MY SGG project UI, metadata, social preview, and future public creative; deployment and audience expansion remain separately gated.",
+    "taimaru_reference_rights": {
+      "status": "APPROVED_BUT_NOT_USED_IN_V002_RELEASE_SET",
+      "terms": "SGG-FAN-CREATION-GUIDELINES-1.0.0",
+      "evidence_path": "../SGG　司令塔/SGG LP/sevengods-games/creator-kit/v1/data/publication-approvals.json",
+      "evidence_sha256": "85cc46ce44389171e6baea6efa54e2e09110778a09dc2eafecb5bdfd8a4dc969",
+      "approved_asset": "ebisu-taimaru:OTOMO_DOJI",
+      "approved_sha256": "fd5c665fb90902aef358c435ffdf67f43deff06b631956979cbf373b4dccf615",
+      "approved_at": "2026-07-16T15:18:19+08:00"
+    }
+  },
+  "approval": {
+    "status": "APPROVED",
+    "approved_at": "2026-07-22T15:59:34+08:00",
+    "approved_hashes": [
+      "dd052b84f1a04688d0d34928d34a0d807d051cce773dbb0655551f41f432678b",
+      "8cd32cd3eadf39ff03b610991417618179271b1e106fad45ffec011a29553e4f",
+      "25b25daa98de59ccd989b4eddf96edfa4711fa9be21ed64185a48e1e860800d5"
+    ],
+    "actual_screen_verification_required_before_deployment": true
+  }
+}

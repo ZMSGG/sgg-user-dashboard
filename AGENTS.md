@@ -13,15 +13,15 @@ This file applies to this folder and everything below it.
 7. `WORLD_AND_CHARACTER_BRIEF.md`
 8. `DECISIONS.md`
 
-Resolve the command center with `COMMAND_CENTER_LINK.json`; do not embed or rely on a personal absolute path. Follow `SGG_ZERO_TO_ONE_GATEWAY_V1`, `SGG_DURABLE_PROJECT_STATE_V1`, `SGG_CREATIVE_CHARACTER_INCLUSION_V1`, and `OTOMO_FORM_BALANCE_V1`. If the command center, state checkpoint, policy lock, or canon cannot be resolved, stop and report the missing source.
+Resolve the command center with `COMMAND_CENTER_LINK.json`; do not embed or rely on a personal absolute path. Follow `SGG_ZERO_TO_ONE_GATEWAY_V1`, `SGG_DURABLE_PROJECT_STATE_V1`, `SGG_CREATIVE_CHARACTER_USAGE_V2`, and `OTOMO_FORM_BALANCE_V1`. If the command center, state checkpoint, policy lock, or canon cannot be resolved, stop and report the missing source.
 
 The chat, context window, conversation summary, and model memory are disposable interfaces and are never project authority. Before the first mutation, reconstruct the task from the filesystem state. After every material decision, milestone, blocker change, or work stoppage, create a new immutable checkpoint with `checkpoint_project.py`, then run `validate_sgg_project.py --record`. Do not end changed work with unrecorded state.
 
-## Non-negotiable creative rule
+## Character usage and creative evidence
 
-- Every new or revised SGG visual output must visibly contain at least one canonical, use-authorized GODS character, at least one canonical, use-authorized OTOMO, or both.
-- A name, logo, metadata, tiny placement, crop loss, or heavy concealment does not satisfy the rule.
-- Record character family, canonical ID, reference, OTOMO form, rights, final-crop visual check, reviewer, timezone-aware review time, version, and final hash.
+- Select `NONE / GODS / OTOMO / BOTH` per asset purpose. Environment, architecture, background, texture, prop, and UI-component assets do not require decorative characters.
+- Record Image 2.0 provenance, source rights, purpose, final-crop visual check, reviewer, timezone-aware review time, version, and final hash for every production image.
+- When characters are used, also record family, canonical ID, reference, OTOMO form, and character-specific rights.
 - Do not paste private source art into public work. Do not generate or approve public derivatives while rights are `PENDING`.
 - Do not mark a non-compliant visual approved, complete, deliverable, or publishable.
 

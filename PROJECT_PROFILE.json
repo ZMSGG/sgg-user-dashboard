@@ -34,7 +34,7 @@
   "success": {
     "metric": "主要Player OS導線の完了率とtruthful-state coverage",
     "target": "6つの主要viewとPassport認証・Wallet・ポイント導線でloading、empty、error、successを100%区別し、公開情報に出典状態を表示する",
-    "guardrail": "架空LIVE値0件、identity越境0件、重複ポイント付与0件、secret漏えい0件、character非準拠visual 0件",
+    "guardrail": "架空LIVE値0件、identity越境0件、重複ポイント付与0件、secret漏えい0件、creative権利・Image 2.0証跡不足0件",
     "decision_date": "2026-07-27"
   },
   "character_plan": {
@@ -47,8 +47,8 @@
       "taimaru": "DOJI"
     },
     "reference": "SGG createve/canon/characters.json",
-    "rights_status": "PENDING",
-    "rights_evidence": ""
+    "rights_status": "APPROVED",
+    "rights_evidence": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json"
   },
   "vertical_slice": "公開hub → live状態とranking → 大会とcollectionのtruthful state → Discord Passport → 任意Wallet → append-only points → mobile and security review",
   "tone": [
@@ -59,7 +59,7 @@
     "mobile first"
   ],
   "must_include": [
-    "最終cropでも識別できる正規OTOMO visualとform metadata",
+    "用途別character usageとImage 2.0制作・権利・承認metadata",
     "公開情報と個人情報の明確な境界",
     "LIVE、SNAPSHOT、DEMO、PREPARING、UNKNOWNの明示",
     "大会または保有情報が無い場合の正直なempty state",

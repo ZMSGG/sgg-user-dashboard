@@ -14,11 +14,11 @@ Project ID: `PRJ-202607-sgg-user-dashboard`
 
 公開gateで必要なのは、案件固有に確認された同じ3 roleです。要件は `ASSET_REQUIREMENTS.csv`、実ファイルと承認状態は `ASSET_MANIFEST.csv` を正本とします。
 
-## GODS／OTOMOの必須挿入
+## 用途別character usageとImage 2.0証跡
 
-各SGG visual creativeは、正規かつ当該用途で使用可能なGODSを1柱以上、OTOMOを1体以上、または両方を、最終cropと実表示で視認できる形で含めます。ロゴ、名称、metadata、極小・見切れ・隠れた配置だけでは条件を満たしません。
+各assetは用途に応じて `NONE / GODS / OTOMO / BOTH` を選びます。環境・system visualへ装飾目的のキャラクターを強制しません。production画像はImage 2.0生成元、prompt、権利、承認、最終hashを記録します。
 
-各assetの制作記録へ `character_family`、`god_ids`、`otomo_ids`、`otomo_forms`、`character_reference`、`character_presence_confirmed: true`、`character_checked_by`、timezone付き `character_checked_at`、最終hash／versionを残します。private原画の直貼りをせず、未達素材を `approved/` へ置きません。正本は `COMMAND_CENTER_LINK.json` で解決した司令塔rootの `standards/SGG_CREATIVE_CHARACTER_INCLUSION_V1.md` です。
+今回のv002 release setは `character_family: NONE` です。制作と承認の完全な記録は `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json`、現行正本は `standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md` です。
 
 ## Folder policy
 
@@ -31,7 +31,7 @@ Project ID: `PRJ-202607-sgg-user-dashboard`
 1. `MEDIA-<slug>-<role>-v001` のasset IDを付ける。
 2. `ASSET_MANIFEST.csv` に用途、寸法、版、出典、権利範囲、alt text、SHA-256を記録する。
 3. 円形crop、32px・64px、mobile、文字の正確性を確認する。
-4. GODS／OTOMOの視認性、canon、権利、reference、OTOMO形態を確認する。
+4. character usage、Image 2.0制作証跡、権利、実表示を確認し、character採用時だけcanon、reference、OTOMO形態を追加確認する。
 5. Approverが用途と対象hashを確認する。
 6. status、approver、approved_atを更新し、`approved/` へ置く。
 

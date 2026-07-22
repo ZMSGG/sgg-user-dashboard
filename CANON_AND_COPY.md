@@ -27,7 +27,7 @@ This file separates verified SGG facts from project proposals. A project proposa
 - Family: `OTOMO`
 - OTOMO: `taimaru` (`DOJI`)
 - Canon reference: `SGG createve/canon/characters.json`
-- Creative rights: `PENDING`
+- Creative rights: `APPROVED` with evidence in `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json`
 
 ## Do not publish as fact
 

@@ -2,10 +2,10 @@
   "schema_version": 1,
   "authority": "SGG_VALIDATION_REPORT",
   "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 11,
-  "checkpoint_id": "CP-000011",
-  "recorded_at": "2026-07-22T00:24:06+08:00",
-  "mode": "structure",
+  "state_version": 12,
+  "checkpoint_id": "CP-000012",
+  "recorded_at": "2026-07-22T16:05:08+08:00",
+  "mode": "kickoff",
   "status": "PASS",
   "readiness_score": 100,
   "errors": [],
@@ -13,14 +13,15 @@
     "python3",
     "../SGG　司令塔/launches/tools/validate_sgg_project.py",
     ".",
+    "--kickoff",
     "--record"
   ],
   "fingerprints": {
-    "PROJECT_PROFILE.json": "de9fd6c7a5cdf131d6a4b476cb47ec906caf1fe60f4634f60695e22d7abede59",
-    "PROJECT_STATE.json": "38966b81ce2f25bf24201980c2cadb6f3bc87c5ffae60755afacd1e9e89fa662",
-    "COMMAND_CENTER_LINK.json": "fc565d15f2e863d4238e97d5f4b76417e8f864f53afd7b2427bb404f4eaaca58",
-    "assets/ASSET_MANIFEST.csv": "d44cdb2b48abf683425048a3bba756cc9b1c5647606e8c1f5347c20380d56d84",
-    "checkpoints/CP-000011.json": "0cde805892c99e8ac9a85fef6a3340a01a600e9c348860dea0e29ccada50e856",
-    "__project_basis__": "1285f2c67ab58cbaf68197495ebac4215455c3557b8d8681e115371d6fec7f8f"
+    "PROJECT_PROFILE.json": "acfc0954e819cb9f35ea9f07b94e2330f3df4e9670a66815d340e0d76f17bece",
+    "PROJECT_STATE.json": "737324cf4cfa1e3bbc51e5c9db3cd20884ed80945f22370640da2c74fb0ed7d1",
+    "COMMAND_CENTER_LINK.json": "777f43f7f1a19d38f20a3ad2368e231d1d775624b16983f4ac0ed6ca8228750f",
+    "assets/ASSET_MANIFEST.csv": "55c2a6f992d68a7e8645dfa7045b4d4e88a1abc8bce87335a355ac3c9526f3bd",
+    "checkpoints/CP-000012.json": "40abf8f897957bbd45c2a46da2e94a18f223d86d08a6c41812db6774a6f9c969",
+    "__project_basis__": "3eb1015851701ec1f6700c7b9dc249124dd70941641ae8150983afefa799d945"
   }
 }
