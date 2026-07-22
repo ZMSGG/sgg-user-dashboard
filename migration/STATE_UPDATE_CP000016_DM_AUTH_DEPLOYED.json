@@ -1,16 +1,11 @@
 {
   "schema_version": 1,
-  "authority": "SGG_PROJECT_STATE",
-  "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 16,
-  "updated_at": "2026-07-22T21:31:52+08:00",
+  "expected_state_version": 15,
   "updated_by": "Codex",
+  "summary": "Committed secure Bot DM Passport source as 713ef7131e2055a8a63e84cd5a42fe48d6b3215f, pushed it to the existing private Sites source main branch, saved Sites Version 11 (appgprj_6a54d2460e7c8191a92c00900d810ab1~appgver_667daa3c0874819184850f109ac83336) with migration 0003, and deployed it successfully as appgdep_6a60c581d3b48191b968abe1d92e845a using environment revision 2. Production remains custom owner-only access with one allowed user and zero groups. Automated production smoke confirmed the shell, all 18 referenced assets, current live read model, anonymous Passport authMethods oauth=false/dmOtp=true, 202 DM start with a 300-second Strict HttpOnly Secure nonce, generic failed verification, 401 admin/integration guards, and security headers. No real user DM was sent. In-app browser control remains unavailable, so actual-screen/console QA and the real two-account gate remain open rather than being claimed complete.",
   "status": "REVIEW",
   "phase": "PRIVATE_DEPLOYED",
   "current_objective": "Preserve the successful owner-only Version 11 deployment and complete the remaining interactive actual-screen, real DM login, and two-account isolation gates when the required Codex browser capability and consenting test identities are available; do not expand access meanwhile.",
-  "last_summary": "Committed secure Bot DM Passport source as 713ef7131e2055a8a63e84cd5a42fe48d6b3215f, pushed it to the existing private Sites source main branch, saved Sites Version 11 (appgprj_6a54d2460e7c8191a92c00900d810ab1~appgver_667daa3c0874819184850f109ac83336) with migration 0003, and deployed it successfully as appgdep_6a60c581d3b48191b968abe1d92e845a using environment revision 2. Production remains custom owner-only access with one allowed user and zero groups. Automated production smoke confirmed the shell, all 18 referenced assets, current live read model, anonymous Passport authMethods oauth=false/dmOtp=true, 202 DM start with a 300-second Strict HttpOnly Secure nonce, generic failed verification, 401 admin/integration guards, and security headers. No real user DM was sent. In-app browser control remains unavailable, so actual-screen/console QA and the real two-account gate remain open rather than being claimed complete.",
-  "last_checkpoint_id": "CP-000016",
-  "last_checkpoint_path": "checkpoints/CP-000016.json",
   "active_work": {
     "work_id": "ACT-014",
     "objective": "Complete the interactive verification gates for the deployed Bot DM Player Passport without changing the production audience.",
@@ -23,56 +18,6 @@
       "Keep production custom owner-only with exactly one allowed user and zero groups until a separate publication authorization exists."
     ]
   },
-  "recently_completed": [
-    {
-      "action_id": "BOOTSTRAP-001",
-      "result": "Initial zero-to-one scaffold generated atomically.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "COMMAND_CENTER_LINK.json",
-        "QUALITY_SCORECARD.md"
-      ]
-    },
-    {
-      "action_id": "ACT-001",
-      "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "migration/INTAKE.json",
-        "migration/MIGRATION_EVIDENCE.md",
-        "COMMAND_CENTER_LINK.json"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-003",
-      "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
-      "evidence": [
-        "app/Dashboard.tsx",
-        "server/auth.ts",
-        "server/passport-db.ts",
-        "db/schema.ts",
-        "drizzle/0001_majestic_boomer.sql",
-        "tests/passport-security.test.mjs",
-        "tests/dashboard-resilience.test.mjs",
-        "tests/rendered-html.test.mjs"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-007",
-      "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
-      "evidence": [
-        "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
-        "assets/ASSET_MANIFEST.csv",
-        "references/SOURCE_LOCK.json"
-      ],
-      "completed_at": "2026-07-22T16:05:03+08:00",
-      "checkpoint_id": "CP-000012"
-    }
-  ],
   "next_actions": [
     {
       "action_id": "ACT-014",
@@ -173,57 +118,11 @@
     }
   ],
   "decisions_needed": [],
-  "authorizations": [
-    {
-      "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
-      "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
-      "status": "GRANTED",
-      "granted_by": "SGG project owner",
-      "granted_at": "2026-07-20T22:47:24+08:00",
-      "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
-    },
-    {
-      "authorization_id": "AUTH-EXTERNAL-ACTIONS",
-      "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
-      "status": "NOT_GRANTED",
-      "granted_by": "",
-      "granted_at": "",
-      "evidence": ""
-    }
-  ],
-  "changed_files": [
+  "changed_paths": [
     {
       "path": "migration/STATE_UPDATE_CP000016_DM_AUTH_DEPLOYED.json",
-      "sha256": "2e93f6a0ba43006869b842bc611adf8a3fb5031c92a2c3f2919b5639b6c84e07",
       "reason": "Record the exact source commit, Sites Version 11, environment revision 2, successful owner-only deployment, production smoke, and remaining interactive gates."
     }
-  ],
-  "last_known_good": {
-    "validation_report": "VALIDATION_REPORT.json",
-    "commands": [
-      [
-        "python3",
-        "../../launches/tools/validate_sgg_project.py",
-        ".",
-        "--kickoff",
-        "--record"
-      ],
-      [
-        "python3",
-        "../../launches/tools/validate_pack.py",
-        "."
-      ]
-    ]
-  },
-  "authoritative_files": [
-    "AGENTS.md",
-    "COMMAND_CENTER_LINK.json",
-    "PROJECT_PROFILE.json",
-    "PROJECT_STATE.json",
-    "DECISIONS.md",
-    "CANON_AND_COPY.md",
-    "WORLD_AND_CHARACTER_BRIEF.md",
-    "VALIDATION_REPORT.json"
   ],
   "resume": {
     "action_id": "ACT-014",

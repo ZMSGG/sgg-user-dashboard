@@ -2,9 +2,9 @@
   "schema_version": 1,
   "authority": "SGG_VALIDATION_REPORT",
   "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 15,
-  "checkpoint_id": "CP-000015",
-  "recorded_at": "2026-07-22T21:26:34+08:00",
+  "state_version": 16,
+  "checkpoint_id": "CP-000016",
+  "recorded_at": "2026-07-22T21:31:59+08:00",
   "mode": "kickoff",
   "status": "PASS",
   "readiness_score": 100,
@@ -18,10 +18,10 @@
   ],
   "fingerprints": {
     "PROJECT_PROFILE.json": "acfc0954e819cb9f35ea9f07b94e2330f3df4e9670a66815d340e0d76f17bece",
-    "PROJECT_STATE.json": "afe273b6cac2e93ad60393934ddfebc4a204d1d296583991bb98632d342b35f2",
+    "PROJECT_STATE.json": "504387d3da61e84e2bf14c7516d5a102d10aa98ff2ffac0a79659438a895a943",
     "COMMAND_CENTER_LINK.json": "777f43f7f1a19d38f20a3ad2368e231d1d775624b16983f4ac0ed6ca8228750f",
     "assets/ASSET_MANIFEST.csv": "fb8d50596698d5d9cf1667baf541a4ac4c56e6776477a5774a1640c5c1c15748",
-    "checkpoints/CP-000015.json": "958672fecfe315b06d1377ecf0caf8a3264a1be1fea50f46e82f21bf44345ca7",
-    "__project_basis__": "a4bb7d4ed54dad07ba0d3f8d45dc2d3a4f83599f2094dfdab7542ad55a262599"
+    "checkpoints/CP-000016.json": "061613ded4a89cdd972009a94e2a6dbbc2b3da415a1e2c25e902b8a23465a02e",
+    "__project_basis__": "1dc992709ca0c9fba953df940e46a6074cebd1c79968326eaafc7e738ac8f675"
   }
 }

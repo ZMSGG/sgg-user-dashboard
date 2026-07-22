@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000016",
+  "state_version": 16,
+  "created_at": "2026-07-22T21:31:52+08:00",
+  "previous_checkpoint_id": "CP-000015",
+  "summary": "Committed secure Bot DM Passport source as 713ef7131e2055a8a63e84cd5a42fe48d6b3215f, pushed it to the existing private Sites source main branch, saved Sites Version 11 (appgprj_6a54d2460e7c8191a92c00900d810ab1~appgver_667daa3c0874819184850f109ac83336) with migration 0003, and deployed it successfully as appgdep_6a60c581d3b48191b968abe1d92e845a using environment revision 2. Production remains custom owner-only access with one allowed user and zero groups. Automated production smoke confirmed the shell, all 18 referenced assets, current live read model, anonymous Passport authMethods oauth=false/dmOtp=true, 202 DM start with a 300-second Strict HttpOnly Secure nonce, generic failed verification, 401 admin/integration guards, and security headers. No real user DM was sent. In-app browser control remains unavailable, so actual-screen/console QA and the real two-account gate remain open rather than being claimed complete.",
+  "project_basis_sha256": "1dc992709ca0c9fba953df940e46a6074cebd1c79968326eaafc7e738ac8f675",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 16,
+    "updated_at": "2026-07-22T21:31:52+08:00",
+    "updated_by": "Codex",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Preserve the successful owner-only Version 11 deployment and complete the remaining interactive actual-screen, real DM login, and two-account isolation gates when the required Codex browser capability and consenting test identities are available; do not expand access meanwhile.",
+    "last_summary": "Committed secure Bot DM Passport source as 713ef7131e2055a8a63e84cd5a42fe48d6b3215f, pushed it to the existing private Sites source main branch, saved Sites Version 11 (appgprj_6a54d2460e7c8191a92c00900d810ab1~appgver_667daa3c0874819184850f109ac83336) with migration 0003, and deployed it successfully as appgdep_6a60c581d3b48191b968abe1d92e845a using environment revision 2. Production remains custom owner-only access with one allowed user and zero groups. Automated production smoke confirmed the shell, all 18 referenced assets, current live read model, anonymous Passport authMethods oauth=false/dmOtp=true, 202 DM start with a 300-second Strict HttpOnly Secure nonce, generic failed verification, 401 admin/integration guards, and security headers. No real user DM was sent. In-app browser control remains unavailable, so actual-screen/console QA and the real two-account gate remain open rather than being claimed complete.",
+    "last_checkpoint_id": "CP-000016",
+    "last_checkpoint_path": "checkpoints/CP-000016.json",
+    "active_work": {
+      "work_id": "ACT-014",
+      "objective": "Complete the interactive verification gates for the deployed Bot DM Player Passport without changing the production audience.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Open the exact Version 11 production URL in a new muted Codex in-app browser tab while preserving every existing tab.",
+        "Visually confirm the DM fallback, responsive layout, focus flow, and absence of major console errors.",
+        "Complete one real ordinary-player DM code login without exposing the code or granting admin assurance.",
+        "Confirm two consenting Discord accounts cannot read each other's Passport or ledger data.",
+        "Keep production custom owner-only with exactly one allowed user and zero groups until a separate publication authorization exists."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-014",
+        "order": 1,
+        "action": "When Codex in-app browser control is available, open the deployed URL in a new muted tab, preserve the existing protected tab, and complete visual, responsive, interaction, and console QA.",
+        "owner": "Codex runtime capability",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-IN-APP-BROWSER-001"
+        ]
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 2,
+        "action": "Complete a real DM code login and two-account isolation check with two consenting Discord test identities before any audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 3,
+        "action": "Upgrade to stable Next and Cloudflare/Miniflare versions that officially support patched Sharp, then remove the temporary non-reachable exception.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 4,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing personal progress or assets.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 5,
+        "action": "Request and record separate authority before public/shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "This Codex task does not expose the mandatory in-app browser control or open_in_codex capability. The existing protected browser tab remains untouched, and Version 11 has been verified through production HTTP/API/asset smoke but not an interactive rendered browser or console session.",
+        "owner": "Codex runtime capability",
+        "status": "OPEN",
+        "resolution_required": "Expose the supported Codex in-app browser control capability; open the exact live URL in a new muted tab without navigating the protected tab and complete dashboard, Passport, responsive, asset, focus, and console verification."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport or ledger data before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp/libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare/Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so personal progress and holdings remain intentionally unconnected.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting personal data."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Version 11 is deployed successfully with owner-only private access, but public/shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+      }
+    ],
+    "decisions_needed": [],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "migration/STATE_UPDATE_CP000016_DM_AUTH_DEPLOYED.json",
+        "sha256": "2e93f6a0ba43006869b842bc611adf8a3fb5031c92a2c3f2919b5639b6c84e07",
+        "reason": "Record the exact source commit, Sites Version 11, environment revision 2, successful owner-only deployment, production smoke, and remaining interactive gates."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-014",
+      "instruction": "Read CP-000016. Version 11 from commit 713ef7131e2055a8a63e84cd5a42fe48d6b3215f is live at https://sgg-player-archive.axie-b-ac.chatgpt.site with environment revision 2, migration 0003, DM auth enabled, OAuth intentionally disabled, and custom owner-only access (one user, zero groups). Automated production smoke passed. Do not redeploy unchanged source. When browser control becomes available, open this exact URL in a new muted Codex tab without touching existing tabs and finish actual-screen/console QA; then run a real DM login and two-account isolation gate with consenting identities.",
+      "do_not_assume": [
+        "The in-app browser, responsive, focus, and console gates passed; this task has no browser control capability.",
+        "A real Discord DM login or two-account identity-isolation test was performed; production smoke used a non-existent identity and sent no user DM.",
+        "OAuth is configured; DISCORD_CLIENT_SECRET is intentionally absent and production reports oauth=false.",
+        "The source evidence commit after this checkpoint is the deployed Version 11 commit; the deployed code commit remains 713ef7131e2055a8a63e84cd5a42fe48d6b3215f.",
+        "Owner-only deployment authorization permits public/shared access, custom domains, indexing, added viewers, or groups."
+      ]
+    }
+  },
+  "resulting_state_sha256": "9f0dd824525a0017eebfc0d94303fd68c34c9256a80ab842100572d328346fc4"
+}
