@@ -1,14 +1,14 @@
 #!/bin/bash
-# Interactive helper: writes Discord secrets from the clipboard into .dev.vars.
-# Values never leave this machine and are never echoed to the screen.
+# Local helper: writes Discord secrets into .dev.vars without echoing values.
+# `all` configures the Bot + DM fallback and never asks for an OAuth reset.
 set -euo pipefail
 FILE="$(cd "$(dirname "$0")/.." && pwd)/.dev.vars"
 MODE="${1:-all}"
 
 case "$MODE" in
-  all|bot|client-secret) ;;
+  all|bot|dm|client-secret) ;;
   *)
-    echo "使い方: $0 [all|bot|client-secret]"
+    echo "使い方: $0 [all|bot|dm|client-secret]"
     exit 2
     ;;
 esac
@@ -43,8 +43,15 @@ if [[ "$MODE" == "all" || "$MODE" == "bot" ]]; then
   echo
 fi
 
-if [[ "$MODE" == "all" || "$MODE" == "client-secret" ]]; then
-  echo "[OAuth2] OAuth2 > General で Client Secret をリセットしてコピーしてから Enter を押してください"
+if [[ "$MODE" == "all" || "$MODE" == "dm" ]]; then
+  PEPPER=$(openssl rand -base64 48 | tr -d '[:space:]')
+  replace DM_OTP_PEPPER "$PEPPER"
+  echo "OK: DM_OTP_PEPPER を安全に生成・保存しました (${#PEPPER}文字)"
+  echo
+fi
+
+if [[ "$MODE" == "client-secret" ]]; then
+  echo "[任意 / OAuth2] 既に利用可能なClient Secretをコピーしてから Enter を押してください"
   read -r
   SECRET=$(pbpaste | tr -d '[:space:]')
   CURRENT_BOT=$(awk -F= '$1 == "DISCORD_BOT_TOKEN" { sub(/^[^=]*=/, ""); print; exit }' "$FILE")
@@ -57,4 +64,4 @@ if [[ "$MODE" == "all" || "$MODE" == "client-secret" ]]; then
   echo
 fi
 
-echo "完了です。チャットに「ok」と送ってください。"
+echo "完了です。Bot DM認証にはClient Secretの入力は不要です。"

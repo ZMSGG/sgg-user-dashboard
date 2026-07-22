@@ -22,6 +22,13 @@
       "when": 1784631361152,
       "tag": "0002_bent_spiral",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1784725077410,
+      "tag": "0003_previous_nitro",
+      "breakpoints": true
     }
   ]
 }

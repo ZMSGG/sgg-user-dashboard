@@ -1,5 +1,13 @@
 import { sql } from "drizzle-orm";
-import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import {
+  check,
+  index,
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
+  uniqueIndex,
+} from "drizzle-orm/sqlite-core";
 
 /**
  * Player OS persistence. Rules from docs/PLAYER_OS_ARCHITECTURE.md:
@@ -43,9 +51,53 @@ export const authSessions = sqliteTable("auth_sessions", {
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   expiresAt: integer("expires_at").notNull(),
   revokedAt: text("revoked_at"),
+  // The D1 row, not a browser assertion, is authoritative for assurance.
+  // Legacy rows predate DM auth and therefore default to Discord OAuth.
+  authMethod: text("auth_method").notNull().default("discord_oauth"),
+  assuranceLevel: integer("assurance_level").notNull().default(2),
 }, (table) => [
   index("auth_sessions_discord_id_idx").on(table.discordId),
   index("auth_sessions_expires_at_idx").on(table.expiresAt),
+]);
+
+/**
+ * One-time Discord DM login challenges. Only digests of the browser-visible
+ * challenge id, browser-bound nonce, and code are durable. Discord ID remains
+ * the formal Player Passport identity and is needed for a fresh guild check.
+ */
+export const discordDmChallenges = sqliteTable("discord_dm_challenges", {
+  challengeIdDigest: text("challenge_id_digest").primaryKey(),
+  discordId: text("discord_id").notNull(),
+  clientNonceDigest: text("client_nonce_digest").notNull(),
+  codeDigest: text("code_digest").notNull(),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  expiresAt: integer("expires_at").notNull(),
+  attempts: integer("attempts").notNull().default(0),
+  consumedAt: text("consumed_at"),
+}, (table) => [
+  index("discord_dm_challenges_discord_expires_idx").on(table.discordId, table.expiresAt),
+  index("discord_dm_challenges_expires_at_idx").on(table.expiresAt),
+  check(
+    "discord_dm_challenges_attempts_check",
+    sql`${table.attempts} >= 0 AND ${table.attempts} <= 5`,
+  ),
+]);
+
+/**
+ * Start throttles contain HMAC pseudonyms only. Raw CF IP addresses and raw
+ * lookup identities are never written to this table.
+ */
+export const discordDmRateLimits = sqliteTable("discord_dm_rate_limits", {
+  scope: text("scope").notNull(),
+  subjectDigest: text("subject_digest").notNull(),
+  windowStart: integer("window_start").notNull(),
+  attempts: integer("attempts").notNull(),
+  lastAttemptAt: integer("last_attempt_at").notNull(),
+}, (table) => [
+  primaryKey({ columns: [table.scope, table.subjectDigest] }),
+  index("discord_dm_rate_limits_last_attempt_idx").on(table.lastAttemptAt),
+  check("discord_dm_rate_limits_scope_check", sql`${table.scope} IN ('global', 'ip', 'discord')`),
+  check("discord_dm_rate_limits_attempts_check", sql`${table.attempts} >= 1`),
 ]);
 
 /**

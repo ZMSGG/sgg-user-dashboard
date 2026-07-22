@@ -31,15 +31,29 @@ export type PassportGuild = {
   syncedAt: string | null;
 };
 
+export type PassportAuthMethods = {
+  oauth: boolean;
+  dmOtp: boolean;
+};
+
+export type PassportLoginMethod = "discord_oauth" | "discord_dm";
+
 export type PassportData =
-  | { connected: false; authConfigured: boolean }
+  | {
+    connected: false;
+    authConfigured: boolean;
+    authMethods?: PassportAuthMethods;
+  }
   | {
     connected: true;
     authConfigured: boolean;
+    authMethods?: PassportAuthMethods;
+    loginMethod?: PassportLoginMethod;
     player: PassportPlayer;
     guild: PassportGuild;
     points: { balance: number; grants: PassportGrant[] };
     isAdmin: boolean;
+    adminUpgradeRequired?: boolean;
   };
 
 export type AdminPlayerRow = {

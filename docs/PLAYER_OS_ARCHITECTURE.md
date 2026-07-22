@@ -36,11 +36,13 @@ Farm links to the verified Vercel runtime while its custom domain remains pendin
 The dashboard now has its own authenticated PlayerAccount:
 
 - `GET /api/auth/discord` starts the Discord authorization-code flow (scope `identify`); the callback exchanges the code server-side and issues a purpose-bound HMAC-signed, HttpOnly, SameSite=Lax session cookie. The random session ID must also resolve to an active D1 row, so logout and incident response can revoke it.
+- `POST /api/auth/discord/dm/start` and `/verify` provide a guild-only Bot DM fallback when OAuth is unavailable. A 10-character, five-minute, one-time code is HMAC-only at rest, bound to a SameSite=Strict HttpOnly browser nonce, capped at five attempts, and protected by pseudonymous rate limits. Membership is checked before delivery and again before consumption; lookup and delivery outcomes remain enumeration-resistant.
+- Sessions carry a D1-authoritative assurance method: `discord_oauth` is high assurance, while the 24-hour `discord_dm` session is low assurance. Low-assurance sessions can use their own Passport but can never read the admin roster or grant points, including when the Discord ID is allowlisted.
 - `GET /api/passport` is the read-only model for the signed-in player: identity, optional wallet, SGG point balance, and grant history. Anonymous or unconfigured environments return `connected: false` — endpoints fail closed.
 - Wallet linking is optional and EVM-based: `POST /api/wallet/challenge` persists a one-time challenge bound to session, canonical origin, and requested address; `POST /api/wallet/link` atomically consumes it, verifies `personal_sign` (viem), and enforces 1 Discord ↔ 1 wallet. Signatures prove address ownership only.
 - SGG points live in D1: `point_grants` is append-only with payload fingerprints, retry-stable idempotency keys, and actor attribution; ledger and `audit_events` writes are one D1 batch. Balances are derived sums — never stored or edited.
-- Grants are restricted to Discord IDs listed in `ADMIN_DISCORD_IDS`, require authentication within the previous 15 minutes, and are issued from the in-dashboard admin panel. Corrections are negative grants, not edits.
-- `APP_ORIGIN` allowlists OAuth and Wallet origins. `DISCORD_CLIENT_SECRET` and `SESSION_SECRET` are Sites secrets; `DISCORD_CLIENT_ID` and `ADMIN_DISCORD_IDS` are Sites runtime values. Logical D1 wiring remains only in `.openai/hosting.json`.
+- Grants are restricted to Discord IDs listed in `ADMIN_DISCORD_IDS`, require high-assurance OAuth authentication within the previous 15 minutes, and are issued from the in-dashboard admin panel. Corrections are negative grants, not edits.
+- `APP_ORIGIN` allowlists OAuth, DM start/verify, and Wallet origins. `DISCORD_CLIENT_SECRET`, `DISCORD_BOT_TOKEN`, `DM_OTP_PEPPER`, and `SESSION_SECRET` are Sites secrets; IDs and allowlists are Sites runtime values. Logical D1 wiring remains only in `.openai/hosting.json`.
 
 This SGG point ledger is the dashboard's own participation-reward system. It remains separate from per-game `SGG_GAME_POINTS`, raw scores, rankings, rewards, SDT, and `SGG Token`.
 

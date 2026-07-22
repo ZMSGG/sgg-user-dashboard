@@ -15,6 +15,7 @@ export type PlayerOsEnv = {
   ADMIN_DISCORD_IDS?: string;
   DISCORD_BOT_TOKEN?: string;
   DISCORD_GUILD_ID?: string;
+  DM_OTP_PEPPER?: string;
   INTEGRATION_GRANT_SECRET?: string;
   INTEGRATION_ACTOR_ID?: string;
 };
@@ -39,6 +40,25 @@ export async function playerOsEnv(): Promise<PlayerOsEnv> {
 
 export const SESSION_COOKIE = "sgg_session";
 export const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
+export const DM_SESSION_TTL_SECONDS = 24 * 60 * 60;
+
+export type AuthMethod = "discord_oauth" | "discord_dm";
+export type AssuranceLevel = 1 | 2;
+
+export type SessionAuthentication = {
+  authMethod: AuthMethod;
+  assuranceLevel: AssuranceLevel;
+};
+
+export const OAUTH_SESSION_AUTHENTICATION: SessionAuthentication = {
+  authMethod: "discord_oauth",
+  assuranceLevel: 2,
+};
+
+export const DM_SESSION_AUTHENTICATION: SessionAuthentication = {
+  authMethod: "discord_dm",
+  assuranceLevel: 1,
+};
 
 export type TokenPurpose = "oauth-state" | "session" | "wallet-challenge";
 
@@ -335,6 +355,8 @@ export type SessionClaims = {
   sessionId: string;
   iat: number;
   exp: number;
+  authMethod: AuthMethod;
+  assuranceLevel: AssuranceLevel;
 };
 
 export const ADMIN_RECENT_AUTH_SECONDS = 15 * 60;
@@ -344,28 +366,65 @@ export function hasRecentAuthentication(
   maxAgeSeconds = ADMIN_RECENT_AUTH_SECONDS,
   nowSeconds = Math.floor(Date.now() / 1000),
 ): boolean {
-  return Number.isInteger(session.iat) &&
+  return isHighAssuranceSession(session) &&
+    Number.isInteger(session.iat) &&
     Number.isInteger(maxAgeSeconds) &&
     maxAgeSeconds > 0 &&
     session.iat <= nowSeconds &&
     nowSeconds - session.iat <= maxAgeSeconds;
 }
 
+/** DM login is intentionally low assurance and can never authorize admin work. */
+export function isHighAssuranceSession(
+  session: Pick<SessionClaims, "authMethod" | "assuranceLevel">,
+): boolean {
+  return session.authMethod === "discord_oauth" && session.assuranceLevel === 2;
+}
+
 export async function createSessionArtifact(
   secret: string,
   sub: string,
   nowSeconds = Math.floor(Date.now() / 1000),
-): Promise<{ token: string; sessionId: string; expiresAt: number }> {
+  options: {
+    ttlSeconds?: number;
+    authentication?: SessionAuthentication;
+  } = {},
+): Promise<{
+  token: string;
+  sessionId: string;
+  expiresAt: number;
+  authMethod: AuthMethod;
+  assuranceLevel: AssuranceLevel;
+}> {
   if (!/^\d{5,25}$/.test(sub)) throw new Error("Discord subject is invalid");
+  const ttlSeconds = options.ttlSeconds ?? SESSION_TTL_SECONDS;
+  const authentication = options.authentication ?? OAUTH_SESSION_AUTHENTICATION;
+  const validAuthentication =
+    (authentication.authMethod === "discord_oauth" && authentication.assuranceLevel === 2) ||
+    (authentication.authMethod === "discord_dm" && authentication.assuranceLevel === 1);
+  if (
+    !Number.isInteger(ttlSeconds) ||
+    ttlSeconds <= 0 ||
+    ttlSeconds > SESSION_TTL_SECONDS ||
+    !validAuthentication ||
+    (authentication.authMethod === "discord_dm" && ttlSeconds > DM_SESSION_TTL_SECONDS)
+  ) {
+    throw new Error("Session authentication context is invalid");
+  }
   const sid = randomToken(32);
-  const expiresAt = nowSeconds + SESSION_TTL_SECONDS;
+  const expiresAt = nowSeconds + ttlSeconds;
   const token = await signPurposeToken(secret, "session", {
     sub,
     sid,
     iat: nowSeconds,
     exp: expiresAt,
   });
-  return { token, sessionId: await sha256Hex(sid), expiresAt };
+  return {
+    token,
+    sessionId: await sha256Hex(sid),
+    expiresAt,
+    ...authentication,
+  };
 }
 
 /** Verifies both the signed assertion and its active, non-revoked D1 row. */
@@ -390,20 +449,37 @@ export async function readSession(request: Request): Promise<SessionClaims | nul
   const sessionId = await sha256Hex(claims.sid);
   try {
     const row = await env.DB.prepare(
-      `SELECT id FROM auth_sessions
+      `SELECT id, auth_method, assurance_level FROM auth_sessions
        WHERE id = ?1 AND discord_id = ?2 AND revoked_at IS NULL
          AND expires_at = ?3 AND expires_at > ?4
        LIMIT 1`,
     )
       .bind(sessionId, claims.sub, claims.exp, Math.floor(Date.now() / 1000))
-      .first<{ id: string }>();
-    if (!row || row.id !== sessionId) return null;
+      .first<{ id: string; auth_method: unknown; assurance_level: unknown }>();
+    if (
+      !row ||
+      row.id !== sessionId ||
+      (row.auth_method !== "discord_oauth" && row.auth_method !== "discord_dm") ||
+      (row.assurance_level !== 1 && row.assurance_level !== 2) ||
+      (row.auth_method === "discord_oauth" && row.assurance_level !== 2) ||
+      (row.auth_method === "discord_dm" && row.assurance_level !== 1)
+    ) {
+      return null;
+    }
+    return {
+      sub: claims.sub,
+      sessionId,
+      iat: claims.iat,
+      exp: claims.exp,
+      authMethod: row.auth_method,
+      assuranceLevel: row.assurance_level,
+    };
   } catch {
     // Missing/unmigrated bindings and D1 failures are authentication failures.
     return null;
   }
 
-  return { sub: claims.sub, sessionId, iat: claims.iat, exp: claims.exp };
+  return null;
 }
 
 export async function adminDiscordIds(): Promise<Set<string>> {

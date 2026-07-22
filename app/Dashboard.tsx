@@ -37,6 +37,15 @@ type FormFilter = "SPIRIT" | "INCARNATE" | "DOJI";
 type SourceState = "online" | "unavailable" | "checking";
 type LoadState = "idle" | "loading" | "ready" | "error";
 
+type DiscordDmChallenge = {
+  challengeId: string;
+  expiresIn: number;
+  expiresAt: number;
+};
+
+const DISCORD_DM_IDENTITY_PATTERN = /^(?:\d{5,25}|[a-z0-9._]{2,32})$/i;
+const DISCORD_DM_CODE_PATTERN = /^[0-9A-HJKMNP-TV-Z]{10}$/;
+
 const navItems: readonly { id: View; label: string; eyebrow: string; glyph: string }[] = [
   { id: "home", label: "ホーム", eyebrow: "TODAY", glyph: "七" },
   { id: "games", label: "プレイ", eyebrow: "PLAY", glyph: "遊" },
@@ -397,6 +406,11 @@ export function Dashboard() {
   const [syncing, setSyncing] = useState(false);
   const [passport, setPassport] = useState<PassportData | null>(null);
   const [passportState, setPassportState] = useState<Exclude<LoadState, "idle">>("loading");
+  const [dmIdentity, setDmIdentity] = useState("");
+  const [dmCode, setDmCode] = useState("");
+  const [dmChallenge, setDmChallenge] = useState<DiscordDmChallenge | null>(null);
+  const [dmAuthBusy, setDmAuthBusy] = useState(false);
+  const [dmAuthMessage, setDmAuthMessage] = useState("");
   const [walletBusy, setWalletBusy] = useState(false);
   const [walletChoices, setWalletChoices] = useState<WalletProviderDetail[] | null>(null);
   const [guildBusy, setGuildBusy] = useState(false);
@@ -412,6 +426,8 @@ export function Dashboard() {
   const notificationRef = useRef<HTMLDivElement>(null);
   const notificationTriggerRef = useRef<HTMLButtonElement>(null);
   const notificationPanelRef = useRef<HTMLDivElement>(null);
+  const dmCodeInputRef = useRef<HTMLInputElement>(null);
+  const dmIdentityInputRef = useRef<HTMLInputElement>(null);
   const checkedAtRef = useRef("");
   const adminRosterRequestRef = useRef(0);
   const grantAttemptRef = useRef<{ fingerprint: string; idempotencyKey: string } | null>(null);
@@ -519,6 +535,18 @@ export function Dashboard() {
     return () => window.clearTimeout(timeout);
   }, [refreshPassport]);
 
+  useEffect(() => {
+    if (!dmChallenge) return;
+    dmCodeInputRef.current?.focus();
+    const timeout = window.setTimeout(() => {
+      setDmChallenge(null);
+      setDmCode("");
+      setDmAuthMessage("コードの有効期限が切れました。もう一度DMを受け取ってください。");
+      window.setTimeout(() => dmIdentityInputRef.current?.focus(), 0);
+    }, Math.max(0, dmChallenge.expiresAt - Date.now()));
+    return () => window.clearTimeout(timeout);
+  }, [dmChallenge]);
+
   const isAdmin = passport?.connected === true && passport.isAdmin;
 
   const loadAdminPlayers = useCallback(async () => {
@@ -547,7 +575,11 @@ export function Dashboard() {
   const logout = async () => {
     try {
       await postJson("/api/auth/logout");
-      setPassport({ connected: false, authConfigured: passport?.authConfigured ?? false });
+      setPassport({
+        connected: false,
+        authConfigured: passport?.authConfigured ?? false,
+        authMethods: passport?.authMethods,
+      });
       setPassportState("ready");
       adminRosterRequestRef.current += 1;
       setAdminPlayers(null);
@@ -556,6 +588,68 @@ export function Dashboard() {
     } catch {
       setToast("ログアウトに失敗しました");
     }
+  };
+
+  const requestDiscordDmCode = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const identity = dmIdentity.trim().replace(/^@/, "");
+    if (!DISCORD_DM_IDENTITY_PATTERN.test(identity)) {
+      setDmAuthMessage("Discordユーザー名またはUser IDを確認してください。");
+      return;
+    }
+    setDmAuthBusy(true);
+    setDmAuthMessage("");
+    try {
+      const challenge = await postJson<Omit<DiscordDmChallenge, "expiresAt">>("/api/auth/discord/dm/start", { identity });
+      setDmChallenge({
+        ...challenge,
+        expiresAt: Date.now() + challenge.expiresIn * 1_000,
+      });
+      setDmCode("");
+      setDmAuthMessage("一致するSGGメンバーならDMを送信しました。コードは5分間・一度だけ有効です。SGGスタッフがコードを尋ねることはありません。");
+    } catch (error) {
+      setDmAuthMessage(error instanceof Error && error.message
+        ? error.message
+        : "DM認証を開始できませんでした。しばらく待って再試行してください。");
+    } finally {
+      setDmAuthBusy(false);
+    }
+  };
+
+  const verifyDiscordDmCode = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!dmChallenge) return;
+    const code = dmCode.trim().toUpperCase().replaceAll("-", "").replaceAll(" ", "");
+    if (!DISCORD_DM_CODE_PATTERN.test(code)) {
+      setDmAuthMessage("DMに届いた10文字のコードを入力してください。");
+      return;
+    }
+    setDmAuthBusy(true);
+    setDmAuthMessage("");
+    try {
+      await postJson("/api/auth/discord/dm/verify", {
+        challengeId: dmChallenge.challengeId,
+        code,
+      });
+      setDmIdentity("");
+      setDmCode("");
+      setDmChallenge(null);
+      setToast("Discord Player Passportへ接続しました");
+      await refreshPassport({ showLoading: true });
+    } catch (error) {
+      setDmAuthMessage(error instanceof Error && error.message
+        ? error.message
+        : "コードを確認できませんでした。DMを確認して再試行してください。");
+    } finally {
+      setDmAuthBusy(false);
+    }
+  };
+
+  const resetDiscordDmChallenge = () => {
+    setDmChallenge(null);
+    setDmCode("");
+    setDmAuthMessage("");
+    window.setTimeout(() => dmIdentityInputRef.current?.focus(), 0);
   };
 
   const linkWallet = async (chosen?: EthereumProvider) => {
@@ -888,6 +982,12 @@ export function Dashboard() {
         : passport?.authConfigured === false
           ? "準備中"
           : "未接続";
+  const dmOtpAvailable = passport?.connected === false && passport.authMethods?.dmOtp === true;
+  const oauthAvailable = passport?.authMethods?.oauth === true ||
+    (passport?.connected === false && passport.authMethods === undefined && passport.authConfigured);
+  const adminUpgradeRequired = passport?.connected === true &&
+    passport.adminUpgradeRequired === true;
+  const adminUpgradeAvailable = adminUpgradeRequired && oauthAvailable;
 
   return (
     <div className={styles.app}>
@@ -1223,17 +1323,81 @@ export function Dashboard() {
                       <button type="button" className={styles.primaryAction} disabled>Passportを確認中…</button>
                     ) : passportState === "error" && !passport ? (
                       <button type="button" className={styles.primaryAction} onClick={() => void refreshPassport({ showLoading: true })}>もう一度確認する</button>
+                    ) : adminUpgradeAvailable ? (
+                      <>
+                        <a className={styles.primaryAction} href="/api/auth/discord">管理者としてDiscord再認証<span aria-hidden="true">→</span></a>
+                        <button type="button" className={styles.textButton} onClick={() => void logout()}>ログアウト</button>
+                      </>
                     ) : passport?.connected ? (
                       <button type="button" className={styles.textButton} onClick={() => void logout()}>ログアウト</button>
-                    ) : passport?.authConfigured === false ? (
-                      <button type="button" className={styles.primaryAction} disabled>Discord連携を準備中</button>
-                    ) : (
+                    ) : oauthAvailable ? (
                       <a className={styles.primaryAction} href="/api/auth/discord">Discordで連携する<span aria-hidden="true">→</span></a>
-                    )}
+                    ) : !dmOtpAvailable ? (
+                      <button type="button" className={styles.primaryAction} disabled>Discord連携を準備中</button>
+                    ) : null}
                   </div>
+                  {adminUpgradeRequired && (
+                    <p className={styles.dmAuthHelp}>DM認証はPlayer Passport専用です。管理機能には通常のDiscord認証が必要です。{oauthAvailable ? "上のボタンから再認証してください。" : "OAuthの準備が整うまで管理機能は利用できません。"}</p>
+                  )}
+                  {dmOtpAvailable && (
+                    <div className={styles.dmAuthPanel}>
+                      <strong className={styles.dmAuthTitle}>{oauthAvailable ? "OAuthが使えない場合 / BOT DM" : "BOT DMで本人確認"}</strong>
+                      {dmChallenge ? (
+                        <form className={styles.dmAuthForm} onSubmit={verifyDiscordDmCode}>
+                          <label htmlFor="discord-dm-code">DMに届いた10文字コード</label>
+                          <div>
+                            <input
+                              ref={dmCodeInputRef}
+                              id="discord-dm-code"
+                              value={dmCode}
+                              onChange={(event) => setDmCode(event.target.value.toUpperCase())}
+                              placeholder="ABCDE-FGHJK"
+                              autoComplete="one-time-code"
+                              inputMode="text"
+                              maxLength={11}
+                              spellCheck={false}
+                              autoCapitalize="characters"
+                              required
+                            />
+                            <button type="submit" className={styles.primaryAction} disabled={dmAuthBusy}>
+                              {dmAuthBusy ? "確認中…" : "Passportへ接続"}
+                            </button>
+                          </div>
+                          <button type="button" className={styles.textButton} onClick={resetDiscordDmChallenge} disabled={dmAuthBusy}>
+                            ユーザー名を入力し直す
+                          </button>
+                        </form>
+                      ) : (
+                        <form className={styles.dmAuthForm} onSubmit={requestDiscordDmCode}>
+                          <label htmlFor="discord-dm-identity">Discordユーザー名（@不要）またはUser ID</label>
+                          <div>
+                            <input
+                              ref={dmIdentityInputRef}
+                              id="discord-dm-identity"
+                              value={dmIdentity}
+                              onChange={(event) => setDmIdentity(event.target.value)}
+                              placeholder="yourname"
+                              autoComplete="username"
+                              maxLength={32}
+                              spellCheck={false}
+                              required
+                            />
+                            <button type="submit" className={styles.primaryAction} disabled={dmAuthBusy}>
+                              {dmAuthBusy ? "送信中…" : "DMコードを受け取る"}
+                            </button>
+                          </div>
+                        </form>
+                      )}
+                      <p className={styles.dmAuthHelp} role="status" aria-live="polite">
+                        {dmAuthMessage || (dmChallenge
+                          ? `コードは${Math.ceil(dmChallenge.expiresIn / 60)}分間・一度だけ有効です。SGGスタッフがコードを尋ねることはありません。`
+                          : "SGG Discord参加メンバーへ、MY SGG Botが本人確認コードをDMします。")}
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <div className={styles.passportStatus}>
-                  <span><Dot active={passport?.connected === true} />Discord<strong>{passportState === "loading" && !passport ? "確認中" : passportState === "error" && !passport ? "取得不可" : passport?.connected ? "接続済み" : passport?.authConfigured === false ? "準備中" : "未接続"}</strong></span>
+                  <span><Dot active={passport?.connected === true} />Discord<strong>{passportState === "loading" && !passport ? "確認中" : passportState === "error" && !passport ? "取得不可" : passport?.connected ? "接続済み" : dmOtpAvailable ? "DM認証可能" : passport?.authConfigured === false ? "準備中" : "未接続"}</strong></span>
                   <span><Dot active={passport?.connected === true && Boolean(passport.player.walletAddress)} />Wallet<strong>{passportState === "loading" && !passport ? "確認中" : passport?.connected && passport.player.walletAddress ? shortAddress(passport.player.walletAddress) : "任意"}</strong></span>
                   <span><Dot active={passport?.connected === true && passport.guild.member === true} />コミュニティ<strong>{passportState === "loading" && !passport
                     ? "確認中"

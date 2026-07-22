@@ -1,9 +1,11 @@
 import {
   adminDiscordIds,
   discordAuthConfigFromEnv,
+  isHighAssuranceSession,
   playerOsEnv,
   readSession,
 } from "../../../server/auth";
+import { discordDmAuthConfigFromEnv } from "../../../server/discord-dm-auth";
 import { guildSyncConfigFromEnv, parseGuildRoles } from "../../../server/discord-guild";
 import { getDb, getPlayer, getPointBalance, getRecentGrants } from "../../../server/passport-db";
 
@@ -18,27 +20,41 @@ const NO_STORE = { "Cache-Control": "no-store" };
 export async function GET(request: Request) {
   const env = await playerOsEnv();
   const db = await getDb();
-  const configured = Boolean(discordAuthConfigFromEnv(env) && db);
+  const authMethods = {
+    oauth: Boolean(discordAuthConfigFromEnv(env) && db),
+    dmOtp: Boolean(discordDmAuthConfigFromEnv(env) && db),
+  };
+  const configured = authMethods.oauth || authMethods.dmOtp;
 
   const session = await readSession(request);
   if (!session || !db) {
-    return Response.json({ connected: false, authConfigured: configured }, { headers: NO_STORE });
+    return Response.json(
+      { connected: false, authConfigured: configured, authMethods },
+      { headers: NO_STORE },
+    );
   }
 
   const player = await getPlayer(db, session.sub);
   if (!player) {
-    return Response.json({ connected: false, authConfigured: configured }, { headers: NO_STORE });
+    return Response.json(
+      { connected: false, authConfigured: configured, authMethods },
+      { headers: NO_STORE },
+    );
   }
 
   const [balance, grants] = await Promise.all([
     getPointBalance(db, player.discordId),
     getRecentGrants(db, player.discordId),
   ]);
+  const adminAllowlisted = (await adminDiscordIds()).has(player.discordId);
+  const highAssurance = isHighAssuranceSession(session);
 
   return Response.json(
     {
       connected: true,
       authConfigured: configured,
+      authMethods,
+      loginMethod: session.authMethod,
       player: {
         discordId: player.discordId,
         username: player.discordUsername,
@@ -57,7 +73,8 @@ export async function GET(request: Request) {
         syncedAt: player.guildSyncedAt,
       },
       points: { balance, grants },
-      isAdmin: (await adminDiscordIds()).has(player.discordId),
+      isAdmin: adminAllowlisted && highAssurance,
+      adminUpgradeRequired: adminAllowlisted && !highAssurance,
     },
     { headers: NO_STORE },
   );

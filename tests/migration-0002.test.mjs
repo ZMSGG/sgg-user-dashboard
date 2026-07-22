@@ -80,14 +80,20 @@ test("migration 0002 preserves deployed data and adds nullable guild snapshot co
   );
 });
 
-test("migration journal packages 0002 exactly once after its predecessors", async () => {
+test("migration journal packages the guild and DM auth migrations exactly once", async () => {
   const journal = JSON.parse(
     await readFile(new URL("../drizzle/meta/_journal.json", import.meta.url), "utf8"),
   );
   assert.deepEqual(
     journal.entries.map((entry) => entry.tag),
-    ["0000_brave_rachel_grey", "0001_majestic_boomer", "0002_bent_spiral"],
+    [
+      "0000_brave_rachel_grey",
+      "0001_majestic_boomer",
+      "0002_bent_spiral",
+      "0003_previous_nitro",
+    ],
   );
-  assert.equal(journal.entries.at(-1)?.idx, 2);
+  assert.equal(journal.entries.at(-1)?.idx, 3);
   assert.match(await readMigration("0002_bent_spiral.sql"), /ADD `guild_synced_at` text/);
+  assert.match(await readMigration("0003_previous_nitro.sql"), /CREATE TABLE `discord_dm_challenges`/);
 });

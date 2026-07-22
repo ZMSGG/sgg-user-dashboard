@@ -117,8 +117,15 @@ test("sensitive admin actions require a recent authenticated session", () => {
     sessionId: "session-digest",
     iat: 2_000_000_000,
     exp: 2_000_604_800,
+    authMethod: "discord_oauth",
+    assuranceLevel: 2,
   };
   assert.equal(hasRecentAuthentication(session, 900, 2_000_000_899), true);
   assert.equal(hasRecentAuthentication(session, 900, 2_000_000_901), false);
   assert.equal(hasRecentAuthentication(session, 900, 1_999_999_999), false);
+  assert.equal(hasRecentAuthentication({
+    ...session,
+    authMethod: "discord_dm",
+    assuranceLevel: 1,
+  }, 900, 2_000_000_100), false);
 });

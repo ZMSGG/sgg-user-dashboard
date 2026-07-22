@@ -8,6 +8,9 @@ ADMIN_DISCORD_IDS=
 # Bot token of the approved SGG Discord application; the bot must be in the guild.
 DISCORD_BOT_TOKEN=
 DISCORD_GUILD_ID=
+# Separate >=32-byte secret used only to HMAC Discord DM one-time codes and
+# rate-limit subjects. Opaque challenge IDs/nonces are SHA-256 digested.
+DM_OTP_PEPPER=
 # Server-to-server automated point grants (optional feature; fails closed when unset).
 # Secret: >=32 bytes, shared only with approved game/campaign backends.
 # Actor: the Discord user ID of the service's bot user, recorded as granted_by.

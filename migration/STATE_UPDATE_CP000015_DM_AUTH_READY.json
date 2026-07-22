@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 14,
+  "updated_by": "Codex",
+  "summary": "Replaced the repeated Discord OAuth Client Secret dependency for ordinary players with a guild-only Bot DM one-time-code fallback while preserving OAuth as the sole high-assurance administrator path. The implementation uses a five-minute browser-bound one-time code, D1-backed attempt and rate limits, fresh guild checks, Cloudflare waitUntil delivery to remove membership timing disclosure, 24-hour low-assurance sessions, migration 0003, and explicit admin denial. Sites runtime values were configured as environment revision 2 without a Discord Client Secret; lint, typecheck, build, database validation, all 54 tests, secret scanning, backend security review, and UI review pass.",
+  "status": "REVIEW",
+  "phase": "PRIVATE_DEPLOYED",
+  "current_objective": "Commit and push the exact validated Bot DM Passport source, save a new Sites version containing migration 0003, deploy it with environment revision 2 to the existing owner-only production site, and complete automated production smoke plus any available actual-screen verification without changing access.",
+  "active_work": {
+    "work_id": "ACT-013",
+    "objective": "Deploy the secure ordinary-player Discord Bot DM Passport fallback to the existing owner-only MY SGG site.",
+    "status": "IN_PROGRESS",
+    "acceptance_criteria": [
+      "The exact validated source commit is pushed to the existing private Sites source main branch and saved as a new version with migration 0003.",
+      "Sites production deploys with environment revision 2 and remains custom access with exactly one allowed user and zero groups.",
+      "Anonymous production Passport reports DM authentication available and OAuth unavailable without exposing secrets.",
+      "DM sessions remain low assurance and cannot read the admin roster or grant points.",
+      "No existing browser tab, development runtime, terminal session, or protected Discord state is stopped, replaced, or navigated away."
+    ]
+  },
+  "next_actions": [
+    {
+      "action_id": "ACT-013",
+      "order": 1,
+      "action": "Commit and push the exact validated source, package the fresh build and migrations, save one new Sites version, and deploy it owner-only with environment revision 2.",
+      "owner": "Codex",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-014",
+      "order": 2,
+      "action": "Run production API and access-boundary smoke checks, then open the exact deployed URL in a new muted Codex in-app browser tab for visual and console QA if the browser control capability is available.",
+      "owner": "Codex",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-015",
+      "order": 3,
+      "action": "Complete a real DM code login and two-account isolation check when two consenting Discord test identities and interactive browser control are available.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DISCORD-E2E-001"
+      ]
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 4,
+      "action": "Upgrade to stable Next and Cloudflare/Miniflare versions that officially support patched Sharp, then remove the temporary non-reachable exception.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPENDENCY-SHARP-001"
+      ]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 5,
+      "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing personal progress or assets.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PLAYER-BRIDGE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-008",
+      "order": 6,
+      "action": "Request and record separate authority before public/shared access, a custom domain, search indexing, or added viewers and groups.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PUBLICATION-001"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-IN-APP-BROWSER-001",
+      "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+      "severity": "P1",
+      "description": "This Codex task still does not expose the mandatory in-app browser control tool. The existing protected browser tab remains untouched, but the newly deployed version cannot be interactively opened or console-checked from this task unless that capability appears.",
+      "owner": "Codex runtime capability",
+      "status": "OPEN",
+      "resolution_required": "Expose the supported Codex in-app browser control capability; open the exact live URL in a new muted tab without navigating the protected tab and complete dashboard, Passport, responsive, asset, and console verification."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "Automated tests cover DM delivery, code consumption, guild re-check, session assurance, and admin denial with mocked Discord responses, but a real DM code entry and two-account isolation test require interactive access to two consenting Discord identities.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport or ledger data before expanding access beyond the current owner-only site."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp/libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare/Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so personal progress and holdings remain intentionally unconnected.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting personal data."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "Owner-only private deployment is authorized and active, but public/shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, and actual-screen gates before any audience expansion."
+    }
+  ],
+  "decisions_needed": [],
+  "changed_paths": [
+    { "path": ".dev.vars.example", "reason": "Document the dedicated DM_OTP_PEPPER without exposing a value." },
+    { "path": "DECISIONS.md", "reason": "Record the owner-approved end to repeated Client Secret reset requests and Bot DM fallback decision." },
+    { "path": "app/Dashboard.module.css", "reason": "Add accessible responsive Bot DM authentication form styling." },
+    { "path": "app/Dashboard.tsx", "reason": "Add OAuth-primary Bot DM fallback UI, expiry handling, input normalization, focus management, and admin upgrade messaging." },
+    { "path": "app/api/admin/players/route.ts", "reason": "Reject low-assurance DM sessions from the administrator roster." },
+    { "path": "app/api/auth/discord/dm/start/route.ts", "reason": "Schedule membership-sensitive DM start work through Cloudflare waitUntil." },
+    { "path": "app/api/auth/discord/dm/verify/route.ts", "reason": "Expose the browser-bound one-time-code verification endpoint." },
+    { "path": "app/api/passport/route.ts", "reason": "Report available methods and D1-authoritative login assurance without granting DM sessions admin access." },
+    { "path": "app/passport-contract.ts", "reason": "Define authentication method and admin-upgrade read-model fields." },
+    { "path": "db/schema.ts", "reason": "Add session assurance, DM challenge, and pseudonymous rate-limit schema." },
+    { "path": "docs/DISCORD_OPERATIONS.md", "reason": "Document the Client-Secret-independent fallback and operating/security rules." },
+    { "path": "docs/PLAYER_OS_ARCHITECTURE.md", "reason": "Document the high/low assurance boundary and DM trust model." },
+    { "path": "drizzle/0003_previous_nitro.sql", "reason": "Add DM persistence and session assurance without rebuilding auth_sessions or losing wallet challenge children." },
+    { "path": "drizzle/meta/0003_snapshot.json", "reason": "Record generated migration metadata." },
+    { "path": "drizzle/meta/_journal.json", "reason": "Package migration 0003 exactly once." },
+    { "path": "scripts/set-dev-secrets.sh", "reason": "Generate the DM pepper locally and make OAuth Client Secret setup explicitly optional." },
+    { "path": "server/auth.ts", "reason": "Add D1-authoritative authentication method and assurance primitives." },
+    { "path": "server/discord-dm-auth.ts", "reason": "Implement enumeration-resistant, rate-limited, one-time Bot DM authentication." },
+    { "path": "server/passport-db.ts", "reason": "Implement atomic challenge, rate-limit, consume, and assurance persistence operations." },
+    { "path": "tests/dashboard-resilience.test.mjs", "reason": "Cover DM UX, normalization, focus, OAuth priority, and admin upgrade messaging." },
+    { "path": "tests/discord-dm-auth.test.mjs", "reason": "Cover DM protocol, delivery, enumeration resistance, throttles, and verification." },
+    { "path": "tests/discord-dm-db-d1.test.mjs", "reason": "Cover migration preservation, one-time CAS, attempts, throttles, and assurance audit." },
+    { "path": "tests/helpers/sqlite-d1.mjs", "reason": "Support the new atomic D1 test operations." },
+    { "path": "tests/migration-0002.test.mjs", "reason": "Extend migration-chain packaging assertions through migration 0003." },
+    { "path": "tests/passport-security.test.mjs", "reason": "Assert low-assurance sessions never satisfy recent administrator authentication." },
+    { "path": "tests/rendered-html.test.mjs", "reason": "Assert method reporting, browser-bound DM identity, and admin assurance guards." },
+    { "path": "migration/STATE_UPDATE_CP000015_DM_AUTH_READY.json", "reason": "Record the verified implementation and Sites environment revision 2 before source publication." }
+  ],
+  "resume": {
+    "action_id": "ACT-013",
+    "instruction": "Read CP-000015. Secure Bot DM Passport source and migration 0003 are fully validated, and Sites environment revision 2 contains the approved Bot/guild/admin/integration values plus a dedicated DM pepper without a Discord Client Secret. Commit and push this exact source, package the fresh dist output, save one new Sites version, deploy it owner-only, and run production smoke. Do not reuse or deploy Version 10.",
+    "do_not_assume": [
+      "Environment revision 2 is active in production before a new saved version is deployed.",
+      "OAuth is configured; the intentionally absent Discord Client Secret means authMethods.oauth must remain false.",
+      "Saved Version 10 contains the Bot DM fallback or migration 0003.",
+      "Automated Discord mocks substitute for a real DM login, two-account identity isolation, or actual-screen browser verification.",
+      "Owner-only authorization permits public/shared access, custom domains, indexing, added viewers, or groups."
+    ]
+  }
+}

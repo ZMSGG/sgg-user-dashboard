@@ -122,6 +122,7 @@ export async function applyProjectMigrations(sqlite) {
     "0000_brave_rachel_grey.sql",
     "0001_majestic_boomer.sql",
     "0002_bent_spiral.sql",
+    "0003_previous_nitro.sql",
   ]) {
     const source = await readFile(
       new URL(`../../drizzle/${migration}`, import.meta.url),

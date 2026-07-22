@@ -1,22 +1,41 @@
-import { and, desc, eq, gt, isNull, sql } from "drizzle-orm";
+import { and, desc, eq, gt, isNull, lt, lte, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import {
   auditEvents,
   authSessions,
+  discordDmChallenges,
+  discordDmRateLimits,
   players,
   pointGrants,
   walletChallenges,
 } from "../db/schema";
-import { playerOsEnv, type SessionClaims } from "./auth";
+import {
+  OAUTH_SESSION_AUTHENTICATION,
+  playerOsEnv,
+  type AuthMethod,
+  type AssuranceLevel,
+  type PlayerOsEnv,
+  type SessionClaims,
+} from "./auth";
 
 export { grantRequestFingerprint, isUniqueConstraintError } from "./auth";
 
-const schema = { players, authSessions, walletChallenges, pointGrants, auditEvents };
+const schema = {
+  players,
+  authSessions,
+  discordDmChallenges,
+  discordDmRateLimits,
+  walletChallenges,
+  pointGrants,
+  auditEvents,
+};
+
+export function getDbFromEnv(bindings: PlayerOsEnv) {
+  return bindings.DB ? drizzle(bindings.DB, { schema }) : null;
+}
 
 export async function getDb() {
-  const bindings = await playerOsEnv();
-  if (!bindings.DB) return null;
-  return drizzle(bindings.DB, { schema });
+  return getDbFromEnv(await playerOsEnv());
 }
 
 export type Db = NonNullable<Awaited<ReturnType<typeof getDb>>>;
@@ -32,9 +51,16 @@ export type DiscordProfile = {
 export async function establishDiscordSession(
   db: Db,
   profile: DiscordProfile,
-  session: { id: string; expiresAt: number },
+  session: {
+    id: string;
+    expiresAt: number;
+    authMethod?: AuthMethod;
+    assuranceLevel?: AssuranceLevel;
+  },
 ) {
   const now = new Date().toISOString();
+  const authMethod = session.authMethod ?? OAUTH_SESSION_AUTHENTICATION.authMethod;
+  const assuranceLevel = session.assuranceLevel ?? OAUTH_SESSION_AUTHENTICATION.assuranceLevel;
   await db.batch([
     db
       .insert(players)
@@ -60,15 +86,195 @@ export async function establishDiscordSession(
       discordId: profile.id,
       createdAt: now,
       expiresAt: session.expiresAt,
+      authMethod,
+      assuranceLevel,
     }),
     db.insert(auditEvents).values({
       actor: profile.id,
       action: "DISCORD_LOGIN",
       subject: profile.id,
-      detail: JSON.stringify({ sessionId: session.id.slice(0, 16) }),
+      detail: JSON.stringify({
+        sessionId: session.id.slice(0, 16),
+        authMethod,
+        assuranceLevel,
+      }),
       createdAt: now,
     }),
   ]);
+}
+
+export type DiscordDmRateScope = "global" | "ip" | "discord";
+
+/** Atomic cooldown and fixed-hour quota check; rejected attempts do not mutate. */
+export async function consumeDiscordDmRateLimit(db: Db, input: {
+  scope: DiscordDmRateScope;
+  subjectDigest: string;
+  nowSeconds: number;
+  cooldownSeconds: number;
+  windowSeconds: number;
+  maxAttempts: number;
+}): Promise<boolean> {
+  const globalScope = input.scope === "global";
+  if (
+    !/^[0-9a-f]{64}$/.test(input.subjectDigest) ||
+    !Number.isInteger(input.nowSeconds) ||
+    !Number.isInteger(input.cooldownSeconds) ||
+    input.cooldownSeconds < (globalScope ? 0 : 30) ||
+    !Number.isInteger(input.windowSeconds) ||
+    input.windowSeconds < input.cooldownSeconds ||
+    input.windowSeconds > (globalScope ? 60 : 3_600) ||
+    !Number.isInteger(input.maxAttempts) ||
+    input.maxAttempts < 1 ||
+    input.maxAttempts > (globalScope ? 30 : 5)
+  ) {
+    return false;
+  }
+  const windowCutoff = input.nowSeconds - input.windowSeconds;
+  const cooldownCutoff = input.nowSeconds - input.cooldownSeconds;
+  const rows = await db
+    .insert(discordDmRateLimits)
+    .values({
+      scope: input.scope,
+      subjectDigest: input.subjectDigest,
+      windowStart: input.nowSeconds,
+      attempts: 1,
+      lastAttemptAt: input.nowSeconds,
+    })
+    .onConflictDoUpdate({
+      target: [discordDmRateLimits.scope, discordDmRateLimits.subjectDigest],
+      set: {
+        windowStart: sql`CASE
+          WHEN ${discordDmRateLimits.windowStart} <= ${windowCutoff} THEN ${input.nowSeconds}
+          ELSE ${discordDmRateLimits.windowStart}
+        END`,
+        attempts: sql`CASE
+          WHEN ${discordDmRateLimits.windowStart} <= ${windowCutoff} THEN 1
+          ELSE ${discordDmRateLimits.attempts} + 1
+        END`,
+        lastAttemptAt: input.nowSeconds,
+      },
+      setWhere: and(
+        lte(discordDmRateLimits.lastAttemptAt, cooldownCutoff),
+        or(
+          lte(discordDmRateLimits.windowStart, windowCutoff),
+          lt(discordDmRateLimits.attempts, input.maxAttempts),
+        ),
+      ),
+    })
+    .returning({ attempts: discordDmRateLimits.attempts });
+  return rows.length === 1;
+}
+
+export async function createDiscordDmChallenge(db: Db, input: {
+  challengeIdDigest: string;
+  discordId: string;
+  clientNonceDigest: string;
+  codeDigest: string;
+  createdAt: string;
+  expiresAt: number;
+}) {
+  const createdAtMs = Date.parse(input.createdAt);
+  if (
+    !/^[0-9a-f]{64}$/.test(input.challengeIdDigest) ||
+    !/^\d{5,25}$/.test(input.discordId) ||
+    !/^[0-9a-f]{64}$/.test(input.clientNonceDigest) ||
+    !/^[0-9a-f]{64}$/.test(input.codeDigest) ||
+    Number.isNaN(createdAtMs) ||
+    !Number.isInteger(input.expiresAt) ||
+    input.expiresAt <= Math.floor(createdAtMs / 1000) ||
+    input.expiresAt - Math.floor(createdAtMs / 1000) > 300
+  ) {
+    throw new Error("Discord DM challenge is invalid");
+  }
+  await db.insert(discordDmChallenges).values(input);
+}
+
+export async function getPendingDiscordDmChallenge(db: Db, input: {
+  challengeIdDigest: string;
+  clientNonceDigest: string;
+  nowSeconds: number;
+}) {
+  const rows = await db
+    .select()
+    .from(discordDmChallenges)
+    .where(and(
+      eq(discordDmChallenges.challengeIdDigest, input.challengeIdDigest),
+      eq(discordDmChallenges.clientNonceDigest, input.clientNonceDigest),
+      isNull(discordDmChallenges.consumedAt),
+      gt(discordDmChallenges.expiresAt, input.nowSeconds),
+      lt(discordDmChallenges.attempts, 5),
+    ))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+/** Counts a wrong code once and terminally consumes the fifth failure. */
+export async function recordDiscordDmChallengeFailure(db: Db, input: {
+  challengeIdDigest: string;
+  clientNonceDigest: string;
+  nowSeconds: number;
+  failedAt: string;
+}): Promise<{ recorded: boolean; terminal: boolean; attempts: number }> {
+  const rows = await db
+    .update(discordDmChallenges)
+    .set({
+      attempts: sql`${discordDmChallenges.attempts} + 1`,
+      consumedAt: sql`CASE
+        WHEN ${discordDmChallenges.attempts} + 1 >= 5 THEN ${input.failedAt}
+        ELSE NULL
+      END`,
+    })
+    .where(and(
+      eq(discordDmChallenges.challengeIdDigest, input.challengeIdDigest),
+      eq(discordDmChallenges.clientNonceDigest, input.clientNonceDigest),
+      isNull(discordDmChallenges.consumedAt),
+      gt(discordDmChallenges.expiresAt, input.nowSeconds),
+      lt(discordDmChallenges.attempts, 5),
+    ))
+    .returning({
+      attempts: discordDmChallenges.attempts,
+      consumedAt: discordDmChallenges.consumedAt,
+    });
+  const row = rows[0];
+  return row
+    ? { recorded: true, terminal: row.consumedAt !== null, attempts: row.attempts }
+    : { recorded: false, terminal: true, attempts: 5 };
+}
+
+/** Atomic compare-and-set: a valid DM challenge establishes at most one session. */
+export async function consumeDiscordDmChallenge(db: Db, input: {
+  challengeIdDigest: string;
+  clientNonceDigest: string;
+  codeDigest: string;
+  nowSeconds: number;
+  consumedAt: string;
+}): Promise<boolean> {
+  const rows = await db
+    .update(discordDmChallenges)
+    .set({ consumedAt: input.consumedAt })
+    .where(and(
+      eq(discordDmChallenges.challengeIdDigest, input.challengeIdDigest),
+      eq(discordDmChallenges.clientNonceDigest, input.clientNonceDigest),
+      eq(discordDmChallenges.codeDigest, input.codeDigest),
+      isNull(discordDmChallenges.consumedAt),
+      gt(discordDmChallenges.expiresAt, input.nowSeconds),
+      lt(discordDmChallenges.attempts, 5),
+    ))
+    .returning({ challengeIdDigest: discordDmChallenges.challengeIdDigest });
+  return rows.length === 1;
+}
+
+export async function invalidateDiscordDmChallenge(db: Db, input: {
+  challengeIdDigest: string;
+  invalidatedAt: string;
+}) {
+  await db
+    .update(discordDmChallenges)
+    .set({ consumedAt: input.invalidatedAt })
+    .where(and(
+      eq(discordDmChallenges.challengeIdDigest, input.challengeIdDigest),
+      isNull(discordDmChallenges.consumedAt),
+    ));
 }
 
 export async function revokeSessionWithAudit(db: Db, session: SessionClaims) {

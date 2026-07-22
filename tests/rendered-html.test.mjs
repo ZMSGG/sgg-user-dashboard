@@ -147,11 +147,13 @@ test("shares one live contract and keeps re-sync failures non-destructive", asyn
 });
 
 test("passport endpoints fail closed and identity never comes from the browser", async () => {
-  const [passportRoute, callbackRoute, walletLink, adminGrants, authLib] = await Promise.all([
+  const [passportRoute, callbackRoute, walletLink, adminGrants, adminPlayers, dmAuthLib, authLib] = await Promise.all([
     readFile(new URL("../app/api/passport/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/auth/discord/callback/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/wallet/link/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/admin/grants/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/admin/players/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../server/discord-dm-auth.ts", import.meta.url), "utf8"),
     readFile(new URL("../server/auth.ts", import.meta.url), "utf8"),
   ]);
 
@@ -166,12 +168,19 @@ test("passport endpoints fail closed and identity never comes from the browser",
   assert.match(callbackRoute, /stateClaims\.state !== state/);
   assert.match(callbackRoute, /discord\.com\/api\/oauth2\/token/);
 
+  // DM verification is browser-bound and derives identity only from its D1 challenge.
+  assert.match(dmAuthLib, /readCookie\(request, DM_CHALLENGE_COOKIE\)/);
+  assert.match(dmAuthLib, /challenge\.discordId/);
+  assert.doesNotMatch(dmAuthLib, /body\?\.discordId/);
+
   // Wallet link requires a signature over a server-issued challenge.
   assert.match(walletLink, /verifyMessage/);
   assert.match(walletLink, /WALLET_TAKEN/);
 
   // Grants are admin-only, idempotent, append-only.
   assert.match(adminGrants, /await adminDiscordIds\(\)\)\.has\(session\.sub\)/);
+  assert.match(adminPlayers, /isHighAssuranceSession\(session\)/);
+  assert.match(passportRoute, /isHighAssuranceSession\(session\)/);
   assert.match(adminGrants, /idempotencyKey/);
   assert.doesNotMatch(adminGrants, /\.delete\(|\.update\(/);
 });
@@ -182,6 +191,7 @@ test("serves an anonymous passport read model without bindings", async () => {
   const payload = JSON.parse(await response.text());
   assert.equal(payload.connected, false);
   assert.equal(payload.authConfigured, false);
+  assert.deepEqual(payload.authMethods, { oauth: false, dmOtp: false });
 });
 
 test("degrades image optimization gracefully without Cloudflare bindings", async () => {

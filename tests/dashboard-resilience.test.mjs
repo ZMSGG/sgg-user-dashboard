@@ -13,6 +13,24 @@ test("keeps Passport and admin roster load outcomes distinct and retryable", asy
   assert.match(source, /PLAYER BRIDGE · UNAVAILABLE/);
   assert.match(source, /Discord連携を準備中/);
   assert.match(source, /Discordで連携する/);
+  assert.match(source, /DMコードを受け取る/);
+  assert.match(source, /\/api\/auth\/discord\/dm\/start/);
+  assert.match(source, /\/api\/auth\/discord\/dm\/verify/);
+  assert.match(source, /autoComplete="one-time-code"/);
+  assert.match(source, /SGGスタッフがコードを尋ねることはありません/);
+  assert.match(source, /DISCORD_DM_IDENTITY_PATTERN/);
+  assert.match(source, /DISCORD_DM_CODE_PATTERN/);
+  assert.match(source, /replaceAll\("-", ""\)/);
+  assert.match(source, /dmChallenge\.expiresAt - Date\.now\(\)/);
+  assert.match(source, /adminUpgradeRequired/);
+  assert.match(source, /管理者としてDiscord再認証/);
+  assert.match(source, /dmIdentityInputRef\.current\?\.focus\(\)/);
+  assert.match(source, /OAuthの準備が整うまで管理機能は利用できません/);
+  assert.doesNotMatch(source, /ABCDE-FGHIJ/);
+  assert.ok(
+    source.indexOf("Discordで連携する") < source.indexOf("OAuthが使えない場合"),
+    "OAuth remains the primary route before the low-assurance DM fallback",
+  );
   assert.match(source, /Passport情報を取得できませんでした/);
   assert.match(source, /refreshPassport\(\{ showLoading: true \}\)/);
 
@@ -51,7 +69,7 @@ test("ships keyboard, mobile form, and safe-area accessibility guards", async ()
   assert.match(source, /notificationTriggerRef\.current\?\.focus\(\)/);
 
   assert.match(css, /:focus-visible/);
-  assert.match(css, /\.searchBox input,\s*\n\s*\.grantForm input \{\s*\n\s*font-size: 16px/);
+  assert.match(css, /\.searchBox input,\s*\n\s*\.grantForm input,\s*\n\s*\.dmAuthForm input \{\s*\n\s*font-size: 16px/);
   assert.match(css, /safe-area-inset-top/);
   assert.match(css, /safe-area-inset-right/);
   assert.match(css, /safe-area-inset-left/);
