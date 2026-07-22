@@ -1,16 +1,11 @@
 {
   "schema_version": 1,
-  "authority": "SGG_PROJECT_STATE",
-  "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 14,
-  "updated_at": "2026-07-22T20:41:24+08:00",
+  "expected_state_version": 13,
   "updated_by": "Codex",
+  "summary": "Pushed the exact validated owner-only release candidate commit 9467ab905a8431bd9c35fec03f5d6bfe3dfdd40c to the existing private Sites source main branch, packaged migrations 0000 through 0002 with the current approved assets, and saved Sites Version 10 from that exact source and archive. The bot token remains valid, but the OAuth Client Secret still returns invalid_client. Discord does not expose secret reset through the bot token or public API, and this Codex task lacks the required in-app browser control capability, so the owner must perform the Developer Portal reset/copy step before hosted identity values and Version 10 can be deployed.",
   "status": "REVIEW",
   "phase": "PRIVATE_DEPLOYED",
   "current_objective": "Obtain and live-validate a newly reset Discord OAuth Client Secret, configure all identity, guild, and integration values in Sites without exposing them, deploy saved Version 10 with migration 0002 owner-only, and run the deployed-environment gate checklist including a second-account isolation test.",
-  "last_summary": "Pushed the exact validated owner-only release candidate commit 9467ab905a8431bd9c35fec03f5d6bfe3dfdd40c to the existing private Sites source main branch, packaged migrations 0000 through 0002 with the current approved assets, and saved Sites Version 10 from that exact source and archive. The bot token remains valid, but the OAuth Client Secret still returns invalid_client. Discord does not expose secret reset through the bot token or public API, and this Codex task lacks the required in-app browser control capability, so the owner must perform the Developer Portal reset/copy step before hosted identity values and Version 10 can be deployed.",
-  "last_checkpoint_id": "CP-000014",
-  "last_checkpoint_path": "checkpoints/CP-000014.json",
   "active_work": {
     "work_id": "ACT-009",
     "objective": "Enable community membership sync and automated point grants on the owner-only private deployment.",
@@ -22,56 +17,6 @@
       "Deployed-environment gate tests pass, including a second Discord account isolation test."
     ]
   },
-  "recently_completed": [
-    {
-      "action_id": "BOOTSTRAP-001",
-      "result": "Initial zero-to-one scaffold generated atomically.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "COMMAND_CENTER_LINK.json",
-        "QUALITY_SCORECARD.md"
-      ]
-    },
-    {
-      "action_id": "ACT-001",
-      "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "migration/INTAKE.json",
-        "migration/MIGRATION_EVIDENCE.md",
-        "COMMAND_CENTER_LINK.json"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-003",
-      "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
-      "evidence": [
-        "app/Dashboard.tsx",
-        "server/auth.ts",
-        "server/passport-db.ts",
-        "db/schema.ts",
-        "drizzle/0001_majestic_boomer.sql",
-        "tests/passport-security.test.mjs",
-        "tests/dashboard-resilience.test.mjs",
-        "tests/rendered-html.test.mjs"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-007",
-      "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
-      "evidence": [
-        "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
-        "assets/ASSET_MANIFEST.csv",
-        "references/SOURCE_LOCK.json"
-      ],
-      "completed_at": "2026-07-22T16:05:03+08:00",
-      "checkpoint_id": "CP-000012"
-    }
-  ],
   "next_actions": [
     {
       "action_id": "ACT-010",
@@ -170,57 +115,11 @@
     }
   ],
   "decisions_needed": [],
-  "authorizations": [
-    {
-      "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
-      "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
-      "status": "GRANTED",
-      "granted_by": "SGG project owner",
-      "granted_at": "2026-07-20T22:47:24+08:00",
-      "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
-    },
-    {
-      "authorization_id": "AUTH-EXTERNAL-ACTIONS",
-      "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
-      "status": "NOT_GRANTED",
-      "granted_by": "",
-      "granted_at": "",
-      "evidence": ""
-    }
-  ],
-  "changed_files": [
+  "changed_paths": [
     {
       "path": "migration/STATE_UPDATE_CP000014_SOURCE_VERSION_SAVED.json",
-      "sha256": "51d2a3bf8f124fee794e55328ab9a4259c6e668cd084176601a6953b385f1ab3",
       "reason": "Record the exact Sites source push, Version 10 save milestone, remaining invalid Client Secret, and unavailable in-app browser control capability."
     }
-  ],
-  "last_known_good": {
-    "validation_report": "VALIDATION_REPORT.json",
-    "commands": [
-      [
-        "python3",
-        "../../launches/tools/validate_sgg_project.py",
-        ".",
-        "--kickoff",
-        "--record"
-      ],
-      [
-        "python3",
-        "../../launches/tools/validate_pack.py",
-        "."
-      ]
-    ]
-  },
-  "authoritative_files": [
-    "AGENTS.md",
-    "COMMAND_CENTER_LINK.json",
-    "PROJECT_PROFILE.json",
-    "PROJECT_STATE.json",
-    "DECISIONS.md",
-    "CANON_AND_COPY.md",
-    "WORLD_AND_CHARACTER_BRIEF.md",
-    "VALIDATION_REPORT.json"
   ],
   "resume": {
     "action_id": "ACT-010",
