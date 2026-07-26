@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000022",
+  "state_version": 22,
+  "created_at": "2026-07-26T18:55:57+08:00",
+  "previous_checkpoint_id": "CP-000021",
+  "summary": "Committed the validated CP-000021 source as 10d287d02e77eba76030e5a8abf20218d807f499, pushed it to the existing Sites source main branch, saved Sites Version 12 with D1 migration 0004 for game_account_links, and deployed it successfully as appgdep_6a65e684f2d881918fe4bd31a34584ba using environment revision 2. Production smoke confirmed the MY SGG shell and confirmed that GET /api/link/otomo-chain and GET /api/holdings return 401 with NOT_AUTHENTICATED when Sites dispatch is authorized but no application session is supplied. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access, and no custom domain; no access, environment, domain, or indexing control was changed. The exact production URL was opened in a new visible Codex in-app browser tab while existing tabs were preserved, but the owner-only Sign in with ChatGPT gate requires the owner to continue before application-screen and console QA can finish. No tournament export secret was configured, no reconciliation or payout ran, and no SGP was granted.",
+  "project_basis_sha256": "1e804242b8e27675c49bd8e9afa97c810b33e177fa2a0cdec0c27f4f2c7835d8",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 22,
+    "updated_at": "2026-07-26T18:55:57+08:00",
+    "updated_by": "Codex MY SGG private deployment operator",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Preserve the successful owner-only Version 12 deployment, have the owner complete the retained Sign in with ChatGPT handoff so production visual and console QA can finish, announce the OTOMO CHAIN link-code flow before season start, and defer reconciliation and payout until after season end and the remaining approval gates.",
+    "last_summary": "Committed the validated CP-000021 source as 10d287d02e77eba76030e5a8abf20218d807f499, pushed it to the existing Sites source main branch, saved Sites Version 12 with D1 migration 0004 for game_account_links, and deployed it successfully as appgdep_6a65e684f2d881918fe4bd31a34584ba using environment revision 2. Production smoke confirmed the MY SGG shell and confirmed that GET /api/link/otomo-chain and GET /api/holdings return 401 with NOT_AUTHENTICATED when Sites dispatch is authorized but no application session is supplied. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access, and no custom domain; no access, environment, domain, or indexing control was changed. The exact production URL was opened in a new visible Codex in-app browser tab while existing tabs were preserved, but the owner-only Sign in with ChatGPT gate requires the owner to continue before application-screen and console QA can finish. No tournament export secret was configured, no reconciliation or payout ran, and no SGP was granted.",
+    "last_checkpoint_id": "CP-000022",
+    "last_checkpoint_path": "checkpoints/CP-000022.json",
+    "active_work": {
+      "work_id": "ACT-020",
+      "objective": "Announce the deployed OTOMO CHAIN link-code flow to participants before season start while keeping the Sites audience unchanged.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Tell participants to obtain the link code from their connected MY SGG Passport and paste it into the OTOMO CHAIN field labelled 'Discord / X など'.",
+        "Do not claim that the game verifies Discord identity itself.",
+        "Do not change Sites access mode, owners, groups, public access, custom domain, or search indexing without separate authority.",
+        "Keep SGP amounts, reconciliation, and payout pending until the post-season gates are satisfied."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      },
+      {
+        "action_id": "ACT-017",
+        "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
+          "drizzle/0004_yielding_dormammu.sql",
+          "app/api/link/otomo-chain/route.ts"
+        ],
+        "completed_at": "2026-07-26T18:55:57+08:00",
+        "checkpoint_id": "CP-000022"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-020",
+        "order": 1,
+        "action": "Announce the deployed link-code flow to OTOMO CHAIN 7 participants so they paste the MY SGG code into the game profile field labelled 'Discord / X など' before or from day one.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-014",
+        "order": 2,
+        "action": "In the retained Codex in-app browser tab, have the owner select Continue with ChatGPT, then verify the exact Version 12 dashboard, Passport, holdings, responsive layout, and console health without changing access.",
+        "owner": "SGG project owner and Codex delivery operator",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-IN-APP-BROWSER-001"
+        ]
+      },
+      {
+        "action_id": "ACT-018",
+        "order": 3,
+        "action": "After the season ends, configure OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET as Sites secrets, run reconciliation with apply omitted, resolve ambiguity manually, then run payout with an approved award table and apply omitted before any apply=true request.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-OTOMO-CHAIN-EXPORT-001",
+          "BLK-SGP-AWARD-TABLE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-016",
+        "order": 4,
+        "action": "Review the desktop and mobile comparison sheets, choose one candidate or a concrete shortlist, then record exact-file owner approval before any Home UI integration.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 5,
+        "action": "Complete a real DM code login and two-account isolation check with two consenting Discord test identities before any audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 6,
+        "action": "Upgrade to stable Next and Cloudflare or Miniflare versions that officially support patched Sharp, then remove the temporary non-reachable exception.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 7,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing in-game progress or resources.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 8,
+        "action": "Request and record separate authority before public or shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "Codex opened the exact Version 12 production URL in a new visible in-app browser tab and preserved all existing tabs, but the private Sites Sign in with ChatGPT gate blocks the application screen. Codex did not initiate account sign-in or claim visual and console verification without the owner's browser action.",
+        "owner": "SGG project owner and Codex delivery operator",
+        "status": "OPEN",
+        "resolution_required": "The owner selects Continue with ChatGPT in the retained production tab and tells Codex to continue; Codex then verifies the Version 12 dashboard, Passport, holdings, responsive layout, interaction, and console without changing the access policy."
+      },
+      {
+        "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+        "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+        "severity": "P1",
+        "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+      },
+      {
+        "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+        "scope": "REWARD_VALUE_AUTHORITY",
+        "severity": "P1",
+        "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Version 12 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      }
+    ],
+    "decisions_needed": [],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
+        "sha256": "b47d9ed2033de9e2d3e63992d001cbe5b179b662ad8a9befa78bdf5a7128b743",
+        "reason": "Record exact source, Version 12, deployment, migration 0004, application-level unauthenticated 401 evidence, unchanged access settings, and the retained browser sign-in handoff."
+      },
+      {
+        "path": "migration/STATE_UPDATE_CP000022_OTOMO_CHAIN_DEPLOYED.json",
+        "sha256": "47b2d325e7d030396ce25674a31b4e00a98a64c68e8508ad804c3133af946108",
+        "reason": "Record completion of ACT-017 and the remaining announcement, browser sign-in, post-season, identity, and publication gates."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-020",
+      "instruction": "Read CP-000022 and deployments/PRIVATE_DEPLOYMENT-20260726-001.json. Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 is live at https://sgg-player-archive.axie-b-ac.chatgpt.site with environment revision 2 and D1 migration 0004. Access remains custom owner-only with one allowed user, zero groups, no public access, and no custom domain. Announce the link-code flow before season start. The retained Codex browser tab is at the Sign in with ChatGPT gate; after the owner continues, finish production visual and console QA. Do not configure export secrets or run reconciliation or payout before the season ends.",
+      "do_not_assume": [
+        "The production application screen or console was visually verified; the retained tab is still at the owner-only Sign in with ChatGPT gate.",
+        "OTOMO CHAIN verifies Discord identity; its external_id field remains free text and unverified inside the game.",
+        "Any SGP award amount is decided or any reconciliation or payout ran.",
+        "Owner-only deployment authorizes public or shared access, a custom domain, search indexing, added viewers or groups, or environment changes.",
+        "Holdings affect rank, SGP, or reward eligibility; they are display-only and no price or valuation is shown."
+      ]
+    }
+  },
+  "resulting_state_sha256": "fa631480cc6e68ba364d625f8fb49593a4a358ff51648b7f4686e01ea727c04e"
+}

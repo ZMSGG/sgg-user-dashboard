@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PRIVATE_DEPLOYMENT_EVIDENCE",
+  "evidence_id": "PRIVATE_DEPLOYMENT-20260726-001",
+  "recorded_at": "2026-07-26T18:54:13+08:00",
+  "recorded_by": "Codex MY SGG private deployment operator",
+  "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+  "scope": "Owner-only production deployment of the OTOMO CHAIN account-linking and display-only holdings release through Sites",
+  "source": {
+    "commit_sha": "10d287d02e77eba76030e5a8abf20218d807f499",
+    "branch": "main",
+    "repository": "appgprj_6a54d2460e7c8191a92c00900d810ab1",
+    "push_result": "SUCCEEDED",
+    "remote_head_verified": true,
+    "secret_scan_findings": 0,
+    "gitleaks_false_positive_findings": 4,
+    "gitleaks_false_positive_disposition": "One fixed HMAC test secret and three synthetic Discord IDs in tests/game-link.test.mjs; no production credential, private key, environment file, or API token was committed."
+  },
+  "sites": {
+    "project_id": "appgprj_6a54d2460e7c8191a92c00900d810ab1",
+    "version_id": "appgprj_6a54d2460e7c8191a92c00900d810ab1~appgver_895d391b95e881919bbd60738c88a9e2",
+    "version_number": 12,
+    "deployment_id": "appgdep_6a65e684f2d881918fe4bd31a34584ba",
+    "deployment_status": "SUCCEEDED",
+    "deployed_at": "2026-07-26T10:50:59.191451+00:00",
+    "environment_revision": 2,
+    "url": "https://sgg-player-archive.axie-b-ac.chatgpt.site",
+    "access_mode_before": "custom",
+    "access_mode_after": "custom",
+    "access_policy_revision_before": 1,
+    "access_policy_revision_after": 1,
+    "allowed_owner_count_before": 1,
+    "allowed_owner_count_after": 1,
+    "allowed_group_count_before": 0,
+    "allowed_group_count_after": 0,
+    "public_access_before": false,
+    "public_access_after": false,
+    "custom_domain_count_before": 0,
+    "custom_domain_count_after": 0,
+    "access_policy_updated_at_before": "2026-07-13T11:55:57.365769+00:00",
+    "access_policy_updated_at_after": "2026-07-13T11:55:57.365769+00:00"
+  },
+  "migration": {
+    "id": "0004_yielding_dormammu",
+    "table": "game_account_links",
+    "logical_d1_binding": "DB",
+    "packaged_path": "dist/.openai/drizzle/0004_yielding_dormammu.sql",
+    "journal_index": 4,
+    "included_in_version": 12,
+    "deployment_result": "PACKAGED_IN_SAVED_VERSION_AND_PRODUCTION_DEPLOYMENT_SUCCEEDED",
+    "archive_file_count": 53,
+    "archive_content_hash": "sha256:5602f1f96195a9cebf02e89e7870d36a0689b1329360254b74f3694be10e6898"
+  },
+  "configuration": {
+    "environment_values_changed": false,
+    "access_values_changed": false,
+    "custom_domain_changed": false,
+    "search_indexing_changed": false,
+    "robots_index": false,
+    "robots_follow": false,
+    "tournament_export_secrets_configured": false,
+    "reconciliation_run": false,
+    "payout_run": false
+  },
+  "verification": {
+    "local": {
+      "lint": "PASS",
+      "typecheck": "PASS",
+      "build": "PASS",
+      "db_check": "PASS",
+      "tests_passed": 70,
+      "tests_failed": 0,
+      "migration_0004_packaged": true,
+      "exact_release_tree_sha1": "906066cad488b6a77a74fe38a4055ffff0b35857"
+    },
+    "production_smoke": {
+      "home_status": 200,
+      "home_contains_my_sgg": true,
+      "link_otomo_chain_status_unauthenticated": 401,
+      "link_otomo_chain_error_code": "NOT_AUTHENTICATED",
+      "holdings_status_unauthenticated": 401,
+      "holdings_error_code": "NOT_AUTHENTICATED",
+      "sites_dispatch_bypass_used_without_application_cookie": true,
+      "content_security_policy_present": true
+    },
+    "codex_in_app_browser": {
+      "status": "AUTHENTICATION_REQUIRED_HANDOFF",
+      "exact_production_url_opened_in_new_tab": true,
+      "protected_existing_tabs_preserved": true,
+      "visible_gate": "Sign in required / Continue with ChatGPT",
+      "application_screen_verified": false,
+      "console_verified": false,
+      "required_follow_up": "The owner must select Continue with ChatGPT in the retained Codex in-app browser tab, then Codex can verify the deployed dashboard and console without changing access."
+    }
+  },
+  "boundaries": {
+    "public_or_shared_release_authorized": false,
+    "custom_domain_authorized": false,
+    "search_indexing_authorized": false,
+    "added_viewers_or_groups_authorized": false,
+    "environment_secret_change_authorized": false,
+    "reconciliation_or_point_grant_authorized": false
+  }
+}

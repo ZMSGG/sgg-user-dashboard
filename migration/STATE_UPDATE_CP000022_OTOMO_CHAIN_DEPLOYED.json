@@ -1,16 +1,11 @@
 {
   "schema_version": 1,
-  "authority": "SGG_PROJECT_STATE",
-  "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 22,
-  "updated_at": "2026-07-26T18:55:57+08:00",
+  "expected_state_version": 21,
   "updated_by": "Codex MY SGG private deployment operator",
+  "summary": "Committed the validated CP-000021 source as 10d287d02e77eba76030e5a8abf20218d807f499, pushed it to the existing Sites source main branch, saved Sites Version 12 with D1 migration 0004 for game_account_links, and deployed it successfully as appgdep_6a65e684f2d881918fe4bd31a34584ba using environment revision 2. Production smoke confirmed the MY SGG shell and confirmed that GET /api/link/otomo-chain and GET /api/holdings return 401 with NOT_AUTHENTICATED when Sites dispatch is authorized but no application session is supplied. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access, and no custom domain; no access, environment, domain, or indexing control was changed. The exact production URL was opened in a new visible Codex in-app browser tab while existing tabs were preserved, but the owner-only Sign in with ChatGPT gate requires the owner to continue before application-screen and console QA can finish. No tournament export secret was configured, no reconciliation or payout ran, and no SGP was granted.",
   "status": "REVIEW",
   "phase": "PRIVATE_DEPLOYED",
   "current_objective": "Preserve the successful owner-only Version 12 deployment, have the owner complete the retained Sign in with ChatGPT handoff so production visual and console QA can finish, announce the OTOMO CHAIN link-code flow before season start, and defer reconciliation and payout until after season end and the remaining approval gates.",
-  "last_summary": "Committed the validated CP-000021 source as 10d287d02e77eba76030e5a8abf20218d807f499, pushed it to the existing Sites source main branch, saved Sites Version 12 with D1 migration 0004 for game_account_links, and deployed it successfully as appgdep_6a65e684f2d881918fe4bd31a34584ba using environment revision 2. Production smoke confirmed the MY SGG shell and confirmed that GET /api/link/otomo-chain and GET /api/holdings return 401 with NOT_AUTHENTICATED when Sites dispatch is authorized but no application session is supplied. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access, and no custom domain; no access, environment, domain, or indexing control was changed. The exact production URL was opened in a new visible Codex in-app browser tab while existing tabs were preserved, but the owner-only Sign in with ChatGPT gate requires the owner to continue before application-screen and console QA can finish. No tournament export secret was configured, no reconciliation or payout ran, and no SGP was granted.",
-  "last_checkpoint_id": "CP-000022",
-  "last_checkpoint_path": "checkpoints/CP-000022.json",
   "active_work": {
     "work_id": "ACT-020",
     "objective": "Announce the deployed OTOMO CHAIN link-code flow to participants before season start while keeping the Sites audience unchanged.",
@@ -22,55 +17,7 @@
       "Keep SGP amounts, reconciliation, and payout pending until the post-season gates are satisfied."
     ]
   },
-  "recently_completed": [
-    {
-      "action_id": "BOOTSTRAP-001",
-      "result": "Initial zero-to-one scaffold generated atomically.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "COMMAND_CENTER_LINK.json",
-        "QUALITY_SCORECARD.md"
-      ]
-    },
-    {
-      "action_id": "ACT-001",
-      "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "migration/INTAKE.json",
-        "migration/MIGRATION_EVIDENCE.md",
-        "COMMAND_CENTER_LINK.json"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-003",
-      "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
-      "evidence": [
-        "app/Dashboard.tsx",
-        "server/auth.ts",
-        "server/passport-db.ts",
-        "db/schema.ts",
-        "drizzle/0001_majestic_boomer.sql",
-        "tests/passport-security.test.mjs",
-        "tests/dashboard-resilience.test.mjs",
-        "tests/rendered-html.test.mjs"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-007",
-      "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
-      "evidence": [
-        "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
-        "assets/ASSET_MANIFEST.csv",
-        "references/SOURCE_LOCK.json"
-      ],
-      "completed_at": "2026-07-22T16:05:03+08:00",
-      "checkpoint_id": "CP-000012"
-    },
+  "completed_actions": [
     {
       "action_id": "ACT-017",
       "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
@@ -78,9 +25,7 @@
         "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
         "drizzle/0004_yielding_dormammu.sql",
         "app/api/link/otomo-chain/route.ts"
-      ],
-      "completed_at": "2026-07-26T18:55:57+08:00",
-      "checkpoint_id": "CP-000022"
+      ]
     }
   ],
   "next_actions": [
@@ -228,62 +173,15 @@
     }
   ],
   "decisions_needed": [],
-  "authorizations": [
-    {
-      "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
-      "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
-      "status": "GRANTED",
-      "granted_by": "SGG project owner",
-      "granted_at": "2026-07-20T22:47:24+08:00",
-      "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
-    },
-    {
-      "authorization_id": "AUTH-EXTERNAL-ACTIONS",
-      "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
-      "status": "NOT_GRANTED",
-      "granted_by": "",
-      "granted_at": "",
-      "evidence": ""
-    }
-  ],
-  "changed_files": [
+  "changed_paths": [
     {
       "path": "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
-      "sha256": "b47d9ed2033de9e2d3e63992d001cbe5b179b662ad8a9befa78bdf5a7128b743",
       "reason": "Record exact source, Version 12, deployment, migration 0004, application-level unauthenticated 401 evidence, unchanged access settings, and the retained browser sign-in handoff."
     },
     {
       "path": "migration/STATE_UPDATE_CP000022_OTOMO_CHAIN_DEPLOYED.json",
-      "sha256": "47b2d325e7d030396ce25674a31b4e00a98a64c68e8508ad804c3133af946108",
       "reason": "Record completion of ACT-017 and the remaining announcement, browser sign-in, post-season, identity, and publication gates."
     }
-  ],
-  "last_known_good": {
-    "validation_report": "VALIDATION_REPORT.json",
-    "commands": [
-      [
-        "python3",
-        "../../launches/tools/validate_sgg_project.py",
-        ".",
-        "--kickoff",
-        "--record"
-      ],
-      [
-        "python3",
-        "../../launches/tools/validate_pack.py",
-        "."
-      ]
-    ]
-  },
-  "authoritative_files": [
-    "AGENTS.md",
-    "COMMAND_CENTER_LINK.json",
-    "PROJECT_PROFILE.json",
-    "PROJECT_STATE.json",
-    "DECISIONS.md",
-    "CANON_AND_COPY.md",
-    "WORLD_AND_CHARACTER_BRIEF.md",
-    "VALIDATION_REPORT.json"
   ],
   "resume": {
     "action_id": "ACT-020",
