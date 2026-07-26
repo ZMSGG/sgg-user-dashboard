@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000019",
+  "state_version": 19,
+  "created_at": "2026-07-26T17:45:18+08:00",
+  "previous_checkpoint_id": "CP-000018",
+  "summary": "Implemented the OTOMO CHAIN 7 tournament account link code so a verified Player Passport can claim an anonymous game account without changing the game. Investigation established that OTOMO CHAIN 7 has no Discord login: it authenticates with install-bound anonymous bearer tokens and exposes only a free-text, explicitly unverified external_id profile field, so a game-asserted Discord identity cannot be trusted for point grants. Trust therefore flows outward from this dashboard: a per-player HMAC-derived code is issued here, the player writes it into the game profile, and reconciliation later observes it. Added the game_account_links table with migration 0004, server/game-link.ts, the session-authenticated GET /api/link/otomo-chain endpoint, and the Passport UI card. Lint, typecheck, production build, and 59 tests pass, and the endpoint plus rendered card were verified on localhost:5799 against local D1. No reconciliation, no point grant, no access setting change, no commit, no deployment, and no production state change occurred; the site remains owner-only private.",
+  "project_basis_sha256": "6dd49850715410748d16450945a232da2de47342dea26a61743a829899f3b0ad",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 19,
+    "updated_at": "2026-07-26T17:45:18+08:00",
+    "updated_by": "Codex",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Put the OTOMO CHAIN 7 tournament link code in front of players before the season-0 start at 2026-07-27T00:00:00Z so participants can bind their game account to a verified Passport, while keeping reconciliation and SGP grants strictly post-tournament and keeping the deployment owner-only until the publication gates are satisfied.",
+    "last_summary": "Implemented the OTOMO CHAIN 7 tournament account link code so a verified Player Passport can claim an anonymous game account without changing the game. Investigation established that OTOMO CHAIN 7 has no Discord login: it authenticates with install-bound anonymous bearer tokens and exposes only a free-text, explicitly unverified external_id profile field, so a game-asserted Discord identity cannot be trusted for point grants. Trust therefore flows outward from this dashboard: a per-player HMAC-derived code is issued here, the player writes it into the game profile, and reconciliation later observes it. Added the game_account_links table with migration 0004, server/game-link.ts, the session-authenticated GET /api/link/otomo-chain endpoint, and the Passport UI card. Lint, typecheck, production build, and 59 tests pass, and the endpoint plus rendered card were verified on localhost:5799 against local D1. No reconciliation, no point grant, no access setting change, no commit, no deployment, and no production state change occurred; the site remains owner-only private.",
+    "last_checkpoint_id": "CP-000019",
+    "last_checkpoint_path": "checkpoints/CP-000019.json",
+    "active_work": {
+      "work_id": "ACT-017",
+      "objective": "Deploy the link-code capability through Sites before the season-0 start so participants can obtain and paste a code from day one.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Deploy the current source through the Sites source and version workflow; Codex cannot deploy because the repository has no git remote.",
+        "Apply D1 migration 0004 to the production database as part of the Sites version.",
+        "Confirm GET /api/link/otomo-chain returns 401 when unauthenticated and a stable code for a connected Passport.",
+        "Do not change Sites access mode, allowed owners, allowed groups, public access, custom domain, or search indexing in this deployment."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-017",
+        "order": 1,
+        "action": "Deploy the link-code capability and D1 migration 0004 through Sites before 2026-07-27T00:00:00Z, without altering access mode or audience.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-018",
+        "order": 2,
+        "action": "Implement reward-export reconciliation that reads OTOMO CHAIN 7 external_id values, matches issued link codes, records game_player_id, and grants TOURNAMENT_RESULT SGP idempotently after the season ends and after the documented manual top-N review.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-OTOMO-CHAIN-EXPORT-001"
+        ]
+      },
+      {
+        "action_id": "ACT-016",
+        "order": 3,
+        "action": "Review the desktop and mobile comparison sheets, choose one candidate or a concrete shortlist, then record exact-file owner approval before any Home UI integration.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-019",
+        "order": 4,
+        "action": "Confirm the SEVENGODS contract address against the chain or the owner's records before any GODS holding is displayed; the three OTOMO form contracts are independently corroborated but the GODS address is single-sourced.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-GODS-CONTRACT-001"
+        ]
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 5,
+        "action": "Complete a real DM code login and two-account isolation check with two consenting Discord test identities before any audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 6,
+        "action": "Upgrade to stable Next and Cloudflare or Miniflare versions that officially support patched Sharp, then remove the temporary non-reachable exception.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 7,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing personal progress or assets.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 8,
+        "action": "Request and record separate authority before public or shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      },
+      {
+        "action_id": "ACT-014",
+        "order": 9,
+        "action": "When Codex in-app browser control is available, open the deployed URL in a new muted tab, preserve the existing protected tab, and complete visual, responsive, interaction, and console QA.",
+        "owner": "Codex runtime capability",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-IN-APP-BROWSER-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+        "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+        "severity": "P1",
+        "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint; the public leaderboards return player_id and display_name only. The dashboard therefore cannot reconcile link codes or attribute tournament results until the OTOMO CHAIN admin export secret and endpoint are configured here as owner-approved server-side values.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then implement and review the reconciliation path before any TOURNAMENT_RESULT grant."
+      },
+      {
+        "blocker_id": "BLK-GODS-CONTRACT-001",
+        "scope": "ONCHAIN_ASSET_PROVENANCE",
+        "severity": "P2",
+        "description": "The three OTOMO form contracts on Ethereum mainnet are corroborated by three independent project files and a recorded supply measurement, but the SEVENGODS contract address appears in exactly one source file and in no registry or canon document. SDT has no deployed contract at all and remains roadmap-stage marketing copy, so SDT holdings cannot be read on chain.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Confirm the SEVENGODS contract address independently before displaying GODS holdings, and keep SDT presented as an off-chain community metric with no balance or value claim."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport or ledger data before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "The deployment is owner-only private, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized. Sites access control is expressed per ChatGPT account and cannot express Discord guild membership, so a guild-limited audience necessarily means public Sites access plus an application-level guild gate, which enlarges rather than reduces this gate.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so personal progress and holdings remain intentionally unconnected. The OTOMO CHAIN link code proves game-account control for tournament reconciliation only and does not satisfy this contract.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting personal data."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      },
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "The deployed production version has been verified through HTTP API and asset smoke but not an interactive rendered browser session. The link-code work was verified interactively on the local dev server, not on production.",
+        "owner": "Codex runtime capability",
+        "status": "OPEN",
+        "resolution_required": "Open the exact live URL in a new muted tab without navigating the protected tab and complete dashboard, Passport, responsive, asset, focus, and console verification."
+      }
+    ],
+    "decisions_needed": [
+      {
+        "decision_id": "DEC-HOME-HERO-001",
+        "question": "Which numbered Image 2.0 Home hero candidate or shortlist should advance to exact-file owner approval and UI integration?",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "evidence": [
+          "assets/candidates/home-hero-image2-v001/CONTACT_SHEET.png",
+          "assets/candidates/home-hero-image2-v001/MOBILE_CROP_CONTACT_SHEET.png",
+          "assets/candidates/home-hero-image2-v001/QA.md"
+        ]
+      }
+    ],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "migration/STATE_UPDATE_CP000019_OTOMO_CHAIN_LINK_CODE.json",
+        "sha256": "0717d862791992e56360df23f13dce2e2aad0ec0a3081ddaa8ceec3373794fd2",
+        "reason": "Record the OTOMO CHAIN link-code implementation and the identity findings that shaped it."
+      },
+      {
+        "path": "db/schema.ts",
+        "sha256": "9ce5fcf29de04c08cb252bcfceb59f10418a56c97ea33aaa33869124f7c8cd8d",
+        "reason": "Add the game_account_links table with fail-closed uniqueness on both the code and the game account."
+      },
+      {
+        "path": "drizzle/0004_yielding_dormammu.sql",
+        "sha256": "ae220c3c973d5fc081d76ffe05db902099cf43eca18ba6183409dd059dc7616d",
+        "reason": "Packaged D1 migration creating game_account_links."
+      },
+      {
+        "path": "server/game-link.ts",
+        "sha256": "8d59c489bc43bfe419597da71b2c8345654133af8fb8509bcfde943b6c0b6746",
+        "reason": "Derive the per-player link code, tolerate real player input when matching, and issue idempotently."
+      },
+      {
+        "path": "app/api/link/otomo-chain/route.ts",
+        "sha256": "63ee51849432623483f7692deef36b4c5ecd6d7b3ac75b84a65a9cbcffd5b430",
+        "reason": "Session-authenticated, fail-closed endpoint that issues the code and never asserts verification."
+      },
+      {
+        "path": "app/Dashboard.tsx",
+        "sha256": "be67a98d1f73a11f17b24599bb41e03589ce828f18188f91c608d3b2f1d5ff98",
+        "reason": "Passport card showing the code, copy action, instructions, and distinct loading, error, unverified, and verified states."
+      },
+      {
+        "path": "app/Dashboard.module.css",
+        "sha256": "99e3f36d40fc22dc7c7a1cc722a4203a6ffe64d0d61cb84905f528de663bd670",
+        "reason": "Styles for the link card and a transcription-sized code chip."
+      },
+      {
+        "path": "tests/game-link.test.mjs",
+        "sha256": "90e02d64af66e6c43e444796e01deb4f7357e9d6dcb67bb23ac7b29339376117",
+        "reason": "Cover code stability, per-game separation, input tolerance, refusal to guess, idempotent issuance, and the one-account-one-Passport constraint."
+      },
+      {
+        "path": "tests/migration-0002.test.mjs",
+        "sha256": "056b2e5722dfc0e5024fb67f6c9cf28d0fdfe2786db028b4d6d0c41423c3031a",
+        "reason": "Extend the migration journal guard to migration 0004."
+      },
+      {
+        "path": "tests/helpers/sqlite-d1.mjs",
+        "sha256": "bd5a387c9f489977852d37a5d1743c93d4cfeb43da08862ae08ae43e3b32be54",
+        "reason": "Apply migration 0004 in the test database."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-017",
+      "instruction": "Deploy the current source and D1 migration 0004 through the Sites source and version workflow before 2026-07-27T00:00:00Z, changing no access setting. Then announce the link code to OTOMO CHAIN 7 participants so they paste it into the game profile field labelled 'Discord / X など' from day one. Do not implement reconciliation or grant any SGP until the season ends, the OTOMO CHAIN admin export secret is provided, and the documented manual top-N review is complete.",
+      "do_not_assume": [
+        "OTOMO CHAIN 7 has Discord login; it does not, and its external_id field is free text that the game itself labels unverified.",
+        "A pasted link code proves anything until reconciliation observes it through the admin reward export; issuing a code asserts no rank, participation, or SGP.",
+        "Codex can deploy; the repository has no git remote and Sites is the only production pipeline.",
+        "Guild-limited access can be expressed in Sites access control; it cannot, and it would require public Sites access plus an application-level guild gate.",
+        "SDT holdings can be read on chain; SDT has no deployed contract and remains roadmap-stage.",
+        "The SEVENGODS contract address is confirmed; it is single-sourced and unverified.",
+        "Any publication, audience expansion, or point grant is authorized by this checkpoint."
+      ]
+    }
+  },
+  "resulting_state_sha256": "57b4e4aa41a7fb43c8dc452305f18781f95327ae7523bee5bed906905795182b"
+}

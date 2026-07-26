@@ -132,6 +132,47 @@ function shortAddress(address: string) {
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
 }
 
+/**
+ * OTOMO CHAIN authenticates anonymously and its profile field is explicitly
+ * unverified, so the link code travels outward from this verified Passport
+ * rather than the game asserting a Discord identity inward.
+ */
+type GameLinkData = {
+  gameId: string;
+  linkCode: string;
+  issuedAt: string;
+  verified: boolean;
+  verifiedAt: string | null;
+  verifiedSeasonId: string | null;
+};
+
+/** Display-only wallet holdings. A null balance is unknown, never zero. */
+type HoldingsData = {
+  linked: boolean;
+  chainId?: number;
+  address?: string;
+  readAt?: string;
+  holdings: { id: string; label: string; kind: "NFT" | "TOKEN"; balance: string | null }[];
+};
+
+async function requestHoldings(): Promise<HoldingsData> {
+  const response = await fetch("/api/holdings", {
+    headers: { accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return await response.json() as HoldingsData;
+}
+
+async function requestOtomoChainLink(): Promise<GameLinkData> {
+  const response = await fetch("/api/link/otomo-chain", {
+    headers: { accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return await response.json() as GameLinkData;
+}
+
 const AUTH_ERROR_MESSAGES: Record<string, string> = {
   not_configured: "Discord連携は現在準備中です",
   state_mismatch: "認証セッションが切れました。もう一度お試しください",
@@ -411,6 +452,10 @@ export function Dashboard() {
   const [dmChallenge, setDmChallenge] = useState<DiscordDmChallenge | null>(null);
   const [dmAuthBusy, setDmAuthBusy] = useState(false);
   const [dmAuthMessage, setDmAuthMessage] = useState("");
+  const [gameLink, setGameLink] = useState<GameLinkData | null>(null);
+  const [gameLinkState, setGameLinkState] = useState<LoadState>("idle");
+  const [holdings, setHoldings] = useState<HoldingsData | null>(null);
+  const [holdingsState, setHoldingsState] = useState<LoadState>("idle");
   const [walletBusy, setWalletBusy] = useState(false);
   const [walletChoices, setWalletChoices] = useState<WalletProviderDetail[] | null>(null);
   const [guildBusy, setGuildBusy] = useState(false);
@@ -534,6 +579,54 @@ export function Dashboard() {
     }, 0);
     return () => window.clearTimeout(timeout);
   }, [refreshPassport]);
+
+  // The link code is only meaningful for a connected Passport, so it is
+  // fetched after connection rather than on first paint.
+  useEffect(() => {
+    const connected = Boolean(passport?.connected);
+    let cancelled = false;
+    const timeout = window.setTimeout(() => {
+      if (!connected) {
+        setGameLink(null);
+        setGameLinkState("idle");
+        return;
+      }
+      setGameLinkState("loading");
+      void (async () => {
+        try {
+          const data = await requestOtomoChainLink();
+          if (cancelled) return;
+          setGameLink(data);
+          setGameLinkState("ready");
+        } catch {
+          if (!cancelled) setGameLinkState("error");
+        }
+      })();
+    }, 0);
+    return () => { cancelled = true; window.clearTimeout(timeout); };
+  }, [passport?.connected]);
+
+  // Holdings are an RPC fan-out, so they load when the Vault is actually
+  // opened rather than on every Passport refresh.
+  useEffect(() => {
+    const connected = Boolean(passport?.connected);
+    let cancelled = false;
+    const timeout = window.setTimeout(() => {
+      if (!connected || activeView !== "collection") return;
+      setHoldingsState("loading");
+      void (async () => {
+        try {
+          const data = await requestHoldings();
+          if (cancelled) return;
+          setHoldings(data);
+          setHoldingsState("ready");
+        } catch {
+          if (!cancelled) setHoldingsState("error");
+        }
+      })();
+    }, 0);
+    return () => { cancelled = true; window.clearTimeout(timeout); };
+  }, [passport?.connected, activeView]);
 
   useEffect(() => {
     if (!dmChallenge) return;
@@ -1245,9 +1338,42 @@ export function Dashboard() {
                 <div><p>COLLECTION / SOURCE-AWARE VAULT</p><h1>コレクション</h1><span>オンチェーン保有、ゲーム内資産、公式キャラクター図鑑を混ぜずに統合。</span></div>
                 <div className={styles.pageStats}><span><b>7</b>PAIRS</span><span><b>3</b>FORMS</span><span><b>未接続</b>MY ASSETS</span></div>
               </header>
+              <section className={styles.holdingsSection}>
+                <SectionTitle
+                  kicker="ONCHAIN HOLDINGS / ETHEREUM MAINNET"
+                  title="Wallet保有"
+                  copy="連携済みWalletの保有数をチェーンから直接読み取ります。価格・評価額は表示せず、順位やSGPにも影響しません。"
+                />
+                {holdingsState === "loading" && <p className={styles.holdingsNote}>チェーンから読み取っています…</p>}
+                {holdingsState === "error" && (
+                  <p className={styles.holdingsNote}>保有情報を取得できませんでした。時間をおいて再度お試しください。</p>
+                )}
+                {holdingsState === "ready" && holdings && !holdings.linked && (
+                  <p className={styles.holdingsNote}>
+                    Walletが未連携です。マイSGGでWalletを連携すると保有数がここに表示されます。Walletが無くてもポイント付与に影響はありません。
+                  </p>
+                )}
+                {holdingsState === "ready" && holdings?.linked && (
+                  <>
+                    <div className={styles.holdingsGrid}>
+                      {holdings.holdings.map((item) => (
+                        <article key={item.id} data-tone={item.kind === "TOKEN" ? "violet" : "gold"}>
+                          <span>{item.kind}</span>
+                          <h3>{item.label}</h3>
+                          {/* A failed read must never render as 0. */}
+                          <b>{item.balance ?? "未取得"}</b>
+                        </article>
+                      ))}
+                    </div>
+                    <p className={styles.holdingsNote}>
+                      {shortAddress(holdings.address ?? "")} の保有数。SDTはSEVENDAOのトークンで、SGGポイントとは別制度です。
+                    </p>
+                  </>
+                )}
+              </section>
               <section className={styles.connectionEmpty}>
                 <div className={styles.connectionIcon} aria-hidden="true">◇</div>
-                <div><p>MY ASSET BRIDGE</p><h2>あなたの保有データはまだ接続されていません</h2><span>共通Discord identityと署名済みplayer snapshot APIが接続されると、Walletと各ゲームの資産がここへ集約されます。</span></div>
+                <div><p>IN-GAME ASSET BRIDGE</p><h2>ゲーム内資産はまだ接続されていません</h2><span>各ゲームの署名済みplayer snapshot APIが接続されると、ゲーム内の資源や進行状況がここへ加わります。</span></div>
                 <StatusPill accent="gold">WALLET OPTIONAL</StatusPill>
               </section>
               <section>
@@ -1492,6 +1618,53 @@ export function Dashboard() {
                           <button type="button" className={styles.primaryAction} onClick={() => void linkWallet()} disabled={walletBusy}>
                             <WalletIcon />{walletBusy ? "署名を待っています…" : "Walletを連携する"}
                           </button>
+                        )}
+                      </>
+                    )}
+                  </section>
+                  <section className={styles.gameLinkCard} data-tone="gold">
+                    <div className={styles.pointsHead}>
+                      <div><p>OTOMO CHAIN 7 / TOURNAMENT LINK</p><h3>大会アカウント連携</h3></div>
+                      <StatusPill accent="gold">
+                        {gameLinkState !== "ready" ? "—" : gameLink?.verified ? "VERIFIED" : "NOT VERIFIED"}
+                      </StatusPill>
+                    </div>
+                    {gameLinkState === "loading" && <p>連携コードを確認しています…</p>}
+                    {gameLinkState === "error" && (
+                      <p>連携コードを取得できませんでした。時間をおいて再読み込みしてください。</p>
+                    )}
+                    {gameLinkState === "ready" && gameLink && (
+                      <>
+                        <p>
+                          OTOMO CHAIN 7 はDiscordログインを持たないため、下のコードをゲーム側プロフィールの
+                          「Discord / X など」欄に貼ることで、この Passport とゲームアカウントを結び付けます。
+                        </p>
+                        <code className={styles.linkCode}>{gameLink.linkCode}</code>
+                        <button
+                          type="button"
+                          className={styles.primaryAction}
+                          onClick={() => {
+                            void navigator.clipboard?.writeText(gameLink.linkCode)
+                              .then(() => setToast("連携コードをコピーしました"))
+                              .catch(() => setToast("コピーできませんでした。手入力してください"));
+                          }}
+                        >
+                          コードをコピー
+                        </button>
+                        <ol className={styles.linkSteps}>
+                          <li>OTOMO CHAIN 7 を開き、プロフィール画面を表示します。</li>
+                          <li>「Discord / X など」欄にこのコードを貼り付けて保存します。</li>
+                          <li>大会終了後、運営が照合します。ここの表示は照合後に VERIFIED へ変わります。</li>
+                        </ol>
+                        {gameLink.verified ? (
+                          <p>
+                            照合済みです({gameLink.verifiedSeasonId ?? "シーズン未記録"})。
+                          </p>
+                        ) : (
+                          <p>
+                            まだ照合されていません。コードを貼っただけでは順位もSGPも確定しません。
+                            付与は大会終了後の確定処理でのみ行われます。
+                          </p>
                         )}
                       </>
                     )}

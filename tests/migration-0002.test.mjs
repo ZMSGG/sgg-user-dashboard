@@ -91,9 +91,16 @@ test("migration journal packages the guild and DM auth migrations exactly once",
       "0001_majestic_boomer",
       "0002_bent_spiral",
       "0003_previous_nitro",
+      "0004_yielding_dormammu",
     ],
   );
-  assert.equal(journal.entries.at(-1)?.idx, 3);
+  assert.equal(journal.entries.at(-1)?.idx, 4);
   assert.match(await readMigration("0002_bent_spiral.sql"), /ADD `guild_synced_at` text/);
   assert.match(await readMigration("0003_previous_nitro.sql"), /CREATE TABLE `discord_dm_challenges`/);
+  assert.match(await readMigration("0004_yielding_dormammu.sql"), /CREATE TABLE `game_account_links`/);
+  // One game account must never resolve to two Passports.
+  assert.match(
+    await readMigration("0004_yielding_dormammu.sql"),
+    /CREATE UNIQUE INDEX `game_account_links_game_player_unique`/,
+  );
 });

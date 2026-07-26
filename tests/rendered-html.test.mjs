@@ -46,7 +46,7 @@ test("does not ship fabricated player, asset, tournament, or release data", asyn
   for (const value of [
     "EBISU FISHING 77",
     "現在、公開確認済みの大会はありません",
-    "あなたの保有データはまだ接続されていません",
+    "ゲーム内資産はまだ接続されていません",
     "COMMUNITY / OFFICIAL SIGNALS",
     "RAW GAMEPLAY SCORE",
     "SGG_GAME_POINTS",

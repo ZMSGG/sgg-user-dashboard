@@ -18,6 +18,8 @@ export type PlayerOsEnv = {
   DM_OTP_PEPPER?: string;
   INTEGRATION_GRANT_SECRET?: string;
   INTEGRATION_ACTOR_ID?: string;
+  OTOMO_CHAIN_EXPORT_URL?: string;
+  OTOMO_CHAIN_ADMIN_SECRET?: string;
 };
 
 let cachedEnv: PlayerOsEnv | null = null;

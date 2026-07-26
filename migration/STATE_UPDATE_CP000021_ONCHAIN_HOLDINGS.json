@@ -1,16 +1,11 @@
 {
   "schema_version": 1,
-  "authority": "SGG_PROJECT_STATE",
-  "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 21,
-  "updated_at": "2026-07-26T18:42:54+08:00",
+  "expected_state_version": 20,
   "updated_by": "Codex",
+  "summary": "Verified the SGG contract set directly on Ethereum mainnet and implemented display-only wallet holdings. Reading name, symbol and total supply over public RPC confirmed SEVEN GODS (GOD, 3041), OTOMO SEIREITAI (10000), OTOMO JUNIKUTAI (2180), OTOMO DOUJI (518), and Seven DAO Token (SDT, 18 decimals, 777,000,000). This corrects an earlier finding: SDT is deployed on chain at an owner-supplied address, and the previous conclusion that it did not exist reflected only the absence of any record in the repositories. The single-sourced SEVENGODS address is confirmed genuine, closing BLK-GODS-CONTRACT-001. Added server/onchain-holdings.ts and GET /api/holdings, which read balanceOf over public RPC with no indexer and no API key, take the address from the server-side player row so a browser cannot request another player's holdings, truncate rather than round so a balance is never overstated, and render a failed read as unknown rather than zero. No price, valuation, or SGG Token claim is displayed, and holdings never affect rank, SGP, or eligibility. Lint, typecheck, production build, and 70 tests pass; the endpoint and the rendered Vault section were verified against the real linked wallet on localhost:5799 with no console errors. No commit, deployment, access change, or point grant occurred.",
   "status": "REVIEW",
   "phase": "PRIVATE_DEPLOYED",
   "current_objective": "Deploy the OTOMO CHAIN 7 link code before the season-0 start at 2026-07-27T00:00:00Z so participants can bind their game account from day one, then reconcile and pay out SGP only after the season ends, the admin export secret is configured, an award table is decided, and the documented manual top-N review is complete.",
-  "last_summary": "Verified the SGG contract set directly on Ethereum mainnet and implemented display-only wallet holdings. Reading name, symbol and total supply over public RPC confirmed SEVEN GODS (GOD, 3041), OTOMO SEIREITAI (10000), OTOMO JUNIKUTAI (2180), OTOMO DOUJI (518), and Seven DAO Token (SDT, 18 decimals, 777,000,000). This corrects an earlier finding: SDT is deployed on chain at an owner-supplied address, and the previous conclusion that it did not exist reflected only the absence of any record in the repositories. The single-sourced SEVENGODS address is confirmed genuine, closing BLK-GODS-CONTRACT-001. Added server/onchain-holdings.ts and GET /api/holdings, which read balanceOf over public RPC with no indexer and no API key, take the address from the server-side player row so a browser cannot request another player's holdings, truncate rather than round so a balance is never overstated, and render a failed read as unknown rather than zero. No price, valuation, or SGG Token claim is displayed, and holdings never affect rank, SGP, or eligibility. Lint, typecheck, production build, and 70 tests pass; the endpoint and the rendered Vault section were verified against the real linked wallet on localhost:5799 with no console errors. No commit, deployment, access change, or point grant occurred.",
-  "last_checkpoint_id": "CP-000021",
-  "last_checkpoint_path": "checkpoints/CP-000021.json",
   "active_work": {
     "work_id": "ACT-017",
     "objective": "Deploy the link-code capability and on-chain holdings through Sites before the season-0 start.",
@@ -22,56 +17,6 @@
       "Do not change Sites access mode, allowed owners, allowed groups, public access, custom domain, or search indexing in this deployment."
     ]
   },
-  "recently_completed": [
-    {
-      "action_id": "BOOTSTRAP-001",
-      "result": "Initial zero-to-one scaffold generated atomically.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "COMMAND_CENTER_LINK.json",
-        "QUALITY_SCORECARD.md"
-      ]
-    },
-    {
-      "action_id": "ACT-001",
-      "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "migration/INTAKE.json",
-        "migration/MIGRATION_EVIDENCE.md",
-        "COMMAND_CENTER_LINK.json"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-003",
-      "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
-      "evidence": [
-        "app/Dashboard.tsx",
-        "server/auth.ts",
-        "server/passport-db.ts",
-        "db/schema.ts",
-        "drizzle/0001_majestic_boomer.sql",
-        "tests/passport-security.test.mjs",
-        "tests/dashboard-resilience.test.mjs",
-        "tests/rendered-html.test.mjs"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-007",
-      "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
-      "evidence": [
-        "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
-        "assets/ASSET_MANIFEST.csv",
-        "references/SOURCE_LOCK.json"
-      ],
-      "completed_at": "2026-07-22T16:05:03+08:00",
-      "checkpoint_id": "CP-000012"
-    }
-  ],
   "next_actions": [
     {
       "action_id": "ACT-017",
@@ -224,100 +169,35 @@
       "resolution_required": "Open the exact live URL in a new muted tab without navigating the protected tab and complete dashboard, Passport, responsive, asset, focus, and console verification."
     }
   ],
-  "decisions_needed": [
-    {
-      "decision_id": "DEC-HOME-HERO-001",
-      "question": "Which numbered Image 2.0 Home hero candidate or shortlist should advance to exact-file owner approval and UI integration?",
-      "owner": "SGG project owner",
-      "status": "OPEN",
-      "evidence": [
-        "assets/candidates/home-hero-image2-v001/CONTACT_SHEET.png",
-        "assets/candidates/home-hero-image2-v001/MOBILE_CROP_CONTACT_SHEET.png",
-        "assets/candidates/home-hero-image2-v001/QA.md"
-      ]
-    }
-  ],
-  "authorizations": [
-    {
-      "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
-      "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
-      "status": "GRANTED",
-      "granted_by": "SGG project owner",
-      "granted_at": "2026-07-20T22:47:24+08:00",
-      "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
-    },
-    {
-      "authorization_id": "AUTH-EXTERNAL-ACTIONS",
-      "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
-      "status": "NOT_GRANTED",
-      "granted_by": "",
-      "granted_at": "",
-      "evidence": ""
-    }
-  ],
-  "changed_files": [
+  "changed_paths": [
     {
       "path": "migration/STATE_UPDATE_CP000021_ONCHAIN_HOLDINGS.json",
-      "sha256": "078bd4596b5ba8838feb726e93fd60571bd5125a18d8349821a26e83669415c0",
       "reason": "Record the on-chain contract verification, the SDT correction, and the holdings implementation."
     },
     {
       "path": "server/onchain-holdings.ts",
-      "sha256": "c6a360db1fe32961261b4ba469de46d3f649cb4d781ce2381a20eb671981f1ef",
       "reason": "Verified mainnet contract set and read-only balanceOf reads that never overstate a balance."
     },
     {
       "path": "app/api/holdings/route.ts",
-      "sha256": "4efa886d6da8939d467a6587c9eaa55d208266e265b045a6c6f819e6133bc62d",
       "reason": "Session-authenticated holdings read using the server-side wallet address only."
     },
     {
       "path": "app/Dashboard.tsx",
-      "sha256": "63256bf5d315e0b6942a60c72a0f6c86e0b89381748d0ae9d8b248fffb9b50f6",
       "reason": "Vault holdings section with distinct loading, error, wallet-unlinked, and ready states; the in-game bridge empty state is now scoped to in-game assets only."
     },
     {
       "path": "app/Dashboard.module.css",
-      "sha256": "ef0e295cccb808d996e36ecbcacd147698c86feb9513e5a96ec6be44b1e11983",
       "reason": "Responsive holdings grid and note styles."
     },
     {
       "path": "tests/game-link.test.mjs",
-      "sha256": "87b4930b190a1de58960635e8fd9ecf0b242c545254f3a02949bfffa6466fa37",
       "reason": "Cover balance truncation, balanceOf encoding, and the pinned verified contract set."
     },
     {
       "path": "tests/rendered-html.test.mjs",
-      "sha256": "21eac6345ca30aa5f7ce459cf32f8e6874cc379b0255e9188c8bdcac49f2dc74",
       "reason": "Update the Vault empty-state guard now that wallet holdings are connected and only in-game assets remain unconnected."
     }
-  ],
-  "last_known_good": {
-    "validation_report": "VALIDATION_REPORT.json",
-    "commands": [
-      [
-        "python3",
-        "../../launches/tools/validate_sgg_project.py",
-        ".",
-        "--kickoff",
-        "--record"
-      ],
-      [
-        "python3",
-        "../../launches/tools/validate_pack.py",
-        "."
-      ]
-    ]
-  },
-  "authoritative_files": [
-    "AGENTS.md",
-    "COMMAND_CENTER_LINK.json",
-    "PROJECT_PROFILE.json",
-    "PROJECT_STATE.json",
-    "DECISIONS.md",
-    "CANON_AND_COPY.md",
-    "WORLD_AND_CHARACTER_BRIEF.md",
-    "VALIDATION_REPORT.json"
   ],
   "resume": {
     "action_id": "ACT-017",

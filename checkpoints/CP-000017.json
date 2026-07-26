@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000017",
+  "state_version": 17,
+  "created_at": "2026-07-23T19:58:35+08:00",
+  "previous_checkpoint_id": "CP-000016",
+  "summary": "Created ten private MY SGG Home hero candidates with the Codex built-in OpenAI Image 2.0 workflow using approved Creator Kit identity references for canonical GOD and OTOMO pairs. Each final 1672x941 scene was substantively rebuilt for the current desktop copy zone and approximate 390x630 mobile object-fit crop, and all ten passed visual checks for pair identity, named OTOMO form, two-character count, family-safe framing, and absence of standalone text or watermark. The batch records prompts, rights evidence, reference and output hashes, form balance, desktop and mobile contact sheets, and rejected-iteration reasons. All files remain CANDIDATE assets outside public runtime paths; no owner selection, approval, UI integration, commit, push, deployment, access change, or production mutation occurred.",
+  "project_basis_sha256": "26cfe2d63ee351e423c8d0888f3c25da43afee46ebba5b7f3c3d2794dbbcdfd4",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 17,
+    "updated_at": "2026-07-23T19:58:35+08:00",
+    "updated_by": "Codex",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Preserve the unchanged owner-only production deployment while the SGG project owner reviews the ten private Image 2.0 Home hero candidates, selects a preferred direction, and separately approves any selected asset before runtime integration.",
+    "last_summary": "Created ten private MY SGG Home hero candidates with the Codex built-in OpenAI Image 2.0 workflow using approved Creator Kit identity references for canonical GOD and OTOMO pairs. Each final 1672x941 scene was substantively rebuilt for the current desktop copy zone and approximate 390x630 mobile object-fit crop, and all ten passed visual checks for pair identity, named OTOMO form, two-character count, family-safe framing, and absence of standalone text or watermark. The batch records prompts, rights evidence, reference and output hashes, form balance, desktop and mobile contact sheets, and rejected-iteration reasons. All files remain CANDIDATE assets outside public runtime paths; no owner selection, approval, UI integration, commit, push, deployment, access change, or production mutation occurred.",
+    "last_checkpoint_id": "CP-000017",
+    "last_checkpoint_path": "checkpoints/CP-000017.json",
+    "active_work": {
+      "work_id": "ACT-016",
+      "objective": "Select and approve one MY SGG Home hero direction from the ten private responsive Image 2.0 candidates before any UI or production change.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Review both CONTACT_SHEET.png and MOBILE_CROP_CONTACT_SHEET.png.",
+        "Record the owner-selected candidate number or a concrete shortlist.",
+        "Perform any requested final Image 2.0 refinement without directly copying a reference asset.",
+        "Create a separate owner approval record for the exact final file and hash.",
+        "Only after approval, integrate the exact approved asset and verify the current desktop and mobile Home views in a new muted Codex in-app browser tab."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-016",
+        "order": 1,
+        "action": "Review the desktop and mobile comparison sheets, choose one candidate or a concrete shortlist, then record exact-file owner approval before any Home UI integration.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-014",
+        "order": 2,
+        "action": "When Codex in-app browser control is available, open the deployed URL in a new muted tab, preserve the existing protected tab, and complete visual, responsive, interaction, and console QA.",
+        "owner": "Codex runtime capability",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-IN-APP-BROWSER-001"
+        ]
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 3,
+        "action": "Complete a real DM code login and two-account isolation check with two consenting Discord test identities before any audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 4,
+        "action": "Upgrade to stable Next and Cloudflare or Miniflare versions that officially support patched Sharp, then remove the temporary non-reachable exception.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 5,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing personal progress or assets.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 6,
+        "action": "Request and record separate authority before public or shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "This Codex task does not expose the mandatory in-app browser control or open_in_codex capability. The existing protected browser tab remains untouched, and Version 11 has been verified through production HTTP API and asset smoke but not an interactive rendered browser or console session.",
+        "owner": "Codex runtime capability",
+        "status": "OPEN",
+        "resolution_required": "Expose the supported Codex in-app browser control capability; open the exact live URL in a new muted tab without navigating the protected tab and complete dashboard, Passport, responsive, asset, focus, and console verification."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport or ledger data before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so personal progress and holdings remain intentionally unconnected.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting personal data."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Version 11 is deployed successfully with owner-only private access, but public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+      }
+    ],
+    "decisions_needed": [
+      {
+        "decision_id": "DEC-HOME-HERO-001",
+        "question": "Which numbered Image 2.0 Home hero candidate or shortlist should advance to exact-file owner approval and UI integration?",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "evidence": [
+          "assets/candidates/home-hero-image2-v001/CONTACT_SHEET.png",
+          "assets/candidates/home-hero-image2-v001/MOBILE_CROP_CONTACT_SHEET.png",
+          "assets/candidates/home-hero-image2-v001/QA.md"
+        ]
+      }
+    ],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "migration/STATE_UPDATE_CP000017_HOME_HERO_CANDIDATES.json",
+        "sha256": "36c361cce11c219c2a58a997bf6d69437fa39caf08a67dd4037c2e310b39f831",
+        "reason": "Record the private responsive Image 2.0 candidate batch and owner-selection gate."
+      },
+      {
+        "path": "assets/ASSET_MANIFEST.csv",
+        "sha256": "3bad645c7597f899a1450b6fa765eee19a5e7f35068b7f293662b35eda65363d",
+        "reason": "Register all ten files as CANDIDATE assets with exact hashes and canonical pair metadata."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/BRIEF.md",
+        "sha256": "85782c2dd6ea33a4bcb7d7278839e2d5e4e7a701e4aa16ae31a140568779fd95",
+        "reason": "Record the Home hero candidate scope and non-public boundary."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/PROMPTS.md",
+        "sha256": "1450090d32740e03d7ec8109d306f27d05359641f4b24f8c4d2c1d16f5792591",
+        "reason": "Preserve the ten initial Image 2.0 concept prompts."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/RESPONSIVE_RECOMPOSITION_PROMPTS.md",
+        "sha256": "3bd4a05c378765dbc1e06352456f52f55969964dd17b3da469f90852e2e8886f",
+        "reason": "Preserve the responsive Image 2.0 reconstruction method and per-candidate deltas."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/OTOMO_FORM_PLAN.csv",
+        "sha256": "1589a9435721ec2d8638ef1685c8d7ab8dee5be9ce2e3526189d005129dd607e",
+        "reason": "Record the balanced SPIRIT, INCARNATE, and DOJI candidate inventory."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/PRODUCTION_RECORD.json",
+        "sha256": "7020185f86ff0faa9b37ad04393c8476ba8f4acff0bb30e5d2ce80a6cbc90782",
+        "reason": "Record Image 2.0 outputs, canonical references, rights evidence, hashes, and visual QA."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/QA.md",
+        "sha256": "abc9735ad276ed7d36efaf37d6aa40cfc70c5996d2a6f4b4e6bdcae982458dab",
+        "reason": "Record desktop, mobile crop, identity, form, count, text, and family-safety QA."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/CONTACT_SHEET.png",
+        "sha256": "0dd9d9e013f010b72aa75c971353285fcaf34289e4068bbaeca059de57709735",
+        "reason": "Provide the numbered desktop comparison for owner selection."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MOBILE_CROP_CONTACT_SHEET.png",
+        "sha256": "1ca0c79a88291dff03a760287da474e7f491c2e8920504cd2d1e2be988454288",
+        "reason": "Provide the numbered current-layout mobile crop comparison."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/create-contact-sheets.swift",
+        "sha256": "fd0589da451659a1debdfe90bef4ec63ee827166ff05d8920839ed01423e537c",
+        "reason": "Preserve the deterministic contact-sheet and mobile-crop QA renderer."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/rejected/README.md",
+        "sha256": "15262d2993de23f47f2b23c1dd991a5840d1f9ecb00dfba2c9908b3d66e7882c",
+        "reason": "Record rejection classes without duplicating rejected binary files into the repository."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-01-v001.png",
+        "sha256": "7620f6fe22cf4e95b9b26862dc372a02748dd842e6ba8c5dc5e19b7948f9a245",
+        "reason": "Store responsive Image 2.0 candidate 01 for private review."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-02-v001.png",
+        "sha256": "f1e82360ac10c912cb1d7abf1f97c976595db6cadc9039aa711eb478795c5ddd",
+        "reason": "Store responsive Image 2.0 candidate 02 for private review."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-03-v001.png",
+        "sha256": "c97ec51dc2f0d4ce233d0b0adda92c98a9f3897fe4b0572702385c2a5650580c",
+        "reason": "Store responsive Image 2.0 candidate 03 for private review."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-04-v001.png",
+        "sha256": "8798c85c666dbd2f76370c1171784f2be8a879fb7c3b2d10d31ddbe3d16a8c9f",
+        "reason": "Store responsive Image 2.0 candidate 04 for private review."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-05-v001.png",
+        "sha256": "13a82febf2bef8ab7fad5a37f6ceb9f8985742fdbc8c6e08deda1477759a16e0",
+        "reason": "Store responsive Image 2.0 candidate 05 for private review."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-06-v001.png",
+        "sha256": "8d49a359a712658a803f70a9da481a09915d2270ad175848b5b05ad6b4742457",
+        "reason": "Store responsive Image 2.0 candidate 06 for private review."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-07-v001.png",
+        "sha256": "e96b9a8362f3d064784d9dc1c413fe67777bf8f98c595c954b01e722783527d7",
+        "reason": "Store responsive Image 2.0 candidate 07 for private review."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-08-v001.png",
+        "sha256": "9078d0eea221c031b4e4303ed3341ae7949733e9deb6e2737b1cedecf7139ce6",
+        "reason": "Store responsive Image 2.0 candidate 08 for private review."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-09-v001.png",
+        "sha256": "1b0a85833997a6282c449db861c2326a5c192382548f8d9dc887c3801573b68f",
+        "reason": "Store responsive Image 2.0 candidate 09 for private review."
+      },
+      {
+        "path": "assets/candidates/home-hero-image2-v001/MEDIA-my-sgg-home-hero-10-v001.png",
+        "sha256": "cc5d9dd7bf7bc4e06a536a4e934c7f94cc380d9237c67a478bb4d6274296035d",
+        "reason": "Store responsive Image 2.0 candidate 10 for private review."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-016",
+      "instruction": "Read CP-000017 and review the numbered desktop and mobile comparison sheets under assets/candidates/home-hero-image2-v001. Ask the SGG project owner for the preferred number or shortlist. Keep all ten files at CANDIDATE status and outside public runtime paths until the exact selected file and SHA-256 receive a separate owner approval. After approval, perform any final Image 2.0 refinement, integrate only the approved asset, validate the desktop and mobile Home view in a new muted Codex in-app browser tab, and preserve the existing protected tab and runtime.",
+      "do_not_assume": [
+        "Any of the ten candidates is selected, approved, public, or production-ready.",
+        "The current Home hero or deployed Version 11 changed; no runtime file was edited and no deployment occurred.",
+        "Creator Kit reference images were copied directly; every candidate was substantively generated and responsively rebuilt with Image 2.0.",
+        "Candidate creation resolves the existing browser, real Discord DM, two-account isolation, dependency, player bridge, or publication gates.",
+        "The prior private deployment authorization permits a future public or shared launch."
+      ]
+    }
+  },
+  "resulting_state_sha256": "b680e0de41c0be225d5d14d6d777d0c2371cdcd35ff0698e405af8d6fdd1905f"
+}

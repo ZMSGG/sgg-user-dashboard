@@ -125,6 +125,37 @@ export const walletChallenges = sqliteTable("wallet_challenges", {
   index("wallet_challenges_expires_at_idx").on(table.expiresAt),
 ]);
 
+/**
+ * Verified links between a Player Passport and an account in a partner game.
+ *
+ * Partner games are not required to know a Discord ID. OTOMO CHAIN 7, for
+ * example, authenticates anonymously and exposes only a free-text, unverified
+ * `external_id` field. A player proves control of that account by writing a
+ * per-player link code into it; the code is derived from the Discord ID, so
+ * reissuing is idempotent and nothing secret is stored here beyond the code.
+ *
+ * Both unique indexes exist to fail closed: one Discord ID owns at most one
+ * code per game, and one game account can never resolve to two Passports.
+ */
+export const gameAccountLinks = sqliteTable("game_account_links", {
+  gameId: text("game_id").notNull(),
+  discordId: text("discord_id")
+    .notNull()
+    .references(() => players.discordId, { onDelete: "cascade", onUpdate: "cascade" }),
+  linkCode: text("link_code").notNull(),
+  issuedAt: text("issued_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  // Populated only once the code has been observed on the game side.
+  gamePlayerId: text("game_player_id"),
+  verifiedAt: text("verified_at"),
+  verifiedSeasonId: text("verified_season_id"),
+}, (table) => [
+  primaryKey({ columns: [table.gameId, table.discordId] }),
+  uniqueIndex("game_account_links_code_unique").on(table.gameId, table.linkCode),
+  uniqueIndex("game_account_links_game_player_unique")
+    .on(table.gameId, table.gamePlayerId)
+    .where(sql`game_player_id IS NOT NULL`),
+]);
+
 export const pointGrants = sqliteTable("point_grants", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   discordId: text("discord_id")

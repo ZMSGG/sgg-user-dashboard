@@ -2046,6 +2046,59 @@
   gap: 10px;
 }
 
+.holdingsSection {
+  display: grid;
+  gap: 14px;
+}
+
+.holdingsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.holdingsGrid article {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px;
+  border: 1px solid var(--hairline);
+  border-radius: 11px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(var(--tone-rgb), 0.09), transparent 37%),
+    var(--surface-solid);
+}
+
+.holdingsGrid article > span {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
+.holdingsGrid h3 {
+  color: #e2dce3;
+  font-family: "Yu Mincho", serif;
+  font-size: 15px;
+}
+
+/* The number is the point of the card, so it outsizes the label. */
+.holdingsGrid b {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 22px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.holdingsNote {
+  color: #77727e;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
 .sourceGrid article {
   display: flex;
   min-width: 0;
@@ -3541,6 +3594,7 @@
 
 .pointsCard,
 .walletCard,
+.gameLinkCard,
 .guildCard,
 .adminPanel {
   display: flex;
@@ -3651,7 +3705,38 @@
 }
 
 .walletCard p,
+.gameLinkCard p,
 .guildCard p {
+  color: #817c88;
+  font-size: 10px;
+  line-height: 1.75;
+}
+
+.gameLinkCard {
+  grid-column: 1 / -1;
+}
+
+/* The code is read off the screen and retyped into another site, so it is
+   sized for transcription rather than to match the other monospace chips. */
+.linkCode {
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--tone-rgb), 0.34);
+  border-radius: 4px 12px 4px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--gold);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-align: center;
+  user-select: all;
+}
+
+.linkSteps {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
   color: #817c88;
   font-size: 10px;
   line-height: 1.75;
@@ -3715,6 +3800,7 @@
 }
 
 .walletCard .primaryAction,
+.gameLinkCard .primaryAction,
 .grantForm .primaryAction {
   justify-content: center;
 }

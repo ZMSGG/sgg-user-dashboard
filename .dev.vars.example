@@ -16,3 +16,8 @@ DM_OTP_PEPPER=
 # Actor: the Discord user ID of the service's bot user, recorded as granted_by.
 INTEGRATION_GRANT_SECRET=
 INTEGRATION_ACTOR_ID=
+# OTOMO CHAIN 7 tournament reconciliation (optional; fails closed when unset).
+# HTTPS reward-export endpoint and its admin secret. Read-only: the dashboard
+# never writes to the game. external_id is exposed on this endpoint only.
+OTOMO_CHAIN_EXPORT_URL=
+OTOMO_CHAIN_ADMIN_SECRET=

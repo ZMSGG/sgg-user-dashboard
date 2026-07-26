@@ -1,0 +1,343 @@
+{
+  "recordVersion": 1,
+  "recordedAt": "2026-07-23T19:58:35+08:00",
+  "projectId": "sgg-user-dashboard",
+  "batchId": "home-hero-image2-v001",
+  "tool": {
+    "provider": "OpenAI",
+    "product": "Image 2.0",
+    "mode": "Codex built-in image generation and editing",
+    "externalGeneratorUsed": false
+  },
+  "use": {
+    "surface": "MY SGG Home hero",
+    "status": "CANDIDATE",
+    "selected": false,
+    "approved": false,
+    "published": false,
+    "runtimeIntegrated": false,
+    "scope": "private owner review only"
+  },
+  "rightsEvidence": [
+    {
+      "file": "command-center://SGG LP/sevengods-games/creator-kit/v1/data/publication-approvals.json",
+      "sha256": "85cc46ce44389171e6baea6efa54e2e09110778a09dc2eafecb5bdfd8a4dc969",
+      "result": "Creator Kit v1 source assets approved by project owner"
+    },
+    {
+      "file": "command-center://SGG LP/sevengods-games/creator-kit/v1/data/image-rights-terms.v1.json",
+      "sha256": "82169461bc89494f95efa58105b151c90755bd42fd8c6fa5d9e972202339437e",
+      "result": "AI reference input and derivative generation/editing permitted"
+    }
+  ],
+  "promptRecords": [
+    "PROMPTS.md",
+    "RESPONSIVE_RECOMPOSITION_PROMPTS.md"
+  ],
+  "qaArtifacts": [
+    {
+      "file": "CONTACT_SHEET.png",
+      "sha256": "0dd9d9e013f010b72aa75c971353285fcaf34289e4068bbaeca059de57709735",
+      "purpose": "desktop comparison"
+    },
+    {
+      "file": "MOBILE_CROP_CONTACT_SHEET.png",
+      "sha256": "1ca0c79a88291dff03a760287da474e7f491c2e8920504cd2d1e2be988454288",
+      "purpose": "approximate 390x630 object-fit cover crop at object-position 60%"
+    }
+  ],
+  "referenceSets": {
+    "ebisu-taimaru-doji": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_main.webp",
+        "sha256": "4e21434fce3abce529a528a53d1c7846b224827866389671d5422947c03d800a"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_front.webp",
+        "sha256": "13402eb9a0af6ccfcc6b17c2324428231fff2c065a98dde7c2179017057fc7a9"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_doji.webp",
+        "sha256": "fd5c665fb90902aef358c435ffdf67f43deff06b631956979cbf373b4dccf615"
+      }
+    ],
+    "ebisu-taimaru-spirit": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_main.webp",
+        "sha256": "4e21434fce3abce529a528a53d1c7846b224827866389671d5422947c03d800a"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_front.webp",
+        "sha256": "13402eb9a0af6ccfcc6b17c2324428231fff2c065a98dde7c2179017057fc7a9"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_spirit.webp",
+        "sha256": "0037ea706a666a864784bc6f2bf6ddfe8297a9eb9716167aad87359f3f5b2f4e"
+      }
+    ],
+    "taiyo-kozuchi-incarnate": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_main.webp",
+        "sha256": "a9714359e8a5a2cc9202694aee49efceced48afe628e81483701510bc34814fa"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_front.webp",
+        "sha256": "910bb1911dc8d4c676d3fa875d570c63b1f62f86065b9e877af4774bff56c2ae"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/otomo/kozuchi_incarnate.webp",
+        "sha256": "c5bf1c464455eb2c6a9f9362e370689215b61747af12779d551dd45ffad8e199"
+      }
+    ],
+    "sobi-momokatsu-spirit": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_main.webp",
+        "sha256": "cae2088d841184e62bdc5feaffbf1ed8119f83fa44c1b7390c4a507330f7a101"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_front.webp",
+        "sha256": "11b12ab3b251681f8790f725da3e24d0504c169e8279987d43a5e857c0eb79fc"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_spirit.webp",
+        "sha256": "1c8a79f962850d9f6566087765417f4b3da8cc30533835d397927075034f99b1"
+      }
+    ],
+    "sobi-momokatsu-doji": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_main.webp",
+        "sha256": "cae2088d841184e62bdc5feaffbf1ed8119f83fa44c1b7390c4a507330f7a101"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_front.webp",
+        "sha256": "11b12ab3b251681f8790f725da3e24d0504c169e8279987d43a5e857c0eb79fc"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_doji.webp",
+        "sha256": "345a1f4be250d04484fc40a3c815c044e37a8e6ddd091e3b5181163092645a5f"
+      }
+    ],
+    "saika-kotone-doji": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_main.webp",
+        "sha256": "d4e0c9b65b60bc95f9d499385ed9d4108605ee030ba4524f55b6b34624a7f431"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_front.webp",
+        "sha256": "77d38e3347fdaa32d49431e82da349e1e2d5da295d7c6d6b3ce37a84152b8edb"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_doji.webp",
+        "sha256": "d1a3c42ef6435a72ec7382622021de5b3f94a080f91ce0695db1cc4ab3903df3"
+      }
+    ],
+    "saika-kotone-incarnate": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_main.webp",
+        "sha256": "d4e0c9b65b60bc95f9d499385ed9d4108605ee030ba4524f55b6b34624a7f431"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_front.webp",
+        "sha256": "77d38e3347fdaa32d49431e82da349e1e2d5da295d7c6d6b3ce37a84152b8edb"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_incarnate.webp",
+        "sha256": "4a4cda764f02db2862fc0247ab183ed4323034c2ef945b9bdb75acb85b867b83"
+      }
+    ],
+    "juraku-juka-incarnate": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_main.webp",
+        "sha256": "77df4155a9e57343c903541fec54b6afef6b5c74740043f70ef8f7d499d485"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_front.webp",
+        "sha256": "4954b73847fc50bb6c12f79d86258cfa7fe67e40c8a6601803c2ebcee92e5cae"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/otomo/juka_incarnate.webp",
+        "sha256": "bb767c8a533935e5ab0132bdec0e88eccb393272bcf04597545c33bcc03ed8c2"
+      }
+    ],
+    "fukuei-haku-spirit": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+        "sha256": "d379f5e4fad4bbdcbb4e7415176e935b7807a08cae83439367eb866517cacdf5"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_front.webp",
+        "sha256": "6690c13bc61d3a55570a0da567f4aa3b017104322d6b9d2d5c96ef66dc57d257"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/otomo/haku_spirit.webp",
+        "sha256": "968fddfb130269df37b93d42a2459adaa4352d7861d3d22f291048d3effc7396"
+      }
+    ],
+    "shouren-shofuku-doji": [
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+        "sha256": "328ac59724358ffe3b4f940672816e339d20486affd83017adc5c549bdc90dc6"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_front.webp",
+        "sha256": "6f64d85f633c11aba2527134d085300f6c295fa40bf698606eab7d50c481d2db"
+      },
+      {
+        "file": "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_doji.webp",
+        "sha256": "e2296971b394877a6d81a64e1d626515f729a426e7c7d6a30e821cc824dca983"
+      }
+    ]
+  },
+  "assets": [
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-01-v001",
+      "pairId": "ebisu-taimaru",
+      "godId": "ebisu",
+      "otomoId": "taimaru",
+      "otomoForm": "DOJI",
+      "referenceSet": "ebisu-taimaru-doji",
+      "generatedAt": "2026-07-23T19:30:48+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/call_ULMdX1UpIPtj4lu2DNt6XYoT.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-01-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "7620f6fe22cf4e95b9b26862dc372a02748dd842e6ba8c5dc5e19b7948f9a245",
+      "recreation": "Celestial welcome-deck scene rebuilt with the pair on a compact upper floating dais and lower mobile copy space cleared.",
+      "visualQa": "PASS"
+    },
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-02-v001",
+      "pairId": "taiyo-kozuchi",
+      "godId": "taiyo",
+      "otomoId": "kozuchi",
+      "otomoForm": "INCARNATE",
+      "referenceSet": "taiyo-kozuchi-incarnate",
+      "generatedAt": "2026-07-23T19:34:05+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/exec-7c36de89-bc30-42b4-bd4e-682dd1346e18.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-02-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "f1e82360ac10c912cb1d7abf1f97c976595db6cadc9039aa711eb478795c5ddd",
+      "recreation": "Solar launch terrace rebuilt around an upper compact pair and amber portal with dark desktop and mobile copy zones.",
+      "visualQa": "PASS"
+    },
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-03-v001",
+      "pairId": "sobi-momokatsu",
+      "godId": "sobi",
+      "otomoId": "momokatsu",
+      "otomoForm": "SPIRIT",
+      "referenceSet": "sobi-momokatsu-spirit",
+      "generatedAt": "2026-07-23T19:32:44+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/exec-6733c25a-b21e-4e9c-92e5-7060f1ef830a.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-03-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "c97ec51dc2f0d4ce233d0b0adda92c98a9f3897fe4b0572702385c2a5650580c",
+      "recreation": "Cyan sky bridge rebuilt with vertical polearm and shoulder-height SPIRIT inside the portrait-safe band.",
+      "visualQa": "PASS"
+    },
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-04-v001",
+      "pairId": "saika-kotone",
+      "godId": "saika",
+      "otomoId": "kotone",
+      "otomoForm": "DOJI",
+      "referenceSet": "saika-kotone-doji",
+      "generatedAt": "2026-07-23T19:36:53+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/exec-48d26136-1b6a-495d-83f0-e38705c3bb18.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-04-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "8798c85c666dbd2f76370c1171784f2be8a879fb7c3b2d10d31ddbe3d16a8c9f",
+      "recreation": "Violet sound garden rebuilt as a compact upper duo stage with both canonical instruments visible.",
+      "visualQa": "PASS"
+    },
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-05-v001",
+      "pairId": "juraku-juka",
+      "godId": "juraku",
+      "otomoId": "juka",
+      "otomoForm": "INCARNATE",
+      "referenceSet": "juraku-juka-incarnate",
+      "generatedAt": "2026-07-23T19:39:56+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/exec-c5a2c437-e1bd-4917-8b78-1d4697b23f93.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-05-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "13a82febf2bef8ab7fad5a37f6ceb9f8985742fdbc8c6e08deda1477759a16e0",
+      "recreation": "Verdant archive rebuilt with a compact pair and abstract light-map confined to the upper action area.",
+      "visualQa": "PASS"
+    },
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-06-v001",
+      "pairId": "fukuei-haku",
+      "godId": "fukuei",
+      "otomoId": "haku",
+      "otomoForm": "SPIRIT",
+      "referenceSet": "fukuei-haku-spirit",
+      "generatedAt": "2026-07-23T19:41:22+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/exec-fa49f48e-0049-4bc2-9dfb-53b53f941a56.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-06-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "8d49a359a712658a803f70a9da481a09915d2270ad175848b5b05ad6b4742457",
+      "recreation": "Quiet observatory rebuilt with upright family-safe staging and Haku SPIRIT at shoulder height.",
+      "visualQa": "PASS"
+    },
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-07-v001",
+      "pairId": "shouren-shofuku",
+      "godId": "shouren",
+      "otomoId": "shofuku",
+      "otomoForm": "DOJI",
+      "referenceSet": "shouren-shofuku-doji",
+      "generatedAt": "2026-07-23T19:43:33+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/exec-6de5ea4c-5a31-4673-83b5-8b0c85c4e034.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-07-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "e96b9a8362f3d064784d9dc1c413fe67777bf8f98c595c954b01e722783527d7",
+      "recreation": "Golden festival gate rebuilt with dignified side-by-side staging and the ceremonial prop covering the torso.",
+      "visualQa": "PASS"
+    },
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-08-v001",
+      "pairId": "ebisu-taimaru",
+      "godId": "ebisu",
+      "otomoId": "taimaru",
+      "otomoForm": "SPIRIT",
+      "referenceSet": "ebisu-taimaru-spirit",
+      "generatedAt": "2026-07-23T19:45:57+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/exec-be3d8e93-6e76-4857-bd5e-12f7f20c9f94.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-08-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "9078d0eea221c031b4e4303ed3341ae7949733e9deb6e2737b1cedecf7139ce6",
+      "recreation": "Crimson river portal rebuilt with a vertical fishing rod and shoulder-height Taimaru SPIRIT.",
+      "visualQa": "PASS"
+    },
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-09-v001",
+      "pairId": "saika-kotone",
+      "godId": "saika",
+      "otomoId": "kotone",
+      "otomoForm": "INCARNATE",
+      "referenceSet": "saika-kotone-incarnate",
+      "generatedAt": "2026-07-23T19:47:51+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/exec-9abf1f04-ab20-4cdf-a191-dfd021bdb1fd.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-09-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "1b0a85833997a6282c449db861c2326a5c192382548f8d9dc887c3801573b68f",
+      "recreation": "Neon harmony corridor rebuilt with complete guitar and INCARNATE partner in a compact diagonal cluster.",
+      "visualQa": "PASS"
+    },
+    {
+      "assetId": "MEDIA-my-sgg-home-hero-10-v001",
+      "pairId": "sobi-momokatsu",
+      "godId": "sobi",
+      "otomoId": "momokatsu",
+      "otomoForm": "DOJI",
+      "referenceSet": "sobi-momokatsu-doji",
+      "generatedAt": "2026-07-23T19:49:15+08:00",
+      "image2Output": "codex-generated://019f5ff9-b5ea-7691-b17b-90b114914786/exec-e1765e38-6bd2-41c5-85aa-0fe6e61f913d.png",
+      "finalFile": "MEDIA-my-sgg-home-hero-10-v001.png",
+      "dimensions": "1672x941",
+      "sha256": "cc5d9dd7bf7bc4e06a536a4e934c7f94cc380d9237c67a478bb4d6274296035d",
+      "recreation": "Guardian hall rebuilt as a compact ceremonial platform with vertical polearm and DOJI partner.",
+      "visualQa": "PASS"
+    }
+  ]
+}
