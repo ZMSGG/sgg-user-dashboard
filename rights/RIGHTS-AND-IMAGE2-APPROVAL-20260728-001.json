@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_ASSET_RIGHTS_AND_IMAGE2_APPROVAL",
+  "evidence_id": "RIGHTS-AND-IMAGE2-APPROVAL-20260728-001",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "recorded_at": "2026-07-28T16:08:49+08:00",
+  "recorded_by": "Codex MY SGG creative evidence operator",
+  "approved_by": "SGG project owner",
+  "approval_basis": "Owner instruction in the current task: the six Home visuals are approved so the rebuilt Home surface can be deployed and reviewed on a phone.",
+  "deployment_authorized": true,
+  "deployment_scope": "Owner-only private Sites deployment. Public access, added viewers, custom domain and search indexing remain unauthorized and are covered by BLK-PUBLICATION-001.",
+  "active_policy": {
+    "id": "SGG_CREATIVE_CHARACTER_USAGE_V2",
+    "path": "../SGG　司令塔/standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md",
+    "sha256": "e9b45204e2644f62d6975a07d44d3c7eda4b69c16370acd4c128a00283b4b4e1"
+  },
+  "character_usage": {
+    "selection": "BOTH",
+    "reason": "These are character key visuals for the Home surface: the GODS and their OTOMO partners are the subject, not decoration.",
+    "character_rights_dependency": true
+  },
+  "image2_production": {
+    "tool": "OpenAI Image 2.0 via Codex built-in image generation",
+    "mode": "GENERATE_NEW_SCENE_FROM_IDENTITY_REFERENCES",
+    "input_images": "creator-kit/v1 GOD main and front sheets plus the named OTOMO form sheet, used as identity references only",
+    "private_source_directly_embedded": false,
+    "reference_backgrounds_or_poses_copied": false
+  },
+  "approved_assets": [
+    {
+      "asset_id": "MEDIA-my-sgg-key-visual-v004",
+      "file": "public/dashboard-art/my-sgg-key-visual-v004.png",
+      "sha256": "9e49ed3d40b33030538916302d675f82f4044a726380c74a0d66c04381fe5e7d",
+      "dimensions": "2098x750",
+      "characters": [
+        {
+          "god": "ebisu"
+        },
+        {
+          "god": "saika"
+        },
+        {
+          "god": "sobi"
+        },
+        {
+          "god": "fukuei"
+        }
+      ],
+      "otomo_forms": [],
+      "note": "Four GODS grouped on the right so the left half stays clear for the hero copy."
+    },
+    {
+      "asset_id": "MEDIA-my-sgg-card-01-v001",
+      "file": "public/dashboard-art/cards/card-01.png",
+      "sha256": "a7e8788dccbc05b52838000ef0033d636fffbdb6039f1ebd5bc91a25fa4ed50a",
+      "characters": [
+        {
+          "god": "ebisu",
+          "otomo": "taimaru",
+          "form": "INCARNATE"
+        }
+      ]
+    },
+    {
+      "asset_id": "MEDIA-my-sgg-card-02-v001",
+      "file": "public/dashboard-art/cards/card-02.png",
+      "sha256": "86eb423d2e59cd903f471f88276096d46376e5d8cd66a0d294f4320c0558372c",
+      "characters": [
+        {
+          "god": "sobi",
+          "otomo": "momokatsu",
+          "form": "DOJI"
+        }
+      ]
+    },
+    {
+      "asset_id": "MEDIA-my-sgg-card-03-v001",
+      "file": "public/dashboard-art/cards/card-03.png",
+      "sha256": "7e191f550dd5976e41e7974004188cac72f55c03da3cd3168e891c221b966958",
+      "characters": [
+        {
+          "god": "saika",
+          "otomo": "kotone",
+          "form": "SPIRIT"
+        }
+      ]
+    },
+    {
+      "asset_id": "MEDIA-my-sgg-card-04-v001",
+      "file": "public/dashboard-art/cards/card-04.png",
+      "sha256": "cf324f48675c0994f6b8956ab0e82823a26759dc1ecb1b767f182e7d77eb2140",
+      "characters": [
+        {
+          "god": "juraku",
+          "otomo": "juka",
+          "form": "INCARNATE"
+        }
+      ]
+    },
+    {
+      "asset_id": "MEDIA-my-sgg-card-05-v001",
+      "file": "public/dashboard-art/cards/card-05.png",
+      "sha256": "8a698af82112524d718c7fcd3044ce6adab42197eeb9465d5d5af8df96548f26",
+      "characters": [
+        {
+          "god": "shouren",
+          "otomo": "shofuku",
+          "form": "DOJI"
+        }
+      ]
+    }
+  ],
+  "otomo_form_balance": {
+    "policy": "OTOMO_FORM_BALANCE_V1",
+    "distribution": {
+      "SPIRIT": 1,
+      "INCARNATE": 2,
+      "DOJI": 2
+    },
+    "note": "No SPIRIT bias; no single character is fixed as the representative of one form."
+  },
+  "visual_check": {
+    "checked_by": "SGG project owner",
+    "checked_at": "2026-07-28T16:08:49+08:00",
+    "method": "Rendered Home surface reviewed on the local development server at desktop and 390px mobile widths.",
+    "final_crop_identifiable": true
+  },
+  "not_authorized_by_this_record": [
+    "Public or shared Sites access",
+    "Additional viewers or groups",
+    "Custom domain attachment",
+    "Search engine indexing",
+    "Any SGP grant"
+  ]
+}

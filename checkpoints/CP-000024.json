@@ -1,0 +1,388 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000024",
+  "state_version": 24,
+  "created_at": "2026-07-28T08:49:08+08:00",
+  "previous_checkpoint_id": "CP-000023",
+  "summary": "Completed the Home rebuild against the owner-supplied mockup. The shell is now three columns (sidebar, main, persistent right rail); the main column carries the hero, a five-card feature row with character key art, the play-now grid and the official feed; the rail carries OTOMO STATUS, LIVE ARENA, SEVEN COLLECTION with a counted collections-held meter, and a NEXT STEPS list ticked from real connection state; and an eight-entry illustrated dock sits at the bottom. Dock and navigation icons are authored as inline SVG rather than generated raster so they stay crisp at any size and inherit each surface's tone colour. Card artwork reuses the five already canon-verified candidate images rather than generating new assets. Every figure remains read from the ledger or Ethereum mainnet: the mockup's GOLD, GEM, Lv.77, Lv.32, 1,234位, 収集率78% and DAILY MISSION were not implemented, the growth panel reads 未接続, and the collection meter counts how many of the four SGG collections the wallet holds rather than estimating completion against an unknown target. Three defects found and fixed during the rebuild: the hero title overflowed to four lines once the rail narrowed the column, the key visual cropped its characters away at the narrower width, and the card art overlay was opaque enough to hide the artwork. Lint, typecheck, production build and 70 tests pass, and the rendered shell, dock, cards and rail were verified at 1568px. The key visual and all five card artworks are recorded PENDING_APPROVAL and must not be deployed until the owner approves each exact file and hash.",
+  "project_basis_sha256": "2de7d8486e1ca5389ad484d9e7ab85ef336de817621e668e765e54b6b979d29a",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 24,
+    "updated_at": "2026-07-28T08:49:08+08:00",
+    "updated_by": "Codex",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Have the owner review the rebuilt Home surface and approve or reject the exact key visual and five card artwork files and their SHA-256 values, keeping every unapproved asset out of any deployment until that approval is recorded.",
+    "last_summary": "Completed the Home rebuild against the owner-supplied mockup. The shell is now three columns (sidebar, main, persistent right rail); the main column carries the hero, a five-card feature row with character key art, the play-now grid and the official feed; the rail carries OTOMO STATUS, LIVE ARENA, SEVEN COLLECTION with a counted collections-held meter, and a NEXT STEPS list ticked from real connection state; and an eight-entry illustrated dock sits at the bottom. Dock and navigation icons are authored as inline SVG rather than generated raster so they stay crisp at any size and inherit each surface's tone colour. Card artwork reuses the five already canon-verified candidate images rather than generating new assets. Every figure remains read from the ledger or Ethereum mainnet: the mockup's GOLD, GEM, Lv.77, Lv.32, 1,234位, 収集率78% and DAILY MISSION were not implemented, the growth panel reads 未接続, and the collection meter counts how many of the four SGG collections the wallet holds rather than estimating completion against an unknown target. Three defects found and fixed during the rebuild: the hero title overflowed to four lines once the rail narrowed the column, the key visual cropped its characters away at the narrower width, and the card art overlay was opaque enough to hide the artwork. Lint, typecheck, production build and 70 tests pass, and the rendered shell, dock, cards and rail were verified at 1568px. The key visual and all five card artworks are recorded PENDING_APPROVAL and must not be deployed until the owner approves each exact file and hash.",
+    "last_checkpoint_id": "CP-000024",
+    "last_checkpoint_path": "checkpoints/CP-000024.json",
+    "active_work": {
+      "work_id": "ACT-023",
+      "objective": "Obtain owner approval or rejection of the Home key visual and card artwork before any deployment carries them.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Owner views the rendered Home surface and confirms the GODS and OTOMO forms are canon-accurate at each final crop.",
+        "Owner records approval of the key visual and the five card artwork files with their SHA-256 values, or requests new directions.",
+        "No deployment ships any asset whose manifest row still reads PENDING_APPROVAL.",
+        "No fabricated balance, level, progress percentage or mission count is introduced to match the mockup."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      },
+      {
+        "action_id": "ACT-017",
+        "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
+          "drizzle/0004_yielding_dormammu.sql",
+          "app/api/link/otomo-chain/route.ts"
+        ],
+        "completed_at": "2026-07-26T18:55:57+08:00",
+        "checkpoint_id": "CP-000022"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-023",
+        "order": 1,
+        "action": "Review the rebuilt Home surface and approve or reject the key visual and the five card artwork files by exact hash.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-022",
+        "order": 2,
+        "action": "Add the OTOMO CHAIN redirect URI to the approved MY SGG Discord application and set DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET in the OTOMO CHAIN Vercel project so discord_enabled becomes true.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-024",
+        "order": 3,
+        "action": "Review the two drifted command-center policy files (OTOMO_FORM_BALANCE_V1.md and canon/TERMINOLOGY.md, both changed 2026-07-26 19:33) and refresh their recorded hashes deliberately; validation fails until then.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-021",
+        "order": 4,
+        "action": "Adapt dashboard reconciliation to the game's verified Discord ID after the concurrent OTOMO CHAIN work is committed and its export shape can be read from source.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-CONCURRENT-GAME-SESSION-001"
+        ]
+      },
+      {
+        "action_id": "ACT-018",
+        "order": 5,
+        "action": "After the season ends on 2026-08-08T00:00:00Z, configure the OTOMO CHAIN export secrets, run the reconcile dry run, resolve anything ambiguous by hand, then run the payout dry run with a decided award table before applying.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-OTOMO-CHAIN-EXPORT-001",
+          "BLK-SGP-AWARD-TABLE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 6,
+        "action": "Complete a real DM code login and two-account isolation check with two consenting Discord test identities before any audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 7,
+        "action": "Upgrade to stable Next and Cloudflare or Miniflare versions that officially support patched Sharp, then remove the temporary non-reachable exception.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 8,
+        "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing in-game progress or resources.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 9,
+        "action": "Request and record separate authority before public or shared access, a custom domain, search indexing, or added viewers and groups.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-KEY-VISUAL-APPROVAL-001",
+        "scope": "CREATIVE_APPROVAL",
+        "severity": "P1",
+        "description": "The v004 Home key visual and five Home card artworks are generated, canon-referenced and wired into the local runtime, but none carry owner approval. Their manifest rows are PENDING_APPROVAL and policy forbids treating an unapproved visual as deliverable or publishable, so any deployment must either exclude them or wait for recorded approval of each exact file and hash.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Review the final crops, confirm the GODS and OTOMO forms are canon-accurate, and record approval of the key visual SHA-256 9e49ed3d40b33030538916302d675f82f4044a726380c74a0d66c04381fe5e7d and of the five card artworks, or request new directions."
+      },
+      {
+        "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+        "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+        "severity": "P1",
+        "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+      },
+      {
+        "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+        "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+        "severity": "P1",
+        "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+      },
+      {
+        "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+        "scope": "REWARD_VALUE_AUTHORITY",
+        "severity": "P1",
+        "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Version 12 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      }
+    ],
+    "decisions_needed": [],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "app/Dashboard.tsx",
+        "sha256": "b282aace70e20c5e4dab3b8139bd4142f2e7f6be0b31ee9c1a5f60831122dd58",
+        "reason": "Three-column Home layout, five-card feature row with artwork, right rail with meter and next-steps, bottom dock."
+      },
+      {
+        "path": "app/DockIcons.tsx",
+        "sha256": "399138bc99bc8d5b6d378cd9cdcfad703f39b79a515fab63e549f0d86869e9a9",
+        "reason": "Inline SVG icon set for the dock and quick access, tone-inheriting and resolution independent."
+      },
+      {
+        "path": "app/Dashboard.module.css",
+        "sha256": "bf85cebdda018a82756c7e05b1a4a0b5d4e02e40c35c1ee1214d7ee9350b23f5",
+        "reason": "Home layout, rail, feature row, card artwork, dock and meter styles plus hero sizing for the narrower column."
+      },
+      {
+        "path": "public/dashboard-art/cards/card-01.png",
+        "sha256": "a7e8788dccbc05b52838000ef0033d636fffbdb6039f1ebd5bc91a25fa4ed50a",
+        "reason": "Card artwork reused from a canon-verified candidate; unapproved and not deployable."
+      },
+      {
+        "path": "public/dashboard-art/cards/card-02.png",
+        "sha256": "86eb423d2e59cd903f471f88276096d46376e5d8cd66a0d294f4320c0558372c",
+        "reason": "Card artwork reused from a canon-verified candidate; unapproved and not deployable."
+      },
+      {
+        "path": "public/dashboard-art/cards/card-03.png",
+        "sha256": "7e191f550dd5976e41e7974004188cac72f55c03da3cd3168e891c221b966958",
+        "reason": "Card artwork reused from a canon-verified candidate; unapproved and not deployable."
+      },
+      {
+        "path": "public/dashboard-art/cards/card-04.png",
+        "sha256": "cf324f48675c0994f6b8956ab0e82823a26759dc1ecb1b767f182e7d77eb2140",
+        "reason": "Card artwork reused from a canon-verified candidate; unapproved and not deployable."
+      },
+      {
+        "path": "public/dashboard-art/cards/card-05.png",
+        "sha256": "8a698af82112524d718c7fcd3044ce6adab42197eeb9465d5d5af8df96548f26",
+        "reason": "Card artwork reused from a canon-verified candidate; unapproved and not deployable."
+      },
+      {
+        "path": "assets/candidates/home-cards-v001/media-my-sgg-card-01-v001.png",
+        "sha256": "a7e8788dccbc05b52838000ef0033d636fffbdb6039f1ebd5bc91a25fa4ed50a",
+        "reason": "Candidate copy held outside the runtime path."
+      },
+      {
+        "path": "assets/candidates/home-cards-v001/media-my-sgg-card-02-v001.png",
+        "sha256": "86eb423d2e59cd903f471f88276096d46376e5d8cd66a0d294f4320c0558372c",
+        "reason": "Candidate copy held outside the runtime path."
+      },
+      {
+        "path": "assets/candidates/home-cards-v001/media-my-sgg-card-03-v001.png",
+        "sha256": "7e191f550dd5976e41e7974004188cac72f55c03da3cd3168e891c221b966958",
+        "reason": "Candidate copy held outside the runtime path."
+      },
+      {
+        "path": "assets/candidates/home-cards-v001/media-my-sgg-card-04-v001.png",
+        "sha256": "cf324f48675c0994f6b8956ab0e82823a26759dc1ecb1b767f182e7d77eb2140",
+        "reason": "Candidate copy held outside the runtime path."
+      },
+      {
+        "path": "assets/candidates/home-cards-v001/media-my-sgg-card-05-v001.png",
+        "sha256": "8a698af82112524d718c7fcd3044ce6adab42197eeb9465d5d5af8df96548f26",
+        "reason": "Candidate copy held outside the runtime path."
+      },
+      {
+        "path": "assets/ASSET_MANIFEST.csv",
+        "sha256": "0124ed9ca934ebf91457e8733608074c61afb1864a87eb35b4e6ee65dbc2e84b",
+        "reason": "Record card artwork provenance, hashes, GODS and OTOMO form metadata and PENDING_APPROVAL status."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-023",
+      "instruction": "Show the owner the rebuilt Home surface and ask for approval or rejection of the key visual and the five card artworks by exact hash. Do not deploy while any manifest row reads PENDING_APPROVAL. Do not add any balance, level, progress percentage or mission figure that is not read from the ledger or the chain. Do not edit the OTOMO CHAIN repository while another session holds work there. Validation currently fails on two drifted command-center policy hashes, which must be reviewed by the owner rather than silently refreshed.",
+      "do_not_assume": [
+        "The key visual or any card artwork is approved, deliverable or publishable; all are PENDING_APPROVAL.",
+        "The mockup's GOLD, GEM, Lv, ranking position, collection percentage or daily missions exist; none of them do.",
+        "The collections-held meter is a completion percentage; it counts collections held out of four.",
+        "Validation passes; two command-center policy hashes drifted on 2026-07-26 and need explicit owner review.",
+        "This session changed anything in the OTOMO CHAIN repository.",
+        "Any publication, audience expansion or point grant is authorized."
+      ]
+    }
+  },
+  "resulting_state_sha256": "9f854ae4feb742c8595474c958c4469ff1171b8f7dceb72dda9fda55d9de3c97"
+}

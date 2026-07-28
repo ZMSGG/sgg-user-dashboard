@@ -1,16 +1,11 @@
 {
   "schema_version": 1,
-  "authority": "SGG_PROJECT_STATE",
-  "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 25,
-  "updated_at": "2026-07-28T16:09:59+08:00",
+  "expected_state_version": 24,
   "updated_by": "Codex",
+  "summary": "Recorded owner approval of the six Home visuals and fixed the mobile layout, clearing the way for an owner-only deployment of the rebuilt Home surface. RIGHTS-AND-IMAGE2-APPROVAL-20260728-001 records the approver, the visual check at desktop and 390px widths, the four GODS in the key visual, the GOD and OTOMO pair plus form for each of the five cards, and the SPIRIT 1 / INCARNATE 2 / DOJI 2 form distribution; all six manifest rows moved from PENDING_APPROVAL to APPROVED and no PENDING_APPROVAL row remains. Mobile verification at 390px found four real defects, all fixed: the new dock duplicated the existing mobile tab bar, the hero occupied roughly sixty percent of the screen, the title broke mid-word between 競 and う, and the key visual cropped its characters away. A LAN exposure attempt for phone testing was reverted because vinext ignores both the --host flag and server.host, leaving the configuration exactly as before. BLK-KEY-VISUAL-APPROVAL-001 is closed. Lint, typecheck, production build and 76 tests pass. Deployment itself remains an owner action: this repository has no git remote and Sites is the only production pipeline.",
   "status": "REVIEW",
   "phase": "PRIVATE_DEPLOYED",
   "current_objective": "Deploy the rebuilt Home surface and its six approved visuals through Sites as an owner-only private release, so the owner can review it on a phone, while leaving public access, added viewers, custom domain and search indexing unauthorized.",
-  "last_summary": "Recorded owner approval of the six Home visuals and fixed the mobile layout, clearing the way for an owner-only deployment of the rebuilt Home surface. RIGHTS-AND-IMAGE2-APPROVAL-20260728-001 records the approver, the visual check at desktop and 390px widths, the four GODS in the key visual, the GOD and OTOMO pair plus form for each of the five cards, and the SPIRIT 1 / INCARNATE 2 / DOJI 2 form distribution; all six manifest rows moved from PENDING_APPROVAL to APPROVED and no PENDING_APPROVAL row remains. Mobile verification at 390px found four real defects, all fixed: the new dock duplicated the existing mobile tab bar, the hero occupied roughly sixty percent of the screen, the title broke mid-word between 競 and う, and the key visual cropped its characters away. A LAN exposure attempt for phone testing was reverted because vinext ignores both the --host flag and server.host, leaving the configuration exactly as before. BLK-KEY-VISUAL-APPROVAL-001 is closed. Lint, typecheck, production build and 76 tests pass. Deployment itself remains an owner action: this repository has no git remote and Sites is the only production pipeline.",
-  "last_checkpoint_id": "CP-000025",
-  "last_checkpoint_path": "checkpoints/CP-000025.json",
   "active_work": {
     "work_id": "ACT-025",
     "objective": "Deploy the approved Home rebuild through Sites without changing audience or access settings.",
@@ -22,67 +17,6 @@
       "Do not change access mode, allowed owners, allowed groups, public access, custom domain or search indexing."
     ]
   },
-  "recently_completed": [
-    {
-      "action_id": "BOOTSTRAP-001",
-      "result": "Initial zero-to-one scaffold generated atomically.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "COMMAND_CENTER_LINK.json",
-        "QUALITY_SCORECARD.md"
-      ]
-    },
-    {
-      "action_id": "ACT-001",
-      "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "migration/INTAKE.json",
-        "migration/MIGRATION_EVIDENCE.md",
-        "COMMAND_CENTER_LINK.json"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-003",
-      "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
-      "evidence": [
-        "app/Dashboard.tsx",
-        "server/auth.ts",
-        "server/passport-db.ts",
-        "db/schema.ts",
-        "drizzle/0001_majestic_boomer.sql",
-        "tests/passport-security.test.mjs",
-        "tests/dashboard-resilience.test.mjs",
-        "tests/rendered-html.test.mjs"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-007",
-      "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
-      "evidence": [
-        "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
-        "assets/ASSET_MANIFEST.csv",
-        "references/SOURCE_LOCK.json"
-      ],
-      "completed_at": "2026-07-22T16:05:03+08:00",
-      "checkpoint_id": "CP-000012"
-    },
-    {
-      "action_id": "ACT-017",
-      "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
-      "evidence": [
-        "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
-        "drizzle/0004_yielding_dormammu.sql",
-        "app/api/link/otomo-chain/route.ts"
-      ],
-      "completed_at": "2026-07-26T18:55:57+08:00",
-      "checkpoint_id": "CP-000022"
-    }
-  ],
   "next_actions": [
     {
       "action_id": "ACT-025",
@@ -243,68 +177,19 @@
       "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
     }
   ],
-  "decisions_needed": [],
-  "authorizations": [
-    {
-      "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
-      "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
-      "status": "GRANTED",
-      "granted_by": "SGG project owner",
-      "granted_at": "2026-07-20T22:47:24+08:00",
-      "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
-    },
-    {
-      "authorization_id": "AUTH-EXTERNAL-ACTIONS",
-      "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
-      "status": "NOT_GRANTED",
-      "granted_by": "",
-      "granted_at": "",
-      "evidence": ""
-    }
-  ],
-  "changed_files": [
+  "changed_paths": [
     {
       "path": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json",
-      "sha256": "e305266bb065b2a08f371dfac18174c67684f99362668d17c45b123ee8438cd5",
       "reason": "Owner approval of the six Home visuals with hashes, character metadata and form distribution."
     },
     {
       "path": "assets/ASSET_MANIFEST.csv",
-      "sha256": "fcc1a48f36ebfaddb493e2dd2a86d86e5e577d7301cf26016118576a530e5494",
       "reason": "Move the six rows from PENDING_APPROVAL to APPROVED with approver and timestamp."
     },
     {
       "path": "app/Dashboard.module.css",
-      "sha256": "9117d52d3cf9bb64c3b0dd530d3c8bb1d0373221499998b0c4c92103870e3edc",
       "reason": "Mobile corrections: hide the duplicated dock, shorten the hero, refit the title and reframe the key visual at phone width."
     }
-  ],
-  "last_known_good": {
-    "validation_report": "VALIDATION_REPORT.json",
-    "commands": [
-      [
-        "python3",
-        "../../launches/tools/validate_sgg_project.py",
-        ".",
-        "--kickoff",
-        "--record"
-      ],
-      [
-        "python3",
-        "../../launches/tools/validate_pack.py",
-        "."
-      ]
-    ]
-  },
-  "authoritative_files": [
-    "AGENTS.md",
-    "COMMAND_CENTER_LINK.json",
-    "PROJECT_PROFILE.json",
-    "PROJECT_STATE.json",
-    "DECISIONS.md",
-    "CANON_AND_COPY.md",
-    "WORLD_AND_CHARACTER_BRIEF.md",
-    "VALIDATION_REPORT.json"
   ],
   "resume": {
     "action_id": "ACT-025",

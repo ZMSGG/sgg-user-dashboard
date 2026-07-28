@@ -27,6 +27,16 @@ import {
   type GameSummary,
   type ReleaseState,
 } from "./dashboard-data";
+import {
+  IconArena,
+  IconCommunity,
+  IconGames,
+  IconLedger,
+  IconOracle,
+  IconOtomo,
+  IconPassport,
+  IconVault,
+} from "./DockIcons";
 import { emptyLiveData, type LiveData, type LiveRanking } from "./live-contract";
 import type { AdminPlayerRow, PassportData } from "./passport-contract";
 import styles from "./Dashboard.module.css";
@@ -162,6 +172,27 @@ async function requestHoldings(): Promise<HoldingsData> {
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return await response.json() as HoldingsData;
+}
+
+/** Unconnected and failed reads stay distinguishable from a real zero. */
+function holdingValue(data: HoldingsData | null, id: string): string {
+  if (!data?.linked) return "未接続";
+  const holding = data.holdings.find((item) => item.id === id);
+  return holding?.balance ?? "未取得";
+}
+
+/** OTOMO are three separate contracts; the chip shows the whole family. */
+function otomoHoldingTotal(data: HoldingsData | null): string {
+  if (!data?.linked) return "未接続";
+  const otomo = data.holdings.filter((item) => item.id.startsWith("otomo-"));
+  if (otomo.some((item) => item.balance === null)) return "未取得";
+  return String(otomo.reduce((sum, item) => sum + Number(item.balance ?? 0), 0));
+}
+
+/** How many of the four SGG collections the wallet holds at least one of. */
+function heldCollections(data: HoldingsData | null): number {
+  if (!data?.linked) return 0;
+  return data.holdings.filter((item) => item.kind === "NFT" && Number(item.balance ?? 0) > 0).length;
 }
 
 async function requestOtomoChainLink(): Promise<GameLinkData> {
@@ -606,13 +637,13 @@ export function Dashboard() {
     return () => { cancelled = true; window.clearTimeout(timeout); };
   }, [passport?.connected]);
 
-  // Holdings are an RPC fan-out, so they load when the Vault is actually
-  // opened rather than on every Passport refresh.
+  // Holdings feed both the Vault and the top-bar chips, so they load once per
+  // connected session rather than per view.
   useEffect(() => {
     const connected = Boolean(passport?.connected);
     let cancelled = false;
     const timeout = window.setTimeout(() => {
-      if (!connected || activeView !== "collection") return;
+      if (!connected) return;
       setHoldingsState("loading");
       void (async () => {
         try {
@@ -626,7 +657,7 @@ export function Dashboard() {
       })();
     }, 0);
     return () => { cancelled = true; window.clearTimeout(timeout); };
-  }, [passport?.connected, activeView]);
+  }, [passport?.connected]);
 
   useEffect(() => {
     if (!dmChallenge) return;
@@ -1104,6 +1135,23 @@ export function Dashboard() {
             </a>
           ))}
         </nav>
+        {passport?.connected && (
+          <button type="button" className={styles.passportCard} onClick={() => changeView("mysgg")}>
+            <small>PLAYER PASSPORT</small>
+            <div>
+              {passport.player.avatarUrl
+                // eslint-disable-next-line @next/next/no-img-element
+                ? <img src={passport.player.avatarUrl} alt="" width={38} height={38} />
+                : <span className={styles.passportInitial} aria-hidden="true">{passport.player.username.slice(0, 1).toUpperCase()}</span>}
+              <strong>{passport.player.globalName ?? passport.player.username}</strong>
+            </div>
+            <dl className={styles.passportStats}>
+              <div><dt>SGP</dt><dd>{number.format(passport.points.balance)}</dd></div>
+              <div><dt>SDT</dt><dd>{holdingValue(holdings, "sdt")}</dd></div>
+              <div><dt>OTOMO</dt><dd>{otomoHoldingTotal(holdings)}</dd></div>
+            </dl>
+          </button>
+        )}
         <section className={styles.sidebarStatus}>
           <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount === 4} />{runtimeSummary}</span>
           <small>PLAYER DATA BRIDGE · NOT CONNECTED</small>
@@ -1152,6 +1200,25 @@ export function Dashboard() {
                 )) : <div className={styles.searchEmpty}>一致する公開情報はありません</div>}
               </div>
             )}
+          </div>
+          {/* Real balances only. A value that is not connected reads 未接続,
+              never a placeholder number. */}
+          <div className={styles.walletStrip} aria-label="保有状況">
+            <span data-tone="gold">
+              <i aria-hidden="true">◈</i>
+              <b>{passport?.connected ? number.format(passport.points.balance) : "未接続"}</b>
+              <small>SGP</small>
+            </span>
+            <span data-tone="violet">
+              <i aria-hidden="true">◆</i>
+              <b>{holdingValue(holdings, "sdt")}</b>
+              <small>SDT</small>
+            </span>
+            <span data-tone="cyan">
+              <i aria-hidden="true">❖</i>
+              <b>{otomoHoldingTotal(holdings)}</b>
+              <small>OTOMO</small>
+            </span>
           </div>
           <div className={styles.topActions}>
             <button type="button" className={styles.iconButton} onClick={() => void loadLiveData()} aria-label="公開データを再同期" aria-busy={syncing} disabled={syncing}>
@@ -1217,49 +1284,84 @@ export function Dashboard() {
           </div>
 
           {activeView === "home" && (
-            <div className={styles.viewStack}>
-              <section className={styles.hero} aria-labelledby="hero-title">
-                <Image src="/dashboard-art/my-sgg-key-visual-v002.png" alt="七つのゲートがプレイヤークリスタルへ接続するMY SGGの神域" fill priority sizes="(max-width: 900px) 100vw, 82vw" />
-                <div className={styles.heroShade} />
-                <div className={styles.heroCopy}>
-                  <p>SEVENGODS GAMES / PLAYER OS</p>
-                  <h1 id="hero-title">遊ぶ。競う。集める。<br /><em>すべてを、ひとつに。</em></h1>
-                  <span>公開中のゲーム、神託番付、キャラクター図鑑、公式アップデートを一つの司令席から。</span>
-                  <div>
-                    <button type="button" onClick={() => changeView("games")}>今すぐ遊ぶ<span aria-hidden="true">→</span></button>
-                    <button type="button" onClick={() => changeView("arena")}>ライブ番付を見る</button>
+            <div className={styles.homeLayout}>
+              <div className={styles.homeMain}>
+                <section className={styles.hero} aria-labelledby="hero-title">
+                  <Image src="/dashboard-art/my-sgg-key-visual-v004.png" alt="神域の大聖堂で恵比寿、才華、蒼毘、福永の四柱が集うMY SGGのキービジュアル" fill priority sizes="(max-width: 900px) 100vw, 62vw" />
+                  <div className={styles.heroShade} />
+                  <div className={styles.heroCopy}>
+                    <p>SEVENGODS GAMES / PLAYER OS</p>
+                    <h1 id="hero-title">遊ぶ。競う。集める。<br /><em>すべてを、ひとつに。</em></h1>
+                    <span>神々とOTOMOが共に紡ぐゲームエコシステム。さあ、あなたの物語を始めよう。</span>
+                    <div>
+                      <button type="button" onClick={() => changeView("games")}>今すぐ遊ぶ<span aria-hidden="true">→</span></button>
+                      <button type="button" onClick={() => changeView("arena")}>ライブ番付を見る</button>
+                    </div>
                   </div>
-                </div>
-                <div className={styles.heroSignal}>
-                  <small>NETWORK</small><strong>{runtimeSummary}</strong><span>LIVE HEALTH · {formatSyncTime(liveData.checkedAt)}</span>
-                </div>
-              </section>
+                  <div className={styles.heroSignal}>
+                    <small>NETWORK</small><strong>{runtimeSummary}</strong><span>LIVE HEALTH · {formatSyncTime(liveData.checkedAt)}</span>
+                  </div>
+                </section>
 
-              <section className={styles.metricStrip} aria-label="SGG公開状態">
-                <button type="button" onClick={() => changeView("games")}><small>PLAYABLE</small><strong>{releaseStateCounts.LIVE}</strong><span>公開runtime</span></button>
-                <button type="button" onClick={() => changeView("arena")}><small>LIVE BOARDS</small><strong>{competitions.length}</strong><span>公開番付</span></button>
-                <button type="button" onClick={() => changeView("collection")}><small>CANON PAIRS</small><strong>{characterPairs.length}</strong><span>GODS × OTOMO</span></button>
-                <button type="button" onClick={() => changeView("community")}><small>PUBLISHED</small><strong>02</strong><span>公式更新</span></button>
-              </section>
+                <section className={styles.featureRow} aria-label="主要導線">
+                  <article data-tone="gold">
+                    <div className={styles.featureArt}>
+                      <Image src="/dashboard-art/cards/card-01.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "82% 46%" }} />
+                    </div>
+                    <small>PLAY NOW</small><h3>公開中のゲーム</h3>
+                    <b>{releaseStateCounts.LIVE}</b><span>稼働中のruntime</span>
+                    <button type="button" onClick={() => changeView("games")}>今すぐプレイ</button>
+                  </article>
+                  <article data-tone="violet">
+                    <div className={styles.featureArt}>
+                      <Image src="/dashboard-art/cards/card-02.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 50%" }} />
+                    </div>
+                    <small>LIVE RANKING</small><h3>ライブ番付</h3>
+                    <b>{competitions.length}</b><span>公開中の番付</span>
+                    <button type="button" onClick={() => changeView("arena")}>ランキングを見る</button>
+                  </article>
+                  <article data-tone="cyan">
+                    <div className={styles.featureArt}>
+                      <Image src="/dashboard-art/cards/card-03.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "72% 38%" }} />
+                    </div>
+                    <small>DIVINE COLLECTION</small><h3>神々コレクション</h3>
+                    <b>{characterPairs.length}</b><span>GODS × OTOMO</span>
+                    <button type="button" onClick={() => changeView("collection")}>コレクションへ</button>
+                  </article>
+                  <article data-tone="green">
+                    <div className={styles.featureArt}>
+                      <Image src="/dashboard-art/cards/card-04.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 34%" }} />
+                    </div>
+                    <small>OTOMO GROWTH</small><h3>OTOMO育成</h3>
+                    <b>未接続</b><span>ゲーム側ブリッジ待ち</span>
+                    <button type="button" onClick={() => changeView("collection")}>接続状況を見る</button>
+                  </article>
+                  <article data-tone="coral">
+                    <div className={styles.featureArt}>
+                      <Image src="/dashboard-art/cards/card-05.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "70% 40%" }} />
+                    </div>
+                    <small>COMMUNITY FEED</small><h3>コミュニティ</h3>
+                    <b>{communityItems.filter((item) => item.status === "PUBLISHED").length}</b><span>公開済みの更新</span>
+                    <button type="button" onClick={() => changeView("community")}>もっと見る</button>
+                  </article>
+                </section>
 
-              <section className={styles.todaySection}>
-                <SectionTitle kicker="TODAY / PLAY NOW" title="いま戻る場所" copy="ログイン後の進行は各ゲームで安全に確認。公開プレイはここから直接起動できます。" action={<button type="button" className={styles.textButton} onClick={() => changeView("games")}>全ゲームを見る →</button>} />
-                <div className={styles.todayGrid}>
-                  {games.filter((game) => game.releaseState === "LIVE").map((game) => {
-                    const runtimeState = getRuntimeState(game.id);
-                    return <article key={game.id} data-tone={game.accent}>
-                      <div className={styles.todayGlyph} aria-hidden="true">{game.glyph}</div>
-                      <span><Dot active={runtimeState === "online"} />{game.shortTitle} · {runtimeState === "online" ? "ONLINE" : runtimeState === "checking" ? "CHECKING" : "稼働確認不可"}</span>
-                      <h3>{game.nextAction}</h3>
-                      <p>{game.nextActionMeta}</p>
-                      {game.officialUrl && <ExternalLink href={game.officialUrl}>{game.primaryAction}</ExternalLink>}
-                    </article>;
-                  })}
-                </div>
-              </section>
+                <section className={styles.todaySection}>
+                  <SectionTitle kicker="TODAY / PLAY NOW" title="いま戻る場所" copy="ログイン後の進行は各ゲームで安全に確認。公開プレイはここから直接起動できます。" action={<button type="button" className={styles.textButton} onClick={() => changeView("games")}>全ゲームを見る →</button>} />
+                  <div className={styles.todayGrid}>
+                    {games.filter((game) => game.releaseState === "LIVE").map((game) => {
+                      const runtimeState = getRuntimeState(game.id);
+                      return <article key={game.id} data-tone={game.accent}>
+                        <div className={styles.todayGlyph} aria-hidden="true">{game.glyph}</div>
+                        <span><Dot active={runtimeState === "online"} />{game.shortTitle} · {runtimeState === "online" ? "ONLINE" : runtimeState === "checking" ? "CHECKING" : "稼働確認不可"}</span>
+                        <h3>{game.nextAction}</h3>
+                        <p>{game.nextActionMeta}</p>
+                        {game.officialUrl && <ExternalLink href={game.officialUrl}>{game.primaryAction}</ExternalLink>}
+                      </article>;
+                    })}
+                  </div>
+                </section>
 
-              <div className={styles.homeGrid}>
-                <Leaderboard title="神託番付" subtitle={`OTOMO ORACLE 7 · DAY ${liveData.oracle.day ?? "—"}`} entries={liveData.oracle.entries} state={oracleSourceState} accent="cyan" />
                 <section className={styles.feedPreview}>
                   <SectionTitle kicker="OFFICIAL FEED" title="公開済みアップデート" copy="公開台帳が確認できた投稿のみ。" />
                   {communityItems.filter((item) => item.status === "PUBLISHED").map((item) => (
@@ -1273,6 +1375,62 @@ export function Dashboard() {
                   <button type="button" className={styles.textButton} onClick={() => changeView("community")}>コミュニティセンターへ →</button>
                 </section>
               </div>
+
+              <aside className={styles.homeRail} aria-label="あなたの状態">
+                <section data-tone="green">
+                  <small>OTOMO STATUS</small>
+                  <h3>育成状況</h3>
+                  {/* No game exposes a signed player snapshot yet, so this stays empty. */}
+                  <p>ゲーム内の育成・進行はまだ接続されていません。署名済みスナップショットAPIが公開されると、Lv・EXP・絆がここに入ります。</p>
+                  <StatusPill accent="green">未接続</StatusPill>
+                </section>
+
+                <section data-tone="cyan">
+                  <small>LIVE ARENA</small>
+                  <h3>今日の番付 TOP 3</h3>
+                  {liveData.oracle.entries.length > 0 ? (
+                    <ol className={styles.railRanks}>
+                      {liveData.oracle.entries.slice(0, 3).map((entry) => (
+                        <li key={entry.rank}><b>{entry.rank}</b><span>{entry.name}</span><em>{number.format(entry.score)}</em></li>
+                      ))}
+                    </ol>
+                  ) : <p>{oracleSourceState === "checking" ? "公開番付を確認しています…" : "公開情報なし"}</p>}
+                  <button type="button" className={styles.textButton} onClick={() => changeView("arena")}>もっと見る →</button>
+                </section>
+
+                <section data-tone="violet">
+                  <small>SEVEN COLLECTION</small>
+                  <h3>オンチェーン保有</h3>
+                  <b className={styles.railBig}>{otomoHoldingTotal(holdings)}</b>
+                  {/* The bar shows how many of the four SGG collections the
+                      wallet holds at all — a counted fact, not a completion
+                      estimate against an unknown target. */}
+                  {holdings?.linked && (
+                    <>
+                      <div className={styles.meterLabel}>
+                        <span>COLLECTIONS HELD</span><span>{heldCollections(holdings)} / 4</span>
+                      </div>
+                      <div className={styles.meter}>
+                        <span style={{ width: `${(heldCollections(holdings) / 4) * 100}%` }} />
+                      </div>
+                    </>
+                  )}
+                  <p>OTOMO 精霊体・受肉体・童子の合計。GODS {holdingValue(holdings, "gods")}体。</p>
+                  <button type="button" className={styles.textButton} onClick={() => changeView("collection")}>コレクションへ →</button>
+                </section>
+
+                <section data-tone="gold">
+                  <small>NEXT STEPS</small>
+                  <h3>次にできること</h3>
+                  {/* Real outstanding actions for this player, not a fabricated mission list. */}
+                  <ul className={styles.railSteps}>
+                    <li data-done={passport?.connected ? "true" : "false"}>Discord Passportへ接続</li>
+                    <li data-done={passport?.connected && passport.player.walletAddress ? "true" : "false"}>Walletを連携して保有を表示</li>
+                    <li data-done={gameLink?.verified ? "true" : "false"}>OTOMO CHAINのアカウントを連携</li>
+                  </ul>
+                  <button type="button" className={styles.textButton} onClick={() => changeView("mysgg")}>マイSGGへ →</button>
+                </section>
+              </aside>
             </div>
           )}
 
@@ -1834,6 +1992,19 @@ export function Dashboard() {
             </div>
           )}
         </main>
+
+        {/* Illustrated dock mirroring the primary destinations. Every entry
+            routes to a real view; nothing here is a placeholder. */}
+        <nav className={styles.dock} aria-label="クイックアクセス">
+          <button type="button" onClick={() => changeView("games")}><IconGames className={styles.dockIcon} /><span>ゲーム一覧</span></button>
+          <button type="button" onClick={() => changeView("arena")}><IconArena className={styles.dockIcon} /><span>アリーナ</span></button>
+          <button type="button" onClick={() => changeView("collection")}><IconVault className={styles.dockIcon} /><span>コレクション</span></button>
+          <button type="button" onClick={() => changeView("collection")}><IconOtomo className={styles.dockIcon} /><span>OTOMO広場</span></button>
+          <button type="button" onClick={() => changeView("community")}><IconCommunity className={styles.dockIcon} /><span>コミュニティ</span></button>
+          <button type="button" onClick={() => changeView("arena")}><IconOracle className={styles.dockIcon} /><span>神託</span></button>
+          <button type="button" onClick={() => changeView("mysgg")}><IconLedger className={styles.dockIcon} /><span>SGP台帳</span></button>
+          <button type="button" onClick={() => changeView("mysgg")}><IconPassport className={styles.dockIcon} /><span>Passport</span></button>
+        </nav>
 
         <footer className={styles.footer}><span>MY SGG / ALL OF SGG, ONE PLAYER OS</span><span>PUBLIC TRUTH · PRIVATE PREFERENCES · NO FABRICATED DATA</span></footer>
       </div>

@@ -3,23 +3,23 @@
 > Derived view. `PROJECT_STATE.json` and its immutable checkpoint are authoritative.
 
 Project ID: `PRJ-202607-sgg-user-dashboard`  
-State version: `22`  
-Updated: `2026-07-26T18:55:57+08:00`  
+State version: `25`  
+Updated: `2026-07-28T16:09:59+08:00`  
 Status: `REVIEW`  
 Phase: `PRIVATE_DEPLOYED`
 
 ## Current objective
 
-Preserve the successful owner-only Version 12 deployment, have the owner complete the retained Sign in with ChatGPT handoff so production visual and console QA can finish, announce the OTOMO CHAIN link-code flow before season start, and defer reconciliation and payout until after season end and the remaining approval gates.
+Deploy the rebuilt Home surface and its six approved visuals through Sites as an owner-only private release, so the owner can review it on a phone, while leaving public access, added viewers, custom domain and search indexing unauthorized.
 
 ## Last checkpoint
 
-- ID: `CP-000022`
-- Summary: Committed the validated CP-000021 source as 10d287d02e77eba76030e5a8abf20218d807f499, pushed it to the existing Sites source main branch, saved Sites Version 12 with D1 migration 0004 for game_account_links, and deployed it successfully as appgdep_6a65e684f2d881918fe4bd31a34584ba using environment revision 2. Production smoke confirmed the MY SGG shell and confirmed that GET /api/link/otomo-chain and GET /api/holdings return 401 with NOT_AUTHENTICATED when Sites dispatch is authorized but no application session is supplied. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access, and no custom domain; no access, environment, domain, or indexing control was changed. The exact production URL was opened in a new visible Codex in-app browser tab while existing tabs were preserved, but the owner-only Sign in with ChatGPT gate requires the owner to continue before application-screen and console QA can finish. No tournament export secret was configured, no reconciliation or payout ran, and no SGP was granted.
+- ID: `CP-000025`
+- Summary: Recorded owner approval of the six Home visuals and fixed the mobile layout, clearing the way for an owner-only deployment of the rebuilt Home surface. RIGHTS-AND-IMAGE2-APPROVAL-20260728-001 records the approver, the visual check at desktop and 390px widths, the four GODS in the key visual, the GOD and OTOMO pair plus form for each of the five cards, and the SPIRIT 1 / INCARNATE 2 / DOJI 2 form distribution; all six manifest rows moved from PENDING_APPROVAL to APPROVED and no PENDING_APPROVAL row remains. Mobile verification at 390px found four real defects, all fixed: the new dock duplicated the existing mobile tab bar, the hero occupied roughly sixty percent of the screen, the title broke mid-word between 競 and う, and the key visual cropped its characters away. A LAN exposure attempt for phone testing was reverted because vinext ignores both the --host flag and server.host, leaving the configuration exactly as before. BLK-KEY-VISUAL-APPROVAL-001 is closed. Lint, typecheck, production build and 76 tests pass. Deployment itself remains an owner action: this repository has no git remote and Sites is the only production pipeline.
 
 ## Blockers
 
-- `BLK-IN-APP-BROWSER-001` [OPEN]: Codex opened the exact Version 12 production URL in a new visible in-app browser tab and preserved all existing tabs, but the private Sites Sign in with ChatGPT gate blocks the application screen. Codex did not initiate account sign-in or claim visual and console verification without the owner's browser action. — Owner: SGG project owner and Codex delivery operator — Unblock: The owner selects Continue with ChatGPT in the retained production tab and tells Codex to continue; Codex then verifies the Version 12 dashboard, Passport, holdings, responsive layout, interaction, and console without changing the access policy.
+- `BLK-CONCURRENT-GAME-SESSION-001` [OPEN]: A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed. — Owner: SGG project owner — Unblock: Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository.
 - `BLK-OTOMO-CHAIN-EXPORT-001` [OPEN]: OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end. — Owner: SGG project owner — Unblock: After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run.
 - `BLK-SGP-AWARD-TABLE-001` [OPEN]: SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one. — Owner: SGG project owner — Unblock: Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request.
 - `BLK-DISCORD-E2E-001` [OPEN]: Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities. — Owner: SGG project owner — Unblock: Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site.
@@ -29,15 +29,17 @@ Preserve the successful owner-only Version 12 deployment, have the owner complet
 
 ## Next actions
 
-1. `ACT-020` [READY] Announce the deployed link-code flow to OTOMO CHAIN 7 participants so they paste the MY SGG code into the game profile field labelled 'Discord / X など' before or from day one. — Owner: SGG project owner
-2. `ACT-014` [BLOCKED] In the retained Codex in-app browser tab, have the owner select Continue with ChatGPT, then verify the exact Version 12 dashboard, Passport, holdings, responsive layout, and console health without changing access. — Owner: SGG project owner and Codex delivery operator
-3. `ACT-018` [BLOCKED] After the season ends, configure OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET as Sites secrets, run reconciliation with apply omitted, resolve ambiguity manually, then run payout with an approved award table and apply omitted before any apply=true request. — Owner: SGG project owner
-4. `ACT-016` [READY] Review the desktop and mobile comparison sheets, choose one candidate or a concrete shortlist, then record exact-file owner approval before any Home UI integration. — Owner: SGG project owner
-5. `ACT-015` [BLOCKED] Complete a real DM code login and two-account isolation check with two consenting Discord test identities before any audience expansion. — Owner: SGG project owner
-6. `ACT-012` [BLOCKED] Upgrade to stable Next and Cloudflare or Miniflare versions that officially support patched Sharp, then remove the temporary non-reachable exception. — Owner: SGG engineering owner
-7. `ACT-006` [BLOCKED] Implement side-effect-free, audience-bound, replay-protected player snapshot bridges for each game before showing in-game progress or resources. — Owner: SGG game platform owner
-8. `ACT-008` [BLOCKED] Request and record separate authority before public or shared access, a custom domain, search indexing, or added viewers and groups. — Owner: SGG project owner
+1. `ACT-025` [READY] Deploy the approved Home rebuild through Sites as an owner-only private release, changing no access setting. — Owner: SGG project owner
+2. `ACT-026` [READY] Open the deployed site on a phone and confirm the rebuilt Home renders as reviewed locally. — Owner: SGG project owner
+3. `ACT-022` [READY] Add the OTOMO CHAIN redirect URI to the approved MY SGG Discord application and set DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET in the OTOMO CHAIN Vercel project so discord_enabled becomes true. — Owner: SGG project owner
+4. `ACT-024` [READY] Review the two drifted command-center policy files (OTOMO_FORM_BALANCE_V1.md and canon/TERMINOLOGY.md, both changed 2026-07-26 19:33) and refresh their recorded hashes deliberately; validation fails until then. — Owner: SGG project owner
+5. `ACT-015` [BLOCKED] Complete the two-account isolation check with two consenting Discord identities before adding any viewer; docs/CORE_MEMBER_RELEASE_CHECKLIST.md has the procedure and tests/two-account-isolation.test.mjs covers the implementation. — Owner: SGG project owner
+6. `ACT-021` [BLOCKED] Adapt dashboard reconciliation to the game's verified Discord ID after the concurrent OTOMO CHAIN work is committed. — Owner: SGG project owner
+7. `ACT-018` [BLOCKED] After the season ends on 2026-08-08T00:00:00Z, configure the OTOMO CHAIN export secrets, run the reconcile dry run, resolve anything ambiguous by hand, then run the payout dry run with a decided award table before applying. — Owner: SGG project owner
+8. `ACT-012` [BLOCKED] Upgrade to stable Next and Cloudflare or Miniflare versions that officially support patched Sharp. — Owner: SGG engineering owner
+9. `ACT-006` [BLOCKED] Implement side-effect-free, audience-bound, replay-protected player snapshot bridges per game before showing in-game progress. — Owner: SGG game platform owner
+10. `ACT-008` [BLOCKED] Request and record separate authority before public or shared access, a custom domain, search indexing, or added viewers and groups. — Owner: SGG project owner
 
 ## Resume exactly here
 
-`ACT-020` — Read CP-000022 and deployments/PRIVATE_DEPLOYMENT-20260726-001.json. Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 is live at https://sgg-player-archive.axie-b-ac.chatgpt.site with environment revision 2 and D1 migration 0004. Access remains custom owner-only with one allowed user, zero groups, no public access, and no custom domain. Announce the link-code flow before season start. The retained Codex browser tab is at the Sign in with ChatGPT gate; after the owner continues, finish production visual and console QA. Do not configure export secrets or run reconciliation or payout before the season ends.
+`ACT-025` — Deploy the current source through the Sites source and version workflow as an owner-only private release, changing no access setting, then open the deployed URL on a phone and confirm the rebuilt Home. Validation still fails on two drifted command-center policy hashes, which the owner must review rather than have refreshed silently.

@@ -2,26 +2,28 @@
   "schema_version": 1,
   "authority": "SGG_VALIDATION_REPORT",
   "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 22,
-  "checkpoint_id": "CP-000022",
-  "recorded_at": "2026-07-26T18:55:59+08:00",
-  "mode": "kickoff",
-  "status": "PASS",
+  "state_version": 24,
+  "checkpoint_id": "CP-000024",
+  "recorded_at": "2026-07-28T08:49:16+08:00",
+  "mode": "structure",
+  "status": "FAIL",
   "readiness_score": 100,
-  "errors": [],
+  "errors": [
+    "policy hash drift: standards/OTOMO_FORM_BALANCE_V1.md (review and refresh explicitly)",
+    "policy hash drift: SGG createve/canon/TERMINOLOGY.md (review and refresh explicitly)"
+  ],
   "command": [
     "python3",
     "../SGG　司令塔/launches/tools/validate_sgg_project.py",
     ".",
-    "--kickoff",
     "--record"
   ],
   "fingerprints": {
     "PROJECT_PROFILE.json": "acfc0954e819cb9f35ea9f07b94e2330f3df4e9670a66815d340e0d76f17bece",
-    "PROJECT_STATE.json": "c69caaf0541b5646ecfed54023567dc4b7a658628fc3d9fa4cc4d4cf97c18ac4",
+    "PROJECT_STATE.json": "0ec3560923f4776c716a8673ff33341853d52eaa55d4b1e8cd9ff2845c605d01",
     "COMMAND_CENTER_LINK.json": "777f43f7f1a19d38f20a3ad2368e231d1d775624b16983f4ac0ed6ca8228750f",
-    "assets/ASSET_MANIFEST.csv": "3bad645c7597f899a1450b6fa765eee19a5e7f35068b7f293662b35eda65363d",
-    "checkpoints/CP-000022.json": "93368561922e34bef65a996ccabf1ff917121340fc11fad17001531c1507a8b4",
-    "__project_basis__": "1e804242b8e27675c49bd8e9afa97c810b33e177fa2a0cdec0c27f4f2c7835d8"
+    "assets/ASSET_MANIFEST.csv": "0124ed9ca934ebf91457e8733608074c61afb1864a87eb35b4e6ee65dbc2e84b",
+    "checkpoints/CP-000024.json": "ec2946694fd9edf22738674a212cca28ab60cb9f30eb3ae5b33e6715c115ad7f",
+    "__project_basis__": "2de7d8486e1ca5389ad484d9e7ab85ef336de817621e668e765e54b6b979d29a"
   }
 }

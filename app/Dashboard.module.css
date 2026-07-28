@@ -357,9 +357,11 @@
   display: grid;
   min-width: 0;
   min-height: var(--topbar-height);
-  grid-template-columns: minmax(128px, 0.55fr) minmax(260px, 620px) auto;
+  /* breadcrumb / search / holdings chips / actions — the chips column
+     collapses at 1180px so the row never wraps onto a second line. */
+  grid-template-columns: minmax(128px, 0.55fr) minmax(220px, 620px) auto auto;
   align-items: center;
-  gap: clamp(12px, 2vw, 30px);
+  gap: clamp(10px, 1.4vw, 22px);
   padding: 12px clamp(20px, 2.5vw, 42px);
   border-bottom: 1px solid var(--hairline);
   background: rgba(8, 7, 13, 0.84);
@@ -859,9 +861,10 @@
 .heroCopy h1 {
   color: #fffaf0;
   font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
-  font-size: clamp(34px, 4.3vw, 69px);
+  /* Sized for the narrower main column once the rail is present. */
+  font-size: clamp(28px, 2.7vw, 48px);
   font-weight: 600;
-  line-height: 1.12;
+  line-height: 1.14;
   letter-spacing: -0.045em;
   text-shadow: 0 3px 30px rgba(0, 0, 0, 0.45);
   text-wrap: balance;
@@ -4083,4 +4086,521 @@
   .toast {
     right: max(8px, env(safe-area-inset-right));
   }
+}
+
+/* ---- Top-bar holdings chips -------------------------------------------- */
+
+.walletStrip {
+  display: flex;
+  gap: 8px;
+}
+
+.walletStrip > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border: 1px solid rgba(var(--tone-rgb), 0.26);
+  border-radius: 999px;
+  background: rgba(var(--tone-rgb), 0.05);
+  white-space: nowrap;
+}
+
+.walletStrip i {
+  color: var(--tone);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.walletStrip b {
+  color: #e6e1e8;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.walletStrip small {
+  color: #77727e;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+/* Chips are supporting information, so they yield before the search field.
+   The topbar drops back to three columns so nothing wraps. */
+@media (max-width: 1180px) {
+  .walletStrip { display: none; }
+  .topbar { grid-template-columns: minmax(128px, 0.55fr) minmax(220px, 620px) auto; }
+}
+
+/* ---- Sidebar passport card --------------------------------------------- */
+
+.passportCard {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid rgba(230, 196, 111, 0.22);
+  border-radius: 4px 16px 4px 16px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(230, 196, 111, 0.09), transparent 42%),
+    var(--surface-solid);
+  cursor: pointer;
+  text-align: left;
+}
+
+.passportCard:hover { border-color: rgba(230, 196, 111, 0.4); }
+
+.passportCard > small {
+  color: var(--gold);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.passportCard > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.passportCard img,
+.passportInitial {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.passportInitial {
+  display: grid;
+  place-items: center;
+  background: rgba(230, 196, 111, 0.1);
+  color: var(--gold);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.passportCard strong {
+  overflow: hidden;
+  color: #e2dce3;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.passportStats {
+  display: grid;
+  margin: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.passportStats dt {
+  color: #77727e;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.passportStats dd {
+  overflow: hidden;
+  margin: 2px 0 0;
+  color: #d8d2da;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+}
+
+/* ---- Home right rail ---------------------------------------------------- */
+
+.railGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.railGrid > section {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 19px;
+  border: 1px solid rgba(var(--tone-rgb), 0.2);
+  border-radius: 4px 18px 4px 18px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(var(--tone-rgb), 0.08), transparent 40%),
+    var(--surface-solid);
+}
+
+.railGrid small {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.railGrid h3 {
+  color: #e2dce3;
+  font-family: "Yu Mincho", serif;
+  font-size: 17px;
+}
+
+.railGrid p {
+  color: #77727e;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.railBig {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.railRanks {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.railRanks li {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.railRanks b {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.railRanks span {
+  overflow: hidden;
+  color: #d8d2da;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.railRanks em {
+  color: #aaa4b0;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  font-style: normal;
+}
+
+/* ---- Home: main column + persistent right rail -------------------------- */
+
+.homeLayout {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) 302px;
+  align-items: start;
+  gap: 16px;
+}
+
+.homeMain {
+  display: grid;
+  min-width: 0;
+  gap: clamp(20px, 2.6vw, 34px);
+}
+
+.homeRail {
+  display: grid;
+  position: sticky;
+  top: calc(var(--topbar-height) + 16px);
+  gap: 12px;
+}
+
+.homeRail > section {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 18px;
+  border: 1px solid rgba(var(--tone-rgb), 0.2);
+  border-radius: 4px 18px 4px 18px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(var(--tone-rgb), 0.09), transparent 42%),
+    var(--surface-solid);
+}
+
+.homeRail small {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.homeRail h3 {
+  color: #e2dce3;
+  font-family: "Yu Mincho", serif;
+  font-size: 16px;
+}
+
+.homeRail p {
+  color: #77727e;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* Outstanding actions for this player, ticked from real connection state. */
+.railSteps {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.railSteps li {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 15px minmax(0, 1fr);
+  gap: 8px;
+  color: #77727e;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.railSteps li::before {
+  content: "○";
+  color: #4b4753;
+  font-size: 10px;
+}
+
+.railSteps li[data-done="true"] {
+  color: #b9b3bf;
+}
+
+.railSteps li[data-done="true"]::before {
+  content: "●";
+  color: var(--tone);
+}
+
+/* ---- Feature card row --------------------------------------------------- */
+
+.featureRow {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.featureRow article {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 6px;
+  padding: 17px;
+  border: 1px solid rgba(var(--tone-rgb), 0.22);
+  border-radius: 4px 16px 4px 16px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(var(--tone-rgb), 0.1), transparent 44%),
+    var(--surface-solid);
+}
+
+.featureRow small {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
+.featureRow h3 {
+  color: #e2dce3;
+  font-family: "Yu Mincho", serif;
+  font-size: 15px;
+}
+
+/* The figure carries the card, so it outsizes its label. Text values such as
+   未接続 shrink so they never overflow the column. */
+.featureRow b {
+  color: var(--tone);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.featureRow b:not(:has(*)):is([class]),
+.featureRow article > b {
+  font-size: clamp(15px, 1.5vw, 26px);
+}
+
+.featureRow span {
+  color: #77727e;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.featureRow button {
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid rgba(var(--tone-rgb), 0.3);
+  border-radius: 8px;
+  background: rgba(var(--tone-rgb), 0.07);
+  color: #e2dce3;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.featureRow button:hover {
+  border-color: rgba(var(--tone-rgb), 0.55);
+  background: rgba(var(--tone-rgb), 0.12);
+}
+
+@media (max-width: 1400px) {
+  .homeLayout { grid-template-columns: minmax(0, 1fr); }
+  .homeRail { position: static; grid-template-columns: repeat(auto-fit, minmax(228px, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .featureRow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+
+/* The key visual groups its characters on the right, so a narrower hero box
+   keeps that side in frame instead of cropping them away. */
+.hero img {
+  object-position: 82% center;
+}
+
+@media (max-width: 1400px) {
+  .hero img { object-position: center; }
+}
+
+/* ---- Feature card artwork ---------------------------------------------- */
+
+.featureArt {
+  position: relative;
+  overflow: hidden;
+  height: 92px;
+  margin: -17px -17px 4px;
+  border-bottom: 1px solid rgba(var(--tone-rgb), 0.18);
+  border-radius: 3px 15px 0 0;
+}
+
+.featureArt img {
+  object-fit: cover;
+}
+
+/* Keeps the card label legible over bright key art. */
+.featureArt::after {
+  position: absolute;
+  background: linear-gradient(180deg, rgba(10, 9, 15, 0.02), rgba(10, 9, 15, 0.62));
+  content: "";
+  inset: 0;
+}
+
+/* ---- Bottom dock -------------------------------------------------------- */
+
+.dock {
+  position: sticky;
+  z-index: 60;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 4px;
+  padding: 10px clamp(14px, 2.4vw, 34px) calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--hairline);
+  background: rgba(8, 7, 13, 0.9);
+  backdrop-filter: saturate(130%) blur(20px);
+}
+
+.dock button {
+  display: grid;
+  justify-items: center;
+  padding: 8px 4px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: none;
+  color: #8a8492;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.dock button:hover {
+  border-color: rgba(230, 196, 111, 0.28);
+  background: rgba(230, 196, 111, 0.06);
+  color: var(--gold-pale);
+}
+
+.dockIcon {
+  width: 21px;
+  height: 21px;
+  color: inherit;
+}
+
+.dock span {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .dock { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ---- Rail meters -------------------------------------------------------- */
+
+.meter {
+  overflow: hidden;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.meter > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(var(--tone-rgb), 0.5), var(--tone));
+}
+
+.meterLabel {
+  display: flex;
+  justify-content: space-between;
+  color: #77727e;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* ---- Mobile corrections -------------------------------------------------- */
+
+@media (max-width: 1040px) {
+  /* The dock duplicates the mobile tab bar that appears at this width. */
+  .dock { display: none; }
+
+  /* A 430px hero swallowed most of a phone screen, pushing every card below
+     the fold. Shorter, and framed on the characters rather than the empty
+     left half the desktop layout needs for its copy. */
+  .hero { min-height: clamp(300px, 40vh, 380px); }
+
+  .hero img { object-position: 78% center; }
+
+  /* Sized so 遊ぶ。競う。集める。 stays on one line instead of breaking
+     between 競 and う. */
+  .heroCopy h1 { font-size: clamp(21px, 6.4vw, 30px); }
 }
