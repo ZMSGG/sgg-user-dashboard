@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PRIVATE_DEPLOYMENT_EVIDENCE",
+  "evidence_id": "PRIVATE_DEPLOYMENT-20260728-001",
+  "recorded_at": "2026-07-28T17:15:00+08:00",
+  "recorded_by": "Codex MY SGG private deployment operator",
+  "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+  "approval_record": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json",
+  "checkpoint_before_deployment": "CP-000025",
+  "scope": "Owner-only production deployment of the approved MY SGG Home rebuild and its six approved Image 2.0 visuals through Sites",
+  "source": {
+    "commit_sha": "7e725f499cd47313b5bb1776b304873a99f71514",
+    "branch": "main",
+    "repository": "appgprj_6a54d2460e7c8191a92c00900d810ab1",
+    "push_result": "SUCCEEDED",
+    "remote_head_verified": true,
+    "release_tree_sha1": "ae2bf5ef0bf69633945696ad938778ff5af05ba2",
+    "secret_scan_findings": 0,
+    "gitleaks_false_positive_findings": 1,
+    "gitleaks_false_positive_disposition": "A fixed synthetic HMAC secret in tests/two-account-isolation.test.mjs; no production credential, private key, environment file, API token, or Sites credential was committed."
+  },
+  "sites": {
+    "project_id": "appgprj_6a54d2460e7c8191a92c00900d810ab1",
+    "version_id": "appgprj_6a54d2460e7c8191a92c00900d810ab1~appgver_453ec2290b4c8191bd753fd3cc03791f",
+    "version_number": 13,
+    "version_archive_content_hash": "sha256:3e1ebd65ff9871f981d10726d95a6f63bf8223d55a37aaa2641229d6322cf070",
+    "version_archive_file_count": 59,
+    "version_archive_size_bytes": 11212800,
+    "deployment_id": "appgdep_6a6871daa8bc8191b05c07c956f9ae47",
+    "provider_deployment_id": "axie-b-ac--sgg-player-archive",
+    "deployment_status": "SUCCEEDED",
+    "deployed_at": "2026-07-28T09:09:59.855853+00:00",
+    "environment_revision": 2,
+    "url": "https://sgg-player-archive.axie-b-ac.chatgpt.site",
+    "access_mode_before": "custom",
+    "access_mode_after": "custom",
+    "access_policy_revision_before": 1,
+    "access_policy_revision_after": 1,
+    "allowed_owner_count_before": 1,
+    "allowed_owner_count_after": 1,
+    "allowed_group_count_before": 0,
+    "allowed_group_count_after": 0,
+    "public_access_before": false,
+    "public_access_after": false,
+    "custom_domain_count_before": 0,
+    "custom_domain_count_after": 0,
+    "access_policy_updated_at_before": "2026-07-13T11:55:57.365769+00:00",
+    "access_policy_updated_at_after": "2026-07-13T11:55:57.365769+00:00"
+  },
+  "creative_evidence": {
+    "rights_record": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json",
+    "approved_asset_count": 6,
+    "production_asset_count": 6,
+    "production_asset_http_statuses": [
+      200,
+      200,
+      200,
+      200,
+      200,
+      200
+    ],
+    "production_sha256_matches_approval": true,
+    "key_visual": {
+      "path": "public/dashboard-art/my-sgg-key-visual-v004.png",
+      "sha256": "9e49ed3d40b33030538916302d675f82f4044a726380c74a0d66c04381fe5e7d",
+      "four_gods": [
+        "恵比寿",
+        "才華",
+        "蒼毘",
+        "福永"
+      ]
+    },
+    "card_sha256": [
+      "a7e8788dccbc05b52838000ef0033d636fffbdb6039f1ebd5bc91a25fa4ed50a",
+      "86eb423d2e59cd903f471f88276096d46376e5d8cd66a0d294f4320c0558372c",
+      "7e191f550dd5976e41e7974004188cac72f55c03da3cd3168e891c221b966958",
+      "cf324f48675c0994f6b8956ab0e82823a26759dc1ecb1b767f182e7d77eb2140",
+      "8a698af82112524d718c7fcd3044ce6adab42197eeb9465d5d5af8df96548f26"
+    ]
+  },
+  "configuration": {
+    "environment_values_changed": false,
+    "access_values_changed": false,
+    "owner_changed": false,
+    "allowed_users_changed": false,
+    "allowed_groups_changed": false,
+    "custom_domain_changed": false,
+    "search_indexing_changed": false,
+    "robots_index": false,
+    "robots_follow": false,
+    "access_or_domain_update_tool_called": false
+  },
+  "verification": {
+    "local": {
+      "lint": "PASS",
+      "typecheck": "PASS",
+      "build": "PASS",
+      "tests_passed": 76,
+      "tests_failed": 0,
+      "migration_chain_packaged_through": "0004_yielding_dormammu",
+      "release_commit_clean_before_packaging": true
+    },
+    "production_http": {
+      "home_status_with_sites_dispatch_authorization": 200,
+      "home_bytes": 29718,
+      "content_security_policy_present": true,
+      "robots": "noindex, nofollow",
+      "passport_status_without_sites_or_application_authentication": 401,
+      "passport_status_with_sites_dispatch_authorization_and_without_application_session": 200,
+      "recent_worker_error_events": 0
+    },
+    "production_home": {
+      "version_13_screenshot_reviewed": true,
+      "version_13_screenshot_sha256": "45aa11f9610d15ca5b0596f1347368e668e50a608e4f70f0ea863f7ed606e954",
+      "four_gods_key_visual_visible": true,
+      "hero_title_present_in_production_html": true,
+      "five_card_titles_present_in_production_html": true,
+      "five_card_images_referenced_in_production_html": true,
+      "five_card_assets_return_200_and_match_approved_sha256": true,
+      "right_rail_present_in_production_html": true,
+      "right_rail_section_count": 4
+    },
+    "mobile_bundle_at_390px": {
+      "mobile_navigation_dom_count": 1,
+      "quick_access_dock_dom_count": 1,
+      "production_css_breakpoint": "width<=1040px",
+      "mobile_navigation_display_at_breakpoint": "grid",
+      "quick_access_dock_display_at_breakpoint": "none",
+      "derived_visible_bottom_navigation_count": 1
+    },
+    "codex_in_app_browser": {
+      "status": "CONTROL_CAPABILITY_UNAVAILABLE",
+      "protected_existing_tab_preserved": true,
+      "protected_existing_tab_url": "https://sgg-player-archive.axie-b-ac.chatgpt.site/#mysgg",
+      "new_tab_opened": false,
+      "application_screen_interactively_verified": false,
+      "responsive_viewport_interactively_verified": false,
+      "console_interactively_verified": false,
+      "fallback_evidence": "Sites Version 13 screenshot, exact production HTML/CSS inspection, approved production asset SHA verification, anonymous HTTP smoke, and recent Worker error log query."
+    }
+  },
+  "validation_expectation": {
+    "expected_result": "FAIL",
+    "expected_error_count": 2,
+    "known_unresolved_policy_hash_drifts": [
+      "standards/OTOMO_FORM_BALANCE_V1.md",
+      "SGG createve/canon/TERMINOLOGY.md"
+    ],
+    "policy_hashes_refreshed": false
+  },
+  "boundaries": {
+    "public_or_shared_release_authorized": false,
+    "custom_domain_authorized": false,
+    "search_indexing_authorized": false,
+    "added_viewers_or_groups_authorized": false,
+    "environment_secret_change_authorized": false,
+    "access_control_mutation_performed": false
+  }
+}

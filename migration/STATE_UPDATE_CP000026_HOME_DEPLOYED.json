@@ -1,16 +1,11 @@
 {
   "schema_version": 1,
-  "authority": "SGG_PROJECT_STATE",
-  "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 26,
-  "updated_at": "2026-07-28T17:15:00+08:00",
+  "expected_state_version": 25,
   "updated_by": "Codex MY SGG private deployment operator",
+  "summary": "Committed the approved CP-000025 Home rebuild as 7e725f499cd47313b5bb1776b304873a99f71514, pushed that exact commit to the existing Sites source main branch, saved Sites Version 13, and deployed it successfully as appgdep_6a6871daa8bc8191b05c07c956f9ae47 with environment revision 2. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access, and no custom domain; no access, owner, group, environment, domain, or indexing control was changed. Production verification confirmed anonymous GET /api/passport returns 401, all six approved Image 2.0 assets return 200 and exactly match the approval hashes, the four-GODS hero appears in the Version 13 screenshot, the five card titles and right rail are in the production HTML, the 390px production CSS exposes the single mobile navigation while hiding the duplicate dock, and no recent Worker errors were present. The mandatory in-app browser control capability is unavailable in this task, so a new muted tab, interactive responsive viewport, and console verification remain explicitly unclaimed. The two known command-center policy hash drifts remain unresolved and were not refreshed.",
   "status": "REVIEW",
   "phase": "PRIVATE_DEPLOYED",
   "current_objective": "Investigate, without changing Sites or Cloudflare state or revealing secret values, whether the production Worker and D1 can be handed over from Sites to an owner-controlled Cloudflare deployment path, and record only verified facts in docs/DEPLOY_HANDOVER_FACTS.md.",
-  "last_summary": "Committed the approved CP-000025 Home rebuild as 7e725f499cd47313b5bb1776b304873a99f71514, pushed that exact commit to the existing Sites source main branch, saved Sites Version 13, and deployed it successfully as appgdep_6a6871daa8bc8191b05c07c956f9ae47 with environment revision 2. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access, and no custom domain; no access, owner, group, environment, domain, or indexing control was changed. Production verification confirmed anonymous GET /api/passport returns 401, all six approved Image 2.0 assets return 200 and exactly match the approval hashes, the four-GODS hero appears in the Version 13 screenshot, the five card titles and right rail are in the production HTML, the 390px production CSS exposes the single mobile navigation while hiding the duplicate dock, and no recent Worker errors were present. The mandatory in-app browser control capability is unavailable in this task, so a new muted tab, interactive responsive viewport, and console verification remain explicitly unclaimed. The two known command-center policy hash drifts remain unresolved and were not refreshed.",
-  "last_checkpoint_id": "CP-000026",
-  "last_checkpoint_path": "checkpoints/CP-000026.json",
   "active_work": {
     "work_id": "ACT-027",
     "objective": "Record a read-only deployment handover fact sheet for the production Sites Worker, D1 binding, runtime variable names, direct Wrangler feasibility, and D1 export path.",
@@ -23,66 +18,7 @@
       "Write the result to docs/DEPLOY_HANDOVER_FACTS.md."
     ]
   },
-  "recently_completed": [
-    {
-      "action_id": "BOOTSTRAP-001",
-      "result": "Initial zero-to-one scaffold generated atomically.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "COMMAND_CENTER_LINK.json",
-        "QUALITY_SCORECARD.md"
-      ]
-    },
-    {
-      "action_id": "ACT-001",
-      "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
-      "evidence": [
-        "PROJECT_PROFILE.json",
-        "migration/INTAKE.json",
-        "migration/MIGRATION_EVIDENCE.md",
-        "COMMAND_CENTER_LINK.json"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-003",
-      "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
-      "evidence": [
-        "app/Dashboard.tsx",
-        "server/auth.ts",
-        "server/passport-db.ts",
-        "db/schema.ts",
-        "drizzle/0001_majestic_boomer.sql",
-        "tests/passport-security.test.mjs",
-        "tests/dashboard-resilience.test.mjs",
-        "tests/rendered-html.test.mjs"
-      ],
-      "completed_at": "2026-07-20T22:48:58+08:00",
-      "checkpoint_id": "CP-000002"
-    },
-    {
-      "action_id": "ACT-007",
-      "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
-      "evidence": [
-        "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
-        "assets/ASSET_MANIFEST.csv",
-        "references/SOURCE_LOCK.json"
-      ],
-      "completed_at": "2026-07-22T16:05:03+08:00",
-      "checkpoint_id": "CP-000012"
-    },
-    {
-      "action_id": "ACT-017",
-      "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
-      "evidence": [
-        "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
-        "drizzle/0004_yielding_dormammu.sql",
-        "app/api/link/otomo-chain/route.ts"
-      ],
-      "completed_at": "2026-07-26T18:55:57+08:00",
-      "checkpoint_id": "CP-000022"
-    },
+  "completed_actions": [
     {
       "action_id": "ACT-025",
       "result": "Deployed Sites Version 13 from commit 7e725f499cd47313b5bb1776b304873a99f71514 as an owner-only private production release, preserved access policy revision 1, and recorded production HTTP, asset, screenshot, CSS, and Worker-log evidence.",
@@ -90,9 +26,7 @@
         "deployments/PRIVATE_DEPLOYMENT-20260728-001.json",
         "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json",
         "checkpoints/CP-000025.json"
-      ],
-      "completed_at": "2026-07-28T17:15:00+08:00",
-      "checkpoint_id": "CP-000026"
+      ]
     }
   ],
   "next_actions": [
@@ -267,62 +201,15 @@
     }
   ],
   "decisions_needed": [],
-  "authorizations": [
-    {
-      "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
-      "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
-      "status": "GRANTED",
-      "granted_by": "SGG project owner",
-      "granted_at": "2026-07-20T22:47:24+08:00",
-      "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
-    },
-    {
-      "authorization_id": "AUTH-EXTERNAL-ACTIONS",
-      "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
-      "status": "NOT_GRANTED",
-      "granted_by": "",
-      "granted_at": "",
-      "evidence": ""
-    }
-  ],
-  "changed_files": [
+  "changed_paths": [
     {
       "path": "deployments/PRIVATE_DEPLOYMENT-20260728-001.json",
-      "sha256": "5670f7820d44c4b18745b55b7103bd2c05c2cdb34d158d3dffa90ab7a37bf942",
       "reason": "Record the exact release commit, Sites Version 13, successful owner-only deployment, unchanged access controls, approved production asset hashes, Home evidence, anonymous Passport 401, and browser capability boundary."
     },
     {
       "path": "migration/STATE_UPDATE_CP000026_HOME_DEPLOYED.json",
-      "sha256": "bdbb132c835bd6d5a20331f990dfe43221d4cfddeccd508ef60ac68a20375784",
       "reason": "Record completion of ACT-025, the remaining interactive browser gate, and the read-only deployment handover investigation as the next active work."
     }
-  ],
-  "last_known_good": {
-    "validation_report": "VALIDATION_REPORT.json",
-    "commands": [
-      [
-        "python3",
-        "../../launches/tools/validate_sgg_project.py",
-        ".",
-        "--kickoff",
-        "--record"
-      ],
-      [
-        "python3",
-        "../../launches/tools/validate_pack.py",
-        "."
-      ]
-    ]
-  },
-  "authoritative_files": [
-    "AGENTS.md",
-    "COMMAND_CENTER_LINK.json",
-    "PROJECT_PROFILE.json",
-    "PROJECT_STATE.json",
-    "DECISIONS.md",
-    "CANON_AND_COPY.md",
-    "WORLD_AND_CHARACTER_BRIEF.md",
-    "VALIDATION_REPORT.json"
   ],
   "resume": {
     "action_id": "ACT-027",
