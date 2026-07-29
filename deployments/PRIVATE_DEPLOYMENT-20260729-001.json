@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PRIVATE_DEPLOYMENT_EVIDENCE",
+  "evidence_id": "PRIVATE_DEPLOYMENT-20260729-001",
+  "recorded_at": "2026-07-29T17:26:01+08:00",
+  "recorded_by": "Codex MY SGG private deployment operator",
+  "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+  "approval_record": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260729-001.json",
+  "checkpoint_before_deployment": "CP-000036",
+  "scope": "Owner-only production deployment of the approved Zipangu dusk lobby, transparent duty GOD rotation, collection-card gacha and multi-currency ledger through Sites with D1 migration 0005",
+  "source": {
+    "commit_sha": "c675ac76bc6812c2a962dc034d3a2beaa9e3926d",
+    "tree_sha1": "a32c3f0ddc29d67f1b40edf72ae3f75bbce84e95",
+    "branch": "main",
+    "repository": "appgprj_6a54d2460e7c8191a92c00900d810ab1",
+    "push_result": "SUCCEEDED",
+    "remote_head_verified": true,
+    "secret_scan": {
+      "tool": "gitleaks 8.30.1 staged scan",
+      "findings": 0
+    },
+    "intentionally_excluded_uncommitted_paths": [
+      "assets/reference/",
+      "public/dashboard-art/swarm/",
+      "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json"
+    ]
+  },
+  "sites": {
+    "project_id": "appgprj_6a54d2460e7c8191a92c00900d810ab1",
+    "version_id": "appgprj_6a54d2460e7c8191a92c00900d810ab1~appgver_ca36094d78b881918f91ded6c3c6a11f",
+    "version_number": 14,
+    "version_archive_content_hash": "sha256:1e689ba4f19714ca99e9426fff885275b21d9efd9db8a4e7799acf7bea54f241",
+    "version_archive_file_count": 105,
+    "version_archive_size_bytes": 45537280,
+    "local_tar_sha256": "0638c78809e58138881e9990c10bdd9123800a62d27f875f3d00b7e0ad807590",
+    "local_tar_size_bytes": 43455057,
+    "local_tar_entry_count": 127,
+    "deployment_id": "appgdep_6a69c62f72c4819182c1388847120b38",
+    "provider_deployment_id": "axie-b-ac--sgg-player-archive",
+    "deployment_status": "SUCCEEDED",
+    "deployed_at": "2026-07-29T09:23:27.168148+00:00",
+    "environment_revision": 2,
+    "url": "https://sgg-player-archive.axie-b-ac.chatgpt.site",
+    "access_mode_before": "custom",
+    "access_mode_after": "custom",
+    "access_policy_revision_before": 1,
+    "access_policy_revision_after": 1,
+    "allowed_user_count_before": 1,
+    "allowed_user_count_after": 1,
+    "allowed_group_count_before": 0,
+    "allowed_group_count_after": 0,
+    "allowed_workspace_group_count_before": 0,
+    "allowed_workspace_group_count_after": 0,
+    "allowed_tenant_group_count_before": 0,
+    "allowed_tenant_group_count_after": 0,
+    "public_access_before": false,
+    "public_access_after": false,
+    "custom_domain_count_before": 0,
+    "custom_domain_count_after": 0,
+    "access_policy_updated_at_before": "2026-07-13T11:55:57.365769+00:00",
+    "access_policy_updated_at_after": "2026-07-13T11:55:57.365769+00:00"
+  },
+  "migration_0005": {
+    "path": "drizzle/0005_same_madripoor.sql",
+    "source_sha256": "9740c30aea4415eb3c6a53f54065ca8eeb6ab1e9a0a8a439fed5755132b2613a",
+    "archive_sha256": "9740c30aea4415eb3c6a53f54065ca8eeb6ab1e9a0a8a439fed5755132b2613a",
+    "journal_index": 5,
+    "included_in_saved_version": true,
+    "features": [
+      "point_grants.currency with SGP default",
+      "gacha_pulls table",
+      "gacha_pulls idempotency unique index",
+      "gacha_pulls player/time and player/card indexes",
+      "database trigger preventing a gacha debit from producing a negative currency balance"
+    ]
+  },
+  "creative_evidence": {
+    "rights_record": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260729-001.json",
+    "rights_record_sha256": "8497389f3943c4577930460082f519cedab09ab297554c39c70d5735b9186bd3",
+    "asset_manifest_sha256": "c856ccbf3055eb9b7d779e58f8602c43d03cac4d4d5ba1d8ccbd44a6cd2e5391",
+    "approved_release_asset_count": 44,
+    "approved_release_asset_hash_mismatches": 0,
+    "pending_approval_asset_count": 0,
+    "rejected_swarm_record_count": 28,
+    "swarm_enabled": false,
+    "swarm_file_count_in_release_commit": 0,
+    "swarm_file_count_in_clean_build": 0,
+    "swarm_file_count_in_archive": 0,
+    "production_swarm_probe_status": 404,
+    "zipangu_backdrop": {
+      "path": "public/dashboard-art/bg-zipangu-dusk.png",
+      "sha256": "277979e3a76b42c0738c03af01521a3cd47a191821267279e001e69cd5fe55ee",
+      "production_status": 200,
+      "production_sha256_matches": true
+    },
+    "current_duty_god": {
+      "canonical_id": "ebisu",
+      "path": "public/dashboard-art/stage/duty-ebisu.png",
+      "sha256": "353947cde0f91bfb2dec202b8d39994f0cabc9b407570cb1d8f5b7cd7cb60eb8",
+      "production_status": 200,
+      "production_sha256_matches": true
+    }
+  },
+  "configuration": {
+    "environment_values_changed": false,
+    "access_values_changed": false,
+    "owner_changed": false,
+    "allowed_users_changed": false,
+    "allowed_groups_changed": false,
+    "custom_domain_changed": false,
+    "search_indexing_changed": false,
+    "robots_index": false,
+    "robots_follow": false,
+    "access_or_domain_update_tool_called": false,
+    "environment_update_tool_called": false
+  },
+  "verification": {
+    "local_exact_release_commit": {
+      "clean_detached_worktree": true,
+      "lint": "PASS",
+      "typecheck": "PASS",
+      "build": "PASS",
+      "tests_passed": 83,
+      "tests_failed": 0,
+      "drizzle_check": "PASS",
+      "migration_chain_packaged_through": "0005_same_madripoor",
+      "next_version": "16.2.12",
+      "postcss_version": "8.5.24",
+      "fixable_next_and_postcss_high_advisories": 0,
+      "remaining_production_audit_exception": "Sharp 0.34.5 inherited libvips advisories; documented non-reachable owner-only exception remains because stable Next and Miniflare resolve this version, the built Worker has no Sharp import, and no untrusted server-side image-processing path exists."
+    },
+    "production_http": {
+      "home_status_with_sites_dispatch_authorization": 200,
+      "home_bytes": 35565,
+      "passport_status_without_sites_or_application_authentication": 401,
+      "gacha_status_without_sites_or_application_authentication": 401,
+      "passport_status_with_sites_dispatch_authorization_without_application_session": 401,
+      "gacha_status_with_sites_dispatch_authorization_without_application_session": 401,
+      "passport_signed_out_body_preserved_login_methods": true,
+      "gacha_signed_out_error_code": "NOT_AUTHENTICATED",
+      "content_security_policy_present": true,
+      "robots": "noindex, nofollow",
+      "recent_worker_error_events": 0
+    },
+    "production_home": {
+      "version_14_screenshot_reviewed": true,
+      "version_14_screenshot_sha256": "1bb806f89486364a0bdcd93e8f96e5535348fa594c794330d5206a17eb12dba9",
+      "screenshot_dimensions": "1200x750",
+      "zipangu_dusk_lobby_visible": true,
+      "viewport_dominant_full_bleed_stage_visible": true,
+      "transparent_duty_god_visible_in_street": true,
+      "swarm_visible": false,
+      "hero_title_present_in_production_html": true,
+      "zipangu_optimized_image_reference_present_in_production_html": true,
+      "duty_god_reference_present_in_production_html": true
+    },
+    "mobile_bundle_at_390px": {
+      "mobile_navigation_dom_count": 1,
+      "quick_access_dock_dom_count": 1,
+      "production_css_breakpoint": "width<=1040px",
+      "mobile_navigation_display_at_breakpoint": "grid",
+      "quick_access_dock_display_at_breakpoint": "none",
+      "derived_visible_bottom_navigation_count": 1,
+      "responsive_viewport_interactively_verified": false
+    },
+    "codex_in_app_browser": {
+      "status": "CONTROL_CAPABILITY_UNAVAILABLE",
+      "discovery_attempts": [
+        "node_repl js",
+        "node_repl js limit=10"
+      ],
+      "protected_existing_tab_preserved": true,
+      "protected_existing_tab_url": "https://sgg-player-archive.axie-b-ac.chatgpt.site/#mysgg",
+      "new_tab_opened": false,
+      "application_screen_interactively_verified": false,
+      "console_interactively_verified": false,
+      "fallback_evidence": "Sites Version 14 screenshot, exact production HTML and CSS inspection, production asset SHA verification, application-level and outer-gate HTTP smoke, and recent Worker error-log query."
+    }
+  },
+  "validation_expectation": {
+    "expected_result": "FAIL",
+    "expected_error_count": 2,
+    "known_unresolved_policy_hash_drifts": [
+      "standards/OTOMO_FORM_BALANCE_V1.md",
+      "SGG createve/canon/TERMINOLOGY.md"
+    ],
+    "policy_hashes_refreshed": false
+  },
+  "boundaries": {
+    "public_or_shared_release_authorized": false,
+    "custom_domain_authorized": false,
+    "search_indexing_authorized": false,
+    "added_viewers_or_groups_authorized": false,
+    "environment_secret_change_authorized": false,
+    "access_control_mutation_performed": false
+  }
+}

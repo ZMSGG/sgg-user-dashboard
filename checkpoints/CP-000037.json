@@ -1,0 +1,389 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000037",
+  "state_version": 37,
+  "created_at": "2026-07-29T17:29:40+08:00",
+  "previous_checkpoint_id": "CP-000036",
+  "summary": "Committed the CP-000033-approved Zipangu lobby and gacha release as c675ac76bc6812c2a962dc034d3a2beaa9e3926d, pushed that exact commit to the existing Sites source main branch, saved Sites Version 14, and deployed it successfully as appgdep_6a69c62f72c4819182c1388847120b38 with environment revision 2. Migration 0005 is present in the saved version with its exact source hash and contains the currency column, gacha tables and database balance guard. All rejected swarm sprites were excluded from the release commit, clean build and archive; SWARM_ENABLED remains false and a production swarm probe returns 404. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access and no custom domain; no access, owner, group, domain, environment or indexing control was changed. Production verification confirmed anonymous application-level GET /api/gacha and GET /api/passport return 401, the approved Zipangu backdrop and current transparent duty GOD match their source hashes, the Sites screenshot shows the full-bleed dusk lobby and duty GOD in the street, the production responsive bundle exposes one mobile navigation while hiding the duplicate dock, and no recent Worker errors were present. The mandatory in-app browser control capability is unavailable in this task, so a new muted tab, interactive responsive viewport and console verification remain explicitly unclaimed. The two known command-center policy hash drifts remain unresolved and were not refreshed.",
+  "project_basis_sha256": "0925ec405c54db0553b288fc127c85062b30667eea781cb2717533e5604d06af",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 37,
+    "updated_at": "2026-07-29T17:29:40+08:00",
+    "updated_by": "Codex MY SGG private deployment operator",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Preserve the owner-only Sites Version 14 release and complete interactive desktop, mobile and console verification when the supported Codex in-app browser control capability is available.",
+    "last_summary": "Committed the CP-000033-approved Zipangu lobby and gacha release as c675ac76bc6812c2a962dc034d3a2beaa9e3926d, pushed that exact commit to the existing Sites source main branch, saved Sites Version 14, and deployed it successfully as appgdep_6a69c62f72c4819182c1388847120b38 with environment revision 2. Migration 0005 is present in the saved version with its exact source hash and contains the currency column, gacha tables and database balance guard. All rejected swarm sprites were excluded from the release commit, clean build and archive; SWARM_ENABLED remains false and a production swarm probe returns 404. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access and no custom domain; no access, owner, group, domain, environment or indexing control was changed. Production verification confirmed anonymous application-level GET /api/gacha and GET /api/passport return 401, the approved Zipangu backdrop and current transparent duty GOD match their source hashes, the Sites screenshot shows the full-bleed dusk lobby and duty GOD in the street, the production responsive bundle exposes one mobile navigation while hiding the duplicate dock, and no recent Worker errors were present. The mandatory in-app browser control capability is unavailable in this task, so a new muted tab, interactive responsive viewport and console verification remain explicitly unclaimed. The two known command-center policy hash drifts remain unresolved and were not refreshed.",
+    "last_checkpoint_id": "CP-000037",
+    "last_checkpoint_path": "checkpoints/CP-000037.json",
+    "active_work": {
+      "work_id": "ACT-036",
+      "objective": "Open the exact Sites Version 14 production URL in a new muted in-app browser tab, without touching the protected existing tab, and verify desktop, 390px mobile and console behavior.",
+      "status": "BLOCKED",
+      "acceptance_criteria": [
+        "The protected existing in-app browser tab remains open and is not navigated away.",
+        "A new muted in-app browser tab shows the Zipangu dusk lobby and transparent duty GOD.",
+        "At 390px exactly one bottom navigation bar is visible.",
+        "No major console error or display failure is present."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      },
+      {
+        "action_id": "ACT-017",
+        "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
+          "drizzle/0004_yielding_dormammu.sql",
+          "app/api/link/otomo-chain/route.ts"
+        ],
+        "completed_at": "2026-07-26T18:55:57+08:00",
+        "checkpoint_id": "CP-000022"
+      },
+      {
+        "action_id": "ACT-025",
+        "result": "Deployed Sites Version 13 from commit 7e725f499cd47313b5bb1776b304873a99f71514 as an owner-only private production release, preserved access policy revision 1, and recorded production HTTP, asset, screenshot, CSS, and Worker-log evidence.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json",
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json",
+          "checkpoints/CP-000025.json"
+        ],
+        "completed_at": "2026-07-28T17:15:00+08:00",
+        "checkpoint_id": "CP-000026"
+      },
+      {
+        "action_id": "ACT-027",
+        "result": "Recorded the production Worker/account facts, unknown production D1 identity, owner-side D1 candidate boundary, Sites environment variable names, official Wrangler deployment path, and official D1 export path without changing external state or exposing secret values.",
+        "evidence": [
+          "docs/DEPLOY_HANDOVER_FACTS.md",
+          ".openai/hosting.json",
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json"
+        ],
+        "completed_at": "2026-07-28T17:27:01+08:00",
+        "checkpoint_id": "CP-000027"
+      },
+      {
+        "action_id": "ACT-034",
+        "result": "The owner supplied the production instruction with an explicit no-swarm boundary; the pending replacement lot was not approved for this release and the runtime switch was restored to false.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260729-001.json",
+          "app/OtomoSwarm.tsx",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-29T17:14:46+08:00",
+        "checkpoint_id": "CP-000035"
+      },
+      {
+        "action_id": "ACT-035",
+        "result": "Committed and pushed the approved release, saved and deployed Sites Version 14 with D1 migration 0005, excluded all rejected swarm files, preserved the exact owner-only access policy, and recorded production HTTP, asset-hash, screenshot, responsive CSS and Worker-log evidence.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260729-001.json",
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260729-001.json",
+          "drizzle/0005_same_madripoor.sql",
+          "checkpoints/CP-000033.json"
+        ],
+        "completed_at": "2026-07-29T17:29:40+08:00",
+        "checkpoint_id": "CP-000037"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-036",
+        "order": 1,
+        "action": "When supported Codex in-app browser control is available, open Version 14 in a new muted tab without touching the protected existing tab and complete interactive desktop, 390px and console verification.",
+        "owner": "Codex runtime capability",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-IN-APP-BROWSER-001"
+        ]
+      },
+      {
+        "action_id": "ACT-033",
+        "order": 2,
+        "action": "Review the replacement mochi swarm separately; keep it disabled and outside production until explicitly approved.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-022",
+        "order": 3,
+        "action": "Set the OTOMO CHAIN Discord credentials in Vercel.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-024",
+        "order": 4,
+        "action": "Review the two drifted command-center policy hashes.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 5,
+        "action": "Two-account isolation check before adding any viewer.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-021",
+        "order": 6,
+        "action": "Adapt reconciliation to verified Discord IDs when the game work lands.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-CONCURRENT-GAME-SESSION-001"
+        ]
+      },
+      {
+        "action_id": "ACT-018",
+        "order": 7,
+        "action": "Post-season export secrets, reconcile and pay out with a decided award table.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-OTOMO-CHAIN-EXPORT-001",
+          "BLK-SGP-AWARD-TABLE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 8,
+        "action": "Upgrade Sharp when supported by stable framework dependencies.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 9,
+        "action": "Implement player snapshot bridges per game.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 10,
+        "action": "Request separate authority before any audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "This Codex task exposes the Browser skill but not its required in-app browser control capability after mandatory discovery. The existing protected production tab remains untouched. Version 14 has Sites screenshot, production HTTP, asset-hash, HTML/CSS and Worker-log evidence, but no new muted tab, interactive 390px viewport or console session was available.",
+        "owner": "Codex runtime capability",
+        "status": "OPEN",
+        "resolution_required": "Expose the supported Codex in-app browser control capability, then open the exact Version 14 URL in a new muted tab without navigating or closing the protected tab and complete desktop, 390px, interaction and console verification."
+      },
+      {
+        "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+        "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+        "severity": "P1",
+        "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+      },
+      {
+        "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+        "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+        "severity": "P1",
+        "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+      },
+      {
+        "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+        "scope": "REWARD_VALUE_AUTHORITY",
+        "severity": "P1",
+        "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger or holdings before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Version 14 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency and actual-screen gates before any audience expansion."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      }
+    ],
+    "decisions_needed": [
+      {
+        "decision_id": "DEC-DEPLOY-HANDOVER-001",
+        "question": "Will Sites/OpenAI provide the production D1 identifier and a supported export or transfer path, or must the owner create a new D1 and migrate through a separate application-level export?",
+        "owner": "SGG project owner and Sites/OpenAI resource provider",
+        "required_by": "Before authorizing any move from Sites to owner-managed Cloudflare deployment"
+      }
+    ],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "deployments/PRIVATE_DEPLOYMENT-20260729-001.json",
+        "sha256": "38c0013aafb1da1c4fb70da49cd003b435f3bbc1d70fbcf05793b32517e46b3c",
+        "reason": "Record the exact release commit, Sites Version 14, successful owner-only deployment, D1 migration 0005, unchanged access controls, approved asset hashes, excluded swarm files and production verification evidence."
+      },
+      {
+        "path": "migration/STATE_UPDATE_CP000037_SOSHAGE_PRIVATE_DEPLOYED.json",
+        "sha256": "9b44addffb2ee07a29309ba21c671541bd0f4051629acd335a135741de640555",
+        "reason": "Record completion of ACT-035, the immutable Sites Version 14 release facts and the remaining in-app browser capability boundary."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-036",
+      "instruction": "Read CP-000037 and deployments/PRIVATE_DEPLOYMENT-20260729-001.json. Sites Version 14 from commit c675ac76bc6812c2a962dc034d3a2beaa9e3926d is live at https://sgg-player-archive.axie-b-ac.chatgpt.site with D1 migration 0005, SWARM_ENABLED=false, environment revision 2 and unchanged custom owner-only access. When the supported Codex in-app browser control capability is available, preserve the existing protected tab, open the exact production URL in a new muted tab and complete interactive desktop, 390px and console verification.",
+      "do_not_assume": [
+        "The existing protected production tab may be navigated, closed or reused; it may not.",
+        "Any swarm sprite is approved or may enter production; every swarm file remains excluded and disabled.",
+        "Access, viewers, groups, domains, environment values or indexing may change; they may not.",
+        "The in-app browser, interactive 390px viewport or console verification passed; only the Sites screenshot and production HTTP, asset-hash, HTML/CSS and Worker-log checks passed.",
+        "The two command-center policy hashes may be refreshed; they remain known unresolved drift and must not be changed."
+      ]
+    }
+  },
+  "resulting_state_sha256": "7f6a5494adc0916d47546824891372a399fcb6160246c8215f3cb55b1bbea3fc"
+}
