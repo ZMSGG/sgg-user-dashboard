@@ -162,6 +162,9 @@ export const pointGrants = sqliteTable("point_grants", {
     .notNull()
     .references(() => players.discordId, { onDelete: "restrict", onUpdate: "cascade" }),
   amount: integer("amount").notNull(),
+  // One append-only ledger carries every dashboard currency. SGP predates the
+  // column, so it is the default; balances are always summed per currency.
+  currency: text("currency").notNull().default("SGP"),
   reasonCode: text("reason_code").notNull(),
   note: text("note"),
   grantedBy: text("granted_by")
@@ -173,6 +176,26 @@ export const pointGrants = sqliteTable("point_grants", {
 }, (table) => [
   index("point_grants_discord_created_idx").on(table.discordId, table.createdAt),
   index("point_grants_granted_by_created_idx").on(table.grantedBy, table.createdAt),
+]);
+
+/**
+ * Gacha pulls are append-only records of what a draw produced. The currency
+ * debit lives in point_grants under the same idempotency key, so a retried
+ * draw can neither double-charge nor double-award.
+ */
+export const gachaPulls = sqliteTable("gacha_pulls", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  discordId: text("discord_id")
+    .notNull()
+    .references(() => players.discordId, { onDelete: "restrict", onUpdate: "cascade" }),
+  poolId: text("pool_id").notNull(),
+  cardId: text("card_id").notNull(),
+  rarity: text("rarity").notNull(),
+  idempotencyKey: text("idempotency_key").notNull().unique(),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+  index("gacha_pulls_discord_created_idx").on(table.discordId, table.createdAt),
+  index("gacha_pulls_discord_card_idx").on(table.discordId, table.cardId),
 ]);
 
 export const auditEvents = sqliteTable("audit_events", {

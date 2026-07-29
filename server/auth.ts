@@ -291,20 +291,37 @@ export type GrantFingerprintInput = {
   actor: string;
   discordId: string;
   amount: number;
+  currency?: string;
   reasonCode: string;
   note: string | null;
 };
 
 export async function grantRequestFingerprint(input: GrantFingerprintInput): Promise<string> {
   // An ordered tuple avoids object-key-order ambiguity across runtimes.
-  return sha256Hex(JSON.stringify([
-    "SGG_POINT_GRANT_V1",
-    input.actor,
-    input.discordId,
-    input.amount,
-    input.reasonCode,
-    input.note,
-  ]));
+  // SGP keeps the original V1 tuple so retries of grants written before the
+  // currency column was deployed remain byte-for-byte compatible. New
+  // currencies use a distinct V2 domain and bind the currency into the hash.
+  const currency = input.currency ?? "SGP";
+  return sha256Hex(JSON.stringify(
+    currency === "SGP"
+      ? [
+          "SGG_POINT_GRANT_V1",
+          input.actor,
+          input.discordId,
+          input.amount,
+          input.reasonCode,
+          input.note,
+        ]
+      : [
+          "SGG_CURRENCY_GRANT_V2",
+          input.actor,
+          input.discordId,
+          currency,
+          input.amount,
+          input.reasonCode,
+          input.note,
+        ],
+  ));
 }
 
 export function isUniqueConstraintError(error: unknown): boolean {

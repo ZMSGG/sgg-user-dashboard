@@ -1,0 +1,334 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 30,
+  "updated_by": "Codex",
+  "summary": "Gave the dashboard its country and its crowds, per the owner's full-max direction. A Zipangu-dusk cityscape (pagodas, torii, lanterns, floating shrine islands; no characters) now underlies the whole app in place of the flat black, dimmed by a top-heavy gradient so content stays readable; a night variant is stocked for a future time-of-day switch. On top lives the OTOMO swarm: 28 bespoke sticker-style sprites (7 OTOMO × walk/sit/sleep/cheer) generated on white and flood-fill transparentized, scattered as roughly 70-80 individuals per page — at the duty god's feet, on a ground band per view, and in a standing parade above the dock. Placement derives deterministically from seeds so SSR and hydration agree; animation is transform-only, the layer takes no pointer events, prefers-reduced-motion stops everything, and a missing sprite hides itself rather than breaking. Density is a per-view count knob for the owner's too-much dial-down. Desktop 1280 and mobile 390 both verified; banner z-order over the crowd fixed. Lint, typecheck, build and 82 tests pass. All 29 new assets (backdrop + 28 sprites) are PENDING_APPROVAL in the manifest; deployment stays blocked on lot approval.",
+  "status": "REVIEW",
+  "phase": "PRIVATE_DEPLOYED",
+  "current_objective": "Owner review of the world backdrop, the swarm density, and all pending creative lots, then a Sites deployment with migration 0005 before the 2026-08-01 tournament.",
+  "active_work": {
+    "work_id": "ACT-030",
+    "objective": "Owner review of the living-world layer and pending lots, then deployment.",
+    "status": "IN_PROGRESS",
+    "acceptance_criteria": [
+      "Owner judges swarm density per view (counts are single-number knobs) and the backdrop brightness.",
+      "Owner approves the pending lots (cards, stage, headers, pairs, game arts, backdrop, sprites) or names rejects.",
+      "Sites deployment carries migration 0005 and changes no access setting."
+    ]
+  },
+  "next_actions": [
+    {
+      "action_id": "ACT-030",
+      "order": 1,
+      "action": "Review the living world (backdrop + swarm) and all pending lots, adjust density if過剰, then deploy via Sites with migration 0005.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-GAME-ART-APPROVAL-001"
+      ]
+    },
+    {
+      "action_id": "ACT-022",
+      "order": 2,
+      "action": "Set the OTOMO CHAIN Discord credentials in Vercel.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-024",
+      "order": 3,
+      "action": "Review the two drifted command-center policy hashes.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-015",
+      "order": 4,
+      "action": "Two-account isolation check before adding any viewer.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DISCORD-E2E-001"
+      ]
+    },
+    {
+      "action_id": "ACT-021",
+      "order": 5,
+      "action": "Adapt reconciliation to verified Discord IDs when the game work lands.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-CONCURRENT-GAME-SESSION-001"
+      ]
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 6,
+      "action": "Post-season export secrets, reconcile, pay out with a decided award table.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-OTOMO-CHAIN-EXPORT-001",
+        "BLK-SGP-AWARD-TABLE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 7,
+      "action": "Sharp upgrade when supported.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPENDENCY-SHARP-001"
+      ]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 8,
+      "action": "Player snapshot bridges per game.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PLAYER-BRIDGE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-008",
+      "order": 9,
+      "action": "Separate authority before audience expansion.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PUBLICATION-001"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-GAME-ART-APPROVAL-001",
+      "scope": "CREATIVE_APPROVAL",
+      "severity": "P1",
+      "description": "Four new game key arts (QUEST 彩華×琴音 受肉体, ORACLE 福栄×ハク 精霊体, TAIYO 大耀×小槌 受肉体, EBISU 恵比寿×鯛丸 童子) are generated, canon-checked by Codex and wired into the local runtime, but carry no owner approval. The first ORACLE render was rejected in-session because 福栄's 福禄寿 helmet and goggles were missing, and the corrected render must still pass the owner's eye. Manifest rows are PENDING_APPROVAL, so no deployment may ship them.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Review the four arts at final crop and record approval of each exact file and hash, or request new directions."
+    },
+    {
+      "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+      "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+      "severity": "P1",
+      "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+    },
+    {
+      "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+      "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+      "severity": "P1",
+      "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+    },
+    {
+      "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+      "scope": "REWARD_VALUE_AUTHORITY",
+      "severity": "P1",
+      "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "Version 13 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "migration/STATE_UPDATE_CP000031_LIVING_WORLD.json",
+      "reason": "Record the backdrop and swarm layer."
+    },
+    {
+      "path": "app/OtomoSwarm.tsx",
+      "reason": "Deterministic, motion-safe, pointer-inert swarm layer."
+    },
+    {
+      "path": "app/Dashboard.tsx",
+      "reason": "Swarm mounted on stage, all five views and the footer."
+    },
+    {
+      "path": "app/Dashboard.module.css",
+      "reason": "Backdrop, swarm bands, walk/bob/cheer/breath keyframes, z-order fix."
+    },
+    {
+      "path": "scripts/creative-pipeline/batch-03-world-and-swarm.json",
+      "reason": "Lot spec: backdrops and 28 sprites."
+    },
+    {
+      "path": "public/dashboard-art/bg-zipangu-dusk.png",
+      "reason": "The country's dusk backdrop; PENDING_APPROVAL."
+    },
+    {
+      "path": "assets/ASSET_MANIFEST.csv",
+      "reason": "29 PENDING_APPROVAL rows for backdrop and sprites."
+    },
+    {
+      "path": "public/dashboard-art/swarm/haku-cheer.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/haku-sit.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/haku-sleep.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/haku-walk.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/juka-cheer.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/juka-sit.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/juka-sleep.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/juka-walk.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/kotone-cheer.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/kotone-sit.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/kotone-sleep.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/kotone-walk.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/kozuchi-cheer.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/kozuchi-sit.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/kozuchi-sleep.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/kozuchi-walk.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/momokatsu-cheer.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/momokatsu-sit.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/momokatsu-sleep.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/momokatsu-walk.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/shofuku-cheer.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/shofuku-sit.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/shofuku-sleep.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/shofuku-walk.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/taimaru-cheer.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/taimaru-sit.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/taimaru-sleep.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/swarm/taimaru-walk.png",
+      "reason": "Swarm sprite; PENDING_APPROVAL."
+    }
+  ],
+  "resume": {
+    "action_id": "ACT-030",
+    "instruction": "Present the living world to the owner: backdrop brightness and per-view swarm counts are the two dials. On lot approval, deploy via Sites with migration 0005, unchanged access.",
+    "do_not_assume": [
+      "Any pending lot is approved.",
+      "Swarm counts are final; they are knobs awaiting the owner's taste.",
+      "The night backdrop is wired; it is stocked, not used.",
+      "Anything was deployed."
+    ]
+  }
+}

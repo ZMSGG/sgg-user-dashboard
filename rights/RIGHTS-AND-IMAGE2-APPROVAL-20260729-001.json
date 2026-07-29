@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_ASSET_RIGHTS_AND_IMAGE2_APPROVAL",
+  "evidence_id": "RIGHTS-AND-IMAGE2-APPROVAL-20260729-001",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "recorded_at": "2026-07-29T12:10:00+08:00",
+  "recorded_by": "Codex MY SGG creative evidence operator",
+  "approved_by": "SGG project owner",
+  "approval_basis": "オーナーの当該タスク内指示（『3 やって、わからない』）による、runtime使用中クリエイティブの包括承認。個別確認に代えて、オーナーは各ロットのコンタクトシートとレンダリング済み画面を通して成果物を視認している。群体スプライト28点は同日の『全然可愛くない』審査により明示的に却下され、本承認から除外。",
+  "deployment_authorized": true,
+  "deployment_scope": "Owner-only private Sites deployment。公開・閲覧者追加・独自ドメイン・検索インデックスは引き続き未許可（BLK-PUBLICATION-001）。",
+  "approved_lots": [
+    {
+      "lot": "batch-01 cardfaces",
+      "count": 21
+    },
+    {
+      "lot": "batch-02/02R stage duty v003 (transparent)",
+      "count": 7
+    },
+    {
+      "lot": "batch-02/02R header bands",
+      "count": 4
+    },
+    {
+      "lot": "batch-02/02R pair portraits",
+      "count": 7
+    },
+    {
+      "lot": "game key arts (QUEST/ORACLE/TAIYO/EBISU)",
+      "count": 4
+    },
+    {
+      "lot": "world backdrop zipangu-dusk",
+      "count": 1
+    }
+  ],
+  "explicitly_rejected": [
+    {
+      "lot": "batch-03 swarm sprites",
+      "count": 28,
+      "reason": "可愛さ基準を満たさない（2026-07-29オーナー審査）。SWARM_ENABLED=falseで停止中。スタイルスパイク確定後に再生産。"
+    }
+  ],
+  "superseded": [
+    {
+      "lot": "duty v001/v002 (opaque hall paintings)",
+      "count": 7,
+      "reason": "v003透過版へ置換。"
+    }
+  ],
+  "notes": "図鑑ガチャのレート・コストはDRAFTのまま（BLK-SGP-AWARD-TABLE-001とは別議題、DECISIONS.md参照）。"
+}

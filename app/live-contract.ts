@@ -26,8 +26,16 @@ export type LiveData = {
     quest: Availability;
     farm: Availability;
     taiyo: Availability;
+    chain: Availability;
   };
   runtimeOnlineCount: number;
+  /** OTOMO CHAIN season banner data, straight from the game's public API. */
+  chainSeason: {
+    name: string;
+    startAt: string;
+    endAt: string;
+    status: "UPCOMING" | "ACTIVE" | "ENDED";
+  } | null;
   oracle: { day: number | null; entries: LiveRanking[] };
   quest: {
     season: { name: string; day: number; totalDays: number } | null;
@@ -41,8 +49,9 @@ export const emptyLiveData: LiveData = {
   servedFrom: "origin",
   cacheAgeSeconds: 0,
   sources: { oracle: "unavailable", quest: "unavailable" },
-  runtimes: { oracle: "unavailable", quest: "unavailable", farm: "unavailable", taiyo: "unavailable" },
+  runtimes: { oracle: "unavailable", quest: "unavailable", farm: "unavailable", taiyo: "unavailable", chain: "unavailable" },
   runtimeOnlineCount: 0,
+  chainSeason: null,
   oracle: { day: null, entries: [] },
   quest: { season: null, entries: [], participants: 0 },
 };

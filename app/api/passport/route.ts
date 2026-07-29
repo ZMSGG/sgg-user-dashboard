@@ -7,7 +7,7 @@ import {
 } from "../../../server/auth";
 import { discordDmAuthConfigFromEnv } from "../../../server/discord-dm-auth";
 import { guildSyncConfigFromEnv, parseGuildRoles } from "../../../server/discord-guild";
-import { getDb, getPlayer, getPointBalance, getRecentGrants } from "../../../server/passport-db";
+import { getCurrencyBalances, getDb, getPlayer, getPointBalance, getRecentGrants } from "../../../server/passport-db";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   if (!session || !db) {
     return Response.json(
       { connected: false, authConfigured: configured, authMethods },
-      { headers: NO_STORE },
+      { status: 401, headers: NO_STORE },
     );
   }
 
@@ -38,13 +38,14 @@ export async function GET(request: Request) {
   if (!player) {
     return Response.json(
       { connected: false, authConfigured: configured, authMethods },
-      { headers: NO_STORE },
+      { status: 401, headers: NO_STORE },
     );
   }
 
-  const [balance, grants] = await Promise.all([
+  const [balance, grants, balances] = await Promise.all([
     getPointBalance(db, player.discordId),
     getRecentGrants(db, player.discordId),
+    getCurrencyBalances(db, player.discordId),
   ]);
   const adminAllowlisted = (await adminDiscordIds()).has(player.discordId);
   const highAssurance = isHighAssuranceSession(session);
@@ -72,7 +73,7 @@ export async function GET(request: Request) {
         roleCount: parseGuildRoles(player.guildRoles).length,
         syncedAt: player.guildSyncedAt,
       },
-      points: { balance, grants },
+      points: { balance, grants, balances },
       isAdmin: adminAllowlisted && highAssurance,
       adminUpgradeRequired: adminAllowlisted && !highAssurance,
     },

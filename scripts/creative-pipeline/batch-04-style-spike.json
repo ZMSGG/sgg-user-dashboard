@@ -1,0 +1,82 @@
+[
+ {
+  "id": "S01-mochi",
+  "file": "SPIKE-S01-mochi.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。ハイライトは体に1つだけ\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "S02-chiikawa",
+  "file": "SPIKE-S02-chiikawa.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】2頭身未満。小さな点目を離して配置し、への字とも笑いともつかない小さな口。線は細めで揺らぎのある手描き風。色は淡く、影はほぼ無し\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "S03-sanrio",
+  "file": "SPIKE-S03-sanrio.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】サンリオ調。完全な左右対称に近い安定感。輪郭は中太で角なし。目は縦長の楕円黒目、口は小さなU。彩度低めのパステル\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "S04-yurukyara",
+  "file": "SPIKE-S04-yurukyara.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】ご当地ゆるキャラ調。少しゆるくて不格好な愛嬌。太いガタつきのある輪郭。半開きの口と垂れた目\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "S05-kirby",
+  "file": "SPIKE-S05-kirby.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】丸ゲームマスコット調。真円に近いフォルム、大きなつやつやの楕円目、頬の赤み、短い手足。彩度は明るくビビッド\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "S06-pokemon",
+  "file": "SPIKE-S06-pokemon.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】ゲームマスコット調。しっかりした黒輪郭、大きな瞳にハイライト2つ、元気な笑顔。立体感のある一段影\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "S07-emoji",
+  "file": "SPIKE-S07-emoji.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】絵文字・LINEスタンプ調。超シンプル化。単色面＋最小限の線。目と口は記号的で、感情がひと目で伝わる\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "S08-chibideka",
+  "file": "SPIKE-S08-chibideka.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】超デフォルメで頭が体の3倍。巨大なうるうる目（ハイライト3つ）、極小の体。まつげ気味の縁取り\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "S09-mofumofu",
+  "file": "SPIKE-S09-mofumofu.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】もふもふのぬいぐるみ調。ふわふわの毛並み質感、丸いシルエット、ボタンのような小さな目、縫い目風の口\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "S10-dot",
+  "file": "SPIKE-S10-dot.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛の子。丸い体、桜の花びら模様、ひれ、黒い点目）。\n\n【用途】可愛さの方向性を決めるスタイル検証。鯛丸1体だけを、ちょこんと座ってこちらを見ている姿で描く。\n\n【背景・必須】完全な純白の背景。地面影なし。背景に何も描かない。\n\n【必ず保つもの】桜色・花びら模様・ひれ・点目という鯛丸の identity。\n\n【スタイル指定】レトロゲームのドット絵調。16×16を拡大したようなカクカクのピクセル。大きな点目、限定パレット\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ }
+]

@@ -31,6 +31,7 @@ import {
   IconArena,
   IconCommunity,
   IconGames,
+  IconHome,
   IconLedger,
   IconOracle,
   IconOtomo,
@@ -39,6 +40,7 @@ import {
 } from "./DockIcons";
 import { emptyLiveData, type LiveData, type LiveRanking } from "./live-contract";
 import type { AdminPlayerRow, PassportData } from "./passport-contract";
+import { OtomoSwarm } from "./OtomoSwarm";
 import styles from "./Dashboard.module.css";
 
 type View = "home" | "games" | "arena" | "collection" | "mysgg" | "community";
@@ -56,13 +58,15 @@ type DiscordDmChallenge = {
 const DISCORD_DM_IDENTITY_PATTERN = /^(?:\d{5,25}|[a-z0-9._]{2,32})$/i;
 const DISCORD_DM_CODE_PATTERN = /^[0-9A-HJKMNP-TV-Z]{10}$/;
 
-const navItems: readonly { id: View; label: string; eyebrow: string; glyph: string }[] = [
-  { id: "home", label: "ホーム", eyebrow: "TODAY", glyph: "七" },
-  { id: "games", label: "プレイ", eyebrow: "PLAY", glyph: "遊" },
-  { id: "arena", label: "アリーナ", eyebrow: "ARENA", glyph: "冠" },
-  { id: "collection", label: "コレクション", eyebrow: "VAULT", glyph: "宝" },
-  { id: "community", label: "コミュニティ", eyebrow: "FEED", glyph: "繋" },
-  { id: "mysgg", label: "マイSGG", eyebrow: "PASSPORT", glyph: "我" },
+type NavIcon = (props: { className?: string }) => React.ReactNode;
+
+const navItems: readonly { id: View; label: string; eyebrow: string; Icon: NavIcon }[] = [
+  { id: "home", label: "ホーム", eyebrow: "TODAY", Icon: IconHome },
+  { id: "games", label: "プレイ", eyebrow: "PLAY", Icon: IconGames },
+  { id: "arena", label: "アリーナ", eyebrow: "ARENA", Icon: IconArena },
+  { id: "collection", label: "コレクション", eyebrow: "VAULT", Icon: IconVault },
+  { id: "community", label: "コミュニティ", eyebrow: "FEED", Icon: IconCommunity },
+  { id: "mysgg", label: "マイSGG", eyebrow: "PASSPORT", Icon: IconPassport },
 ] as const;
 
 // Passive loads may reuse the server-side snapshot; forced syncs always
@@ -134,8 +138,13 @@ async function requestPassport(): Promise<PassportData> {
     headers: { accept: "application/json" },
     cache: "no-store",
   });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return await response.json() as PassportData;
+  const payload = await response.json().catch(() => null) as PassportData | null;
+  // 401 is the deliberate signed-out contract. Its body still carries the
+  // available login methods so the public dashboard can render the correct
+  // connect/setup state without treating sign-out as an outage.
+  if (response.status === 401 && payload?.connected === false) return payload;
+  if (!response.ok || !payload) throw new Error(`HTTP ${response.status}`);
+  return payload;
 }
 
 function shortAddress(address: string) {
@@ -195,6 +204,35 @@ function heldCollections(data: HoldingsData | null): number {
   return data.holdings.filter((item) => item.kind === "NFT" && Number(item.balance ?? 0) > 0).length;
 }
 
+type GachaCardView = {
+  id: string;
+  pairId: string;
+  godName: string;
+  otomoName: string;
+  form: "SPIRIT" | "INCARNATE" | "DOJI";
+  formLabel: string;
+  rarity: "N" | "R" | "SR";
+  art: string;
+  accent: Accent;
+  owned: number;
+};
+
+type GachaData = {
+  poolId: string;
+  cost: { currency: string; amount: number };
+  balance: number;
+  cards: GachaCardView[];
+};
+
+async function requestGacha(): Promise<GachaData> {
+  const response = await fetch("/api/gacha", {
+    headers: { accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return await response.json() as GachaData;
+}
+
 async function requestOtomoChainLink(): Promise<GameLinkData> {
   const response = await fetch("/api/link/otomo-chain", {
     headers: { accept: "application/json" },
@@ -232,7 +270,23 @@ const runtimeKeyByGameId: Partial<Record<string, keyof LiveData["runtimes"]>> = 
   "otomo-quest-77": "quest",
   "otomo-farm-77": "farm",
   "taiyo-action-rpg": "taiyo",
+  "otomo-chain-7": "chain",
 };
+
+/**
+ * 本日の当番 — a deterministic 7-day rotation over the seven canonical pairs.
+ * A presentation schedule owned by this dashboard, not a canon fact: it only
+ * decides whose official art fronts the stage today.
+ */
+// All seven duty paintings shipped (batch-02 + batch-02R).
+const DUTY_ROSTER = characterPairs;
+
+function dutyPair(date = new Date()) {
+  const dayOfYear = Math.floor(
+    (date.getTime() - Date.UTC(date.getUTCFullYear(), 0, 0)) / 86_400_000,
+  );
+  return DUTY_ROSTER[dayOfYear % DUTY_ROSTER.length];
+}
 
 function viewFromHash(): View {
   if (typeof window === "undefined") return "home";
@@ -266,7 +320,10 @@ function formatSyncAge(value: string, now: number) {
 function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <span className={styles.brand}>
-      <span className={styles.brandMark} aria-hidden="true">七</span>
+      <span className={styles.brandMark} aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/my-sgg-icon-v003.png" alt="" width={44} height={44} />
+      </span>
       {!compact && (
         <span className={styles.brandText}>
           <strong>MY SGG</strong>
@@ -357,7 +414,15 @@ function GameCard({
         </StatusPill>
         <span>{game.duration === "ACTION" ? "ACTION" : `${game.duration} DAY`}</span>
       </div>
-      <div className={styles.gameGlyph} aria-hidden="true">{game.glyph}</div>
+      {game.keyArt ? (
+        <div className={styles.gameArt}>
+          <Image src={game.keyArt} alt="" fill sizes="(max-width: 900px) 92vw, 30vw" />
+          <span className={styles.gameGlyphOnArt} aria-hidden="true">{game.glyph}</span>
+        </div>
+      ) : (
+        // Dormant titles carry no key art, so the surface stays deliberately quiet.
+        <div className={styles.gameGlyph} aria-hidden="true">{game.glyph}</div>
+      )}
       <div className={styles.gameBody}>
         <p>{game.genre}</p>
         <h3>{game.title}</h3>
@@ -487,6 +552,10 @@ export function Dashboard() {
   const [gameLinkState, setGameLinkState] = useState<LoadState>("idle");
   const [holdings, setHoldings] = useState<HoldingsData | null>(null);
   const [holdingsState, setHoldingsState] = useState<LoadState>("idle");
+  const [gacha, setGacha] = useState<GachaData | null>(null);
+  const [gachaState, setGachaState] = useState<LoadState>("idle");
+  const [gachaBusy, setGachaBusy] = useState(false);
+  const [lastPull, setLastPull] = useState<GachaCardView | null>(null);
   const [walletBusy, setWalletBusy] = useState(false);
   const [walletChoices, setWalletChoices] = useState<WalletProviderDetail[] | null>(null);
   const [guildBusy, setGuildBusy] = useState(false);
@@ -599,6 +668,29 @@ export function Dashboard() {
     }
   }, []);
 
+  const drawGacha = useCallback(async () => {
+    if (gachaBusy) return;
+    setGachaBusy(true);
+    try {
+      const result = await postJson<{ ok: boolean; card: GachaCardView; balance: number }>(
+        "/api/gacha",
+        { idempotencyKey: crypto.randomUUID() },
+      );
+      setLastPull(result.card);
+      setGacha((prev) => prev && {
+        ...prev,
+        balance: result.balance,
+        cards: prev.cards.map((card) =>
+          card.id === result.card.id ? { ...card, owned: card.owned + 1 } : card),
+      });
+      void refreshPassport();
+    } catch (error) {
+      setToast(error instanceof Error ? error.message : "ガチャを引けませんでした");
+    } finally {
+      setGachaBusy(false);
+    }
+  }, [gachaBusy, refreshPassport]);
+
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       void refreshPassport();
@@ -653,6 +745,17 @@ export function Dashboard() {
           setHoldingsState("ready");
         } catch {
           if (!cancelled) setHoldingsState("error");
+        }
+      })();
+      setGachaState("loading");
+      void (async () => {
+        try {
+          const data = await requestGacha();
+          if (cancelled) return;
+          setGacha(data);
+          setGachaState("ready");
+        } catch {
+          if (!cancelled) setGachaState("error");
         }
       })();
     }, 0);
@@ -1087,7 +1190,7 @@ export function Dashboard() {
     ? "CHECKING"
     : liveState === "error"
       ? "HEALTH UNAVAILABLE"
-      : `${liveData.runtimeOnlineCount} / 4 ONLINE`;
+      : `${liveData.runtimeOnlineCount} / 5 ONLINE`;
   const passportBridgeLabel = passportState === "loading" && !passport
     ? "PLAYER BRIDGE · CHECKING"
     : passportState === "error" && !passport
@@ -1130,7 +1233,7 @@ export function Dashboard() {
               onClick={(event) => { event.preventDefault(); changeView(item.id); }}
             >
               <span className={styles.navNumber}>{String(index + 1).padStart(2, "0")}</span>
-              <span className={styles.navGlyph} aria-hidden="true">{item.glyph}</span>
+              <span className={styles.navGlyph} aria-hidden="true"><item.Icon className={styles.navIcon} /></span>
               <span><small>{item.eyebrow}</small><strong>{item.label}</strong></span>
             </a>
           ))}
@@ -1153,7 +1256,7 @@ export function Dashboard() {
           </button>
         )}
         <section className={styles.sidebarStatus}>
-          <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount === 4} />{runtimeSummary}</span>
+          <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount === 5} />{runtimeSummary}</span>
           <small>PLAYER DATA BRIDGE · NOT CONNECTED</small>
         </section>
       </aside>
@@ -1208,6 +1311,11 @@ export function Dashboard() {
               <i aria-hidden="true">◈</i>
               <b>{passport?.connected ? number.format(passport.points.balance) : "未接続"}</b>
               <small>SGP</small>
+            </span>
+            <span data-tone="violet">
+              <i aria-hidden="true">☽</i>
+              <b>{passport?.connected ? number.format(passport.points.balances?.MAGATAMA ?? 0) : "未接続"}</b>
+              <small>勾玉</small>
             </span>
             <span data-tone="violet">
               <i aria-hidden="true">◆</i>
@@ -1286,18 +1394,45 @@ export function Dashboard() {
           {activeView === "home" && (
             <div className={styles.homeLayout}>
               <div className={styles.homeMain}>
-                <section className={styles.hero} aria-labelledby="hero-title">
-                  <Image src="/dashboard-art/my-sgg-key-visual-v004.png" alt="神域の大聖堂で恵比寿、才華、蒼毘、福永の四柱が集うMY SGGのキービジュアル" fill priority sizes="(max-width: 900px) 100vw, 62vw" />
-                  <div className={styles.heroShade} />
-                  <div className={styles.heroCopy}>
+                <section className={styles.stage} aria-labelledby="hero-title">
+                  <div className={styles.stageBackdrop}>
+                    <Image src="/dashboard-art/bg-zipangu-dusk.png" alt="" fill priority sizes="(max-width: 900px) 100vw, 62vw" />
+                  </div>
+                  {(() => { const duty = dutyPair(); return (
+                    <div className={styles.stageActor} data-tone={duty.accent}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`/dashboard-art/stage/duty-${duty.godId.toLowerCase()}.png`} alt={`本日の当番 ${duty.godName}`} />
+                      <p className={styles.stageDuty}><small>本日の当番</small><strong>{duty.godName}</strong><span>× {duty.otomoName}</span></p>
+                    </div>
+                  ); })()}
+                  <div className={styles.stageCopy}>
                     <p>SEVENGODS GAMES / PLAYER OS</p>
                     <h1 id="hero-title">遊ぶ。競う。集める。<br /><em>すべてを、ひとつに。</em></h1>
-                    <span>神々とOTOMOが共に紡ぐゲームエコシステム。さあ、あなたの物語を始めよう。</span>
-                    <div>
-                      <button type="button" onClick={() => changeView("games")}>今すぐ遊ぶ<span aria-hidden="true">→</span></button>
-                      <button type="button" onClick={() => changeView("arena")}>ライブ番付を見る</button>
-                    </div>
                   </div>
+                  <nav className={styles.stageMenu} aria-label="クイックメニュー">
+                    <button type="button" onClick={() => changeView("collection")}><span className={styles.stageMenuIcon} data-tone="violet">☽</span>ガチャ</button>
+                    <button type="button" onClick={() => changeView("collection")}><IconVault className={styles.stageMenuSvg} />図鑑</button>
+                    <button type="button" onClick={() => changeView("arena")}><IconArena className={styles.stageMenuSvg} />番付</button>
+                    <button type="button" onClick={() => changeView("games")}><IconGames className={styles.stageMenuSvg} />出撃</button>
+                    <button type="button" onClick={() => changeView("mysgg")}><IconPassport className={styles.stageMenuSvg} />連携</button>
+                  </nav>
+                  {liveData.chainSeason && (
+                    <a
+                      className={styles.eventBanner}
+                      href="https://otomochain.sevengodsgames.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-status={liveData.chainSeason.status}
+                    >
+                      <small>{liveData.chainSeason.status === "ACTIVE" ? "開催中" : liveData.chainSeason.status === "UPCOMING" ? "開催予定" : "終了"}</small>
+                      <strong>{liveData.chainSeason.name}</strong>
+                      <span>{new Date(liveData.chainSeason.startAt).toLocaleDateString("ja-JP", { month: "numeric", day: "numeric", timeZone: "Asia/Tokyo" })}
+                        {" 〜 "}
+                        {new Date(liveData.chainSeason.endAt).toLocaleDateString("ja-JP", { month: "numeric", day: "numeric", timeZone: "Asia/Tokyo" })}</span>
+                      <i aria-hidden="true">→</i>
+                    </a>
+                  )}
+                  <OtomoSwarm className={styles.swarmStage} spec={{ seed: 7, count: 18, size: 46, bandHeight: 92, walkRatio: 0.5 }} />
                   <div className={styles.heroSignal}>
                     <small>NETWORK</small><strong>{runtimeSummary}</strong><span>LIVE HEALTH · {formatSyncTime(liveData.checkedAt)}</span>
                   </div>
@@ -1436,12 +1571,15 @@ export function Dashboard() {
 
           {activeView === "games" && (
             <div className={styles.viewStack}>
+              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 77, count: 26, size: 42 }} />
               <header className={styles.pageHeader}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className={styles.headerBand} src="/dashboard-art/headers/header-taiyo.png" alt="" aria-hidden="true" />
                 <div><p>PLAY / GAME UNIVERSE</p><h1>SGGを遊ぶ</h1><span>公開状態、進行タイプ、公式URLを正本とlive healthから統合。</span></div>
                 <div className={styles.pageStats}><span><b>{releaseStateCounts.LIVE}</b>PLAYABLE</span><span><b>{releaseStateCounts.DRAFT}</b>IN DEVELOPMENT</span><span><b>7·77·777</b>TIME AXES</span></div>
               </header>
               <div className={styles.filterBar} aria-label="ゲーム公開状態フィルター">
-                {(["ALL", "LIVE", "DRAFT"] as GameFilter[]).map((filter) => (
+                {(["ALL", "LIVE", "DORMANT"] as GameFilter[]).map((filter) => (
                   <button key={filter} type="button" aria-pressed={gameFilter === filter} className={gameFilter === filter ? styles.filterActive : ""} onClick={() => setGameFilter(filter)}>
                     {filter === "ALL" ? "すべて" : releaseStateLabels[filter]}
                   </button>
@@ -1464,8 +1602,11 @@ export function Dashboard() {
 
           {activeView === "arena" && (
             <div className={styles.viewStack}>
+              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 777, count: 22, size: 42 }} />
               <header className={styles.pageHeader}>
                 <div><p>ARENA / VERIFIED COMPETITION</p><h1>アリーナ</h1><span>公開APIと公開ページで確認できる競争だけを表示します。</span></div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className={styles.headerBand} src="/dashboard-art/headers/header-sobi.png" alt="" aria-hidden="true" />
                 <button type="button" className={styles.refreshButton} onClick={() => void loadLiveData()} disabled={syncing}>{syncing ? "同期中…" : "公開データを再同期"}</button>
               </header>
               <div className={styles.arenaBoards}>
@@ -1492,6 +1633,7 @@ export function Dashboard() {
 
           {activeView === "collection" && (
             <div className={styles.viewStack}>
+              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 7777, count: 30, size: 42 }} />
               <header className={styles.pageHeader}>
                 <div><p>COLLECTION / SOURCE-AWARE VAULT</p><h1>コレクション</h1><span>オンチェーン保有、ゲーム内資産、公式キャラクター図鑑を混ぜずに統合。</span></div>
                 <div className={styles.pageStats}><span><b>7</b>PAIRS</span><span><b>3</b>FORMS</span><span><b>未接続</b>MY ASSETS</span></div>
@@ -1546,6 +1688,61 @@ export function Dashboard() {
                   ))}
                 </div>
               </section>
+              <section className={styles.gachaSection} data-tone="violet">
+                <SectionTitle
+                  kicker="ZUKAN GACHA / 図鑑ガチャ"
+                  title="勾玉で図鑑カードを引く"
+                  copy="ダッシュボード限定のコレクションカード。NFTでもゲームアイテムでもなく、順位や報酬には影響しません。"
+                />
+                {!passport?.connected ? (
+                  <p className={styles.holdingsNote}>Discord Passportに接続するとガチャが利用できます。</p>
+                ) : gachaState === "loading" ? (
+                  <p className={styles.holdingsNote}>ガチャを準備しています…</p>
+                ) : gachaState === "error" ? (
+                  <p className={styles.holdingsNote}>ガチャ情報を取得できませんでした。再読み込みしてください。</p>
+                ) : gacha && (
+                  <div className={styles.gachaPanel}>
+                    <div className={styles.gachaMeter}>
+                      <span data-tone="violet"><i aria-hidden="true">☽</i><b>{number.format(gacha.balance)}</b><small>勾玉</small></span>
+                      <p>1回 {gacha.cost.amount} 勾玉。勾玉はイベント・大会参加で授与されます。</p>
+                      <button
+                        type="button"
+                        className={styles.primaryAction}
+                        onClick={() => void drawGacha()}
+                        disabled={gachaBusy || gacha.balance < gacha.cost.amount}
+                      >
+                        {gachaBusy ? "召喚中…" : gacha.balance < gacha.cost.amount ? "勾玉が足りません" : "ガチャを引く"}
+                      </button>
+                    </div>
+                    {lastPull && (
+                      <figure className={styles.gachaResult} data-tone={lastPull.accent} data-rarity={lastPull.rarity}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={lastPull.art} alt={`${lastPull.otomoName}（${lastPull.formLabel}）`} />
+                        <figcaption>
+                          <b data-rarity={lastPull.rarity}>{lastPull.rarity}</b>
+                          <strong>{lastPull.otomoName}</strong>
+                          <span>{lastPull.godName} × {lastPull.otomoName} · {lastPull.formLabel}</span>
+                        </figcaption>
+                      </figure>
+                    )}
+                  </div>
+                )}
+                {passport?.connected && gacha && (
+                  <div className={styles.cardShelf}>
+                    {gacha.cards.map((card) => (
+                      <figure key={card.id} data-tone={card.accent} data-owned={card.owned > 0 ? "true" : "false"}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={card.art} alt={card.owned > 0 ? `${card.otomoName}（${card.formLabel}）` : "未獲得カード"} loading="lazy" />
+                        <figcaption>
+                          <b data-rarity={card.rarity}>{card.rarity}</b>
+                          <span>{card.otomoName} · {card.formLabel}</span>
+                          <small>{card.owned > 0 ? `×${card.owned}` : "未獲得"}</small>
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                )}
+              </section>
               <section>
                 <SectionTitle
                   kicker="CANON CATALOG"
@@ -1559,7 +1756,10 @@ export function Dashboard() {
                   {characterPairs.map((pair, index) => (
                     <article key={pair.otomoId} data-tone={pair.accent}>
                       <span className={styles.pairNumber}>PAIR {String(index + 1).padStart(2, "0")}</span>
-                      <div className={styles.pairGlyph} aria-hidden="true">{pair.glyph}</div>
+                      <div className={styles.pairArt}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={`/dashboard-art/pairs/pair-${pair.godId.toLowerCase()}.png`} alt={`${pair.godName}と${pair.otomoName}の肖像`} loading="lazy" />
+                      </div>
                       <div><small>{pair.godId}</small><h3>{pair.godName}</h3></div>
                       <i aria-hidden="true">×</i>
                       <div><small>{pair.otomoId}</small><h3>{pair.otomoName}</h3></div>
@@ -1573,8 +1773,11 @@ export function Dashboard() {
 
           {activeView === "mysgg" && (
             <div className={styles.viewStack}>
+              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 777777, count: 20, size: 42 }} />
               <header className={styles.pageHeader}>
                 <div><p>MY SGG / PLAYER PASSPORT</p><h1>マイSGG</h1><span>本人、履歴、ポイント、報酬、セキュリティを一つに。制度は混ぜません。</span></div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className={styles.headerBand} src="/dashboard-art/headers/header-fukuei.png" alt="" aria-hidden="true" />
                 <StatusPill accent="coral">{passportBridgeLabel}</StatusPill>
               </header>
               <section className={styles.passportHero} aria-busy={passportState === "loading"}>
@@ -1961,7 +2164,10 @@ export function Dashboard() {
 
           {activeView === "community" && (
             <div className={styles.viewStack}>
+              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 77777, count: 22, size: 42 }} />
               <header className={styles.pageHeader}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className={styles.headerBand} src="/dashboard-art/headers/header-shouren.png" alt="" aria-hidden="true" />
                 <div><p>COMMUNITY / OFFICIAL SIGNALS</p><h1>コミュニティ</h1><span>公開済みニュース、参加導線、学び、貢献を一つのフィードへ。</span></div>
                 <div className={styles.pageStats}><span><b>02</b>PUBLISHED</span><span><b>02</b>PREPARING</span><span><b>01</b>MVP DEMO</span></div>
               </header>
@@ -1991,6 +2197,7 @@ export function Dashboard() {
               <aside className={styles.integrityNote}><strong>PUBLICATION RULE</strong><p>APPROVEDやREVIEWは公開済みではありません。Xは公開台帳、Discordは送信記録、Dispatchは公開URLを確認してから表示します。</p></aside>
             </div>
           )}
+          <OtomoSwarm className={styles.swarmFooter} spec={{ seed: 20260801, count: 34, size: 46, bandHeight: 96, walkRatio: 0.55 }} />
         </main>
 
         {/* Illustrated dock mirroring the primary destinations. Every entry
@@ -2012,7 +2219,7 @@ export function Dashboard() {
       <nav className={styles.mobileNav} aria-label="モバイルナビゲーション">
         {navItems.map((item) => (
           <a key={item.id} href={`#${item.id}`} className={activeView === item.id ? styles.mobileNavActive : ""} aria-current={activeView === item.id ? "page" : undefined} onClick={(event) => { event.preventDefault(); changeView(item.id); }}>
-            <span aria-hidden="true">{item.glyph}</span><strong>{item.label}</strong>
+            <span aria-hidden="true"><item.Icon className={styles.navIcon} /></span><strong>{item.label}</strong>
           </a>
         ))}
       </nav>

@@ -1,6 +1,6 @@
 export type Accent = "cyan" | "violet" | "coral" | "gold" | "green";
 
-export type ReleaseState = "LIVE" | "DRAFT" | "NOT_DEPLOYED";
+export type ReleaseState = "LIVE" | "DORMANT" | "DRAFT" | "NOT_DEPLOYED";
 export type SyncMode = "PUBLIC" | "AUTH_REQUIRED" | "UNAVAILABLE";
 
 export type GameSummary = {
@@ -17,6 +17,8 @@ export type GameSummary = {
   glyph: string;
   genre: string;
   duration: "7" | "77" | "777" | "ACTION";
+  /** Approved key art. Null keeps a dormant title visually quiet. */
+  keyArt: string | null;
   officialUrl: string | null;
   rankingUrl: string | null;
   guideUrl: string | null;
@@ -34,20 +36,44 @@ export const games: readonly GameSummary[] = [
     subtitle: "派遣・待機・探索・進化",
     description:
       "7体のOTOMOを神域へ派遣し、帰還を待ち、素材と成長を積み上げる77日シーズン。",
-    releaseState: "LIVE",
-    releaseLabel: "CLOSED TEST RUNTIME · S1 REVIEW",
+    releaseState: "DORMANT",
+    releaseLabel: "休眠中 · 市場投入対象外",
     sourceLabel: "DEPLOYMENT REGISTRY · 2026.07.20",
     syncMode: "AUTH_REQUIRED",
     accent: "violet",
     glyph: "Q7",
     genre: "LONG-FORM EXPEDITION",
     duration: "77",
+    keyArt: "/dashboard-art/games/quest.png",
     officialUrl: "https://otomoquest.sevengodsgames.com/",
     rankingUrl: "https://otomoquest.sevengodsgames.com/ranking",
     guideUrl: "https://otomoquest.sevengodsgames.com/guide",
     primaryAction: "QUESTを開く",
     nextAction: "帰還・派遣状況を確認",
     nextActionMeta: "Discordログイン後にゲーム側で同期",
+  },
+  {
+    id: "otomo-chain-7",
+    title: "OTOMO CHAIN 7",
+    shortTitle: "CHAIN 7",
+    subtitle: "七日間・一日七走の番付戦",
+    description:
+      "神域の連鎖を駆け抜け、日々の最高記録を積み上げる7日間シーズン。上位3日分の合計で序列が決まる。",
+    releaseState: "LIVE",
+    releaseLabel: "配信中 · 重点タイトル",
+    sourceLabel: "PRODUCTION API · /api/season",
+    syncMode: "PUBLIC",
+    accent: "cyan",
+    glyph: "C7",
+    genre: "SHORT-RUN RANKING",
+    duration: "7",
+    keyArt: "/dashboard-art/cards/card-02.png",
+    officialUrl: "https://otomochain.sevengodsgames.com/",
+    rankingUrl: "https://otomochain.sevengodsgames.com/",
+    guideUrl: null,
+    primaryAction: "CHAINを開く",
+    nextAction: "シーズンの開催状況を確認",
+    nextActionMeta: "第1回大会は公式発表の日程で開催",
     featured: true,
   },
   {
@@ -58,13 +84,14 @@ export const games: readonly GameSummary[] = [
     description:
       "神域の畑で種をまき、収穫し、OTOMOを育てる77日シーズン。自動農作業にも対応。",
     releaseState: "LIVE",
-    releaseLabel: "EXISTING RUNTIME · CUSTOM DOMAIN PENDING",
+    releaseLabel: "配信中 · 重点タイトル",
     sourceLabel: "DEPLOYMENT REGISTRY · 2026.07.20",
     syncMode: "AUTH_REQUIRED",
     accent: "green",
     glyph: "F7",
     genre: "LONG-FORM FARMING",
     duration: "77",
+    keyArt: "/dashboard-art/cards/card-04.png",
     officialUrl: "https://otomo-farm-77.vercel.app/",
     rankingUrl: "https://otomo-farm-77.vercel.app/rankings",
     guideUrl: null,
@@ -79,14 +106,15 @@ export const games: readonly GameSummary[] = [
     subtitle: "七柱の神託を読み解く",
     description:
       "7体のOTOMOを神座へ配置する、1日1問の空間ロジックゲーム。練習と神託番付を公開中。",
-    releaseState: "LIVE",
-    releaseLabel: "PUBLIC RUNTIME VERIFIED",
+    releaseState: "DORMANT",
+    releaseLabel: "休眠中 · 市場投入対象外",
     sourceLabel: "HTTP 200 VERIFIED · 2026.07.14",
     syncMode: "PUBLIC",
     accent: "cyan",
     glyph: "O7",
     genre: "DAILY LOGIC",
     duration: "7",
+    keyArt: "/dashboard-art/games/oracle.png",
     officialUrl: "https://otomooracle.sevengodsgames.com/",
     rankingUrl: "https://otomooracle.sevengodsgames.com/ranking",
     guideUrl: "https://otomooracle.sevengodsgames.com/guide",
@@ -101,14 +129,15 @@ export const games: readonly GameSummary[] = [
     subtitle: "宵闇の神楽林を駆ける",
     description:
       "大黒天の神装をまとったTAIYOで駆ける、ハイスピード2DアクションRPG。",
-    releaseState: "NOT_DEPLOYED",
-    releaseLabel: "PRIVATE RUNTIME · PUBLIC RELEASE PENDING",
+    releaseState: "DORMANT",
+    releaseLabel: "休眠中 · 市場投入対象外",
     sourceLabel: "DEPLOYMENT REGISTRY · 2026.07.20",
     syncMode: "UNAVAILABLE",
     accent: "gold",
     glyph: "大",
     genre: "ACTION RPG",
     duration: "ACTION",
+    keyArt: "/dashboard-art/games/taiyo.png",
     officialUrl: null,
     rankingUrl: null,
     guideUrl: null,
@@ -123,14 +152,15 @@ export const games: readonly GameSummary[] = [
     subtitle: "潮を読み、仕掛けを最適化する",
     description:
       "11の潮を77時間で巡る放置釣りゲーム。仕様・進行・データ設計を準備中。",
-    releaseState: "DRAFT",
-    releaseLabel: "SPEC ONLY DRAFT",
+    releaseState: "DORMANT",
+    releaseLabel: "休眠中 · 市場投入対象外",
     sourceLabel: "PROJECT REGISTRY · 2026.07.14",
     syncMode: "UNAVAILABLE",
     accent: "coral",
     glyph: "釣",
     genre: "IDLE FISHING",
     duration: "77",
+    keyArt: "/dashboard-art/games/ebisu.png",
     officialUrl: null,
     rankingUrl: null,
     guideUrl: null,
@@ -442,6 +472,9 @@ export const systemNotifications = [
 
 export const releaseStateLabels: Record<ReleaseState, string> = {
   LIVE: "プレイ可能",
+  // Built and reachable, but not part of the titles currently being taken to
+  // market. Deliberately distinct from 開発中 and 未公開.
+  DORMANT: "休眠中",
   DRAFT: "開発中",
   NOT_DEPLOYED: "未公開",
 };
@@ -451,5 +484,5 @@ export const releaseStateCounts = games.reduce(
     counts[game.releaseState] += 1;
     return counts;
   },
-  { LIVE: 0, DRAFT: 0, NOT_DEPLOYED: 0 } as Record<ReleaseState, number>,
+  { LIVE: 0, DORMANT: 0, DRAFT: 0, NOT_DEPLOYED: 0 } as Record<ReleaseState, number>,
 );

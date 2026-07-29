@@ -82,6 +82,8 @@ test("the packaged migration chain exposes the constraints required by the grant
       { name: "idempotency_key", notnull: 1, defaultValue: null },
       { name: "request_fingerprint", notnull: 1, defaultValue: "''" },
       { name: "created_at", notnull: 1, defaultValue: "CURRENT_TIMESTAMP" },
+      // Multi-currency ledger: rows written before the column exist as SGP.
+      { name: "currency", notnull: 1, defaultValue: "'SGP'" },
     ],
   );
 
@@ -174,6 +176,7 @@ test("appendPointGrantWithAudit commits the grant and its matching audit atomica
   assert.equal(audit.created_at, grant.created_at);
   assert.deepEqual(JSON.parse(audit.detail), {
     amount: input.amount,
+    currency: "SGP",
     reasonCode: input.reasonCode,
     idempotencyKey: input.idempotencyKey,
     requestFingerprint: input.requestFingerprint,
@@ -206,6 +209,7 @@ test("idempotency collisions preserve the first fingerprint and never append a s
   assert.deepEqual(await getGrantByIdempotencyKey(db, original.idempotencyKey), {
     discordId: original.discordId,
     amount: original.amount,
+    currency: "SGP",
     reasonCode: original.reasonCode,
     note: original.note,
     grantedBy: original.grantedBy,

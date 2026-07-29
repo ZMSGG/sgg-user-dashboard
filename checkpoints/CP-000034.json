@@ -1,0 +1,498 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000034",
+  "state_version": 34,
+  "created_at": "2026-07-29T15:43:47+08:00",
+  "previous_checkpoint_id": "CP-000033",
+  "summary": "The owner chose S01 mochi as the cuteness constitution ('1 他のキャラもこれみたい'). The family sheet extended it to all seven OTOMO with identity intact (momokatsu's helmet-daruma, haku's crane ball, shofuku's gold cord), and batch-07 produced the full 28-sprite swarm lot (7 × walk/sit/sleep/cheer) in that style. All passed QA, were flood-fill transparentized, trimmed and installed over the rejected v001 set; SWARM_ENABLED is back on and the parade renders on the stage foot, the per-view ground bands and the footer. The manifest holds the v001 rows as REJECTED history and 28 v002 mochi rows PENDING the owner's look. Blanket approval RIGHTS-20260729-001 already cleared everything else, so the deploy prompt in the owner's hands covers the rest; the mochi swarm needs one visual yes to ride along or SWARM_ENABLED ships true with the owner's next word. Lint, typecheck, build and 82 tests pass.",
+  "project_basis_sha256": "c91281ddfea1282f77808f5ec1a45a39a9148eb011de4eb02912c2b76f2d625e",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 34,
+    "updated_at": "2026-07-29T15:43:47+08:00",
+    "updated_by": "Codex",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Get the owner's yes on the rendered mochi swarm, then the owner pastes the deploy prompt so the full soshage dashboard reaches production before the 2026-08-01 tournament.",
+    "last_summary": "The owner chose S01 mochi as the cuteness constitution ('1 他のキャラもこれみたい'). The family sheet extended it to all seven OTOMO with identity intact (momokatsu's helmet-daruma, haku's crane ball, shofuku's gold cord), and batch-07 produced the full 28-sprite swarm lot (7 × walk/sit/sleep/cheer) in that style. All passed QA, were flood-fill transparentized, trimmed and installed over the rejected v001 set; SWARM_ENABLED is back on and the parade renders on the stage foot, the per-view ground bands and the footer. The manifest holds the v001 rows as REJECTED history and 28 v002 mochi rows PENDING the owner's look. Blanket approval RIGHTS-20260729-001 already cleared everything else, so the deploy prompt in the owner's hands covers the rest; the mochi swarm needs one visual yes to ride along or SWARM_ENABLED ships true with the owner's next word. Lint, typecheck, build and 82 tests pass.",
+    "last_checkpoint_id": "CP-000034",
+    "last_checkpoint_path": "checkpoints/CP-000034.json",
+    "active_work": {
+      "work_id": "ACT-034",
+      "objective": "Owner confirms the mochi swarm on screen; deploy via Sites with migration 0005.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Owner views the rendered swarm and confirms or adjusts density/style.",
+        "Deployment carries migration 0005, unchanged access settings.",
+        "Deployed home shows the lobby with the mochi parade."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      },
+      {
+        "action_id": "ACT-017",
+        "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
+          "drizzle/0004_yielding_dormammu.sql",
+          "app/api/link/otomo-chain/route.ts"
+        ],
+        "completed_at": "2026-07-26T18:55:57+08:00",
+        "checkpoint_id": "CP-000022"
+      },
+      {
+        "action_id": "ACT-025",
+        "result": "Deployed Sites Version 13 from commit 7e725f499cd47313b5bb1776b304873a99f71514 as an owner-only private production release, preserved access policy revision 1, and recorded production HTTP, asset, screenshot, CSS, and Worker-log evidence.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json",
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json",
+          "checkpoints/CP-000025.json"
+        ],
+        "completed_at": "2026-07-28T17:15:00+08:00",
+        "checkpoint_id": "CP-000026"
+      },
+      {
+        "action_id": "ACT-027",
+        "result": "Recorded the production Worker/account facts, unknown production D1 identity, owner-side D1 candidate boundary, Sites environment variable names, official Wrangler deployment path, and official D1 export path without changing external state or exposing secret values.",
+        "evidence": [
+          "docs/DEPLOY_HANDOVER_FACTS.md",
+          ".openai/hosting.json",
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json"
+        ],
+        "completed_at": "2026-07-28T17:27:01+08:00",
+        "checkpoint_id": "CP-000027"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-034",
+        "order": 1,
+        "action": "Owner confirms the mochi swarm and pastes the deploy prompt into Codex.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-022",
+        "order": 2,
+        "action": "Set the OTOMO CHAIN Discord credentials in Vercel.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-024",
+        "order": 3,
+        "action": "Review the two drifted command-center policy hashes.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 4,
+        "action": "Two-account isolation check before adding any viewer.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-021",
+        "order": 5,
+        "action": "Adapt reconciliation to verified Discord IDs when the game work lands.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-CONCURRENT-GAME-SESSION-001"
+        ]
+      },
+      {
+        "action_id": "ACT-018",
+        "order": 6,
+        "action": "Post-season export secrets, reconcile, pay out with a decided award table.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-OTOMO-CHAIN-EXPORT-001",
+          "BLK-SGP-AWARD-TABLE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 7,
+        "action": "Sharp upgrade when supported.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 8,
+        "action": "Player snapshot bridges per game.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 9,
+        "action": "Separate authority before audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+        "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+        "severity": "P1",
+        "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+      },
+      {
+        "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+        "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+        "severity": "P1",
+        "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+      },
+      {
+        "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+        "scope": "REWARD_VALUE_AUTHORITY",
+        "severity": "P1",
+        "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Version 13 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      }
+    ],
+    "decisions_needed": [
+      {
+        "decision_id": "DEC-DEPLOY-HANDOVER-001",
+        "question": "Will Sites/OpenAI provide the production D1 identifier and a supported export or transfer path, or must the owner create a new D1 and migrate through a separate application-level export?",
+        "owner": "SGG project owner and Sites/OpenAI resource provider",
+        "required_by": "Before authorizing any move from Sites to owner-managed Cloudflare deployment"
+      }
+    ],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "migration/STATE_UPDATE_CP000034_MOCHI_SWARM.json",
+        "sha256": "1ae3a024670f725d3128c30b86c266e3e10c0b4eaf032a2ade73686f6a923458",
+        "reason": "Record the mochi constitution, family and swarm production."
+      },
+      {
+        "path": "scripts/creative-pipeline/batch-06-mochi-family.json",
+        "sha256": "6bab53c4c811ed10c9b54c0ab434a7c7aac849328e10e8ced423486c50d79866",
+        "reason": "Family confirmation lot spec."
+      },
+      {
+        "path": "scripts/creative-pipeline/batch-07-mochi-swarm.json",
+        "sha256": "3d10418626fc5c1fae02eec5911987022272afc83b4ad009dc18d749cc12bf10",
+        "reason": "Full swarm production spec under the S01 clause."
+      },
+      {
+        "path": "app/OtomoSwarm.tsx",
+        "sha256": "c9b0fec779e993d1f0c6911bb4444d84a5a29889a4c7fdbef1392640f35d8b59",
+        "reason": "SWARM_ENABLED restored with the replacement lot."
+      },
+      {
+        "path": "assets/ASSET_MANIFEST.csv",
+        "sha256": "063d3ebefc115e545181193623507b33e24693e547a9c24cbf978cc8b27aa57c",
+        "reason": "28 v002 mochi rows; v001 kept as REJECTED history."
+      },
+      {
+        "path": "public/dashboard-art/swarm/haku-cheer.png",
+        "sha256": "0db0947627e5760db3c53594ecc2b2129e0c608834f2cbf79a41155092d3f9c0",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/haku-sit.png",
+        "sha256": "0f70a0792a6228f8055c7ebc1c07957d69e4031317be4971cfabe46d7f911541",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/haku-sleep.png",
+        "sha256": "07131f620f9508603762b321aac9e299a1fc11db78138bc29a694039985c8093",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/haku-walk.png",
+        "sha256": "7984a949fc363aca5f2b3dba5e8ca6b4f5a9f22195893d955134d3a9828034e5",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/juka-cheer.png",
+        "sha256": "42617880a83edd46ee20e180abcfb4aacf9027e63feb804c18c1f4cd0425c033",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/juka-sit.png",
+        "sha256": "7617e5166cc5776d913a860b27ff2194c4a8849c571a9e0f2c90d2e043b48824",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/juka-sleep.png",
+        "sha256": "8556b6ca302e4ccf2480fa8c38fde185f35d5ed68407078091e56a9a57b3b2c5",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/juka-walk.png",
+        "sha256": "e757b89b51577dee9229892e297e33ab3484147c10a6d99c841c604db3b9ead6",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/kotone-cheer.png",
+        "sha256": "550cc48f293803b3970b10926f3f911dd61b43c17de81408e63e5256d242b64b",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/kotone-sit.png",
+        "sha256": "cf585f532241b9179576afc2587ea03af9aa9930aaf0ba59753d3be525082e9b",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/kotone-sleep.png",
+        "sha256": "7d99199fea5251fb3af9de8a63c3f648bae319c2daf6b9dc918c0001fcfa4794",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/kotone-walk.png",
+        "sha256": "7cb4cf311c350db56365e0b7ec9692fc54d7f142a35c93866f518fc68daf1805",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/kozuchi-cheer.png",
+        "sha256": "7808f121330026f1106743821de629582e8eb688bba5b39b93ca4ba38ba77362",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/kozuchi-sit.png",
+        "sha256": "c81c24394d27e650423f6ac4ca0b433223c11f53f1fde881932155b6dde81177",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/kozuchi-sleep.png",
+        "sha256": "682b7ca2e53ac4cda9afeed7bb92ff5ab5348f417bbbc22a379c62e7c6d070cb",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/kozuchi-walk.png",
+        "sha256": "d55d92374cf0980c859a128c573418f25c24dca2c6769e0020c2e5260eb9d2cb",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/momokatsu-cheer.png",
+        "sha256": "dd5376c62f2b5487a92bae68eb4f7c854b3decc18017f1ff07401bcdfcd29d0e",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/momokatsu-sit.png",
+        "sha256": "4edf9f2971f0c2613ca17505371fa53db4a0c86a09a773621bb3e1e05211b117",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/momokatsu-sleep.png",
+        "sha256": "3b59a5054c46424242b5a066a20010b0f2bd7a00de58955f65277e589f3d577d",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/momokatsu-walk.png",
+        "sha256": "493f4a17ee2cc9b60ce5988b35c6d36f091c95a0e04149eda42e8bb1f9dbae39",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/shofuku-cheer.png",
+        "sha256": "6febd97f346acb7b72c77df8383df86d3ea91474011c57bfeeac51bc9d1c0d1b",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/shofuku-sit.png",
+        "sha256": "fba6ee93253f44628be8cd2d8bf62d3a76b73183f55c51ceb4811eee2f951b82",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/shofuku-sleep.png",
+        "sha256": "2c8900cb5a9983691ae5bcf02e10e858ff222c20faf8f5981a2985f4eaab09a8",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/shofuku-walk.png",
+        "sha256": "0fb1a5d7519362b35123108116662d3793c6d1faa3c71f77e3eb73b1a8c49840",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/taimaru-cheer.png",
+        "sha256": "f654598fcec0679ad1fe1a325afc9f5d016db6b5756a25599fec3ccdf54f90f3",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/taimaru-sit.png",
+        "sha256": "8cb08d44ad591a2d962e6584deb2d376e64777ca077227e28d6ce0333681bfc5",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/taimaru-sleep.png",
+        "sha256": "932e7085972b6592c9d892f94d2fd733b586633738406d6ebc1a050a61264951",
+        "reason": "Mochi swarm sprite v002."
+      },
+      {
+        "path": "public/dashboard-art/swarm/taimaru-walk.png",
+        "sha256": "d9684516fea8406f9db0df411de713e21e2030a3264fa1a880a6ce1be57610af",
+        "reason": "Mochi swarm sprite v002."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-034",
+      "instruction": "Show the owner the rendered parade. On their yes, they paste the standing deploy prompt (Sites, migration 0005, unchanged access). Density knobs remain per-view counts if they want adjustments.",
+      "do_not_assume": [
+        "The mochi swarm lot is owner-approved; it awaits their look at the rendered screen.",
+        "Anything was deployed; production remains Sites Version 13."
+      ]
+    }
+  },
+  "resulting_state_sha256": "a3325e3589548791e862168c12581bd382e7ef70218876b6fd38c9f78988bbd9"
+}

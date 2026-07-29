@@ -4,6 +4,16 @@
  * cannot drift apart in what the append-only ledger accepts.
  */
 
+// Kept dependency-free on purpose: plain Node tests import this module
+// without a TS loader. The vocabulary below must match server/currencies.ts;
+// tests/gacha.test.mjs asserts the two stay in sync.
+const GRANT_CURRENCIES = ["SGP", "MAGATAMA", "FUKUSEN"] as const;
+export type CurrencyCode = (typeof GRANT_CURRENCIES)[number];
+
+function isCurrencyCode(value: unknown): value is CurrencyCode {
+  return typeof value === "string" && (GRANT_CURRENCIES as readonly string[]).includes(value);
+}
+
 export const GRANT_REASON_PATTERN = /^[A-Z0-9_]{3,64}$/;
 export const GRANT_MAX_ABS_AMOUNT = 1_000_000;
 export const GRANT_IDEMPOTENCY_KEY_PATTERN = /^[A-Za-z0-9._:-]{8,128}$/;
@@ -11,6 +21,7 @@ export const GRANT_IDEMPOTENCY_KEY_PATTERN = /^[A-Za-z0-9._:-]{8,128}$/;
 export type GrantPayload = {
   discordId: string;
   amount: number;
+  currency: CurrencyCode;
   reasonCode: string;
   note: string | null;
   idempotencyKey: string;
@@ -23,10 +34,16 @@ export type GrantParseResult =
 export function parseGrantPayload(body: {
   discordId?: unknown;
   amount?: unknown;
+  currency?: unknown;
   reasonCode?: unknown;
   note?: unknown;
   idempotencyKey?: unknown;
 }): GrantParseResult {
+  // Absent means SGP so that pre-currency callers keep their exact behavior.
+  const currency = body.currency === undefined ? "SGP" : body.currency;
+  if (!isCurrencyCode(currency)) {
+    return { ok: false, code: "BAD_CURRENCY", message: "対応していない通貨コードです。" };
+  }
   if (typeof body.discordId !== "string" || !/^\d{5,25}$/.test(body.discordId)) {
     return { ok: false, code: "BAD_TARGET", message: "付与先のDiscord IDが不正です。" };
   }
@@ -67,6 +84,7 @@ export function parseGrantPayload(body: {
     value: {
       discordId: body.discordId,
       amount: body.amount,
+      currency,
       reasonCode: body.reasonCode,
       note: normalizedNote || null,
       idempotencyKey: body.idempotencyKey,

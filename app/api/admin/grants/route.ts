@@ -66,6 +66,7 @@ export async function POST(request: Request) {
     actor: session.sub,
     discordId: grant.discordId,
     amount: grant.amount,
+    currency: grant.currency,
     reasonCode: grant.reasonCode,
     note: grant.note,
   });
@@ -75,6 +76,7 @@ export async function POST(request: Request) {
     await appendPointGrantWithAudit(db, {
       discordId: grant.discordId,
       amount: grant.amount,
+      currency: grant.currency,
       reasonCode: grant.reasonCode,
       note: grant.note,
       grantedBy: session.sub,
@@ -91,6 +93,7 @@ export async function POST(request: Request) {
       existing.grantedBy === session.sub &&
       existing.discordId === grant.discordId &&
       existing.amount === grant.amount &&
+      existing.currency === grant.currency &&
       existing.reasonCode === grant.reasonCode &&
       existing.note === grant.note;
     if (existing.requestFingerprint !== requestFingerprint && !legacyPayloadMatches) {
@@ -103,7 +106,7 @@ export async function POST(request: Request) {
     alreadyGranted = true;
   }
 
-  const balance = await getPointBalance(db, grant.discordId);
+  const balance = await getPointBalance(db, grant.discordId, grant.currency);
   return Response.json(
     { ok: true, alreadyGranted, balance },
     { headers: { "Cache-Control": "no-store" } },

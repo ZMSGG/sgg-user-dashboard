@@ -98,11 +98,17 @@ test("point grant fingerprint is deterministic and payload-sensitive", async () 
   const retry = await grantRequestFingerprint({ ...base });
   const altered = await grantRequestFingerprint({ ...base, amount: 76 });
   const otherActor = await grantRequestFingerprint({ ...base, actor: "333333333333333333" });
+  const explicitSgp = await grantRequestFingerprint({ ...base, currency: "SGP" });
+  const magatama = await grantRequestFingerprint({ ...base, currency: "MAGATAMA" });
+  const fukusen = await grantRequestFingerprint({ ...base, currency: "FUKUSEN" });
 
   assert.match(first, /^[0-9a-f]{64}$/);
   assert.equal(retry, first);
+  assert.equal(explicitSgp, first, "legacy SGP fingerprints remain retry-compatible");
   assert.notEqual(altered, first);
   assert.notEqual(otherActor, first);
+  assert.notEqual(magatama, first);
+  assert.notEqual(magatama, fukusen);
 });
 
 test("D1 unique races are recognized without swallowing unrelated failures", () => {

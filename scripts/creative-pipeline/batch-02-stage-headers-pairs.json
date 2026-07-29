@@ -1,0 +1,164 @@
+[
+ {
+  "id": "duty-ebisu",
+  "file": "DUTY-ebisu.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『恵比寿』の本体イラストと正面設定。\n\n【用途】ダッシュボードのホーム画面ステージに立つ「本日の当番」全身立ち絵。縦長2:3。\n\n【必ず保つもの】恵比寿の顔の造形、目、髪、体型と頭身、衣装、装備、配色を参照と一致させる。人物像: 豊漁の神。おおらかで面倒見がよい。\n\n【シーン】暗い黒曜石と金の神域の広間に立ち、こちらへ視線を向けて迎える。ポーズは新規で、性格が伝わる自然な立ち姿。足元に淡い金の魔法陣の光。\n\n【構図】人物は中央、画面の高さの70%。背景は暗く静かに保ち、画面下端30%と右端20%は特に暗くしてUIが重なっても読めるようにする。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング＋映画的な光。全年齢向けで健全。登場は恵比寿1体のみ。"
+ },
+ {
+  "id": "duty-taiyo",
+  "file": "DUTY-taiyo.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『大耀』の本体イラストと正面設定。\n\n【用途】ダッシュボードのホーム画面ステージに立つ「本日の当番」全身立ち絵。縦長2:3。\n\n【必ず保つもの】大耀の顔の造形、目、髪、体型と頭身、衣装、装備、配色を参照と一致させる。人物像: 疾駆の神。快活で負けず嫌い。\n\n【シーン】暗い黒曜石と金の神域の広間に立ち、こちらへ視線を向けて迎える。ポーズは新規で、性格が伝わる自然な立ち姿。足元に淡い金の魔法陣の光。\n\n【構図】人物は中央、画面の高さの70%。背景は暗く静かに保ち、画面下端30%と右端20%は特に暗くしてUIが重なっても読めるようにする。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング＋映画的な光。全年齢向けで健全。登場は大耀1体のみ。"
+ },
+ {
+  "id": "duty-sobi",
+  "file": "DUTY-sobi.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『蒼毘』の本体イラストと正面設定。\n\n【用途】ダッシュボードのホーム画面ステージに立つ「本日の当番」全身立ち絵。縦長2:3。\n\n【必ず保つもの】蒼毘の顔の造形、目、髪、体型と頭身、衣装、装備、配色を参照と一致させる。人物像: 武の神。凛として頼もしい。\n\n【シーン】暗い黒曜石と金の神域の広間に立ち、こちらへ視線を向けて迎える。ポーズは新規で、性格が伝わる自然な立ち姿。足元に淡い金の魔法陣の光。\n\n【構図】人物は中央、画面の高さの70%。背景は暗く静かに保ち、画面下端30%と右端20%は特に暗くしてUIが重なっても読めるようにする。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング＋映画的な光。全年齢向けで健全。登場は蒼毘1体のみ。"
+ },
+ {
+  "id": "duty-saika",
+  "file": "DUTY-saika.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『彩華』の本体イラストと正面設定。\n\n【用途】ダッシュボードのホーム画面ステージに立つ「本日の当番」全身立ち絵。縦長2:3。\n\n【必ず保つもの】彩華の顔の造形、目、髪、体型と頭身、衣装、装備、配色を参照と一致させる。人物像: 音曲の神。艶やかで自由。\n\n【シーン】暗い黒曜石と金の神域の広間に立ち、こちらへ視線を向けて迎える。ポーズは新規で、性格が伝わる自然な立ち姿。足元に淡い金の魔法陣の光。\n\n【構図】人物は中央、画面の高さの70%。背景は暗く静かに保ち、画面下端30%と右端20%は特に暗くしてUIが重なっても読めるようにする。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング＋映画的な光。全年齢向けで健全。登場は彩華1体のみ。"
+ },
+ {
+  "id": "duty-juraku",
+  "file": "DUTY-juraku.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『寿楽』の本体イラストと正面設定。\n\n【用途】ダッシュボードのホーム画面ステージに立つ「本日の当番」全身立ち絵。縦長2:3。\n\n【必ず保つもの】寿楽の顔の造形、目、髪、体型と頭身、衣装、装備、配色を参照と一致させる。人物像: 学理の神。穏やかで思慮深い。\n\n【シーン】暗い黒曜石と金の神域の広間に立ち、こちらへ視線を向けて迎える。ポーズは新規で、性格が伝わる自然な立ち姿。足元に淡い金の魔法陣の光。\n\n【構図】人物は中央、画面の高さの70%。背景は暗く静かに保ち、画面下端30%と右端20%は特に暗くしてUIが重なっても読めるようにする。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング＋映画的な光。全年齢向けで健全。登場は寿楽1体のみ。"
+ },
+ {
+  "id": "duty-fukuei",
+  "file": "DUTY-fukuei.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『福栄』の本体イラストと正面設定。\n\n【用途】ダッシュボードのホーム画面ステージに立つ「本日の当番」全身立ち絵。縦長2:3。\n\n【必ず保つもの】福栄の顔の造形、目、髪、体型と頭身、衣装、装備、配色を参照と一致させる。人物像: 福徳の神。無邪気で観察者。\n\n【シーン】暗い黒曜石と金の神域の広間に立ち、こちらへ視線を向けて迎える。ポーズは新規で、性格が伝わる自然な立ち姿。足元に淡い金の魔法陣の光。\n\n【構図】人物は中央、画面の高さの70%。背景は暗く静かに保ち、画面下端30%と右端20%は特に暗くしてUIが重なっても読めるようにする。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング＋映画的な光。全年齢向けで健全。登場は福栄1体のみ。"
+ },
+ {
+  "id": "duty-shouren",
+  "file": "DUTY-shouren.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『笑蓮』の本体イラストと正面設定。\n\n【用途】ダッシュボードのホーム画面ステージに立つ「本日の当番」全身立ち絵。縦長2:3。\n\n【必ず保つもの】笑蓮の顔の造形、目、髪、体型と頭身、衣装、装備、配色を参照と一致させる。人物像: 笑福の神。華やかで包容力がある。\n\n【シーン】暗い黒曜石と金の神域の広間に立ち、こちらへ視線を向けて迎える。ポーズは新規で、性格が伝わる自然な立ち姿。足元に淡い金の魔法陣の光。\n\n【構図】人物は中央、画面の高さの70%。背景は暗く静かに保ち、画面下端30%と右端20%は特に暗くしてUIが重なっても読めるようにする。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング＋映画的な光。全年齢向けで健全。登場は笑蓮1体のみ。"
+ },
+ {
+  "id": "header-arena",
+  "file": "HEADER-sobi.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『蒼毘』。\n\n【用途】ダッシュボード「アリーナ（競争・番付）」ページのヘッダー装飾。横長3:1の帯。人物は右40%に配置し、左60%は見出し文字のための暗く静かな空間。\n\n【必ず保つもの】蒼毘の顔・髪・衣装・配色を参照と一致させる。\n\n【シーン】蒼い闘気平を纏い槍を構える臨戦の横姿。左60%は暗い競技場の霞。\n\n【スタイル】高品質な和風ミライ神話アニメ。全年齢向けで健全。登場は蒼毘1体のみ。"
+ },
+ {
+  "id": "header-play",
+  "file": "HEADER-taiyo.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『大耀』。\n\n【用途】ダッシュボード「プレイ（出撃・ゲーム選択）」ページのヘッダー装飾。横長3:1の帯。人物は右40%に配置し、左60%は見出し文字のための暗く静かな空間。\n\n【必ず保つもの】大耀の顔・髪・衣装・配色を参照と一致させる。\n\n【シーン】駆け出す瞬間の躍動。左60%は暗い出撃回廊。\n\n【スタイル】高品質な和風ミライ神話アニメ。全年齢向けで健全。登場は大耀1体のみ。"
+ },
+ {
+  "id": "header-community",
+  "file": "HEADER-shouren.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『笑蓮』。\n\n【用途】ダッシュボード「コミュニティ（交流・祭）」ページのヘッダー装飾。横長3:1の帯。人物は右40%に配置し、左60%は見出し文字のための暗く静かな空間。\n\n【必ず保つもの】笑蓮の顔・髪・衣装・配色を参照と一致させる。\n\n【シーン】扇を掲げて笑う歓待の姿。左60%は暗い祭りの夜空と提灯の玉ボケ。\n\n【スタイル】高品質な和風ミライ神話アニメ。全年齢向けで健全。登場は笑蓮1体のみ。"
+ },
+ {
+  "id": "header-mysgg",
+  "file": "HEADER-fukuei.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『福栄』。\n\n【用途】ダッシュボード「マイSGG（記録・本人確認）」ページのヘッダー装飾。横長3:1の帯。人物は右40%に配置し、左60%は見出し文字のための暗く静かな空間。\n\n【必ず保つもの】福栄の顔・髪・衣装・配色を参照と一致させる。\n\n【シーン】帳面と星図を検める姿。左60%は暗い記録庫。\n\n【スタイル】高品質な和風ミライ神話アニメ。全年齢向けで健全。登場は福栄1体のみ。"
+ },
+ {
+  "id": "pair-ebisu",
+  "file": "PAIR-ebisu.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『恵比寿』とOTOMO『鯛丸』。\n\n【用途】キャラクター図鑑のペア肖像。正方形1:1。二人が並び立つ公式肖像画の趣。\n\n【必ず保つもの】両者の顔・髪・衣装・体型・配色を参照と一致させる。\n\n【シーン】暗い神域を背景に、恵比寿が主、鯛丸が傍らに寄り添う。互いへの信頼が伝わる自然な距離感。ポーズは新規。\n\n【スタイル】高品質な和風ミライ神話アニメの肖像。全年齢向けで健全。登場は2体のみ。"
+ },
+ {
+  "id": "pair-taiyo",
+  "file": "PAIR-taiyo.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/otomo/kozuchi_incarnate.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『大耀』とOTOMO『小槌』。\n\n【用途】キャラクター図鑑のペア肖像。正方形1:1。二人が並び立つ公式肖像画の趣。\n\n【必ず保つもの】両者の顔・髪・衣装・体型・配色を参照と一致させる。\n\n【シーン】暗い神域を背景に、大耀が主、小槌が傍らに寄り添う。互いへの信頼が伝わる自然な距離感。ポーズは新規。\n\n【スタイル】高品質な和風ミライ神話アニメの肖像。全年齢向けで健全。登場は2体のみ。"
+ },
+ {
+  "id": "pair-sobi",
+  "file": "PAIR-sobi.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『蒼毘』とOTOMO『百勝』。\n\n【用途】キャラクター図鑑のペア肖像。正方形1:1。二人が並び立つ公式肖像画の趣。\n\n【必ず保つもの】両者の顔・髪・衣装・体型・配色を参照と一致させる。\n\n【シーン】暗い神域を背景に、蒼毘が主、百勝が傍らに寄り添う。互いへの信頼が伝わる自然な距離感。ポーズは新規。\n\n【スタイル】高品質な和風ミライ神話アニメの肖像。全年齢向けで健全。登場は2体のみ。"
+ },
+ {
+  "id": "pair-saika",
+  "file": "PAIR-saika.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_spirit.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『彩華』とOTOMO『琴音』。\n\n【用途】キャラクター図鑑のペア肖像。正方形1:1。二人が並び立つ公式肖像画の趣。\n\n【必ず保つもの】両者の顔・髪・衣装・体型・配色を参照と一致させる。\n\n【シーン】暗い神域を背景に、彩華が主、琴音が傍らに寄り添う。互いへの信頼が伝わる自然な距離感。ポーズは新規。\n\n【スタイル】高品質な和風ミライ神話アニメの肖像。全年齢向けで健全。登場は2体のみ。"
+ },
+ {
+  "id": "pair-juraku",
+  "file": "PAIR-juraku.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/otomo/juka_incarnate.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『寿楽』とOTOMO『寿鹿』。\n\n【用途】キャラクター図鑑のペア肖像。正方形1:1。二人が並び立つ公式肖像画の趣。\n\n【必ず保つもの】両者の顔・髪・衣装・体型・配色を参照と一致させる。\n\n【シーン】暗い神域を背景に、寿楽が主、寿鹿が傍らに寄り添う。互いへの信頼が伝わる自然な距離感。ポーズは新規。\n\n【スタイル】高品質な和風ミライ神話アニメの肖像。全年齢向けで健全。登場は2体のみ。"
+ },
+ {
+  "id": "pair-fukuei",
+  "file": "PAIR-fukuei.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/otomo/haku_spirit.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『福栄』とOTOMO『ハク』。\n\n【用途】キャラクター図鑑のペア肖像。正方形1:1。二人が並び立つ公式肖像画の趣。\n\n【必ず保つもの】両者の顔・髪・衣装・体型・配色を参照と一致させる。\n\n【シーン】暗い神域を背景に、福栄が主、ハクが傍らに寄り添う。互いへの信頼が伝わる自然な距離感。ポーズは新規。\n\n【スタイル】高品質な和風ミライ神話アニメの肖像。全年齢向けで健全。登場は2体のみ。"
+ },
+ {
+  "id": "pair-shouren",
+  "file": "PAIR-shouren.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『笑蓮』とOTOMO『笑袋』。\n\n【用途】キャラクター図鑑のペア肖像。正方形1:1。二人が並び立つ公式肖像画の趣。\n\n【必ず保つもの】両者の顔・髪・衣装・体型・配色を参照と一致させる。\n\n【シーン】暗い神域を背景に、笑蓮が主、笑袋が傍らに寄り添う。互いへの信頼が伝わる自然な距離感。ポーズは新規。\n\n【スタイル】高品質な和風ミライ神話アニメの肖像。全年齢向けで健全。登場は2体のみ。"
+ }
+]

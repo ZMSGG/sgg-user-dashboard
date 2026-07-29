@@ -1,0 +1,463 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000029",
+  "state_version": 29,
+  "created_at": "2026-07-29T00:25:13+08:00",
+  "previous_checkpoint_id": "CP-000028",
+  "summary": "Overnight build to the owner's soshage-dashboard direction. The ledger gained a currency column (migration 0005) with a closed vocabulary of three dashboard-native soft currencies (SGP, 勾玉 MAGATAMA, 福銭 FUKUSEN) — none is a token and no price or exchange value is shown anywhere. On top of it sits the 図鑑ガチャ: 21 collection cards (7 canonical pairs × 3 OTOMO forms) faced with official public creator-kit art, one draw costs 7 MAGATAMA, and a draw is one batch (debit + pull + audit) under one idempotency key so retries can neither double-charge nor double-award; rates N100/R35/SR10 and the cost are recorded as DRAFT project-only assumptions in DECISIONS.md. The home became a character stage: today's duty GOD (a deterministic 7-day rotation, presentation only) stands in official art over the approved key visual, beside a quick-menu column and a tournament banner fed live from the OTOMO CHAIN season API. Official canon art now also faces the character catalog, and unowned gacha cards render as silhouettes so the shelf never overstates what a player holds. The 28 canon files had edge-connected white backgrounds converted to transparency; interior whites survive. End-to-end verification on local D1 covered granting stones through the admin API, three UI/API draws (21→0), an idempotent retry resolving to the same card without charge, a 402 on insufficient funds, and the rendered stage and gacha shelf at 390px. Lint, typecheck, production build and 82 tests pass. Nothing here is deployed; the four game key arts remain PENDING_APPROVAL and the two command-center policy hashes remain drifted pending owner review.",
+  "project_basis_sha256": "d18ff9918b1762e9171aa0c1ea668f6994774b60a27d98bd454a0e7d4ee022ab",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 29,
+    "updated_at": "2026-07-29T00:25:13+08:00",
+    "updated_by": "Codex",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Have the owner review the soshage home stage, the gacha, and the four pending game key arts in the morning, then deploy the whole surface through Sites before the 2026-08-01 tournament without touching audience settings.",
+    "last_summary": "Overnight build to the owner's soshage-dashboard direction. The ledger gained a currency column (migration 0005) with a closed vocabulary of three dashboard-native soft currencies (SGP, 勾玉 MAGATAMA, 福銭 FUKUSEN) — none is a token and no price or exchange value is shown anywhere. On top of it sits the 図鑑ガチャ: 21 collection cards (7 canonical pairs × 3 OTOMO forms) faced with official public creator-kit art, one draw costs 7 MAGATAMA, and a draw is one batch (debit + pull + audit) under one idempotency key so retries can neither double-charge nor double-award; rates N100/R35/SR10 and the cost are recorded as DRAFT project-only assumptions in DECISIONS.md. The home became a character stage: today's duty GOD (a deterministic 7-day rotation, presentation only) stands in official art over the approved key visual, beside a quick-menu column and a tournament banner fed live from the OTOMO CHAIN season API. Official canon art now also faces the character catalog, and unowned gacha cards render as silhouettes so the shelf never overstates what a player holds. The 28 canon files had edge-connected white backgrounds converted to transparency; interior whites survive. End-to-end verification on local D1 covered granting stones through the admin API, three UI/API draws (21→0), an idempotent retry resolving to the same card without charge, a 402 on insufficient funds, and the rendered stage and gacha shelf at 390px. Lint, typecheck, production build and 82 tests pass. Nothing here is deployed; the four game key arts remain PENDING_APPROVAL and the two command-center policy hashes remain drifted pending owner review.",
+    "last_checkpoint_id": "CP-000029",
+    "last_checkpoint_path": "checkpoints/CP-000029.json",
+    "active_work": {
+      "work_id": "ACT-028",
+      "objective": "Morning owner review of the overnight soshage build, then a Sites deployment.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Owner reviews the stage, gacha, catalog and play surfaces on the local server or screenshots.",
+        "Owner approves the four pending game key arts by exact hash or requests new directions.",
+        "Owner decides whether DRAFT gacha rates and costs ship as-is for the private release.",
+        "Sites deployment carries migration 0005 and changes no access setting."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      },
+      {
+        "action_id": "ACT-017",
+        "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
+          "drizzle/0004_yielding_dormammu.sql",
+          "app/api/link/otomo-chain/route.ts"
+        ],
+        "completed_at": "2026-07-26T18:55:57+08:00",
+        "checkpoint_id": "CP-000022"
+      },
+      {
+        "action_id": "ACT-025",
+        "result": "Deployed Sites Version 13 from commit 7e725f499cd47313b5bb1776b304873a99f71514 as an owner-only private production release, preserved access policy revision 1, and recorded production HTTP, asset, screenshot, CSS, and Worker-log evidence.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json",
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json",
+          "checkpoints/CP-000025.json"
+        ],
+        "completed_at": "2026-07-28T17:15:00+08:00",
+        "checkpoint_id": "CP-000026"
+      },
+      {
+        "action_id": "ACT-027",
+        "result": "Recorded the production Worker/account facts, unknown production D1 identity, owner-side D1 candidate boundary, Sites environment variable names, official Wrangler deployment path, and official D1 export path without changing external state or exposing secret values.",
+        "evidence": [
+          "docs/DEPLOY_HANDOVER_FACTS.md",
+          ".openai/hosting.json",
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json"
+        ],
+        "completed_at": "2026-07-28T17:27:01+08:00",
+        "checkpoint_id": "CP-000027"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-028",
+        "order": 1,
+        "action": "Review the overnight soshage build and the DRAFT gacha rates, approve the four game key arts, then deploy through Sites with migration 0005.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-GAME-ART-APPROVAL-001"
+        ]
+      },
+      {
+        "action_id": "ACT-022",
+        "order": 2,
+        "action": "Add the OTOMO CHAIN redirect URI to the approved MY SGG Discord application and set DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET in the OTOMO CHAIN Vercel project.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-024",
+        "order": 3,
+        "action": "Review the two drifted command-center policy files and refresh their recorded hashes deliberately.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 4,
+        "action": "Complete the two-account isolation check before adding any viewer.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-021",
+        "order": 5,
+        "action": "Adapt dashboard reconciliation to the game's verified Discord ID after the concurrent OTOMO CHAIN work is committed.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-CONCURRENT-GAME-SESSION-001"
+        ]
+      },
+      {
+        "action_id": "ACT-018",
+        "order": 6,
+        "action": "After the season ends, configure the export secrets, reconcile via dry run, then pay out with a decided award table.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-OTOMO-CHAIN-EXPORT-001",
+          "BLK-SGP-AWARD-TABLE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 7,
+        "action": "Upgrade to stable Next and Cloudflare or Miniflare versions that officially support patched Sharp.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 8,
+        "action": "Implement side-effect-free player snapshot bridges per game before showing in-game progress.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 9,
+        "action": "Request and record separate authority before any audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-GAME-ART-APPROVAL-001",
+        "scope": "CREATIVE_APPROVAL",
+        "severity": "P1",
+        "description": "Four new game key arts (QUEST 彩華×琴音 受肉体, ORACLE 福栄×ハク 精霊体, TAIYO 大耀×小槌 受肉体, EBISU 恵比寿×鯛丸 童子) are generated, canon-checked by Codex and wired into the local runtime, but carry no owner approval. The first ORACLE render was rejected in-session because 福栄's 福禄寿 helmet and goggles were missing, and the corrected render must still pass the owner's eye. Manifest rows are PENDING_APPROVAL, so no deployment may ship them.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Review the four arts at final crop and record approval of each exact file and hash, or request new directions."
+      },
+      {
+        "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+        "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+        "severity": "P1",
+        "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+      },
+      {
+        "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+        "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+        "severity": "P1",
+        "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+      },
+      {
+        "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+        "scope": "REWARD_VALUE_AUTHORITY",
+        "severity": "P1",
+        "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Version 13 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      }
+    ],
+    "decisions_needed": [
+      {
+        "decision_id": "DEC-DEPLOY-HANDOVER-001",
+        "question": "Will Sites/OpenAI provide the production D1 identifier and a supported export or transfer path, or must the owner create a new D1 and migrate through a separate application-level export?",
+        "owner": "SGG project owner and Sites/OpenAI resource provider",
+        "required_by": "Before authorizing any move from Sites to owner-managed Cloudflare deployment"
+      }
+    ],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "migration/STATE_UPDATE_CP000029_SOSHAGE_OVERNIGHT.json",
+        "sha256": "5702ed90c008e03f60cf3b6f6e38f33f8df240d592675e386461d45f4754cda3",
+        "reason": "Record the overnight currency, gacha and stage build."
+      },
+      {
+        "path": "db/schema.ts",
+        "sha256": "75e9ba11ae70cb882bb1bd613c87712abeeb6641d953e166e5ba42e6d8372989",
+        "reason": "currency column on point_grants; gacha_pulls table."
+      },
+      {
+        "path": "drizzle/0005_same_madripoor.sql",
+        "sha256": "7d76e0621a8b9c20d5fd2d9eddb1e273502bcb694ddc6524b8c3200e92b6f965",
+        "reason": "Packaged D1 migration for both."
+      },
+      {
+        "path": "server/currencies.ts",
+        "sha256": "794d908e389a6f9773d9bfa9b873ad5fb6d322596c3dba9d92707a5d42f88ba2",
+        "reason": "Closed three-currency registry."
+      },
+      {
+        "path": "server/gacha.ts",
+        "sha256": "56a28e9582ab2a574f166e8e948fdcd734624ffb412b16f35d74fc6ce24ba6f2",
+        "reason": "Card pool, DRAFT weights, injectable pick logic."
+      },
+      {
+        "path": "server/grant-validation.ts",
+        "sha256": "712ef5a281355c17d2f5e7976d49894cf0f7a9987d9d6898aaa41aa7ac510f35",
+        "reason": "Currency-aware validation, kept dependency-free."
+      },
+      {
+        "path": "server/passport-db.ts",
+        "sha256": "535e4e24b01d46b111622b79ffa4401b28fdae9e0908f1cb10119292ed57a971",
+        "reason": "Per-currency balances, gacha draw batch, inventory reads."
+      },
+      {
+        "path": "app/api/gacha/route.ts",
+        "sha256": "f1b89b7776d46423f790fce14109443e56721c916ba584957fd5c24f0a4b0d95",
+        "reason": "Pool read and idempotent draw endpoints."
+      },
+      {
+        "path": "app/api/passport/route.ts",
+        "sha256": "39ff56271ad6cb62349029324e9001437f78b146a3d7b31f66f168078c7f6939",
+        "reason": "Passport now carries all currency balances."
+      },
+      {
+        "path": "app/api/admin/grants/route.ts",
+        "sha256": "1ecc1892f8c9263b9521733bfb41a7cf7ebcf867df8daa58a11d0e2ce647a2da",
+        "reason": "Admin grants accept a currency."
+      },
+      {
+        "path": "app/api/integration/grants/route.ts",
+        "sha256": "c62da6e96cbae964b9b19a267c2cbdef30bf85ca7575da01dce248bb5ddd5952",
+        "reason": "Integration grants accept a currency."
+      },
+      {
+        "path": "app/api/live/route.ts",
+        "sha256": "5742f10fe42c8a2804b84cb4d5929b463fb15377110a8304bc318b16fd57212e",
+        "reason": "Chain season fetched for the live event banner."
+      },
+      {
+        "path": "app/live-contract.ts",
+        "sha256": "4c8303d257209b7c902dd99be7b672f01cdf0eb991171ef19ef15292410e1c4a",
+        "reason": "chainSeason in the shared live contract."
+      },
+      {
+        "path": "app/passport-contract.ts",
+        "sha256": "f04baa29e231608319bd784ccda1d536f09bac7d296afe15eed951c9abd8f31c",
+        "reason": "balances and per-grant currency."
+      },
+      {
+        "path": "app/Dashboard.tsx",
+        "sha256": "be0c2d328a12c50615fbf7c7cbc4f95a8b17cffb5a043e329ef99e580051db27",
+        "reason": "Character stage home, quick menu, event banner, gacha panel, card shelf, catalog art."
+      },
+      {
+        "path": "app/Dashboard.module.css",
+        "sha256": "8e58c89de68269b935e6e075118700ec198f65bc35567af963af78b3e56787a1",
+        "reason": "Stage, menu, banner, gacha, shelf and catalog styles."
+      },
+      {
+        "path": "docs/POINT_REASON_CODES.md",
+        "sha256": "aed9b392d8de61ffcec0e547de22509cccfcd56f752f742636c2a287a9b9979c",
+        "reason": "GACHA_DRAW and EVENT_STONE codes."
+      },
+      {
+        "path": "DECISIONS.md",
+        "sha256": "175123050807347e4eae5e591bc6ec2d11b1e022ee300a9f1244f07e36832c80",
+        "reason": "Currency, gacha-DRAFT and canon-art-usage decisions."
+      },
+      {
+        "path": "assets/ASSET_MANIFEST.csv",
+        "sha256": "743ce5e3ccac7163b219f4fc3fd246d5635257077b569b1cf01fa5bb0ef65f92",
+        "reason": "28 canon art REFERENCE rows."
+      },
+      {
+        "path": "tests/gacha.test.mjs",
+        "sha256": "3074ff0870d96f60293c8008b2fe3362c52815163e58b052a6d130d29d7826d3",
+        "reason": "Pool coverage, weight mapping, vocabulary sync, isolation, idempotency."
+      },
+      {
+        "path": "tests/helpers/sqlite-d1.mjs",
+        "sha256": "2c44a87a99fcf26452fa89588e95dcb7bc30238fdca809dcf4d30fbff11d0c74",
+        "reason": "Apply migration 0005."
+      },
+      {
+        "path": "tests/migration-0002.test.mjs",
+        "sha256": "c2dd2af7fae616889ee8391417598681538fd355f782181edd6a56f251e15b58",
+        "reason": "Journal covers 0005."
+      },
+      {
+        "path": "tests/passport-db-d1.test.mjs",
+        "sha256": "b590da8fd131931e52bf794966cf7388d74236089c65b66c7c6bd7b55e1b9f5f",
+        "reason": "Ledger shape includes currency."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-028",
+      "instruction": "Walk the owner through the overnight build in the morning: the stage, the gacha (77 MAGATAMA are pre-granted to the owner locally for a demo), the shelf, and the pending approvals. Deployment goes through Sites and must carry migration 0005.",
+      "do_not_assume": [
+        "Gacha rates or costs are final; they are DRAFT and the owner may change them before deployment.",
+        "Cards are assets; they are dashboard-only cosmetics with no NFT, item, ranking or reward meaning.",
+        "The duty rotation is canon; it is a presentation schedule.",
+        "The four game key arts are approved; they remain PENDING_APPROVAL.",
+        "Anything was deployed overnight; nothing was."
+      ]
+    }
+  },
+  "resulting_state_sha256": "6753e660b25638e36d286fd7ecff6f5fb169463266e4d3e1f8b7a27d87d462c3"
+}

@@ -5,6 +5,7 @@
 
 export type PassportGrant = {
   amount: number;
+  currency?: string;
   reasonCode: string;
   note: string | null;
   createdAt: string;
@@ -51,7 +52,7 @@ export type PassportData =
     loginMethod?: PassportLoginMethod;
     player: PassportPlayer;
     guild: PassportGuild;
-    points: { balance: number; grants: PassportGrant[] };
+    points: { balance: number; grants: PassportGrant[]; balances?: Record<string, number> };
     isAdmin: boolean;
     adminUpgradeRequired?: boolean;
   };

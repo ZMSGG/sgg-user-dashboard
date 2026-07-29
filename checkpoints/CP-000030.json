@@ -1,0 +1,732 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000030",
+  "state_version": 30,
+  "created_at": "2026-07-29T09:31:08+08:00",
+  "previous_checkpoint_id": "CP-000029",
+  "summary": "Replaced every raw-art paste with bespoke Image 2.0 creatives, completing the owner's prohibition of direct source-art use. Three lots ran through the new batch pipeline (scripts/creative-pipeline): 21 gacha card faces, then 18 stage/header/pair slots of which six were rejected in QA — 福栄 twice for a missing 福禄寿 helmet and goggles, 笑蓮 three times for a missing signature headdress or an extra figure, and one header for wrong placement — and regenerated with signature-feature clauses; all six passed re-inspection. The runtime now carries 48 bespoke character creatives: 21 card faces, 7 duty stage paintings with the full seven-god rotation restored, 4 page-header bands (arena 蒼毘, play 大耀, community 笑蓮, my-sgg 福栄), 7 catalog pair portraits, plus the previously approved key visual, 5 home cards and 4 game key arts. The raw creator-kit copies were moved out of public/ into assets/reference/creator-kit/ and their 28 manifest rows relabeled identity-reference-only. Lint, typecheck, build and 82 tests pass; the stage, gacha result plates, shelf, catalog and all four header bands were verified rendered at 390px. Every new creative is PENDING_APPROVAL pending the owner's lot review, and deployment stays blocked on that approval.",
+  "project_basis_sha256": "cc17a6f5af4c6a497531b77c92709cb7eb654649d527ed00e5d1ac04d434f636",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 30,
+    "updated_at": "2026-07-29T09:31:08+08:00",
+    "updated_by": "Codex",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Obtain the owner's lot-level review of the 48 bespoke creatives and the DRAFT gacha economics, then deploy the soshage dashboard through Sites before the 2026-08-01 tournament.",
+    "last_summary": "Replaced every raw-art paste with bespoke Image 2.0 creatives, completing the owner's prohibition of direct source-art use. Three lots ran through the new batch pipeline (scripts/creative-pipeline): 21 gacha card faces, then 18 stage/header/pair slots of which six were rejected in QA — 福栄 twice for a missing 福禄寿 helmet and goggles, 笑蓮 three times for a missing signature headdress or an extra figure, and one header for wrong placement — and regenerated with signature-feature clauses; all six passed re-inspection. The runtime now carries 48 bespoke character creatives: 21 card faces, 7 duty stage paintings with the full seven-god rotation restored, 4 page-header bands (arena 蒼毘, play 大耀, community 笑蓮, my-sgg 福栄), 7 catalog pair portraits, plus the previously approved key visual, 5 home cards and 4 game key arts. The raw creator-kit copies were moved out of public/ into assets/reference/creator-kit/ and their 28 manifest rows relabeled identity-reference-only. Lint, typecheck, build and 82 tests pass; the stage, gacha result plates, shelf, catalog and all four header bands were verified rendered at 390px. Every new creative is PENDING_APPROVAL pending the owner's lot review, and deployment stays blocked on that approval.",
+    "last_checkpoint_id": "CP-000030",
+    "last_checkpoint_path": "checkpoints/CP-000030.json",
+    "active_work": {
+      "work_id": "ACT-029",
+      "objective": "Owner lot review of batches 01, 02 and 02R, then a Sites deployment with migration 0005.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Owner reviews the three contact sheets and approves each lot or names rejects by id.",
+        "Owner confirms the DRAFT gacha rates and cost may ship in the owner-only release.",
+        "Sites deployment carries migration 0005 and changes no access setting.",
+        "No PENDING_APPROVAL asset ships without its lot approved."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      },
+      {
+        "action_id": "ACT-017",
+        "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
+          "drizzle/0004_yielding_dormammu.sql",
+          "app/api/link/otomo-chain/route.ts"
+        ],
+        "completed_at": "2026-07-26T18:55:57+08:00",
+        "checkpoint_id": "CP-000022"
+      },
+      {
+        "action_id": "ACT-025",
+        "result": "Deployed Sites Version 13 from commit 7e725f499cd47313b5bb1776b304873a99f71514 as an owner-only private production release, preserved access policy revision 1, and recorded production HTTP, asset, screenshot, CSS, and Worker-log evidence.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json",
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json",
+          "checkpoints/CP-000025.json"
+        ],
+        "completed_at": "2026-07-28T17:15:00+08:00",
+        "checkpoint_id": "CP-000026"
+      },
+      {
+        "action_id": "ACT-027",
+        "result": "Recorded the production Worker/account facts, unknown production D1 identity, owner-side D1 candidate boundary, Sites environment variable names, official Wrangler deployment path, and official D1 export path without changing external state or exposing secret values.",
+        "evidence": [
+          "docs/DEPLOY_HANDOVER_FACTS.md",
+          ".openai/hosting.json",
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json"
+        ],
+        "completed_at": "2026-07-28T17:27:01+08:00",
+        "checkpoint_id": "CP-000027"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-029",
+        "order": 1,
+        "action": "Review the three lot contact sheets, approve or name rejects, then deploy through Sites with migration 0005.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-GAME-ART-APPROVAL-001"
+        ]
+      },
+      {
+        "action_id": "ACT-022",
+        "order": 2,
+        "action": "Add the OTOMO CHAIN redirect URI to the MY SGG Discord application and set the client credentials in Vercel.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-024",
+        "order": 3,
+        "action": "Review the two drifted command-center policy hashes.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 4,
+        "action": "Complete the two-account isolation check before adding any viewer.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-021",
+        "order": 5,
+        "action": "Adapt reconciliation to the game's verified Discord ID once that work is committed.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-CONCURRENT-GAME-SESSION-001"
+        ]
+      },
+      {
+        "action_id": "ACT-018",
+        "order": 6,
+        "action": "After the season ends, configure export secrets, reconcile, then pay out with a decided award table.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-OTOMO-CHAIN-EXPORT-001",
+          "BLK-SGP-AWARD-TABLE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 7,
+        "action": "Upgrade Sharp when officially supported.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 8,
+        "action": "Implement player snapshot bridges per game.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 9,
+        "action": "Separate authority before any audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-GAME-ART-APPROVAL-001",
+        "scope": "CREATIVE_APPROVAL",
+        "severity": "P1",
+        "description": "Four new game key arts (QUEST 彩華×琴音 受肉体, ORACLE 福栄×ハク 精霊体, TAIYO 大耀×小槌 受肉体, EBISU 恵比寿×鯛丸 童子) are generated, canon-checked by Codex and wired into the local runtime, but carry no owner approval. The first ORACLE render was rejected in-session because 福栄's 福禄寿 helmet and goggles were missing, and the corrected render must still pass the owner's eye. Manifest rows are PENDING_APPROVAL, so no deployment may ship them.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Review the four arts at final crop and record approval of each exact file and hash, or request new directions."
+      },
+      {
+        "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+        "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+        "severity": "P1",
+        "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+      },
+      {
+        "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+        "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+        "severity": "P1",
+        "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+      },
+      {
+        "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+        "scope": "REWARD_VALUE_AUTHORITY",
+        "severity": "P1",
+        "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Version 13 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      }
+    ],
+    "decisions_needed": [
+      {
+        "decision_id": "DEC-DEPLOY-HANDOVER-001",
+        "question": "Will Sites/OpenAI provide the production D1 identifier and a supported export or transfer path, or must the owner create a new D1 and migrate through a separate application-level export?",
+        "owner": "SGG project owner and Sites/OpenAI resource provider",
+        "required_by": "Before authorizing any move from Sites to owner-managed Cloudflare deployment"
+      }
+    ],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "migration/STATE_UPDATE_CP000030_BESPOKE_CREATIVE_SWEEP.json",
+        "sha256": "aa9ce419360adda8fc289226deb3c847a87f1c3347ef712358eccb16c7a1774e",
+        "reason": "Record the raw-art replacement sweep."
+      },
+      {
+        "path": "scripts/creative-pipeline/run-batch.py",
+        "sha256": "6c826925ac5df9bc7fa8e08a52620f0eafb87388e25f584f7524f89d95a8da58",
+        "reason": "Batch generation driver with the no-copy clause baked in."
+      },
+      {
+        "path": "scripts/creative-pipeline/batch-01-cardfaces.json",
+        "sha256": "3400d3892e58e93919f510e766354be687b8106741b6aab13a7a2d8cbb9f1e26",
+        "reason": "Lot spec: 21 card faces."
+      },
+      {
+        "path": "scripts/creative-pipeline/batch-02-stage-headers-pairs.json",
+        "sha256": "15c97b1192953d6503dfb520a2004256c6a7868d1b23294ccbf43b82b1019465",
+        "reason": "Lot spec: duty, headers, pairs."
+      },
+      {
+        "path": "scripts/creative-pipeline/batch-02R-rejects.json",
+        "sha256": "ee84853d5b4660a8489ed2f4d8664d4101fe122407036eac1fbc8e03348c0b23",
+        "reason": "Reject regeneration with signature clauses."
+      },
+      {
+        "path": "server/gacha.ts",
+        "sha256": "acd89a22f73fb42ffb9be46ad3e435c7cd0231f32af5f4b7561ed80793de8d68",
+        "reason": "Card faces point at bespoke art."
+      },
+      {
+        "path": "app/Dashboard.tsx",
+        "sha256": "97d3766b4064247b3ecaf6053a6fe88c10a018ceeab76442e030076293df34fd",
+        "reason": "Duty rotation, catalog portraits, four header bands; zero raw-art references."
+      },
+      {
+        "path": "app/Dashboard.module.css",
+        "sha256": "8fef70d791a18dc51aa9744f222724553761d54cb5719226f8a7ac3e82c4e424",
+        "reason": "Stage edge mask and header band styles."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/haku-doji.png",
+        "sha256": "dbb698a53679b12188ab425d09e46c78a9014aa2a4ba444a97eb3748cf136b97",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/haku-incarnate.png",
+        "sha256": "46a260dc65a879ccdf6ef5a2a3510219dd312e3d42837af69866fa2c602845ff",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/haku-spirit.png",
+        "sha256": "8b46388663d014c231bfeaa665c9d87395f4bcdb05a764a7eaf5d4898b79b660",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/juka-doji.png",
+        "sha256": "9e54f3147430daa0f099dec3ff78a250b3bd447d4fabf5908983396c785c01b7",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/juka-incarnate.png",
+        "sha256": "c464a7badcee15f1fe22fc7ac9a6096de8c6f3f958bfd7f1c2573ce5fb349836",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/juka-spirit.png",
+        "sha256": "d92b30907a76d99fc183bdf4be8a43c13aee307c1c15178ae8dd2f28273b7243",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/kotone-doji.png",
+        "sha256": "fe39b94a428845b5da84cb9324d7eb3058a86e7522f254fa9afa183ecdf5b8cc",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/kotone-incarnate.png",
+        "sha256": "ac8f7a2bad5be89f21ea410153915e18c35c9f5ddcb58557dad65b604d604cb1",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/kotone-spirit.png",
+        "sha256": "e9f8ef600e6d8c5682b800b72e690e3651cbdd1128e50632c18857ff61dd1e0f",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/kozuchi-doji.png",
+        "sha256": "8560db9ac7292f9b182a892217034966fbdca6cff7fdbfef5a242ef4c5c1e45d",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/kozuchi-incarnate.png",
+        "sha256": "b049fed2998e06e27ff363b11e2c5f1875fe654ac798ec7252dcb7200403d67e",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/kozuchi-spirit.png",
+        "sha256": "79d9faddff531d76c545a7b05b003d9161bb8899407515ba631ab882d715c8ec",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/momokatsu-doji.png",
+        "sha256": "e732f6f19acfc47f8b6ac73c441986dc725708fd6b9cc1e46065a071ee8c0199",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/momokatsu-incarnate.png",
+        "sha256": "ae67915a4e44311ec408d2587d19936f9da54206b9a9b49550940d6bad78b375",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/momokatsu-spirit.png",
+        "sha256": "0fd4a8e1db1f9cf2ce3f9d2015b419305a7113b5ec3336cc36b162adae0a3cc1",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/shofuku-doji.png",
+        "sha256": "e334cf1575d06103bc653c567daf7d96c862454bf9493a454a67a1d035673b8c",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/shofuku-incarnate.png",
+        "sha256": "612a86f3017459fda12efd2afc6f923673d314cbb1eebe95caa3162123bcb5fd",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/shofuku-spirit.png",
+        "sha256": "8b8f79d2364e8e088335cb91a78fe19b6c4b8afca8da4fa4b24b89aece3e5270",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/taimaru-doji.png",
+        "sha256": "d3fafcfe8a6d8157f28150b2e3e51f02b500fa08ef43ec16f0c3c9047511219e",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/taimaru-incarnate.png",
+        "sha256": "175e7a694433d4aa5633564e55cd937b31079644a9c24f38087859538fee1a74",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/cards/faces/taimaru-spirit.png",
+        "sha256": "13b0397e6171625098b7761810f13132e6ca5648b38f9f15ccf7036396b11f2d",
+        "reason": "21 bespoke card faces."
+      },
+      {
+        "path": "public/dashboard-art/stage/duty-ebisu.png",
+        "sha256": "e7b5a045566efa1bbc90650e51c8003cef785ab0ca96e75361577768e3508531",
+        "reason": "7 duty paintings."
+      },
+      {
+        "path": "public/dashboard-art/stage/duty-fukuei.png",
+        "sha256": "e14099a60285370ffb68a951378a505315d8e25e98617e3f3adb8078163a530f",
+        "reason": "7 duty paintings."
+      },
+      {
+        "path": "public/dashboard-art/stage/duty-juraku.png",
+        "sha256": "dfee8663b0069ae92d5f5f2f4b056ac77cf801a38d0ac7305f5a557e9c1bb470",
+        "reason": "7 duty paintings."
+      },
+      {
+        "path": "public/dashboard-art/stage/duty-saika.png",
+        "sha256": "21307c956bd2c200b9ff20e69070fe5a8d1c7b25c344336419590e180d1ac445",
+        "reason": "7 duty paintings."
+      },
+      {
+        "path": "public/dashboard-art/stage/duty-shouren.png",
+        "sha256": "3fdf5123f6563ad768f044ad9c29175881907f546a752272707419550ece5aa8",
+        "reason": "7 duty paintings."
+      },
+      {
+        "path": "public/dashboard-art/stage/duty-sobi.png",
+        "sha256": "8aa8f929c77c18a20a230e0f554a8d3dc9d73b151c58d33669d3f3df5006685f",
+        "reason": "7 duty paintings."
+      },
+      {
+        "path": "public/dashboard-art/stage/duty-taiyo.png",
+        "sha256": "5f1ed0fb9f8b1587d53073b11ed96c0b0f1ad8bc0d56420178bab0b625425fdf",
+        "reason": "7 duty paintings."
+      },
+      {
+        "path": "public/dashboard-art/headers/header-fukuei.png",
+        "sha256": "c6528f99930b8d5f6f893970eff0f19253fd11530cccdfcf79371b3df4da8987",
+        "reason": "4 header bands."
+      },
+      {
+        "path": "public/dashboard-art/headers/header-shouren.png",
+        "sha256": "2c9b0fd09c0d9a2eb3d3892008ccf1bb9633a216f4b3442a06379239c271ddbe",
+        "reason": "4 header bands."
+      },
+      {
+        "path": "public/dashboard-art/headers/header-sobi.png",
+        "sha256": "a3f6a06f5544496af8281964f3a79eececeed6824fabd959f7aedec14bda328e",
+        "reason": "4 header bands."
+      },
+      {
+        "path": "public/dashboard-art/headers/header-taiyo.png",
+        "sha256": "5a0d91ebe1c3fc5f6570c4e958c7e47031d9b021b3733adb91d6dd3d334f78a0",
+        "reason": "4 header bands."
+      },
+      {
+        "path": "public/dashboard-art/pairs/pair-ebisu.png",
+        "sha256": "c79a37c7dccad504730a44a1d34544d4ff39145004d372db5ec7adc10a10898f",
+        "reason": "7 pair portraits."
+      },
+      {
+        "path": "public/dashboard-art/pairs/pair-fukuei.png",
+        "sha256": "e09b4d1e002500414e513728467c869462b341378c33ba7a347388fd4f8e3f71",
+        "reason": "7 pair portraits."
+      },
+      {
+        "path": "public/dashboard-art/pairs/pair-juraku.png",
+        "sha256": "9dff1fde001a57d1be946898a8b6329e9d73a92aa8f6187a7fc22099052105ea",
+        "reason": "7 pair portraits."
+      },
+      {
+        "path": "public/dashboard-art/pairs/pair-saika.png",
+        "sha256": "475a1767800987c10f923255a09b472c47cdcf35d38377062d0f0d28558688f8",
+        "reason": "7 pair portraits."
+      },
+      {
+        "path": "public/dashboard-art/pairs/pair-shouren.png",
+        "sha256": "e7aba82a6251295ff0e4d6cf00eb27977f4d02a0908969a3dcc5d6e74b212a0f",
+        "reason": "7 pair portraits."
+      },
+      {
+        "path": "public/dashboard-art/pairs/pair-sobi.png",
+        "sha256": "a03ffa163b2c66ba1e57f30fd919aaf51058b37a1b699d88256366f31ff8cbc5",
+        "reason": "7 pair portraits."
+      },
+      {
+        "path": "public/dashboard-art/pairs/pair-taiyo.png",
+        "sha256": "895c20d367b5ca2ec2d078b07adaca25e1d77296e3a2fd6474da0b9f204a22ea",
+        "reason": "7 pair portraits."
+      },
+      {
+        "path": "assets/reference/creator-kit/ebisu_main.webp",
+        "sha256": "11d2595ef74941dd790af7c91b3b3a4d0f69138f79d7e2728641643e0c756862",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/fukuei_main.webp",
+        "sha256": "6967566c588f2b4abd23b71afe85c33f157c5d945f9daa6189d65fc7c92ed0b1",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/haku_doji.webp",
+        "sha256": "0daf73b93d2170b00e98b473513671a3b0c2b38da926449f4c31d45648d72e22",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/haku_incarnate.webp",
+        "sha256": "9b98ba101508e0905a769297288455bbe7a76bad75294489137ebbf3643ecf5c",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/haku_spirit.webp",
+        "sha256": "b917df346e81c6908c153cfe6ffd5e4bfac236774f28a285f8f7a9a91622363e",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/juka_doji.webp",
+        "sha256": "593d73dbf353ea2f8a60c4e96d15fb81d2e98831275d467484ba397afe0f9340",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/juka_incarnate.webp",
+        "sha256": "7755b054152a1e481af2876a267f9c0b1162b15774c90059d9467eca436c49f6",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/juka_spirit.webp",
+        "sha256": "7e6c447b9237ba02aa4614222fa13c2db1ce487853e41a76be96552977228561",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/juraku_main.webp",
+        "sha256": "8a3a91e60a671b8e0d3878358f3cb8dec66bf2a02c88a744278ed750f32c6f6b",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/kotone_doji.webp",
+        "sha256": "d2e4b7cd87ed492fa5c073405d9cd6ad5117467214ff2a673aceb4c8245858c1",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/kotone_incarnate.webp",
+        "sha256": "cdf2b3237d7f921ea86a52d8c90d8bd0c64f2c5b9263df34515ca03b41239901",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/kotone_spirit.webp",
+        "sha256": "6c0f659974e9f4cd0a0be80d8141be2263cfcb809006dff48e891100b5928acd",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/kozuchi_doji.webp",
+        "sha256": "ecc47c24afd3638b494790fbfd7c7377c64d14d031cea58ba647a6fe4b1f23dc",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/kozuchi_incarnate.webp",
+        "sha256": "e08884b6540f83d73c1fb0b6a955cafe3bab1a16df569dceecd6c94d97d8ab95",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/kozuchi_spirit.webp",
+        "sha256": "8e5385b1893816b92ce0c60a3049570c876528449be0fbae62538e2f542aea11",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/momokatsu_doji.webp",
+        "sha256": "886497c0ca1c31099cd80972f053ea4aeb1d9c7aa545489da5cda1eeb9ca879f",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/momokatsu_incarnate.webp",
+        "sha256": "81f98156ee20f31d640bc73fcaadbf900591c66d97e256a716979e84f214a222",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/momokatsu_spirit.webp",
+        "sha256": "c3de9446dc8e33148b878e155502dd7c1e9890de42212872d3e8de4b13f16ed1",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/saika_main.webp",
+        "sha256": "32213880bd50f36b4f6797257f2c10dab11d597dc414aa6007ca310e4fe19e56",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/shofuku_doji.webp",
+        "sha256": "86d66b15f08e89dd452b7df35c64118958717dc3ebe7a0b0e98e0bb34aa1310a",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/shofuku_incarnate.webp",
+        "sha256": "8f1af628fa876763aa630b562904adaebf1b014df3030f3ec382712dada4f804",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/shofuku_spirit.webp",
+        "sha256": "b2f641be04d2a5d46572e30ca8de87e19c1e303beb1e835ee4b2ccd885eb97e1",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/shouren_main.webp",
+        "sha256": "6a479c0459984b648c5a4ea26cc230fe3d867a6f9807b5adec78ab379aa1e613",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/sobi_main.webp",
+        "sha256": "8d7ea50a2a75177346f90e46f6aac209d9366c9adecb5db39eab3b52df0fe5d8",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/taimaru_doji.webp",
+        "sha256": "fe56a479cde153e07f964f2601f39283ae10179e52dc63713f85b98a89f3f336",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/taimaru_incarnate.webp",
+        "sha256": "0b409e7e37b2e060b35cd5ded39d9b8c1e026f3c9bd8f9bb5533a950a678e56e",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/taimaru_spirit.webp",
+        "sha256": "d2c1f83882531dea34cb00a7232719a16fc14bc861607480aad498258c85affd",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/reference/creator-kit/taiyo_main.webp",
+        "sha256": "1aaaba617b387ceac5ac3a121983e9e474f6f7c246147419cbef5719a1cd0bf9",
+        "reason": "Raw canon copies archived out of the runtime."
+      },
+      {
+        "path": "assets/ASSET_MANIFEST.csv",
+        "sha256": "316eede7ab9478080b69e5b24379edba592db4a584bfff45982649fc69f50458",
+        "reason": "39 PENDING_APPROVAL rows for the new lots; 28 canon rows relabeled reference-only."
+      },
+      {
+        "path": "DECISIONS.md",
+        "sha256": "cd4e232ae19ba15c68e4b142cb884ddca54dc9752e522b18219241ff629e4edc",
+        "reason": "No-paste rule recorded as a confirmed decision."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-029",
+      "instruction": "Show the owner the three contact sheets (cardfaces, batch02, batch02R) for lot review. On approval, deploy via Sites with migration 0005 and unchanged access settings. The gacha economics remain DRAFT until the owner confirms them.",
+      "do_not_assume": [
+        "Any of the 48 bespoke creatives is owner-approved; QA passed but approval is the owner's.",
+        "Raw creator-kit art may appear in the runtime; it is prohibited and archived under assets/reference/.",
+        "Gacha rates or costs are final.",
+        "Anything was deployed; nothing was."
+      ]
+    }
+  },
+  "resulting_state_sha256": "6dafa7eaca76f3e0953376ab56398565156e88f224b42eb96fa677971ed5f478"
+}

@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 26,
+  "updated_by": "Codex deployment handover investigator",
+  "summary": "Completed the read-only Sites-to-Cloudflare deployment handover investigation and recorded verified facts in docs/DEPLOY_HANDOVER_FACTS.md without writing any secret value or changing Sites, Worker, D1, environment, access, domain, owner, group, or indexing state. Production logs identify Worker axie-b-ac--sgg-player-archive in Cloudflare account 7979fbd212715c4874b937da9cb25d4f, while the Cloudflare account currently authenticated through Wrangler is 8b32932649804bcee9bbcd58c7ddd1a0; a read-only deployment lookup confirms the production Worker does not exist in that owner-side account. Sites exposes only the logical D1 binding DB, so the production database_id, source database name, owner control, and Dashboard visibility remain unknown. The owner-side account contains a D1 named sgg-player-os with ID d49f95b5-3f70-4f43-9673-9a1eb0ae1e02, but its observed schema stops at players, point_grants, and audit_events and does not establish production identity. Sites environment revision 2 contains nine configured names, recorded only by name and secret classification. Cloudflare officially supports Wrangler Worker deployment, D1 bindings, and remote D1 SQL export, but the same Sites Worker/D1 cannot currently be managed directly because the production account is inaccessible through the present credential and the physical D1 identifier is unavailable.",
+  "status": "REVIEW",
+  "phase": "PRIVATE_DEPLOYED",
+  "current_objective": "Preserve the owner-only Sites Version 13 deployment while obtaining a verified production D1 database identifier and export or resource-transfer path from Sites/OpenAI before designing any owner-managed Cloudflare migration.",
+  "active_work": {
+    "work_id": "ACT-028",
+    "objective": "Obtain authoritative Sites/OpenAI confirmation of the production D1 database identifier, source account access, and supported export or resource-transfer path without changing the live deployment.",
+    "status": "IN_PROGRESS",
+    "acceptance_criteria": [
+      "Receive a verified production D1 database_id or an official statement that Sites does not expose it.",
+      "Receive a supported SQL export, account transfer, or other data-preserving handover procedure from Sites/OpenAI.",
+      "Do not treat the owner-side sgg-player-os candidate as production without direct identity evidence.",
+      "Do not attempt Wrangler deploy, D1 migration, secret recreation, domain change, or access change before a separate implementation authorization and rollback plan.",
+      "Keep secret values out of repository records and handover documents."
+    ]
+  },
+  "completed_actions": [
+    {
+      "action_id": "ACT-027",
+      "result": "Recorded the production Worker/account facts, unknown production D1 identity, owner-side D1 candidate boundary, Sites environment variable names, official Wrangler deployment path, and official D1 export path without changing external state or exposing secret values.",
+      "evidence": [
+        "docs/DEPLOY_HANDOVER_FACTS.md",
+        ".openai/hosting.json",
+        "deployments/PRIVATE_DEPLOYMENT-20260728-001.json"
+      ]
+    }
+  ],
+  "next_actions": [
+    {
+      "action_id": "ACT-028",
+      "order": 1,
+      "action": "Ask Sites/OpenAI for the production D1 database identifier and a supported SQL export, account transfer, or data-preserving resource handover path.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-029",
+      "order": 2,
+      "action": "After production D1 identity and export evidence exist, design a separately authorized owner-managed Worker/D1 migration with secret recreation, cutover, validation, and rollback.",
+      "owner": "SGG project owner and deployment engineer",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPLOY-HANDOVER-D1-001"
+      ]
+    },
+    {
+      "action_id": "ACT-026",
+      "order": 3,
+      "action": "When supported Codex in-app browser control is available, open Version 13 in a new muted tab without touching the protected existing tab and complete interactive desktop, 390px, and console verification.",
+      "owner": "Codex runtime capability",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-IN-APP-BROWSER-001"
+      ]
+    },
+    {
+      "action_id": "ACT-022",
+      "order": 4,
+      "action": "Add the OTOMO CHAIN redirect URI to the approved MY SGG Discord application and set DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET in the OTOMO CHAIN Vercel project so discord_enabled becomes true.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-024",
+      "order": 5,
+      "action": "Review the two drifted command-center policy files (OTOMO_FORM_BALANCE_V1.md and canon/TERMINOLOGY.md, both changed 2026-07-26 19:33) and refresh their recorded hashes deliberately; validation fails until then.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-015",
+      "order": 6,
+      "action": "Complete the two-account isolation check with two consenting Discord identities before adding any viewer; docs/CORE_MEMBER_RELEASE_CHECKLIST.md has the procedure and tests/two-account-isolation.test.mjs covers the implementation.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DISCORD-E2E-001"
+      ]
+    },
+    {
+      "action_id": "ACT-021",
+      "order": 7,
+      "action": "Adapt dashboard reconciliation to the game's verified Discord ID after the concurrent OTOMO CHAIN work is committed.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-CONCURRENT-GAME-SESSION-001"
+      ]
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 8,
+      "action": "After the season ends on 2026-08-08T00:00:00Z, configure the OTOMO CHAIN export secrets, run the reconcile dry run, resolve anything ambiguous by hand, then run the payout dry run with a decided award table before applying.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-OTOMO-CHAIN-EXPORT-001",
+        "BLK-SGP-AWARD-TABLE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 9,
+      "action": "Upgrade to stable Next and Cloudflare or Miniflare versions that officially support patched Sharp.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPENDENCY-SHARP-001"
+      ]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 10,
+      "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges per game before showing in-game progress.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PLAYER-BRIDGE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-008",
+      "order": 11,
+      "action": "Request and record separate authority before public or shared access, a custom domain, search indexing, or added viewers and groups.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PUBLICATION-001"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-DEPLOY-HANDOVER-D1-001",
+      "scope": "PRODUCTION_D1_HANDOVER",
+      "severity": "P1",
+      "description": "Sites exposes the logical DB binding and applies packaged migrations, but neither Sites metadata nor the repository exposes the physical production D1 database_id or source database name. Production Worker logs identify a Cloudflare account that is not present in the current owner-side Wrangler account list, and the production Worker is not readable from the owner-side account. The separate owner-side sgg-player-os D1 lacks current schema evidence and is not verified as production.",
+      "owner": "Sites/OpenAI resource provider and SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Provide the authoritative production D1 database identifier plus a supported SQL export, account transfer, or other data-preserving resource handover method before any migration or direct Wrangler deployment is designed."
+    },
+    {
+      "blocker_id": "BLK-IN-APP-BROWSER-001",
+      "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+      "severity": "P1",
+      "description": "This Codex task exposes the Browser skill but not its required in-app browser control capability after mandatory discovery. The existing protected production tab remains untouched. Version 13 has Sites screenshot, production HTTP, asset, HTML/CSS, and Worker-log evidence, but no new muted tab, interactive 390px viewport, or console session was available.",
+      "owner": "Codex runtime capability",
+      "status": "OPEN",
+      "resolution_required": "Expose the supported Codex in-app browser control capability, then open the exact Version 13 URL in a new muted tab without navigating or closing the protected tab and complete desktop, 390px, interaction, and console verification."
+    },
+    {
+      "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+      "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+      "severity": "P1",
+      "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+    },
+    {
+      "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+      "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+      "severity": "P1",
+      "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+    },
+    {
+      "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+      "scope": "REWARD_VALUE_AUTHORITY",
+      "severity": "P1",
+      "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "Version 13 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+    }
+  ],
+  "decisions_needed": [
+    {
+      "decision_id": "DEC-DEPLOY-HANDOVER-001",
+      "question": "Will Sites/OpenAI provide the production D1 identifier and a supported export or transfer path, or must the owner create a new D1 and migrate through a separate application-level export?",
+      "owner": "SGG project owner and Sites/OpenAI resource provider",
+      "required_by": "Before authorizing any move from Sites to owner-managed Cloudflare deployment"
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "docs/DEPLOY_HANDOVER_FACTS.md",
+      "reason": "Record the requested five-part deployment handover investigation with verified account, Worker, D1, environment-name, Wrangler, and export facts and explicit unknowns."
+    },
+    {
+      "path": "migration/STATE_UPDATE_CP000027_DEPLOY_HANDOVER_FACTS.json",
+      "reason": "Record completion of ACT-027 and the production D1 identity/export dependency that blocks a data-preserving owner-managed migration."
+    }
+  ],
+  "resume": {
+    "action_id": "ACT-028",
+    "instruction": "Read CP-000027 and docs/DEPLOY_HANDOVER_FACTS.md. Version 13 remains live owner-only in Sites. Production Worker axie-b-ac--sgg-player-archive runs under Cloudflare account 7979fbd212715c4874b937da9cb25d4f, which is not accessible through the currently authenticated owner-side Wrangler account 8b32932649804bcee9bbcd58c7ddd1a0. The production D1 database_id is unknown. Ask Sites/OpenAI for the physical D1 identifier and supported export or transfer path. Do not deploy with Wrangler, treat the owner-side sgg-player-os candidate as production, recreate secrets, move data, or alter access until those facts and separate implementation authority exist.",
+    "do_not_assume": [
+      "The owner-side sgg-player-os D1 is the Sites production database; its identity is unverified and its observed schema is incomplete for the current app.",
+      "Generic Wrangler deploy support means the current credential can overwrite the Sites Worker; Cloudflare reports that Worker does not exist in the owner-side account.",
+      "Generic D1 export support is currently actionable for the Sites database; the source account permission and physical database identifier are unavailable.",
+      "Cloudflare Dashboard visibility was confirmed; no dashboard UI was opened and production D1 visibility remains unknown.",
+      "Any secret value is present in docs/DEPLOY_HANDOVER_FACTS.md; the document contains names and configured or unconfigured status only.",
+      "The two command-center policy hashes may be refreshed; they remain known unresolved drift and must not be changed."
+    ]
+  }
+}

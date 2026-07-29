@@ -1,0 +1,191 @@
+[
+ {
+  "id": "card-taimaru-spirit",
+  "file": "CARDFACE-taimaru-spirit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_spirit.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『恵比寿』、2枚目=OTOMO『鯛丸』の精霊体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『鯛丸』(精霊体)で、画面の60%以上を占めるバストアップ〜全身。GOD『恵比寿』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。精霊体の性質: 淡く発光する神秘的な存在感。輪郭が光でにじむ。\n\n【シーン】潮と豊漁。背後に朱の鳥居と揺れる水面の光。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は恵比寿と鯛丸の2体のみ。"
+ },
+ {
+  "id": "card-taimaru-incarnate",
+  "file": "CARDFACE-taimaru-incarnate.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『恵比寿』、2枚目=OTOMO『鯛丸』の受肉体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『鯛丸』(受肉体)で、画面の60%以上を占めるバストアップ〜全身。GOD『恵比寿』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。受肉体の性質: 身体性と行動。地に足がつき道具や世界に触れる。\n\n【シーン】潮と豊漁。背後に朱の鳥居と揺れる水面の光。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は恵比寿と鯛丸の2体のみ。"
+ },
+ {
+  "id": "card-taimaru-doji",
+  "file": "CARDFACE-taimaru-doji.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『恵比寿』、2枚目=OTOMO『鯛丸』の童子。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『鯛丸』(童子)で、画面の60%以上を占めるバストアップ〜全身。GOD『恵比寿』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。童子の性質: 個性と物語。表情豊かで親密。\n\n【シーン】潮と豊漁。背後に朱の鳥居と揺れる水面の光。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は恵比寿と鯛丸の2体のみ。"
+ },
+ {
+  "id": "card-kozuchi-spirit",
+  "file": "CARDFACE-kozuchi-spirit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/otomo/kozuchi_spirit.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『大耀』、2枚目=OTOMO『小槌』の精霊体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『小槌』(精霊体)で、画面の60%以上を占めるバストアップ〜全身。GOD『大耀』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。精霊体の性質: 淡く発光する神秘的な存在感。輪郭が光でにじむ。\n\n【シーン】疾走と太陽。背後に暁のオレンジ光条。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は大耀と小槌の2体のみ。"
+ },
+ {
+  "id": "card-kozuchi-incarnate",
+  "file": "CARDFACE-kozuchi-incarnate.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/otomo/kozuchi_incarnate.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『大耀』、2枚目=OTOMO『小槌』の受肉体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『小槌』(受肉体)で、画面の60%以上を占めるバストアップ〜全身。GOD『大耀』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。受肉体の性質: 身体性と行動。地に足がつき道具や世界に触れる。\n\n【シーン】疾走と太陽。背後に暁のオレンジ光条。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は大耀と小槌の2体のみ。"
+ },
+ {
+  "id": "card-kozuchi-doji",
+  "file": "CARDFACE-kozuchi-doji.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/otomo/kozuchi_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『大耀』、2枚目=OTOMO『小槌』の童子。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『小槌』(童子)で、画面の60%以上を占めるバストアップ〜全身。GOD『大耀』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。童子の性質: 個性と物語。表情豊かで親密。\n\n【シーン】疾走と太陽。背後に暁のオレンジ光条。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は大耀と小槌の2体のみ。"
+ },
+ {
+  "id": "card-momokatsu-spirit",
+  "file": "CARDFACE-momokatsu-spirit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_spirit.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『蒼毘』、2枚目=OTOMO『百勝』の精霊体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『百勝』(精霊体)で、画面の60%以上を占めるバストアップ〜全身。GOD『蒼毘』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。精霊体の性質: 淡く発光する神秘的な存在感。輪郭が光でにじむ。\n\n【シーン】武勇と守護。背後に蒼い光の槍衾。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は蒼毘と百勝の2体のみ。"
+ },
+ {
+  "id": "card-momokatsu-incarnate",
+  "file": "CARDFACE-momokatsu-incarnate.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_incarnate.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『蒼毘』、2枚目=OTOMO『百勝』の受肉体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『百勝』(受肉体)で、画面の60%以上を占めるバストアップ〜全身。GOD『蒼毘』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。受肉体の性質: 身体性と行動。地に足がつき道具や世界に触れる。\n\n【シーン】武勇と守護。背後に蒼い光の槍衾。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は蒼毘と百勝の2体のみ。"
+ },
+ {
+  "id": "card-momokatsu-doji",
+  "file": "CARDFACE-momokatsu-doji.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『蒼毘』、2枚目=OTOMO『百勝』の童子。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『百勝』(童子)で、画面の60%以上を占めるバストアップ〜全身。GOD『蒼毘』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。童子の性質: 個性と物語。表情豊かで親密。\n\n【シーン】武勇と守護。背後に蒼い光の槍衾。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は蒼毘と百勝の2体のみ。"
+ },
+ {
+  "id": "card-kotone-spirit",
+  "file": "CARDFACE-kotone-spirit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_spirit.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『彩華』、2枚目=OTOMO『琴音』の精霊体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『琴音』(精霊体)で、画面の60%以上を占めるバストアップ〜全身。GOD『彩華』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。精霊体の性質: 淡く発光する神秘的な存在感。輪郭が光でにじむ。\n\n【シーン】音曲と華。背後に紫の音波紋と花弁。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は彩華と琴音の2体のみ。"
+ },
+ {
+  "id": "card-kotone-incarnate",
+  "file": "CARDFACE-kotone-incarnate.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_incarnate.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『彩華』、2枚目=OTOMO『琴音』の受肉体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『琴音』(受肉体)で、画面の60%以上を占めるバストアップ〜全身。GOD『彩華』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。受肉体の性質: 身体性と行動。地に足がつき道具や世界に触れる。\n\n【シーン】音曲と華。背後に紫の音波紋と花弁。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は彩華と琴音の2体のみ。"
+ },
+ {
+  "id": "card-kotone-doji",
+  "file": "CARDFACE-kotone-doji.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『彩華』、2枚目=OTOMO『琴音』の童子。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『琴音』(童子)で、画面の60%以上を占めるバストアップ〜全身。GOD『彩華』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。童子の性質: 個性と物語。表情豊かで親密。\n\n【シーン】音曲と華。背後に紫の音波紋と花弁。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は彩華と琴音の2体のみ。"
+ },
+ {
+  "id": "card-juka-spirit",
+  "file": "CARDFACE-juka-spirit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/otomo/juka_spirit.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『寿楽』、2枚目=OTOMO『寿鹿』の精霊体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『寿鹿』(精霊体)で、画面の60%以上を占めるバストアップ〜全身。GOD『寿楽』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。精霊体の性質: 淡く発光する神秘的な存在感。輪郭が光でにじむ。\n\n【シーン】学理と長寿。背後に翠の書架と光る文字片。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は寿楽と寿鹿の2体のみ。"
+ },
+ {
+  "id": "card-juka-incarnate",
+  "file": "CARDFACE-juka-incarnate.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/otomo/juka_incarnate.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『寿楽』、2枚目=OTOMO『寿鹿』の受肉体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『寿鹿』(受肉体)で、画面の60%以上を占めるバストアップ〜全身。GOD『寿楽』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。受肉体の性質: 身体性と行動。地に足がつき道具や世界に触れる。\n\n【シーン】学理と長寿。背後に翠の書架と光る文字片。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は寿楽と寿鹿の2体のみ。"
+ },
+ {
+  "id": "card-juka-doji",
+  "file": "CARDFACE-juka-doji.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/otomo/juka_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『寿楽』、2枚目=OTOMO『寿鹿』の童子。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『寿鹿』(童子)で、画面の60%以上を占めるバストアップ〜全身。GOD『寿楽』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。童子の性質: 個性と物語。表情豊かで親密。\n\n【シーン】学理と長寿。背後に翠の書架と光る文字片。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は寿楽と寿鹿の2体のみ。"
+ },
+ {
+  "id": "card-haku-spirit",
+  "file": "CARDFACE-haku-spirit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/otomo/haku_spirit.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『福栄』、2枚目=OTOMO『ハク』の精霊体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『ハク』(精霊体)で、画面の60%以上を占めるバストアップ〜全身。GOD『福栄』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。精霊体の性質: 淡く発光する神秘的な存在感。輪郭が光でにじむ。\n\n【シーン】福徳と星見。背後に星図と金の環。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は福栄とハクの2体のみ。"
+ },
+ {
+  "id": "card-haku-incarnate",
+  "file": "CARDFACE-haku-incarnate.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/otomo/haku_incarnate.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『福栄』、2枚目=OTOMO『ハク』の受肉体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『ハク』(受肉体)で、画面の60%以上を占めるバストアップ〜全身。GOD『福栄』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。受肉体の性質: 身体性と行動。地に足がつき道具や世界に触れる。\n\n【シーン】福徳と星見。背後に星図と金の環。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は福栄とハクの2体のみ。"
+ },
+ {
+  "id": "card-haku-doji",
+  "file": "CARDFACE-haku-doji.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/otomo/haku_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『福栄』、2枚目=OTOMO『ハク』の童子。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『ハク』(童子)で、画面の60%以上を占めるバストアップ〜全身。GOD『福栄』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。童子の性質: 個性と物語。表情豊かで親密。\n\n【シーン】福徳と星見。背後に星図と金の環。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は福栄とハクの2体のみ。"
+ },
+ {
+  "id": "card-shofuku-spirit",
+  "file": "CARDFACE-shofuku-spirit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_spirit.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『笑蓮』、2枚目=OTOMO『笑袋』の精霊体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『笑袋』(精霊体)で、画面の60%以上を占めるバストアップ〜全身。GOD『笑蓮』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。精霊体の性質: 淡く発光する神秘的な存在感。輪郭が光でにじむ。\n\n【シーン】笑福と祭。背後に提灯の玉ボケ。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は笑蓮と笑袋の2体のみ。"
+ },
+ {
+  "id": "card-shofuku-incarnate",
+  "file": "CARDFACE-shofuku-incarnate.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_incarnate.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『笑蓮』、2枚目=OTOMO『笑袋』の受肉体。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『笑袋』(受肉体)で、画面の60%以上を占めるバストアップ〜全身。GOD『笑蓮』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。受肉体の性質: 身体性と行動。地に足がつき道具や世界に触れる。\n\n【シーン】笑福と祭。背後に提灯の玉ボケ。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は笑蓮と笑袋の2体のみ。"
+ },
+ {
+  "id": "card-shofuku-doji",
+  "file": "CARDFACE-shofuku-doji.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。1枚目=GOD『笑蓮』、2枚目=OTOMO『笑袋』の童子。\n\n【用途】図鑑ガチャのカード面イラスト。正方形1:1。主役はOTOMO『笑袋』(童子)で、画面の60%以上を占めるバストアップ〜全身。GOD『笑蓮』は背景奥に小さく気配として添える（顔が識別できる程度、画面の20%以下）。\n\n【必ず保つもの】両者の顔の造形、目、髪、体型と頭身、衣装、配色を参照と一致させる。童子の性質: 個性と物語。表情豊かで親密。\n\n【シーン】笑福と祭。背後に提灯の玉ボケ。カード面として中央に視線が集まる構図。\n\n【スタイル】高品質な和風ミライ神話アニメのカードイラスト。セルシェーディング＋上質な光。画面の四辺は暗く落として、後からUI側でレアリティ枠を重ねられる余白を残す。\n\n【表現の制約】全年齢向けで健全。体のラインや露出を強調しない。登場は笑蓮と笑袋の2体のみ。"
+ }
+]

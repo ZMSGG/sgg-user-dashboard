@@ -1,0 +1,65 @@
+[
+ {
+  "id": "dutyw-ebisu",
+  "file": "DUTYW-ebisu.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/god/ebisu_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『恵比寿』。\n\n【用途】ゲームのホーム画面で街の風景の上に立たせる全身立ち絵。縦長2:3。後で背景を透過処理する。\n\n【背景・必須】完全な純白の背景（#FFFFFF）。地面影・床・魔法陣・背景要素を一切描かない。人物の内部に純白の大きな面を作らない（衣装の白はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】恵比寿の顔・髪・衣装・装備・配色を参照と一致させる。人物像: 豊漁の神。おおらかで面倒見がよい。頭身は参照どおり。\n\n【ポーズ】こちらへ視線を向けて迎える、性格が伝わる自然な全身の立ち姿。新規ポーズ。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング。全年齢向けで健全。登場は恵比寿1体のみ。文字・ロゴ・枠・透かし禁止。"
+ },
+ {
+  "id": "dutyw-taiyo",
+  "file": "DUTYW-taiyo.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『大耀』。\n\n【用途】ゲームのホーム画面で街の風景の上に立たせる全身立ち絵。縦長2:3。後で背景を透過処理する。\n\n【背景・必須】完全な純白の背景（#FFFFFF）。地面影・床・魔法陣・背景要素を一切描かない。人物の内部に純白の大きな面を作らない（衣装の白はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】大耀の顔・髪・衣装・装備・配色を参照と一致させる。人物像: 疾駆の神。快活で負けず嫌い。頭身は参照どおり。\n\n【ポーズ】こちらへ視線を向けて迎える、性格が伝わる自然な全身の立ち姿。新規ポーズ。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング。全年齢向けで健全。登場は大耀1体のみ。文字・ロゴ・枠・透かし禁止。"
+ },
+ {
+  "id": "dutyw-sobi",
+  "file": "DUTYW-sobi.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/god/sobi_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『蒼毘』。\n\n【用途】ゲームのホーム画面で街の風景の上に立たせる全身立ち絵。縦長2:3。後で背景を透過処理する。\n\n【背景・必須】完全な純白の背景（#FFFFFF）。地面影・床・魔法陣・背景要素を一切描かない。人物の内部に純白の大きな面を作らない（衣装の白はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】蒼毘の顔・髪・衣装・装備・配色を参照と一致させる。人物像: 武の神。凛として頼もしい。頭身は参照どおり。\n\n【ポーズ】こちらへ視線を向けて迎える、性格が伝わる自然な全身の立ち姿。新規ポーズ。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング。全年齢向けで健全。登場は蒼毘1体のみ。文字・ロゴ・枠・透かし禁止。"
+ },
+ {
+  "id": "dutyw-saika",
+  "file": "DUTYW-saika.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/god/saika_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『彩華』。\n\n【用途】ゲームのホーム画面で街の風景の上に立たせる全身立ち絵。縦長2:3。後で背景を透過処理する。\n\n【背景・必須】完全な純白の背景（#FFFFFF）。地面影・床・魔法陣・背景要素を一切描かない。人物の内部に純白の大きな面を作らない（衣装の白はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】彩華の顔・髪・衣装・装備・配色を参照と一致させる。人物像: 音曲の神。艶やかで自由。頭身は参照どおり。\n\n【ポーズ】こちらへ視線を向けて迎える、性格が伝わる自然な全身の立ち姿。新規ポーズ。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング。全年齢向けで健全。登場は彩華1体のみ。文字・ロゴ・枠・透かし禁止。"
+ },
+ {
+  "id": "dutyw-juraku",
+  "file": "DUTYW-juraku.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/god/juraku_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『寿楽』。\n\n【用途】ゲームのホーム画面で街の風景の上に立たせる全身立ち絵。縦長2:3。後で背景を透過処理する。\n\n【背景・必須】完全な純白の背景（#FFFFFF）。地面影・床・魔法陣・背景要素を一切描かない。人物の内部に純白の大きな面を作らない（衣装の白はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】寿楽の顔・髪・衣装・装備・配色を参照と一致させる。人物像: 学理の神。穏やかで思慮深い。頭身は参照どおり。\n\n【ポーズ】こちらへ視線を向けて迎える、性格が伝わる自然な全身の立ち姿。新規ポーズ。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング。全年齢向けで健全。登場は寿楽1体のみ。文字・ロゴ・枠・透かし禁止。"
+ },
+ {
+  "id": "dutyw-fukuei",
+  "file": "DUTYW-fukuei.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『福栄』。\n\n【用途】ゲームのホーム画面で街の風景の上に立たせる全身立ち絵。縦長2:3。後で背景を透過処理する。\n\n【背景・必須】完全な純白の背景（#FFFFFF）。地面影・床・魔法陣・背景要素を一切描かない。人物の内部に純白の大きな面を作らない（衣装の白はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】福栄の顔・髪・衣装・装備・配色を参照と一致させる。人物像: 福徳の神。無邪気で観察者。「福」「禄」「寿」の文字入り緑ヘルメットと金のゴーグルを必ず描く。頭身は参照どおり。\n\n【ポーズ】こちらへ視線を向けて迎える、性格が伝わる自然な全身の立ち姿。新規ポーズ。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング。全年齢向けで健全。登場は福栄1体のみ。文字・ロゴ・枠・透かし禁止。"
+ },
+ {
+  "id": "dutyw-shouren",
+  "file": "DUTYW-shouren.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『笑蓮』。\n\n【用途】ゲームのホーム画面で街の風景の上に立たせる全身立ち絵。縦長2:3。後で背景を透過処理する。\n\n【背景・必須】完全な純白の背景（#FFFFFF）。地面影・床・魔法陣・背景要素を一切描かない。人物の内部に純白の大きな面を作らない（衣装の白はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】笑蓮の顔・髪・衣装・装備・配色を参照と一致させる。人物像: 笑福の神。華やかで包容力。扇状の紫の結髪・放射状の簪・赤い薔薇・下がり藤の頭飾り一式を必ず描く。頭身は参照どおり。\n\n【ポーズ】こちらへ視線を向けて迎える、性格が伝わる自然な全身の立ち姿。新規ポーズ。\n\n【スタイル】高品質な和風ミライ神話アニメ。セルシェーディング。全年齢向けで健全。登場は笑蓮1体のみ。文字・ロゴ・枠・透かし禁止。"
+ }
+]

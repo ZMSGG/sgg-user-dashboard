@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 27,
+  "updated_by": "Codex",
+  "summary": "Made the play surface mobile-first and gave every title character key art, targeting roughly seventy percent completeness before the first tournament on 2026-08-01. The play page now renders as a two-column tile grid on phones, tiles compress to art, name, state and one action, and the two market titles OTOMO CHAIN 7 and OTOMO FARM 77 lead while the four dormant titles sit quieter below. Four new Image 2.0 key arts were generated against creator-kit identity references (QUEST, ORACLE, TAIYO, EBISU); the first ORACLE render was rejected in-session for missing 福栄's signature 福禄寿 helmet and goggles and was regenerated canon-accurate. OTOMO CHAIN 7 was also added to the live health model end to end (contract, route, dashboard, tests), fixing a false 稼働確認不可 badge on the tournament title, which production now reports online. Two self-inflicted CSS defects were found and fixed: a widened selector corrupted the dormant-card rules, and the featured card's higher-specificity detail rows escaped the mobile hiding. Lint, typecheck, production build and 76 tests pass; the rendered play surface was verified at 390px. The four new arts are PENDING_APPROVAL and deployment remains blocked on that approval plus the owner-run Sites pipeline. Meanwhile the owner-run session deployed Sites Version 13 and recorded the D1 handover investigation as CP-000026 and CP-000027; this checkpoint builds on that state.",
+  "status": "REVIEW",
+  "phase": "PRIVATE_DEPLOYED",
+  "current_objective": "Obtain owner approval of the four new game key arts, then deploy the mobile-first play surface through Sites as an owner-only release before the 2026-08-01 tournament, leaving audience settings untouched.",
+  "active_work": {
+    "work_id": "ACT-027",
+    "objective": "Owner review of the four game key arts, then a Sites deployment of the mobile-first play surface.",
+    "status": "IN_PROGRESS",
+    "acceptance_criteria": [
+      "Owner approves or rejects each of the four game arts by exact file and hash.",
+      "No deployment ships any PENDING_APPROVAL manifest row.",
+      "The deployed play page renders as two-column tiles at phone width with a single bottom navigation bar.",
+      "OTOMO CHAIN 7 shows its live online state on the deployed site."
+    ]
+  },
+  "next_actions": [
+    {
+      "action_id": "ACT-027",
+      "order": 1,
+      "action": "Review and approve the four new game key arts by exact hash, then deploy through Sites without changing audience settings.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-GAME-ART-APPROVAL-001"
+      ]
+    },
+    {
+      "action_id": "ACT-026",
+      "order": 2,
+      "action": "Open the deployed site on a phone and confirm the rebuilt Home and play surfaces render as reviewed locally.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-022",
+      "order": 3,
+      "action": "Add the OTOMO CHAIN redirect URI to the approved MY SGG Discord application and set DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET in the OTOMO CHAIN Vercel project so discord_enabled becomes true.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-024",
+      "order": 4,
+      "action": "Review the two drifted command-center policy files and refresh their recorded hashes deliberately; validation fails until then.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-015",
+      "order": 5,
+      "action": "Complete the two-account isolation check with two consenting Discord identities before adding any viewer.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DISCORD-E2E-001"
+      ]
+    },
+    {
+      "action_id": "ACT-021",
+      "order": 6,
+      "action": "Adapt dashboard reconciliation to the game's verified Discord ID after the concurrent OTOMO CHAIN work is committed.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-CONCURRENT-GAME-SESSION-001"
+      ]
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 7,
+      "action": "After the season ends on 2026-08-08T00:00:00Z, configure the export secrets, reconcile via dry run, then pay out with a decided award table.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-OTOMO-CHAIN-EXPORT-001",
+        "BLK-SGP-AWARD-TABLE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 8,
+      "action": "Upgrade to stable Next and Cloudflare or Miniflare versions that officially support patched Sharp.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPENDENCY-SHARP-001"
+      ]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 9,
+      "action": "Implement side-effect-free, audience-bound, replay-protected player snapshot bridges per game before showing in-game progress.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PLAYER-BRIDGE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-008",
+      "order": 10,
+      "action": "Request and record separate authority before public or shared access, a custom domain, search indexing, or added viewers and groups.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PUBLICATION-001"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-GAME-ART-APPROVAL-001",
+      "scope": "CREATIVE_APPROVAL",
+      "severity": "P1",
+      "description": "Four new game key arts (QUEST 彩華×琴音 受肉体, ORACLE 福栄×ハク 精霊体, TAIYO 大耀×小槌 受肉体, EBISU 恵比寿×鯛丸 童子) are generated, canon-checked by Codex and wired into the local runtime, but carry no owner approval. The first ORACLE render was rejected in-session because 福栄's 福禄寿 helmet and goggles were missing, and the corrected render must still pass the owner's eye. Manifest rows are PENDING_APPROVAL, so no deployment may ship them.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Review the four arts at final crop and record approval of each exact file and hash, or request new directions."
+    },
+    {
+      "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+      "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+      "severity": "P1",
+      "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+    },
+    {
+      "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+      "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+      "severity": "P1",
+      "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+    },
+    {
+      "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+      "scope": "REWARD_VALUE_AUTHORITY",
+      "severity": "P1",
+      "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "Version 13 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "migration/STATE_UPDATE_CP000028_MOBILE_PLAY_AND_GAME_ART.json",
+      "reason": "Record the mobile-first play surface, the four game arts and the CHAIN health fix."
+    },
+    {
+      "path": "app/dashboard-data.ts",
+      "reason": "DORMANT release state, OTOMO CHAIN 7 entry, keyArt for all six titles, canon relabeling."
+    },
+    {
+      "path": "app/Dashboard.tsx",
+      "reason": "Brand icon replaces 七, SVG nav icons, game card art block, CHAIN runtime mapping, 5-runtime summary."
+    },
+    {
+      "path": "app/DockIcons.tsx",
+      "reason": "IconHome added for the navigation set."
+    },
+    {
+      "path": "app/Dashboard.module.css",
+      "reason": "Mobile play tiles, game art styles, nav icon sizing, repaired dormant-card selectors."
+    },
+    {
+      "path": "app/live-contract.ts",
+      "reason": "chain runtime added to the live contract."
+    },
+    {
+      "path": "app/api/live/route.ts",
+      "reason": "otomochain.sevengodsgames.com added to runtime health sources."
+    },
+    {
+      "path": "public/dashboard-art/games/quest.png",
+      "reason": "QUEST key art; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/games/oracle.png",
+      "reason": "ORACLE key art, regenerated for canon compliance; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/games/taiyo.png",
+      "reason": "TAIYO key art; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/games/ebisu.png",
+      "reason": "EBISU key art; PENDING_APPROVAL."
+    },
+    {
+      "path": "assets/candidates/game-art-v001/media-my-sgg-game-quest-v001.png",
+      "reason": "Candidate copy outside the runtime path."
+    },
+    {
+      "path": "assets/candidates/game-art-v001/media-my-sgg-game-oracle-v001.png",
+      "reason": "Candidate copy outside the runtime path."
+    },
+    {
+      "path": "assets/candidates/game-art-v001/media-my-sgg-game-taiyo-v001.png",
+      "reason": "Candidate copy outside the runtime path."
+    },
+    {
+      "path": "assets/candidates/game-art-v001/media-my-sgg-game-ebisu-v001.png",
+      "reason": "Candidate copy outside the runtime path."
+    },
+    {
+      "path": "assets/ASSET_MANIFEST.csv",
+      "reason": "Four PENDING_APPROVAL rows with provenance, hashes and character metadata."
+    },
+    {
+      "path": "tests/rendered-html.test.mjs",
+      "reason": "Key-art invariant now covers all six titles; chain runtime keys; 5-runtime bounds."
+    }
+  ],
+  "resume": {
+    "action_id": "ACT-027",
+    "instruction": "Show the owner the four new game key arts and request approval by exact hash. After approval, deploy through Sites without changing audience settings, then verify the play surface on a phone. Do not ship any PENDING_APPROVAL row.",
+    "do_not_assume": [
+      "The four game arts are approved; they are PENDING_APPROVAL.",
+      "The first ORACLE render is usable; it was rejected for missing 福栄's helmet and goggles and replaced.",
+      "Codex can deploy; Sites is the only production pipeline.",
+      "Validation passes; two command-center policy hashes remain drifted pending owner review.",
+      "Any publication, audience expansion or point grant is authorized."
+    ]
+  }
+}

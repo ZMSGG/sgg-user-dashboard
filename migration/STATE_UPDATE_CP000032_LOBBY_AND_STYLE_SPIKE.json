@@ -1,0 +1,255 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 31,
+  "updated_by": "Codex",
+  "summary": "Rebuilt the home into a reference-accurate game lobby after the owner rejected the swarm sprites as not cute and called out that the base was still black. Three structural corrections: the obsidian design tokens were re-based onto warm lacquer tones and the near-opaque veils over the Zipangu backdrop were cut to whispers; the home stage lost its panel frame entirely and now runs full-bleed as the screen itself, with the top bar reduced to a fading scrim and the sidebar to translucent glass; and the duty gods were regenerated on pure white (batch-05, all seven passing QA including 福栄's helmet and 笑蓮's headdress clauses), flood-fill transparentized, so today's god now stands directly in the dusk city with no painted hall behind. The rejected swarm layer is disabled behind SWARM_ENABLED=false pending a style verdict; a 10-direction cuteness spike on 鯛丸 (mochi/chiikawa/sanrio/yurukyara/round-mascot/pokemon/emoji/bigeye/plush/pixel) is on the owner's desk as lot4-style-spike.png. Lint, typecheck, build and 82 tests pass. Deployment remains blocked on lot approvals; nothing shipped.",
+  "status": "REVIEW",
+  "phase": "PRIVATE_DEPLOYED",
+  "current_objective": "Get the owner's style verdict from the spike sheet and the go on the full-bleed lobby direction, regenerate the swarm in the chosen style, roll the lobby treatment to the remaining views, then deploy before the 2026-08-01 tournament.",
+  "active_work": {
+    "work_id": "ACT-031",
+    "objective": "Style verdict, swarm regeneration in the chosen style, lobby rollout to all views, lot approvals, deployment.",
+    "status": "IN_PROGRESS",
+    "acceptance_criteria": [
+      "Owner picks a spike direction (or a blend) as the cuteness constitution.",
+      "Owner confirms or corrects the full-bleed lobby direction shown on home.",
+      "Swarm sprites regenerate in the chosen style and pass identity QA before re-enabling SWARM_ENABLED.",
+      "Remaining views adopt the world-first treatment without losing readability."
+    ]
+  },
+  "next_actions": [
+    {
+      "action_id": "ACT-031",
+      "order": 1,
+      "action": "Collect the style verdict and lobby confirmation, regenerate the swarm accordingly, extend the lobby treatment to all views.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-GAME-ART-APPROVAL-001"
+      ]
+    },
+    {
+      "action_id": "ACT-022",
+      "order": 2,
+      "action": "Set the OTOMO CHAIN Discord credentials in Vercel.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-024",
+      "order": 3,
+      "action": "Review the two drifted command-center policy hashes.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-015",
+      "order": 4,
+      "action": "Two-account isolation check before adding any viewer.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DISCORD-E2E-001"
+      ]
+    },
+    {
+      "action_id": "ACT-021",
+      "order": 5,
+      "action": "Adapt reconciliation to verified Discord IDs when the game work lands.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-CONCURRENT-GAME-SESSION-001"
+      ]
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 6,
+      "action": "Post-season export secrets, reconcile, pay out with a decided award table.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-OTOMO-CHAIN-EXPORT-001",
+        "BLK-SGP-AWARD-TABLE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 7,
+      "action": "Sharp upgrade when supported.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPENDENCY-SHARP-001"
+      ]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 8,
+      "action": "Player snapshot bridges per game.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PLAYER-BRIDGE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-008",
+      "order": 9,
+      "action": "Separate authority before audience expansion.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PUBLICATION-001"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-GAME-ART-APPROVAL-001",
+      "scope": "CREATIVE_APPROVAL",
+      "severity": "P1",
+      "description": "Four new game key arts (QUEST 彩華×琴音 受肉体, ORACLE 福栄×ハク 精霊体, TAIYO 大耀×小槌 受肉体, EBISU 恵比寿×鯛丸 童子) are generated, canon-checked by Codex and wired into the local runtime, but carry no owner approval. The first ORACLE render was rejected in-session because 福栄's 福禄寿 helmet and goggles were missing, and the corrected render must still pass the owner's eye. Manifest rows are PENDING_APPROVAL, so no deployment may ship them.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Review the four arts at final crop and record approval of each exact file and hash, or request new directions."
+    },
+    {
+      "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+      "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+      "severity": "P1",
+      "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+    },
+    {
+      "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+      "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+      "severity": "P1",
+      "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+    },
+    {
+      "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+      "scope": "REWARD_VALUE_AUTHORITY",
+      "severity": "P1",
+      "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger, or holdings before expanding access beyond the current owner-only site."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "Version 13 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups, and public release remain unauthorized.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency, and actual-screen gates before any audience expansion."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "migration/STATE_UPDATE_CP000032_LOBBY_AND_STYLE_SPIKE.json",
+      "reason": "Record the lobby rebuild, warm re-base, duty transparency and the pending style verdict."
+    },
+    {
+      "path": "app/Dashboard.module.css",
+      "reason": "Warm lacquer tokens, full-bleed stage, scrim top bar, glass sidebar, veils cut, duty mask removed."
+    },
+    {
+      "path": "app/globals.css",
+      "reason": "Page base color warmed."
+    },
+    {
+      "path": "app/Dashboard.tsx",
+      "reason": "Stage backdrop switched to the Zipangu city."
+    },
+    {
+      "path": "app/OtomoSwarm.tsx",
+      "reason": "Swarm disabled behind SWARM_ENABLED pending the style verdict."
+    },
+    {
+      "path": "scripts/creative-pipeline/batch-04-style-spike.json",
+      "reason": "Ten-direction cuteness spike spec."
+    },
+    {
+      "path": "scripts/creative-pipeline/batch-05-duty-white.json",
+      "reason": "White-background duty regeneration spec."
+    },
+    {
+      "path": "assets/ASSET_MANIFEST.csv",
+      "reason": "Seven v003 transparent duty rows."
+    },
+    {
+      "path": "public/dashboard-art/stage/duty-ebisu.png",
+      "reason": "Transparent duty painting v003; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/stage/duty-fukuei.png",
+      "reason": "Transparent duty painting v003; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/stage/duty-juraku.png",
+      "reason": "Transparent duty painting v003; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/stage/duty-saika.png",
+      "reason": "Transparent duty painting v003; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/stage/duty-shouren.png",
+      "reason": "Transparent duty painting v003; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/stage/duty-sobi.png",
+      "reason": "Transparent duty painting v003; PENDING_APPROVAL."
+    },
+    {
+      "path": "public/dashboard-art/stage/duty-taiyo.png",
+      "reason": "Transparent duty painting v003; PENDING_APPROVAL."
+    }
+  ],
+  "resume": {
+    "action_id": "ACT-031",
+    "instruction": "Await the owner's spike pick and lobby confirmation. Then: encode the pick as a style clause, regenerate the 28 swarm sprites, QA, re-enable SWARM_ENABLED, extend the world-first treatment to the play/arena/collection/community/mysgg views, collect lot approvals and deploy via Sites with migration 0005.",
+    "do_not_assume": [
+      "A style direction was chosen; ten candidates await the owner.",
+      "The lobby direction is approved; it awaits the owner's word.",
+      "The old swarm may return; it was rejected and stays disabled.",
+      "Anything was deployed."
+    ]
+  }
+}

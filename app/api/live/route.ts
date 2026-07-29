@@ -19,6 +19,22 @@ type QuestEntry = {
 
 type LiveSnapshot = Omit<LiveData, "servedFrom" | "cacheAgeSeconds">;
 
+const CHAIN_SEASON_SOURCE = "https://otomochain.sevengodsgames.com/api/season";
+
+function parseChainSeason(value: unknown): LiveData["chainSeason"] {
+  if (!value || typeof value !== "object") return null;
+  const season = (value as { season?: unknown }).season;
+  if (!season || typeof season !== "object") return null;
+  const s = season as { name?: unknown; start_at?: unknown; end_at?: unknown; status?: unknown };
+  if (
+    typeof s.name !== "string" ||
+    typeof s.start_at !== "string" ||
+    typeof s.end_at !== "string" ||
+    (s.status !== "UPCOMING" && s.status !== "ACTIVE" && s.status !== "ENDED")
+  ) return null;
+  return { name: s.name.slice(0, 64), startAt: s.start_at, endAt: s.end_at, status: s.status };
+}
+
 const RANKING_SOURCES = {
   oracle: "https://otomooracle.sevengodsgames.com/api/ranking?scope=daily",
   quest: "https://otomoquest.sevengodsgames.com/api/ranking",
@@ -29,6 +45,7 @@ const RUNTIME_SOURCES = {
   quest: "https://otomoquest.sevengodsgames.com/",
   farm: "https://otomo-farm-77.vercel.app/",
   taiyo: "https://emberveil.sevengodsgames.com/",
+  chain: "https://otomochain.sevengodsgames.com/",
 } as const;
 
 // Snapshot reuse protects upstream games from one fetch fan-out per visitor.
@@ -163,6 +180,7 @@ async function readUpstream(): Promise<LiveSnapshot> {
     Promise.allSettled([
       fetchJson(RANKING_SOURCES.oracle),
       fetchJson(RANKING_SOURCES.quest),
+      fetchJson(CHAIN_SEASON_SOURCE),
     ]),
     Promise.all(
       Object.entries(RUNTIME_SOURCES).map(async ([key, url]) =>
@@ -171,12 +189,15 @@ async function readUpstream(): Promise<LiveSnapshot> {
     ),
   ]);
 
-  const [oracleResult, questResult] = rankingResults;
+  const [oracleResult, questResult, chainSeasonResult] = rankingResults;
   const oracle = oracleResult.status === "fulfilled"
     ? parseOracle(oracleResult.value)
     : null;
   const quest = questResult.status === "fulfilled"
     ? parseQuest(questResult.value)
+    : null;
+  const chainSeason = chainSeasonResult.status === "fulfilled"
+    ? parseChainSeason(chainSeasonResult.value)
     : null;
   const runtimes = Object.fromEntries(runtimeEntries) as Record<keyof typeof RUNTIME_SOURCES, Availability>;
 
@@ -188,6 +209,7 @@ async function readUpstream(): Promise<LiveSnapshot> {
       oracle: oracle ? "online" : "unavailable",
       quest: quest ? "online" : "unavailable",
     },
+    chainSeason,
     oracle: oracle ?? { day: null, entries: [] },
     quest: quest ?? { season: null, entries: [], participants: 0 },
   };

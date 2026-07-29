@@ -1,0 +1,56 @@
+[
+ {
+  "id": "duty-fukuei",
+  "file": "DUTY-fukuei.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『福栄』。\n\n【用途】ダッシュボードのホーム画面ステージに立つ「本日の当番」全身立ち絵。縦長2:3。\n\n【必ず保つもの】福栄の顔・髪・衣装・配色を参照と一致させる。福栄の頭部装備は象徴なので絶対に省略しない: 「福」「禄」「寿」の文字が入った緑のヘルメットを必ずかぶせ、金色の大きなゴーグルを必ず描く。銀白のツインテールをヘルメットの下から見せる。\n\n【シーン】暗い黒曜石と金の神域の広間に立ち、こちらへ視線を向けて迎える。無邪気で観察者らしい自然な立ち姿。足元に淡い金の魔法陣。\n\n【構図】人物は中央、画面の高さの70%。下端30%と右端20%は暗くしてUIが重なっても読めるようにする。\n\n【スタイル】高品質な和風ミライ神話アニメ。全年齢向けで健全。登場は福栄1体のみ。"
+ },
+ {
+  "id": "duty-shouren",
+  "file": "DUTY-shouren.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『笑蓮』。\n\n【用途】「本日の当番」全身立ち絵。縦長2:3。\n\n【必ず保つもの】笑蓮の顔・髪・衣装・配色を参照と一致させる。笑蓮の頭上の大きな花魁風の髪飾り一式（扇状に広がる紫の結髪、放射状の黒い簪、赤い薔薇、下がり藤、上部の横長の札）は象徴なので必ず全て描く。省略や簡略化をしない。頭身は参照どおりデフォルメ寄り。\n\n【シーン】暗い神域の広間で扇を手に、包容力のある笑みで迎える立ち姿。足元に淡い金の魔法陣。\n\n【構図】人物は中央、画面の高さの70%（頭飾りの頂点まで画面内に収める）。下端30%は暗く。\n\n【スタイル】高品質な和風ミライ神話アニメ。全年齢向けで健全。体のラインや露出を強調しない。登場は笑蓮1体のみ。"
+ },
+ {
+  "id": "pair-shouren",
+  "file": "PAIR-shouren.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_doji.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『笑蓮』とOTOMO『笑袋』(童子)。\n\n【用途】キャラクター図鑑のペア肖像。正方形1:1。\n\n【必ず保つもの】両者の顔・髪・衣装・配色を参照と一致させる。笑蓮の頭上の大きな花魁風の髪飾り一式（扇状に広がる紫の結髪、放射状の黒い簪、赤い薔薇、下がり藤、上部の横長の札）は象徴なので必ず全て描く。省略や簡略化をしない。\n\n【シーン】暗い神域を背景に、笑蓮が主、笑袋(童子)が傍らに寄り添う。信頼が伝わる自然な距離感。\n\n【スタイル】高品質な和風ミライ神話アニメの肖像。全年齢向けで健全。体のラインや露出を強調しない。登場は2体のみ。"
+ },
+ {
+  "id": "header-fukuei",
+  "file": "HEADER-fukuei.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/god/fukuei_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『福栄』。\n\n【用途】「マイSGG（記録・本人確認）」ページのヘッダー装飾。横長3:1の帯。\n\n【必ず保つもの】福栄の顔・髪・衣装・配色を参照と一致させる。福栄の頭部装備は象徴なので絶対に省略しない: 「福」「禄」「寿」の文字が入った緑のヘルメットを必ずかぶせ、金色の大きなゴーグルを必ず描く。銀白のツインテールをヘルメットの下から見せる。\n\n【構図】人物は必ず画面の右側40%の領域に置き、左側60%は見出し文字のための暗く静かな空間として人物や強い模様を置かない。\n\n【シーン】帳面と星図を検める姿。\n\n【スタイル】高品質な和風ミライ神話アニメ。全年齢向けで健全。登場は福栄1体のみ。"
+ },
+ {
+  "id": "header-taiyo",
+  "file": "HEADER-taiyo.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/god/taiyo_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『大耀』。\n\n【用途】「プレイ（出撃・ゲーム選択）」ページのヘッダー装飾。横長3:1の帯。\n\n【必ず保つもの】大耀の顔・髪・オレンジのバイザー・迷彩衣装・配色を参照と一致させる。\n\n【構図】人物は必ず画面の右側40%の領域に置き、左側60%は見出し文字のための暗く静かな空間として人物や強い模様を置かない。人物は帯の高さいっぱいに大きく描く。\n\n【シーン】駆け出す瞬間の躍動。左側は暗い出撃回廊の奥行き。\n\n【スタイル】高品質な和風ミライ神話アニメ。全年齢向けで健全。登場は大耀1体のみ。"
+ },
+ {
+  "id": "header-shouren",
+  "file": "HEADER-shouren.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_main.webp",
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/god/shouren_front.webp"
+  ],
+  "prompt": "添付2枚は identity 参照専用。GOD『笑蓮』。\n\n【用途】「コミュニティ（交流・祭）」ページのヘッダー装飾。横長3:1の帯。\n\n【必ず保つもの】笑蓮の顔・髪・衣装・配色を参照と一致させる。笑蓮の頭上の大きな花魁風の髪飾り一式（扇状に広がる紫の結髪、放射状の黒い簪、赤い薔薇、下がり藤、上部の横長の札）は象徴なので必ず全て描く。省略や簡略化をしない。\n\n【構図】人物は必ず画面の右側40%の領域に置き、左側60%は見出し文字のための暗く静かな空間として人物や強い模様を置かない。\n\n【シーン】扇を掲げて笑う歓待の姿。左側は暗い祭りの夜空と提灯の玉ボケ。\n\n【スタイル】高品質な和風ミライ神話アニメ。全年齢向けで健全。体のラインや露出を強調しない。登場は笑蓮1体のみで、他の人物を加えない。"
+ }
+]

@@ -119,3 +119,12 @@ export function IconPassport({ className }: IconProps) {
     </Frame>
   );
 }
+
+/** Seven-point star — the home surface. */
+export function IconHome({ className }: IconProps) {
+  return (
+    <Frame className={className}>
+      <path d="M12 2.6 14 8.4l6 .5-4.6 4 1.4 5.9L12 15.7 7.2 18.8l1.4-5.9L4 8.9l6-.5z" />
+    </Frame>
+  );
+}

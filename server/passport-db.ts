@@ -5,6 +5,7 @@ import {
   authSessions,
   discordDmChallenges,
   discordDmRateLimits,
+  gachaPulls,
   players,
   pointGrants,
   walletChallenges,
@@ -19,6 +20,10 @@ import {
 } from "./auth";
 
 export { grantRequestFingerprint, isUniqueConstraintError } from "./auth";
+
+export function isInsufficientCurrencyBalanceError(error: unknown): boolean {
+  return /SGG_INSUFFICIENT_CURRENCY_BALANCE/i.test(String(error));
+}
 
 const schema = {
   players,
@@ -426,18 +431,41 @@ export async function getPlayer(db: Db, discordId: string) {
   return rows[0] ?? null;
 }
 
-export async function getPointBalance(db: Db, discordId: string): Promise<number> {
+export async function getPointBalance(
+  db: Db,
+  discordId: string,
+  currency = "SGP",
+): Promise<number> {
   const rows = await db
     .select({ total: sql<number>`COALESCE(SUM(${pointGrants.amount}), 0)` })
     .from(pointGrants)
-    .where(eq(pointGrants.discordId, discordId));
+    .where(and(eq(pointGrants.discordId, discordId), eq(pointGrants.currency, currency)));
   return rows[0]?.total ?? 0;
+}
+
+/** All currency balances in one read; absent currencies report zero. */
+export async function getCurrencyBalances(
+  db: Db,
+  discordId: string,
+): Promise<Record<string, number>> {
+  const rows = await db
+    .select({
+      currency: pointGrants.currency,
+      total: sql<number>`COALESCE(SUM(${pointGrants.amount}), 0)`,
+    })
+    .from(pointGrants)
+    .where(eq(pointGrants.discordId, discordId))
+    .groupBy(pointGrants.currency);
+  const balances: Record<string, number> = {};
+  for (const row of rows) balances[row.currency] = row.total;
+  return balances;
 }
 
 export async function getRecentGrants(db: Db, discordId: string, limit = 20) {
   return db
     .select({
       amount: pointGrants.amount,
+      currency: pointGrants.currency,
       reasonCode: pointGrants.reasonCode,
       note: pointGrants.note,
       createdAt: pointGrants.createdAt,
@@ -448,11 +476,79 @@ export async function getRecentGrants(db: Db, discordId: string, limit = 20) {
     .limit(limit);
 }
 
+/**
+ * One gacha draw: currency debit and pull row in a single batch under one
+ * idempotency key. If either row already exists the batch throws the unique
+ * violation and the caller resolves the previously recorded pull instead.
+ */
+export async function appendGachaDraw(db: Db, input: {
+  discordId: string;
+  amount: number;
+  currency: string;
+  poolId: string;
+  cardId: string;
+  rarity: string;
+  idempotencyKey: string;
+  requestFingerprint: string;
+}) {
+  const now = new Date().toISOString();
+  await db.batch([
+    db.insert(pointGrants).values({
+      discordId: input.discordId,
+      amount: -Math.abs(input.amount),
+      currency: input.currency,
+      reasonCode: "GACHA_DRAW",
+      note: input.cardId,
+      grantedBy: input.discordId,
+      idempotencyKey: input.idempotencyKey,
+      requestFingerprint: input.requestFingerprint,
+      createdAt: now,
+    }),
+    db.insert(gachaPulls).values({
+      discordId: input.discordId,
+      poolId: input.poolId,
+      cardId: input.cardId,
+      rarity: input.rarity,
+      idempotencyKey: input.idempotencyKey,
+      createdAt: now,
+    }),
+    db.insert(auditEvents).values({
+      actor: input.discordId,
+      action: "GACHA_DRAW",
+      subject: input.cardId,
+      detail: JSON.stringify({ poolId: input.poolId, idempotencyKey: input.idempotencyKey }),
+      createdAt: now,
+    }),
+  ]);
+}
+
+export async function getGachaPullByIdempotencyKey(db: Db, idempotencyKey: string) {
+  const rows = await db
+    .select()
+    .from(gachaPulls)
+    .where(eq(gachaPulls.idempotencyKey, idempotencyKey))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+/** Card counts for one player, derived from the append-only pull history. */
+export async function getGachaInventory(db: Db, discordId: string) {
+  return db
+    .select({
+      cardId: gachaPulls.cardId,
+      count: sql<number>`COUNT(*)`,
+    })
+    .from(gachaPulls)
+    .where(eq(gachaPulls.discordId, discordId))
+    .groupBy(gachaPulls.cardId);
+}
+
 export async function getGrantByIdempotencyKey(db: Db, idempotencyKey: string) {
   const rows = await db
     .select({
       discordId: pointGrants.discordId,
       amount: pointGrants.amount,
+      currency: pointGrants.currency,
       reasonCode: pointGrants.reasonCode,
       note: pointGrants.note,
       grantedBy: pointGrants.grantedBy,
@@ -467,6 +563,7 @@ export async function getGrantByIdempotencyKey(db: Db, idempotencyKey: string) {
 export async function appendPointGrantWithAudit(db: Db, input: {
   discordId: string;
   amount: number;
+  currency?: string;
   reasonCode: string;
   note: string | null;
   grantedBy: string;
@@ -482,6 +579,7 @@ export async function appendPointGrantWithAudit(db: Db, input: {
       subject: input.discordId,
       detail: JSON.stringify({
         amount: input.amount,
+        currency: input.currency ?? "SGP",
         reasonCode: input.reasonCode,
         idempotencyKey: input.idempotencyKey,
         requestFingerprint: input.requestFingerprint,

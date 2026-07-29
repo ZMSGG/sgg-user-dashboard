@@ -1,0 +1,226 @@
+[
+ {
+  "id": "mochi-taimaru-walk",
+  "file": "SPRITE2-taimaru-walk.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛のもちもち塊。桜の花びら模様、小さなひれ）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】楽しそうにてくてく歩いている横向きの姿。短い足をちょこちょこ出す。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】鯛丸の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-taimaru-sit",
+  "file": "SPRITE2-taimaru-sit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛のもちもち塊。桜の花びら模様、小さなひれ）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】ちょこんと座ってこちらを見ている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】鯛丸の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-taimaru-sleep",
+  "file": "SPRITE2-taimaru-sleep.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛のもちもち塊。桜の花びら模様、小さなひれ）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】丸くなってすやすや眠っている姿。目を閉じて安らか。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】鯛丸の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-taimaru-cheer",
+  "file": "SPRITE2-taimaru-cheer.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/01_ebisu-taimaru/otomo/taimaru_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『鯛丸』（桜色の鯛のもちもち塊。桜の花びら模様、小さなひれ）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】両手（ひれ・羽）を上げて大喜びしている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】鯛丸の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-kozuchi-walk",
+  "file": "SPRITE2-kozuchi-walk.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/otomo/kozuchi_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『小槌』（白い小鼠のもちもち塊。丸い耳、橙の花マーク、細いしっぽ）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】楽しそうにてくてく歩いている横向きの姿。短い足をちょこちょこ出す。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】小槌の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-kozuchi-sit",
+  "file": "SPRITE2-kozuchi-sit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/otomo/kozuchi_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『小槌』（白い小鼠のもちもち塊。丸い耳、橙の花マーク、細いしっぽ）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】ちょこんと座ってこちらを見ている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】小槌の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-kozuchi-sleep",
+  "file": "SPRITE2-kozuchi-sleep.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/otomo/kozuchi_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『小槌』（白い小鼠のもちもち塊。丸い耳、橙の花マーク、細いしっぽ）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】丸くなってすやすや眠っている姿。目を閉じて安らか。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】小槌の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-kozuchi-cheer",
+  "file": "SPRITE2-kozuchi-cheer.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/02_taiyo-kozuchi/otomo/kozuchi_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『小槌』（白い小鼠のもちもち塊。丸い耳、橙の花マーク、細いしっぽ）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】両手（ひれ・羽）を上げて大喜びしている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】小槌の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-momokatsu-walk",
+  "file": "SPRITE2-momokatsu-walk.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_doji.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『百勝』（青い兜と鎧のだるま型もちもち武者）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】楽しそうにてくてく歩いている横向きの姿。短い足をちょこちょこ出す。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】百勝の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-momokatsu-sit",
+  "file": "SPRITE2-momokatsu-sit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_doji.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『百勝』（青い兜と鎧のだるま型もちもち武者）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】ちょこんと座ってこちらを見ている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】百勝の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-momokatsu-sleep",
+  "file": "SPRITE2-momokatsu-sleep.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_doji.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『百勝』（青い兜と鎧のだるま型もちもち武者）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】丸くなってすやすや眠っている姿。目を閉じて安らか。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】百勝の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-momokatsu-cheer",
+  "file": "SPRITE2-momokatsu-cheer.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/03_sobi-momokatsu/otomo/momokatsu_doji.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『百勝』（青い兜と鎧のだるま型もちもち武者）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】両手（ひれ・羽）を上げて大喜びしている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】百勝の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-kotone-walk",
+  "file": "SPRITE2-kotone-walk.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『琴音』（桃色の小蛇のもちもち塊。花びらの頭飾り）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】楽しそうにてくてく歩いている横向きの姿。短い足をちょこちょこ出す。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】琴音の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-kotone-sit",
+  "file": "SPRITE2-kotone-sit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『琴音』（桃色の小蛇のもちもち塊。花びらの頭飾り）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】ちょこんと座ってこちらを見ている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】琴音の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-kotone-sleep",
+  "file": "SPRITE2-kotone-sleep.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『琴音』（桃色の小蛇のもちもち塊。花びらの頭飾り）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】丸くなってすやすや眠っている姿。目を閉じて安らか。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】琴音の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-kotone-cheer",
+  "file": "SPRITE2-kotone-cheer.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/04_saika-kotone/otomo/kotone_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『琴音』（桃色の小蛇のもちもち塊。花びらの頭飾り）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】両手（ひれ・羽）を上げて大喜びしている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】琴音の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-juka-walk",
+  "file": "SPRITE2-juka-walk.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/otomo/juka_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『寿鹿』（橙の子鹿のもちもち塊。白い斑、小さな角）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】楽しそうにてくてく歩いている横向きの姿。短い足をちょこちょこ出す。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】寿鹿の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-juka-sit",
+  "file": "SPRITE2-juka-sit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/otomo/juka_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『寿鹿』（橙の子鹿のもちもち塊。白い斑、小さな角）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】ちょこんと座ってこちらを見ている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】寿鹿の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-juka-sleep",
+  "file": "SPRITE2-juka-sleep.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/otomo/juka_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『寿鹿』（橙の子鹿のもちもち塊。白い斑、小さな角）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】丸くなってすやすや眠っている姿。目を閉じて安らか。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】寿鹿の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-juka-cheer",
+  "file": "SPRITE2-juka-cheer.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/05_juraku-juka/otomo/juka_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『寿鹿』（橙の子鹿のもちもち塊。白い斑、小さな角）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】両手（ひれ・羽）を上げて大喜びしている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】寿鹿の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-haku-walk",
+  "file": "SPRITE2-haku-walk.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/otomo/haku_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『ハク』（白いもちに包まれた鶴の子。頭に赤い丸）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】楽しそうにてくてく歩いている横向きの姿。短い足をちょこちょこ出す。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】ハクの配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-haku-sit",
+  "file": "SPRITE2-haku-sit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/otomo/haku_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『ハク』（白いもちに包まれた鶴の子。頭に赤い丸）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】ちょこんと座ってこちらを見ている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】ハクの配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-haku-sleep",
+  "file": "SPRITE2-haku-sleep.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/otomo/haku_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『ハク』（白いもちに包まれた鶴の子。頭に赤い丸）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】丸くなってすやすや眠っている姿。目を閉じて安らか。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】ハクの配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-haku-cheer",
+  "file": "SPRITE2-haku-cheer.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/06_fukuei-haku/otomo/haku_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『ハク』（白いもちに包まれた鶴の子。頭に赤い丸）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】両手（ひれ・羽）を上げて大喜びしている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】ハクの配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-shofuku-walk",
+  "file": "SPRITE2-shofuku-walk.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『笑袋』（クリーム色の袋のもちもち塊。金の紐と渦紋様）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】楽しそうにてくてく歩いている横向きの姿。短い足をちょこちょこ出す。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】笑袋の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-shofuku-sit",
+  "file": "SPRITE2-shofuku-sit.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『笑袋』（クリーム色の袋のもちもち塊。金の紐と渦紋様）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】ちょこんと座ってこちらを見ている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】笑袋の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-shofuku-sleep",
+  "file": "SPRITE2-shofuku-sleep.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『笑袋』（クリーム色の袋のもちもち塊。金の紐と渦紋様）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】丸くなってすやすや眠っている姿。目を閉じて安らか。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】笑袋の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ },
+ {
+  "id": "mochi-shofuku-cheer",
+  "file": "SPRITE2-shofuku-cheer.png",
+  "refs": [
+   "command-center://SGG LP/sevengods-games/public/creator-kit/v1/assets/07_shouren-shofuku/otomo/shofuku_incarnate.webp"
+  ],
+  "prompt": "添付1枚は identity 参照専用。OTOMO『笑袋』（クリーム色の袋のもちもち塊。金の紐と渦紋様）。\n\n【用途】ダッシュボードに群れとして配置する小さなマスコットスプライト。1体だけ。\n\n【スタイル指定・憲法】つきたての餅のような、まんまるもちもちの塊。輪郭はごく太く均一。顔パーツは極小で中央に寄せ、頬に楕円のほんのり赤み。体のハイライトは1つだけ。\n\n【ポーズ】両手（ひれ・羽）を上げて大喜びしている姿。もちもち塊の形は崩さない。\n\n【背景・必須】完全な純白の背景。地面影なし。キャラ内部に純白の大きな面を作らない（白い体はごくわずかにクリーム寄りへ）。\n\n【必ず保つもの】笑袋の配色・模様・シルエットの identity。\n\n【禁止】文字・ロゴ・枠・透かし。複数体禁止。"
+ }
+]

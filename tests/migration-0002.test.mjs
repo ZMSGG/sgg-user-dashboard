@@ -92,9 +92,10 @@ test("migration journal packages the guild and DM auth migrations exactly once",
       "0002_bent_spiral",
       "0003_previous_nitro",
       "0004_yielding_dormammu",
+      "0005_same_madripoor",
     ],
   );
-  assert.equal(journal.entries.at(-1)?.idx, 4);
+  assert.equal(journal.entries.at(-1)?.idx, 5);
   assert.match(await readMigration("0002_bent_spiral.sql"), /ADD `guild_synced_at` text/);
   assert.match(await readMigration("0003_previous_nitro.sql"), /CREATE TABLE `discord_dm_challenges`/);
   assert.match(await readMigration("0004_yielding_dormammu.sql"), /CREATE TABLE `game_account_links`/);
@@ -103,4 +104,8 @@ test("migration journal packages the guild and DM auth migrations exactly once",
     await readMigration("0004_yielding_dormammu.sql"),
     /CREATE UNIQUE INDEX `game_account_links_game_player_unique`/,
   );
+  assert.match(await readMigration("0005_same_madripoor.sql"), /CREATE TABLE `gacha_pulls`/);
+  assert.match(await readMigration("0005_same_madripoor.sql"), /`currency` text DEFAULT 'SGP' NOT NULL/);
+  assert.match(await readMigration("0005_same_madripoor.sql"), /point_grants_nonnegative_currency_balance/);
+  assert.match(await readMigration("0005_same_madripoor.sql"), /SGG_INSUFFICIENT_CURRENCY_BALANCE/);
 });

@@ -23,9 +23,10 @@ test("server-renders the truthful SGG Player OS", async () => {
   const html = await response.text();
   assert.match(html, /All of SGG\. One Player OS/i);
   assert.match(html, /遊ぶ。競う。集める。/);
-  assert.match(html, /QUEST 77/);
+  // Home surfaces only the titles being taken to market; dormant ones are
+  // reachable from プレイ but are not presented here as somewhere to return to.
+  assert.match(html, /CHAIN 7/);
   assert.match(html, /FARM 77/);
-  assert.match(html, /ORACLE 7/);
   assert.match(html, /公開確認済みのゲーム・ランキング・投稿だけを表示/);
   assert.match(html, /name="robots" content="noindex, nofollow"/);
   assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v002\.png"/);
@@ -91,8 +92,8 @@ test("exposes a same-origin live read model without internal Quest IDs", async (
   assert.equal(typeof payload.sources.oracle, "string");
   assert.equal(typeof payload.sources.quest, "string");
   assert.equal(typeof payload.runtimeOnlineCount, "number");
-  assert.ok(payload.runtimeOnlineCount >= 0 && payload.runtimeOnlineCount <= 4);
-  for (const key of ["oracle", "quest", "farm", "taiyo"]) {
+  assert.ok(payload.runtimeOnlineCount >= 0 && payload.runtimeOnlineCount <= 5);
+  for (const key of ["oracle", "quest", "farm", "taiyo", "chain"]) {
     assert.match(payload.runtimes[key], /^(online|unavailable)$/);
   }
   assert.ok(payload.oracle.day === null || typeof payload.oracle.day === "number");
@@ -115,7 +116,7 @@ test("derives current health, search selection, and filtered feature state", asy
   assert.match(dashboard, /filteredGames\.find/);
   assert.match(dashboard, /まだ公開記録がありません/);
   assert.match(dashboard, /稼働確認不可/);
-  assert.doesNotMatch(dashboard, />4 \/ 4 ONLINE</);
+  assert.doesNotMatch(dashboard, />5 \/ 5 ONLINE</);
 });
 
 test("shares one live contract and keeps re-sync failures non-destructive", async () => {
@@ -185,13 +186,17 @@ test("passport endpoints fail closed and identity never comes from the browser",
   assert.doesNotMatch(adminGrants, /\.delete\(|\.update\(/);
 });
 
-test("serves an anonymous passport read model without bindings", async () => {
+test("fails closed for anonymous passport and gacha reads without bindings", async () => {
   const response = await render("/api/passport");
-  assert.equal(response.status, 200);
+  assert.equal(response.status, 401);
   const payload = JSON.parse(await response.text());
   assert.equal(payload.connected, false);
   assert.equal(payload.authConfigured, false);
   assert.deepEqual(payload.authMethods, { oauth: false, dmOtp: false });
+
+  const gacha = await render("/api/gacha");
+  assert.equal(gacha.status, 401);
+  assert.equal(JSON.parse(await gacha.text()).code, "NOT_AUTHENTICATED");
 });
 
 test("degrades image optimization gracefully without Cloudflare bindings", async () => {
@@ -228,13 +233,24 @@ test("degrades image optimization gracefully without Cloudflare bindings", async
 test("keeps publication claims aligned with the deployment registry", async () => {
   const data = await readFile(new URL("../app/dashboard-data.ts", import.meta.url), "utf8");
   assert.match(data, /otomo-farm-77\.vercel\.app/);
-  assert.match(data, /PRIVATE RUNTIME · PUBLIC RELEASE PENDING/);
-  assert.match(data, /id: "taiyo-action-rpg"[\s\S]*?releaseState: "NOT_DEPLOYED"/);
+  // Only OTOMO CHAIN 7 and OTOMO FARM 77 are being taken to market; every
+  // other built title reads 休眠中 rather than claiming a release state.
+  assert.match(data, /id: "otomo-chain-7"[\s\S]*?releaseState: "LIVE"/);
+  assert.match(data, /id: "otomo-farm-77"[\s\S]*?releaseState: "LIVE"/);
+  for (const dormant of ["otomo-quest-77", "otomo-oracle-7", "taiyo-action-rpg", "ebisu-fishing-77"]) {
+    assert.match(data, new RegExp(`id: "${dormant}"[\\s\\S]*?releaseState: "DORMANT"`));
+  }
   assert.doesNotMatch(data, /id: "taiyo-action-rpg"[\s\S]*?releaseLabel: "PUBLIC RUNTIME/);
+  // Every title carries key art on the play surface (owner direction 2026-07-28).
+  for (const withArt of ["otomo-quest-77", "otomo-chain-7", "otomo-farm-77", "otomo-oracle-7", "taiyo-action-rpg", "ebisu-fishing-77"]) {
+    assert.match(data, new RegExp(`id: "${withArt}"[^}]*?keyArt: "/dashboard-art/`));
+  }
 });
 
 test("ships the finished visual surface and retires legacy demo art", async () => {
+  const swarm = await readFile(new URL("../app/OtomoSwarm.tsx", import.meta.url), "utf8");
   const og = await readFile(new URL("../public/my-sgg-social-og-v002.png", import.meta.url));
+  assert.match(swarm, /SWARM_ENABLED = false/);
   assert.equal(og.toString("ascii", 1, 4), "PNG");
   assert.equal(og.readUInt32BE(16), 1200);
   assert.equal(og.readUInt32BE(20), 630);

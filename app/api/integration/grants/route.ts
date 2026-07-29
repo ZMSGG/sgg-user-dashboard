@@ -64,6 +64,7 @@ export async function POST(request: Request) {
     actor: config.actorId,
     discordId: grant.discordId,
     amount: grant.amount,
+    currency: grant.currency,
     reasonCode: grant.reasonCode,
     note: grant.note,
   });
@@ -73,6 +74,7 @@ export async function POST(request: Request) {
     await appendPointGrantWithAudit(db, {
       discordId: grant.discordId,
       amount: grant.amount,
+      currency: grant.currency,
       reasonCode: grant.reasonCode,
       note: grant.note,
       grantedBy: config.actorId,
@@ -94,7 +96,7 @@ export async function POST(request: Request) {
     alreadyGranted = true;
   }
 
-  const balance = await getPointBalance(db, grant.discordId);
+  const balance = await getPointBalance(db, grant.discordId, grant.currency);
   return Response.json(
     { ok: true, alreadyGranted, balance },
     { headers: { "Cache-Control": "no-store" } },
