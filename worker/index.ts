@@ -66,7 +66,7 @@ function withSecurityHeaders(request: Request, response: Response): Response {
     "font-src 'self' data:",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    "img-src 'self' data: https://cdn.discordapp.com",
+    "img-src 'self' data: https://cdn.discordapp.com https://storage.googleapis.com",
     "object-src 'none'",
     "script-src 'self' 'unsafe-inline'",
     "style-src 'self' 'unsafe-inline'",

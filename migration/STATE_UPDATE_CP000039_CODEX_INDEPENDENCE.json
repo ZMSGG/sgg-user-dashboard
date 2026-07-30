@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 38,
+  "updated_by": "Codex",
+  "summary": "Prepared full independence from the Codex/Sites pipeline on the owner's instruction that Codex may be cancelled. docs/DEPLOY_HANDOVER_FACTS.md had established that the Sites production Worker and D1 live in an OpenAI-side Cloudflare account the owner cannot reach, so independence means a new owner-owned production plus a data exit. All three pieces now exist and are verified: GET /api/admin/export (admin-only, recent-auth, durable ledger tables only — sessions and challenges deliberately excluded) returns the full state and fails closed unauthenticated; scripts/import-export.mjs converts that JSON to INSERT OR FAIL SQL, round-trip-verified against a fresh database carrying migrations 0000-0005 with exact count parity on real data; and wrangler.owner.jsonc deploys the vinext build to the owner's already-authenticated Cloudflare account, validated by a successful dry-run (2.1MB bundle, 115 assets, DB and ASSETS bindings resolved) with workers_dev pinned false so the worker has no public URL until a Cloudflare-Access-guarded custom domain is attached per docs/OWNER_DEPLOY_RUNBOOK.md. Image generation stays on Codex per the owner. The export endpoint must ride the next Sites deployment so the exit hatch exists in production while Sites still works. Lint, typecheck, build and 82 tests pass.",
+  "status": "REVIEW",
+  "phase": "PRIVATE_DEPLOYED",
+  "current_objective": "Ship the export endpoint (with the vignettes and honest labels) through Sites while it remains available, keeping the owner-path runbook ready for cutover whenever Codex is cancelled.",
+  "active_work": {
+    "work_id": "ACT-036",
+    "objective": "Next Sites deployment carries the export hatch, vignettes and honest labels.",
+    "status": "IN_PROGRESS",
+    "acceptance_criteria": [
+      "Sites deployment includes /api/admin/export and it returns 401 unauthenticated in production.",
+      "Vignettes and honest labels are live.",
+      "The owner-path runbook, config and scripts stay committed and unchanged by the deploy."
+    ]
+  },
+  "next_actions": [
+    {
+      "action_id": "ACT-036",
+      "order": 1,
+      "action": "Owner pastes the redeploy prompt so production gains the export hatch, vignettes and honest labels.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-037",
+      "order": 2,
+      "action": "On any Codex cancellation signal: run docs/OWNER_DEPLOY_RUNBOOK.md steps 1-6 and record the new rights entry before attaching the Access-guarded domain.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PUBLICATION-001"
+      ]
+    },
+    {
+      "action_id": "ACT-022",
+      "order": 3,
+      "action": "Set the OTOMO CHAIN Discord credentials in Vercel.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-024",
+      "order": 4,
+      "action": "Review the two drifted command-center policy hashes.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-015",
+      "order": 5,
+      "action": "Two-account isolation check before adding any viewer.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DISCORD-E2E-001"
+      ]
+    },
+    {
+      "action_id": "ACT-021",
+      "order": 6,
+      "action": "Adapt reconciliation to verified Discord IDs when the game work lands.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-CONCURRENT-GAME-SESSION-001"
+      ]
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 7,
+      "action": "Post-season export secrets, reconcile, pay out with a decided award table.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-OTOMO-CHAIN-EXPORT-001",
+        "BLK-SGP-AWARD-TABLE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 8,
+      "action": "Sharp upgrade when supported.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPENDENCY-SHARP-001"
+      ]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 9,
+      "action": "Player snapshot bridges per game.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PLAYER-BRIDGE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-008",
+      "order": 10,
+      "action": "Separate authority before audience expansion.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PUBLICATION-001"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-IN-APP-BROWSER-001",
+      "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+      "severity": "P1",
+      "description": "This Codex task exposes the Browser skill but not its required in-app browser control capability after mandatory discovery. The existing protected production tab remains untouched. Version 14 has Sites screenshot, production HTTP, asset-hash, HTML/CSS and Worker-log evidence, but no new muted tab, interactive 390px viewport or console session was available.",
+      "owner": "Codex runtime capability",
+      "status": "OPEN",
+      "resolution_required": "Expose the supported Codex in-app browser control capability, then open the exact Version 14 URL in a new muted tab without navigating or closing the protected tab and complete desktop, 390px, interaction and console verification."
+    },
+    {
+      "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+      "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+      "severity": "P1",
+      "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+    },
+    {
+      "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+      "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+      "severity": "P1",
+      "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+    },
+    {
+      "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+      "scope": "REWARD_VALUE_AUTHORITY",
+      "severity": "P1",
+      "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger or holdings before expanding access beyond the current owner-only site."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "Version 14 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups and public release remain unauthorized.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency and actual-screen gates before any audience expansion."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "migration/STATE_UPDATE_CP000039_CODEX_INDEPENDENCE.json",
+      "reason": "Record the owner-path deployment readiness."
+    },
+    {
+      "path": "app/api/admin/export/route.ts",
+      "reason": "Admin-only durable-state export; the data exit hatch."
+    },
+    {
+      "path": "server/passport-db.ts",
+      "reason": "exportDurableState over the five durable tables."
+    },
+    {
+      "path": "scripts/import-export.mjs",
+      "reason": "Export JSON to INSERT OR FAIL SQL; round-trip verified."
+    },
+    {
+      "path": "wrangler.owner.jsonc",
+      "reason": "Owner-account deploy config, workers_dev false, dry-run validated."
+    },
+    {
+      "path": "docs/OWNER_DEPLOY_RUNBOOK.md",
+      "reason": "Cutover runbook with the Access-guarded domain gate."
+    },
+    {
+      "path": "DECISIONS.md",
+      "reason": "Independence path recorded; Sites remains production until cutover."
+    }
+  ],
+  "resume": {
+    "action_id": "ACT-036",
+    "instruction": "Get the export hatch deployed through Sites while it exists. The cutover itself only runs on the owner's go, following the runbook, with a new rights record before any domain attaches.",
+    "do_not_assume": [
+      "The owner-path worker exists in Cloudflare; only a dry-run ran, nothing was created or deployed.",
+      "Cutover is authorized; it awaits the owner's go and a rights record.",
+      "The Sites production D1 can be read directly; the export endpoint is the only data path."
+    ]
+  }
+}

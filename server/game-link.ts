@@ -185,6 +185,61 @@ export async function confirmGameLink(db: Db, input: {
     ));
 }
 
+export type IdentityResolution = {
+  gamePlayerId: string;
+  discordId: string;
+  /** Where the identity came from, strongest first. */
+  source: "RECORD_DISCORD" | "PRE_ENTRY" | "CONFIRMED_LINK" | "LINK_CODE";
+};
+
+/**
+ * Resolves game accounts to Discord IDs using every trustworthy source, in
+ * strength order. Ambiguous link codes never resolve; a stronger source for
+ * the same account always wins over a weaker one.
+ */
+export function resolveIdentities(input: {
+  records: { gamePlayerId: string; recordDiscordId: string | null; externalId: string | null }[];
+  preEntries: { gamePlayerId: string; discordId: string | null }[];
+  issuedLinks: { linkCode: string; discordId: string; gamePlayerId: string | null }[];
+}): Map<string, IdentityResolution> {
+  const out = new Map<string, IdentityResolution>();
+  const preEntryByPlayer = new Map(
+    input.preEntries.filter((e) => e.discordId).map((e) => [e.gamePlayerId, e.discordId as string]),
+  );
+  const confirmedByPlayer = new Map(
+    input.issuedLinks.filter((l) => l.gamePlayerId).map((l) => [l.gamePlayerId as string, l.discordId]),
+  );
+
+  // 第1パス: 強いソース。ここで確定した行は第2パスのコード照合から外す。
+  // 強い身元を持つ人のプロフィールに残った連携コードが、他人のコード解決を
+  // 「曖昧」として道連れにしないため。
+  for (const record of input.records) {
+    const id = record.gamePlayerId;
+    if (record.recordDiscordId) {
+      out.set(id, { gamePlayerId: id, discordId: record.recordDiscordId, source: "RECORD_DISCORD" });
+    } else if (preEntryByPlayer.has(id)) {
+      out.set(id, { gamePlayerId: id, discordId: preEntryByPlayer.get(id) as string, source: "PRE_ENTRY" });
+    } else if (confirmedByPlayer.has(id)) {
+      out.set(id, { gamePlayerId: id, discordId: confirmedByPlayer.get(id) as string, source: "CONFIRMED_LINK" });
+    }
+  }
+
+  // 第2パス: 未解決の行だけでコード照合。曖昧さの判定も未解決集合の中で行う。
+  const unresolved = input.records.filter((r) => !out.has(r.gamePlayerId));
+  const codePlan = planReconciliation(
+    input.issuedLinks.map((l) => ({ linkCode: l.linkCode, discordId: l.discordId })),
+    unresolved.map((r) => ({ gamePlayerId: r.gamePlayerId, externalId: r.externalId })),
+  );
+  for (const match of codePlan.matched) {
+    out.set(match.gamePlayerId, {
+      gamePlayerId: match.gamePlayerId,
+      discordId: match.discordId,
+      source: "LINK_CODE",
+    });
+  }
+  return out;
+}
+
 export async function getGameLink(
   db: Db,
   gameId: string,

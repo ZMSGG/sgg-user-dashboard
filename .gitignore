@@ -46,3 +46,10 @@ next-env.d.ts
 .dev.vars
 !.dev.vars.example
 .env.deploy
+
+# 却下ロット除けのガード。OTOMOスウォーム/ヴィネットのスプライトは
+# rights/RIGHTS-AND-IMAGE2-APPROVAL-20260729-001.json で不承認のため、
+# assets/rejected/swarm-v002/ に退避してある（public/ に置くとビルドが
+# dist/client へ写して本番から取得可能になる）。復活させるときは
+# オーナー承認を得たうえで意図的に public/ へ戻すこと。
+/public/dashboard-art/swarm/

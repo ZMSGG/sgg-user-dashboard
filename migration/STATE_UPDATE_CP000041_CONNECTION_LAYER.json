@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 40,
+  "updated_by": "Codex",
+  "summary": "Connection work per the owner's pivot away from design. The tournament identity path adapted to the game's real Discord login: the committed OTOMO CHAIN tree shows the pre-entry export carrying verified discord_id while the reward export still lacks it, so the dashboard now resolves identities through a two-pass, strength-ordered resolver — a record's own discord_id first (future-proof, validated as a snowflake), then the pre-entry roster, then confirmed links, then link codes — with rows settled by stronger sources excluded from code matching so a stray code in a verified player's profile cannot drag others into ambiguity (a defect the new test exposed before it shipped). The payout route reports each grant's identity source. A stones connection joined it: POST /api/admin/tournament/stones grants MAGATAMA across the pre-entry roster with operator-supplied amount and season, dry-run default, idempotent keys, and NOT_REGISTERED_YET withholding that resolves itself on rerun after a player's first dashboard login. OTOMO_CHAIN_PREENTRY_URL joins the env surface, all fetches remain HTTPS-only with the admin secret, and a set-state-in-effect lint error in the concurrent session's 推しGODS picker was fixed in place. 84 tests, lint, typecheck and build pass; unauth 403 and the recent-auth gate verified live.",
+  "status": "REVIEW",
+  "phase": "PRIVATE_DEPLOYED",
+  "current_objective": "Ship the connection layer (resolver, stones, export hatch, honest labels) through Sites, then have the owner flip the two external switches: CHAIN's Discord credentials in Vercel, and the export/pre-entry secrets in Sites after the season.",
+  "active_work": {
+    "work_id": "ACT-038",
+    "objective": "Deploy the connection layer; owner flips the two external configuration switches.",
+    "status": "IN_PROGRESS",
+    "acceptance_criteria": [
+      "Sites deployment carries the resolver, stones route and export hatch.",
+      "CHAIN discord_enabled turns true once the owner sets Vercel credentials.",
+      "Post-season: export/pre-entry URLs and admin secret configured in Sites, reconcile and stones dry runs reviewed before apply."
+    ]
+  },
+  "next_actions": [
+    {
+      "action_id": "ACT-038",
+      "order": 1,
+      "action": "Owner pastes the redeploy prompt (connection layer rides it).",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-022",
+      "order": 2,
+      "action": "Add the OTOMO CHAIN redirect URI to the MY SGG Discord app and set DISCORD_CLIENT_ID/SECRET in Vercel so discord_enabled becomes true.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 3,
+      "action": "After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-OTOMO-CHAIN-EXPORT-001",
+        "BLK-SGP-AWARD-TABLE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-024",
+      "order": 4,
+      "action": "Review the two drifted command-center policy hashes.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-015",
+      "order": 5,
+      "action": "Two-account isolation check before adding any viewer.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DISCORD-E2E-001"
+      ]
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 6,
+      "action": "Sharp upgrade when supported.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPENDENCY-SHARP-001"
+      ]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 7,
+      "action": "Player snapshot bridges per game.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PLAYER-BRIDGE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-008",
+      "order": 8,
+      "action": "Separate authority before audience expansion.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PUBLICATION-001"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-IN-APP-BROWSER-001",
+      "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+      "severity": "P1",
+      "description": "This Codex task exposes the Browser skill but not its required in-app browser control capability after mandatory discovery. The existing protected production tab remains untouched. Version 14 has Sites screenshot, production HTTP, asset-hash, HTML/CSS and Worker-log evidence, but no new muted tab, interactive 390px viewport or console session was available.",
+      "owner": "Codex runtime capability",
+      "status": "OPEN",
+      "resolution_required": "Expose the supported Codex in-app browser control capability, then open the exact Version 14 URL in a new muted tab without navigating or closing the protected tab and complete desktop, 390px, interaction and console verification."
+    },
+    {
+      "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+      "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+      "severity": "P1",
+      "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+    },
+    {
+      "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+      "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+      "severity": "P1",
+      "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+    },
+    {
+      "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+      "scope": "REWARD_VALUE_AUTHORITY",
+      "severity": "P1",
+      "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger or holdings before expanding access beyond the current owner-only site."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "Version 14 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups and public release remain unauthorized.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency and actual-screen gates before any audience expansion."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "migration/STATE_UPDATE_CP000041_CONNECTION_LAYER.json",
+      "reason": "Record the identity resolver, stones route and env additions."
+    },
+    {
+      "path": "server/otomo-chain-export.ts",
+      "reason": "discord_id parsing (validated), pre-entry roster fetch and parser."
+    },
+    {
+      "path": "server/game-link.ts",
+      "reason": "Two-pass strength-ordered identity resolver."
+    },
+    {
+      "path": "app/api/admin/tournament/payout/route.ts",
+      "reason": "Payout resolves via the resolver and reports identity sources."
+    },
+    {
+      "path": "app/api/admin/tournament/stones/route.ts",
+      "reason": "Pre-entry MAGATAMA distribution, dry-run default, idempotent."
+    },
+    {
+      "path": "server/auth.ts",
+      "reason": "OTOMO_CHAIN_PREENTRY_URL binding."
+    },
+    {
+      "path": ".dev.vars.example",
+      "reason": "Document the new env name."
+    },
+    {
+      "path": "app/Dashboard.tsx",
+      "reason": "Deferred the 推しGODS localStorage read to clear the lint error."
+    },
+    {
+      "path": "tests/game-link.test.mjs",
+      "reason": "Resolver priority and pre-entry parser coverage."
+    }
+  ],
+  "resume": {
+    "action_id": "ACT-038",
+    "instruction": "Deployment first; then the owner's two switches (Vercel Discord credentials now, Sites export secrets after the season). Stones and payout stay dry-run until their operator inputs are supplied.",
+    "do_not_assume": [
+      "The reward export carries discord_id yet; only the pre-entry roster does, and the resolver tolerates both.",
+      "Stone or SGP amounts exist by default; both are operator-supplied.",
+      "The OTOMO CHAIN repository may be edited from here; its tree still holds another session's uncommitted work."
+    ]
+  }
+}

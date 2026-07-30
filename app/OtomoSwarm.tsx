@@ -134,3 +134,53 @@ export function OtomoSwarm({ spec, className }: { spec: SwarmSpec; className?: s
     </div>
   );
 }
+
+/**
+ * ヴィネット: 群れの対極。各ページ2〜3体だけを、演出意図のある定位置に
+ * 「暮らしている」ように置く。重なりなし・徘徊なし・寝息だけ。
+ * 2026-07-29 オーナー審査「個体は可愛いが群れ方が気持ち悪い」への回答。
+ */
+export type VignetteItem = {
+  sprite: (typeof SPRITES)[number];
+  pose: Pose;
+  /** CSS length からの相対位置。left か right のどちらかを指定。 */
+  left?: string;
+  right?: string;
+  bottom?: string;
+  size?: number;
+  flip?: boolean;
+};
+
+/** 2026-07-29 オーナー指示「いったんOTOMOたちは撤退」。復帰はこの1行。 */
+export const VIGNETTE_ENABLED = false;
+
+export function OtomoVignette({ items, className }: { items: VignetteItem[]; className?: string }) {
+  const mounted = useIsClient();
+  if (!VIGNETTE_ENABLED || !mounted) return null;
+  return (
+    <div className={className} aria-hidden="true" data-otomo-vignette="">
+      {items.map((item, index) => (
+        <span
+          key={index}
+          data-pose={item.pose}
+          style={{
+            left: item.left,
+            right: item.right,
+            bottom: item.bottom ?? "0px",
+            width: `${item.size ?? 76}px`,
+            height: `${item.size ?? 76}px`,
+            ["--flip" as string]: item.flip ? "-1" : "1",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/dashboard-art/swarm/${item.sprite}-${item.pose}.png`}
+            alt=""
+            loading="lazy"
+            onError={(event) => { event.currentTarget.parentElement!.style.display = "none"; }}
+          />
+        </span>
+      ))}
+    </div>
+  );
+}

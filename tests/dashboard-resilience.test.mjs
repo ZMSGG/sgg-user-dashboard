@@ -62,14 +62,16 @@ test("ships keyboard, mobile form, and safe-area accessibility guards", async ()
     readFile(stylesUrl, "utf8"),
   ]);
 
-  assert.match(source, /aria-controls="notification-panel"/);
-  assert.match(source, /aria-haspopup="dialog"/);
-  assert.match(source, /role="dialog"/);
-  assert.match(source, /notificationPanelRef\.current\?\.focus\(\)/);
-  assert.match(source, /notificationTriggerRef\.current\?\.focus\(\)/);
+  // The topbar — and with it the global search combobox and the notification
+  // popover — was removed (owner direction 2026-07-30). The remaining
+  // interactive surfaces are the 推しGODS picker and the admin/DM forms.
+  assert.match(source, /role="listbox"/);
+  assert.match(source, /role="option"/);
+  assert.match(source, /aria-selected=/);
+  assert.match(source, /aria-expanded=\{stagePickerOpen\}/);
 
   assert.match(css, /:focus-visible/);
-  assert.match(css, /\.searchBox input,\s*\n\s*\.grantForm input,\s*\n\s*\.dmAuthForm input \{\s*\n\s*font-size: 16px/);
+  assert.match(css, /\.grantForm input,\s*\n\s*\.dmAuthForm input \{\s*\n\s*font-size: 16px/);
   assert.match(css, /safe-area-inset-top/);
   assert.match(css, /safe-area-inset-right/);
   assert.match(css, /safe-area-inset-left/);

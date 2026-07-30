@@ -20,6 +20,7 @@ Project ID: `PRJ-202607-sgg-user-dashboard`
 | 2026-07-29T02:30:00+08:00 | 図鑑ガチャを実装（21カード=7ペア×3形態、N100/R35/SR10、1回7勾玉） | CONFIRMED(レートはDRAFT) | オーナー指示「ガチャの仕組みのベース」。カードは本ダッシュボード限定のコスメティックで、NFT・ゲームアイテム・順位・報酬に影響しない。レート・コストは製品判断が出るまでDRAFT | SGG project owner (in-session) | server/gacha.ts, app/api/gacha/route.ts |
 | 2026-07-29T02:30:00+08:00 | 公開creator-kit v1の公式キャラアートをダッシュボード表示に利用し、ホームは七柱の日替わり当番ローテーションで表示 | CONFIRMED | 全ページへキャラクターを均等配置するオーナー指示。公開済み公式アセットの表示利用であり、私的原画の直貼りには該当しない。当番表は表示順の都合でありcanonの主張ではない | SGG project owner (in-session) | public/dashboard-art/canon/, app/Dashboard.tsx |
 | 2026-07-29T04:50:00+08:00 | 公式素材（creator-kit等）の runtime への直貼りを全面禁止し、全スロットを用途別の Image 2.0 新規生成へ置換する | CONFIRMED | オーナー指示。参照としての利用は許可、貼り付けは禁止。置換完了まで deploy 封鎖 | SGG project owner | scripts/creative-pipeline/, public/dashboard-art/cards/faces/ |
+| 2026-07-29T18:40:00+08:00 | Codex/Sites非依存の自前デプロイ経路を準備（wrangler.owner.jsonc・/api/admin/export・import script・runbook）。切替実行までSitesが本番のまま | CONFIRMED | オーナー指示「codexは解約する可能性があるから、あなたが完結できるように」。dry-runとデータ往復検証済み | SGG project owner | wrangler.owner.jsonc, app/api/admin/export/, scripts/import-export.mjs, docs/OWNER_DEPLOY_RUNBOOK.md |
 
 ## Assumptions awaiting a decision
 

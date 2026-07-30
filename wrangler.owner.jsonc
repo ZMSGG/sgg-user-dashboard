@@ -1,0 +1,31 @@
+// オーナー管理Cloudflareアカウントへの直接デプロイ設定。
+//
+// Sites（OpenAI側）経路が使えなくなった場合の自立経路であり、Sites本番とは
+// 別のWorker・別のD1に向く。docs/DEPLOY_HANDOVER_FACTS.md のとおり、Sites本番
+// リソースへは到達できないため、これは「同じ場所への別経路」ではなく
+// 「オーナー所有の新しい本番」である。切替はデータ移行（/api/admin/export →
+// scripts/import-export.mjs）とセットで行う。
+//
+// workers_dev は必ず false のまま維持する: 公開URLを持たないことが、
+// BLK-PUBLICATION-001（公開未許可）を守る前提になる。到達経路は移行時に
+// Cloudflare Access で保護したカスタムドメインだけを付ける。
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "my-sgg-player-os",
+  "main": "dist/server/index.js",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "assets": {
+    "directory": "dist/client",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "my-sgg-player-os",
+      // 移行実行時に `wrangler d1 create my-sgg-player-os` の結果で置き換える。
+      "database_id": "TO_BE_CREATED_AT_MIGRATION"
+    }
+  ]
+}

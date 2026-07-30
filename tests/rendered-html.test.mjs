@@ -23,11 +23,13 @@ test("server-renders the truthful SGG Player OS", async () => {
   const html = await response.text();
   assert.match(html, /All of SGG\. One Player OS/i);
   assert.match(html, /遊ぶ。競う。集める。/);
-  // Home surfaces only the titles being taken to market; dormant ones are
-  // reachable from プレイ but are not presented here as somewhere to return to.
-  assert.match(html, /CHAIN 7/);
-  assert.match(html, /FARM 77/);
-  assert.match(html, /公開確認済みのゲーム・ランキング・投稿だけを表示/);
+  // Home is now the hero stage plus the quick-access card row (owner direction
+  // 2026-07-30): the topbar, LIVE SOURCES banner, いま戻る場所, 公開済み
+  // アップデート and the right rail were all removed. Per-title status lives in
+  // プレイ, so home no longer names individual games server-side.
+  assert.match(html, /公開中のゲーム/);
+  assert.match(html, /開催中の大会/);
+  assert.doesNotMatch(html, /いま戻る場所/);
   assert.match(html, /name="robots" content="noindex, nofollow"/);
   assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v002\.png"/);
   assert.match(html, /name="twitter:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v002\.png"/);
@@ -44,21 +46,27 @@ test("does not ship fabricated player, asset, tournament, or release data", asyn
   ]);
   const source = `${dashboard}\n${data}`;
 
+  // The in-game asset bridge / asset source shelf was removed from the
+  // collection view entirely (owner direction 2026-07-30), so its honest
+  // empty-state copy is no longer required to ship.
+  // The TRUSTED LEDGER card grid and SGG Token boundary note were removed from
+  // マイSGG (owner direction 2026-07-30); the system definitions remain in
+  // dashboard-data.ts as canon documentation.
+  // アリーナ emptied to a 準備中 state (owner direction 2026-07-30): the boards
+  // and competition cards are gone, so the honest placeholder copy is now what
+  // must ship in their place.
   for (const value of [
     "EBISU FISHING 77",
-    "現在、公開確認済みの大会はありません",
-    "ゲーム内資産はまだ接続されていません",
+    "大会の受付・締切・戦績と、ゲームごとの番付をここに表示します",
     "COMMUNITY / OFFICIAL SIGNALS",
     "RAW GAMEPLAY SCORE",
     "SGG_GAME_POINTS",
-    "SGG TokenはPLANNEDです",
   ]) assert.match(source, new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 
   assert.doesNotMatch(source, /ZEN_TARO|0x7E7A|ORACLE OPEN|SUMMER CIRCUIT|WEEKEND CUP|KAMIZA 7/);
   assert.doesNotMatch(source, /1,284 PLAYING|842 PLAYING|396 IN ROOM|3,000 SGG_GAME_POINTS POOL/);
   assert.doesNotMatch(source, /GODS AUCTION 7|OTOMO CASCADE 7|SEVENGODS TREE 777/);
   assert.doesNotMatch(source, /4,277|12,840|MYTHIC|EPIC|RARE/);
-  assert.match(source, /missingを0/);
   assert.match(source, /PLAYER BRIDGE · NOT CONNECTED/);
 });
 
@@ -74,7 +82,9 @@ test("keeps canonical pairs, forms, and economic systems separate", async () => 
   assert.match(data, /RANKING/);
   assert.match(data, /SGG_GAME_POINTS/);
   assert.match(data, /REWARD CANDIDATE/);
-  assert.match(data, /SDT \/ COMMUNITY SCORE/);
+  // SDT holdings are live from the linked wallet; community score remains 実装予定.
+  assert.match(data, /SDT \/ SEVENDAO TOKEN/);
+  assert.match(data, /コミュニティ指標は実装予定/);
   assert.match(data, /SGG Token/);
   assert.doesNotMatch(data, /INCARNATED|獣獣体|\bSDG\b/);
 });
@@ -111,10 +121,16 @@ test("derives current health, search selection, and filtered feature state", asy
   assert.doesNotMatch(route, /scope=daily&day=1/);
   assert.match(route, /RUNTIME_SOURCES/);
   assert.match(route, /payload\.entries\.every/);
-  assert.match(dashboard, /aria-activedescendant/);
-  assert.match(dashboard, /event\.key === "ArrowDown"/);
-  assert.match(dashboard, /filteredGames\.find/);
-  assert.match(dashboard, /まだ公開記録がありません/);
+  // Global search was removed with the topbar (owner direction 2026-07-30),
+  // so its combobox accessibility contract no longer applies.
+  // The featured/library split was removed (owner direction 2026-07-30): the
+  // filter alone decides which titles the play view lists, at one shared size.
+  assert.match(dashboard, /filteredGames = games\.filter/);
+  assert.match(dashboard, /filteredGames\.map/);
+  // アリーナ is a 準備中 placeholder (owner direction 2026-07-30), so the
+  // leaderboard empty-state copy no longer exists; the play view still carries
+  // the honest runtime label.
+  assert.match(dashboard, /準備中<\/h2>/);
   assert.match(dashboard, /稼働確認不可/);
   assert.doesNotMatch(dashboard, />5 \/ 5 ONLINE</);
 });

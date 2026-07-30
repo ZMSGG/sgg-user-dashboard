@@ -43,6 +43,13 @@
       "when": 1785254510550,
       "tag": "0005_same_madripoor",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1785403796121,
+      "tag": "0006_married_nighthawk",
+      "breakpoints": true
     }
   ]
 }

@@ -251,55 +251,6 @@ export const otomoForms = [
   { code: "DOJI", label: "童子", description: "成熟・戦略・コレクション", accent: "violet" as Accent },
 ] as const;
 
-export type AssetSource = {
-  id: string;
-  label: string;
-  kind: "ONCHAIN" | "GAME" | "CATALOG";
-  status: "CONNECT" | "LOGIN" | "AVAILABLE" | "PLANNED";
-  description: string;
-  href: string | null;
-  accent: Accent;
-};
-
-export const assetSources: readonly AssetSource[] = [
-  {
-    id: "wallet",
-    label: "Wallet Assets",
-    kind: "ONCHAIN",
-    status: "CONNECT",
-    description: "GODS・OTOMOのオンチェーン保有。Walletはプレイ条件ではありません。",
-    href: null,
-    accent: "gold",
-  },
-  {
-    id: "quest-assets",
-    label: "QUEST 77 Assets",
-    kind: "GAME",
-    status: "LOGIN",
-    description: "OTOMO、G精霊体・G受肉体・G童子、素材、探索記録。",
-    href: "https://otomoquest.sevengodsgames.com/",
-    accent: "violet",
-  },
-  {
-    id: "farm-assets",
-    label: "FARM 77 Inventory",
-    kind: "GAME",
-    status: "LOGIN",
-    description: "OTOMO、種、作物、進化素材、畑と奉納ミッション。",
-    href: "https://otomofarm.sevengodsgames.com/",
-    accent: "green",
-  },
-  {
-    id: "canon-catalog",
-    label: "SGG Character Catalog",
-    kind: "CATALOG",
-    status: "AVAILABLE",
-    description: "7 GODS × 7 OTOMOと三形態の公式対応を確認。",
-    href: null,
-    accent: "cyan",
-  },
-] as const;
-
 export type LedgerSystem = {
   id: string;
   label: string;
@@ -358,11 +309,11 @@ export const ledgerSystems: readonly LedgerSystem[] = [
   },
   {
     id: "sdt",
-    label: "SDT / COMMUNITY SCORE",
+    label: "SDT / SEVENDAO TOKEN",
     category: "COMMUNITY",
-    status: "AUTH_REQUIRED",
-    description: "SEVENDAOの学び・参加・貢献指標。SGG_GAME_POINTSとは別制度です。",
-    source: "SEVENDAO",
+    status: "AVAILABLE",
+    description: "連携WalletのSDT保有数を表示中（表示のみ・価格なし）。コミュニティ指標は実装予定です。",
+    source: "ETHEREUM MAINNET",
     accent: "violet",
   },
   {
@@ -378,7 +329,7 @@ export const ledgerSystems: readonly LedgerSystem[] = [
 
 export type CommunityItem = {
   id: string;
-  channel: "X" | "DISCORD" | "SUBSTACK" | "SEVENDAO" | "SYSTEM";
+  channel: "X" | "DISCORD" | "SEVENDAO" | "SYSTEM";
   status: "PUBLISHED" | "PREPARING" | "MVP_DEMO";
   title: string;
   description: string;
@@ -421,17 +372,6 @@ export const communityItems: readonly CommunityItem[] = [
     href: null,
     actionLabel: "公開導線を準備中",
     accent: "violet",
-  },
-  {
-    id: "substack-dispatch",
-    channel: "SUBSTACK",
-    status: "PREPARING",
-    title: "SEVENGODS Games Dispatch",
-    description: "背景、開発思想、先行情報を保存して読める公式ロングフォーム。",
-    dateLabel: "FOLLOW FOR UPDATES",
-    href: null,
-    actionLabel: "公開準備中",
-    accent: "coral",
   },
   {
     id: "sevendao-learning",

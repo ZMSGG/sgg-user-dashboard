@@ -12,7 +12,7 @@
         "5799"
       ],
       "port": 5799,
-      "autoPort": false
+      "autoPort": true
     }
   ]
 }

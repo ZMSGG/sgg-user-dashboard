@@ -21,3 +21,6 @@ INTEGRATION_ACTOR_ID=
 # never writes to the game. external_id is exposed on this endpoint only.
 OTOMO_CHAIN_EXPORT_URL=
 OTOMO_CHAIN_ADMIN_SECRET=
+# Pre-entry roster endpoint (optional). Same admin secret; supplies the
+# game-verified Discord IDs used as the strongest identity source.
+OTOMO_CHAIN_PREENTRY_URL=

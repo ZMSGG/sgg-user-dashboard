@@ -4,26 +4,19 @@ import Image from "next/image";
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
   type FormEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
 import {
-  assetSources,
   characterPairs,
   communityItems,
-  competitions,
   games,
-  ledgerSystems,
   otomoForms,
   releaseStateCounts,
   releaseStateLabels,
-  systemNotifications,
   type Accent,
-  type Competition,
   type GameSummary,
   type ReleaseState,
 } from "./dashboard-data";
@@ -33,18 +26,18 @@ import {
   IconGames,
   IconHome,
   IconLedger,
-  IconOracle,
   IconOtomo,
   IconPassport,
   IconVault,
 } from "./DockIcons";
-import { emptyLiveData, type LiveData, type LiveRanking } from "./live-contract";
+import { emptyLiveData, type LiveData } from "./live-contract";
 import type { AdminPlayerRow, PassportData } from "./passport-contract";
-import { OtomoSwarm } from "./OtomoSwarm";
+import { OtomoVignette } from "./OtomoSwarm";
 import styles from "./Dashboard.module.css";
 
 type View = "home" | "games" | "arena" | "collection" | "mysgg" | "community";
-type GameFilter = "ALL" | ReleaseState;
+// 「すべて」は出さない — 休眠タイトルはプレイ可能の棚に混ぜず、休眠中タブに置く。
+type GameFilter = Extract<ReleaseState, "LIVE" | "DORMANT">;
 type FormFilter = "SPIRIT" | "INCARNATE" | "DOJI";
 type SourceState = "online" | "unavailable" | "checking";
 type LoadState = "idle" | "loading" | "ready" | "error";
@@ -151,20 +144,6 @@ function shortAddress(address: string) {
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
 }
 
-/**
- * OTOMO CHAIN authenticates anonymously and its profile field is explicitly
- * unverified, so the link code travels outward from this verified Passport
- * rather than the game asserting a Discord identity inward.
- */
-type GameLinkData = {
-  gameId: string;
-  linkCode: string;
-  issuedAt: string;
-  verified: boolean;
-  verifiedAt: string | null;
-  verifiedSeasonId: string | null;
-};
-
 /** Display-only wallet holdings. A null balance is unknown, never zero. */
 type HoldingsData = {
   linked: boolean;
@@ -198,12 +177,6 @@ function otomoHoldingTotal(data: HoldingsData | null): string {
   return String(otomo.reduce((sum, item) => sum + Number(item.balance ?? 0), 0));
 }
 
-/** How many of the four SGG collections the wallet holds at least one of. */
-function heldCollections(data: HoldingsData | null): number {
-  if (!data?.linked) return 0;
-  return data.holdings.filter((item) => item.kind === "NFT" && Number(item.balance ?? 0) > 0).length;
-}
-
 type GachaCardView = {
   id: string;
   pairId: string;
@@ -233,13 +206,16 @@ async function requestGacha(): Promise<GachaData> {
   return await response.json() as GachaData;
 }
 
-async function requestOtomoChainLink(): Promise<GameLinkData> {
-  const response = await fetch("/api/link/otomo-chain", {
+type OwnedTokenView = { tokenId: number; name: string | null; image: string | null; thumb: string | null };
+type TokenPageView = { supported: boolean; total: number; tokens: OwnedTokenView[]; nextOffset: number | null };
+
+async function requestOwnedTokens(collection: string, offset: number): Promise<TokenPageView> {
+  const response = await fetch(`/api/holdings/tokens?collection=${encodeURIComponent(collection)}&offset=${offset}`, {
     headers: { accept: "application/json" },
     cache: "no-store",
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return await response.json() as GameLinkData;
+  return await response.json() as TokenPageView;
 }
 
 const AUTH_ERROR_MESSAGES: Record<string, string> = {
@@ -306,16 +282,6 @@ function formatSyncTime(value: string) {
   }).format(date);
 }
 
-function formatSyncAge(value: string, now: number) {
-  if (!value) return "未同期";
-  const timestamp = new Date(value).getTime();
-  if (Number.isNaN(timestamp)) return "未同期";
-  const elapsedSeconds = Math.max(0, Math.floor((now - timestamp) / 1000));
-  if (elapsedSeconds < 45) return "たった今";
-  if (elapsedSeconds < 90) return "1分前";
-  if (elapsedSeconds < 3600) return `${Math.round(elapsedSeconds / 60)}分前`;
-  return formatSyncTime(value);
-}
 
 function Brand({ compact = false }: { compact?: boolean }) {
   return (
@@ -391,21 +357,20 @@ function ExternalLink({ href, children, className }: { href: string; children: R
   );
 }
 
+/** Every title gets the same full-width card; no featured/library hierarchy. */
 function GameCard({
   game,
   runtimeState,
   watched,
   onWatch,
-  featured = false,
 }: {
   game: GameSummary;
   runtimeState: SourceState;
   watched: boolean;
   onWatch: (id: string) => void;
-  featured?: boolean;
 }) {
   return (
-    <article className={featured ? styles.gameCardFeatured : styles.gameCard} data-tone={game.accent}>
+    <article className={styles.gameCard} data-tone={game.accent}>
       <div className={styles.gameCardTop}>
         <StatusPill accent={game.accent}>
           {game.releaseState === "LIVE" && <Dot active={runtimeState === "online"} />}
@@ -417,7 +382,6 @@ function GameCard({
       {game.keyArt ? (
         <div className={styles.gameArt}>
           <Image src={game.keyArt} alt="" fill sizes="(max-width: 900px) 92vw, 30vw" />
-          <span className={styles.gameGlyphOnArt} aria-hidden="true">{game.glyph}</span>
         </div>
       ) : (
         // Dormant titles carry no key art, so the surface stays deliberately quiet.
@@ -454,93 +418,13 @@ function GameCard({
   );
 }
 
-function CompetitionCard({ competition, runtimeState }: { competition: Competition; runtimeState: SourceState }) {
-  return (
-    <article className={styles.competitionCard} data-tone={competition.accent}>
-      <div>
-        <StatusPill accent={competition.accent}>
-          <Dot active={runtimeState === "online"} />公開ランキング · {runtimeState === "online" ? "ONLINE" : runtimeState === "checking" ? "CHECKING" : "稼働確認不可"}
-        </StatusPill>
-        <span>{competition.cadence}</span>
-      </div>
-      <p>{competition.game}</p>
-      <h3>{competition.title}</h3>
-      <dl>
-        <div><dt>RULE</dt><dd>{competition.rule}</dd></div>
-        <div><dt>DATA</dt><dd>{competition.integrity}</dd></div>
-      </dl>
-      {competition.href && (
-        <ExternalLink href={competition.href} className={styles.primaryAction}>
-          {competition.actionLabel}
-        </ExternalLink>
-      )}
-    </article>
-  );
-}
-
-function Leaderboard({
-  title,
-  subtitle,
-  entries,
-  state,
-  accent,
-}: {
-  title: string;
-  subtitle: string;
-  entries: LiveRanking[];
-  state: SourceState;
-  accent: Accent;
-}) {
-  return (
-    <section className={styles.leaderboard} data-tone={accent}>
-      <div className={styles.leaderboardHead}>
-        <div><p>LIVE PUBLIC DATA</p><h3>{title}</h3><span>{subtitle}</span></div>
-        <StatusPill accent={accent}><Dot active={state === "online"} />{state === "online" ? "同期済み" : state === "checking" ? "同期中" : "一時取得不可"}</StatusPill>
-      </div>
-      {entries.length ? (
-        <ol>
-          {entries.slice(0, 5).map((entry) => (
-            <li key={`${entry.rank}-${entry.name}`}>
-              <span>{String(entry.rank).padStart(2, "0")}</span>
-              <div><strong>{entry.name}</strong><small>{entry.meta}</small></div>
-              <b>{number.format(entry.score)}</b>
-            </li>
-          ))}
-        </ol>
-      ) : state === "checking" ? (
-        <ol className={styles.leaderboardSkeleton} aria-hidden="true">
-          {Array.from({ length: 5 }, (_, index) => (
-            <li key={index}>
-              <span /><div><strong /><small /></div><b />
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <div className={styles.inlineEmpty}>
-          <span aria-hidden="true">↻</span>
-          <p>{state === "online"
-            ? "この番付には、まだ公開記録がありません。"
-            : "公開ランキングを取得できませんでした。公式ページでは引き続き確認できます。"}</p>
-        </div>
-      )}
-    </section>
-  );
-}
-
 export function Dashboard() {
   const [activeView, setActiveView] = useState<View>("home");
-  const [gameFilter, setGameFilter] = useState<GameFilter>("ALL");
+  const [gameFilter, setGameFilter] = useState<GameFilter>("LIVE");
   const [formFilter, setFormFilter] = useState<FormFilter>("SPIRIT");
-  const [search, setSearch] = useState("");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [activeSearchIndex, setActiveSearchIndex] = useState(0);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [watchedIds, setWatchedIds] = useState<Set<string>>(new Set());
-  const [readIds, setReadIds] = useState<Set<string>>(new Set());
-  const [followedChannels, setFollowedChannels] = useState<Set<string>>(new Set(["X"]));
   const [liveData, setLiveData] = useState<LiveData>(emptyLiveData);
   const [liveState, setLiveState] = useState<"loading" | "ready" | "error">("loading");
-  const [syncing, setSyncing] = useState(false);
   const [passport, setPassport] = useState<PassportData | null>(null);
   const [passportState, setPassportState] = useState<Exclude<LoadState, "idle">>("loading");
   const [dmIdentity, setDmIdentity] = useState("");
@@ -548,10 +432,12 @@ export function Dashboard() {
   const [dmChallenge, setDmChallenge] = useState<DiscordDmChallenge | null>(null);
   const [dmAuthBusy, setDmAuthBusy] = useState(false);
   const [dmAuthMessage, setDmAuthMessage] = useState("");
-  const [gameLink, setGameLink] = useState<GameLinkData | null>(null);
-  const [gameLinkState, setGameLinkState] = useState<LoadState>("idle");
   const [holdings, setHoldings] = useState<HoldingsData | null>(null);
   const [holdingsState, setHoldingsState] = useState<LoadState>("idle");
+  const [nftViewer, setNftViewer] = useState<{ collection: string; label: string } | null>(null);
+  const [nftTokens, setNftTokens] = useState<OwnedTokenView[]>([]);
+  const [nftPage, setNftPage] = useState<{ total: number; nextOffset: number | null }>({ total: 0, nextOffset: null });
+  const [nftState, setNftState] = useState<LoadState>("idle");
   const [gacha, setGacha] = useState<GachaData | null>(null);
   const [gachaState, setGachaState] = useState<LoadState>("idle");
   const [gachaBusy, setGachaBusy] = useState(false);
@@ -563,14 +449,11 @@ export function Dashboard() {
   const [adminRosterState, setAdminRosterState] = useState<LoadState>("idle");
   const [grantForm, setGrantForm] = useState({ discordId: "", amount: "", reasonCode: "TESTER_FEEDBACK", note: "" });
   const [grantBusy, setGrantBusy] = useState(false);
-  const [clock, setClock] = useState(0);
   const [toast, setToast] = useState("");
+  const [stageGodId, setStageGodId] = useState<string | null>(null);
+  const [stagePickerOpen, setStagePickerOpen] = useState(false);
+  const [grantHistoryOpen, setGrantHistoryOpen] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
-  const searchBoxRef = useRef<HTMLDivElement>(null);
-  const notificationRef = useRef<HTMLDivElement>(null);
-  const notificationTriggerRef = useRef<HTMLButtonElement>(null);
-  const notificationPanelRef = useRef<HTMLDivElement>(null);
   const dmCodeInputRef = useRef<HTMLInputElement>(null);
   const dmIdentityInputRef = useRef<HTMLInputElement>(null);
   const checkedAtRef = useRef("");
@@ -578,7 +461,6 @@ export function Dashboard() {
   const grantAttemptRef = useRef<{ fingerprint: string; idempotencyKey: string } | null>(null);
 
   const activeNav = navItems.find((item) => item.id === activeView) ?? navItems[0];
-  const unread = systemNotifications.filter((item) => !readIds.has(item.id));
 
   const persistSet = useCallback((key: string, next: Set<string>) => {
     try {
@@ -592,8 +474,6 @@ export function Dashboard() {
   useEffect(() => {
     for (const [key, setter] of [
       ["my-sgg-watched", setWatchedIds],
-      ["my-sgg-read", setReadIds],
-      ["my-sgg-followed", setFollowedChannels],
     ] as const) {
       try {
         const stored = window.localStorage.getItem(key);
@@ -602,10 +482,31 @@ export function Dashboard() {
         // Device-local preferences are optional; malformed storage is ignored.
       }
     }
+    // 推しGODS: 他の設定と同じく遅延させ、effect内の同期setStateを避ける。
+    const stageGodTimeout = window.setTimeout(() => {
+      try {
+        const stored = window.localStorage.getItem("my-sgg-stage-god");
+        if (stored && characterPairs.some((pair) => pair.godId === stored)) {
+          setStageGodId(stored);
+        }
+      } catch {
+        // Device-local preferences are optional; malformed storage is ignored.
+      }
+    }, 0);
+    return () => window.clearTimeout(stageGodTimeout);
+  }, []);
+
+  const selectStageGod = useCallback((godId: string) => {
+    setStageGodId(godId);
+    setStagePickerOpen(false);
+    try {
+      window.localStorage.setItem("my-sgg-stage-god", godId);
+    } catch {
+      // Selection still applies for this session even if persistence fails.
+    }
   }, []);
 
   const syncLiveData = useCallback(async (options?: { force?: boolean; announceFailure?: boolean }) => {
-    setSyncing(true);
     try {
       const payload = await requestLiveData(options?.force ?? true);
       setLiveData(payload);
@@ -619,15 +520,8 @@ export function Dashboard() {
           ? "再同期に失敗しました。前回の同期結果を表示しています"
           : "公開データを取得できませんでした");
       }
-    } finally {
-      setSyncing(false);
     }
   }, []);
-
-  const loadLiveData = useCallback(
-    () => syncLiveData({ force: true, announceFailure: true }),
-    [syncLiveData],
-  );
 
   useEffect(() => {
     checkedAtRef.current = liveData.checkedAt;
@@ -668,6 +562,49 @@ export function Dashboard() {
     }
   }, []);
 
+  /** Same-visit cache: reopening a collection reuses what was already fetched. */
+  const nftCacheRef = useRef(new Map<string, { tokens: OwnedTokenView[]; total: number; nextOffset: number | null }>());
+
+  const openNftViewer = useCallback(async (collection: string, label: string) => {
+    setNftViewer({ collection, label });
+    const hit = nftCacheRef.current.get(collection);
+    if (hit) {
+      setNftTokens(hit.tokens);
+      setNftPage({ total: hit.total, nextOffset: hit.nextOffset });
+      setNftState("ready");
+      return;
+    }
+    setNftTokens([]);
+    setNftPage({ total: 0, nextOffset: null });
+    setNftState("loading");
+    try {
+      const page = await requestOwnedTokens(collection, 0);
+      setNftTokens(page.tokens);
+      setNftPage({ total: page.total, nextOffset: page.nextOffset });
+      setNftState("ready");
+      nftCacheRef.current.set(collection, { tokens: page.tokens, total: page.total, nextOffset: page.nextOffset });
+    } catch {
+      setNftState("error");
+    }
+  }, []);
+
+  const loadMoreNftTokens = useCallback(async () => {
+    if (!nftViewer || nftPage.nextOffset === null || nftState === "loading") return;
+    setNftState("loading");
+    try {
+      const page = await requestOwnedTokens(nftViewer.collection, nftPage.nextOffset);
+      setNftTokens((prev) => {
+        const merged = [...prev, ...page.tokens];
+        nftCacheRef.current.set(nftViewer.collection, { tokens: merged, total: page.total, nextOffset: page.nextOffset });
+        return merged;
+      });
+      setNftPage({ total: page.total, nextOffset: page.nextOffset });
+      setNftState("ready");
+    } catch {
+      setNftState("error");
+    }
+  }, [nftViewer, nftPage.nextOffset, nftState]);
+
   const drawGacha = useCallback(async () => {
     if (gachaBusy) return;
     setGachaBusy(true);
@@ -702,32 +639,6 @@ export function Dashboard() {
     }, 0);
     return () => window.clearTimeout(timeout);
   }, [refreshPassport]);
-
-  // The link code is only meaningful for a connected Passport, so it is
-  // fetched after connection rather than on first paint.
-  useEffect(() => {
-    const connected = Boolean(passport?.connected);
-    let cancelled = false;
-    const timeout = window.setTimeout(() => {
-      if (!connected) {
-        setGameLink(null);
-        setGameLinkState("idle");
-        return;
-      }
-      setGameLinkState("loading");
-      void (async () => {
-        try {
-          const data = await requestOtomoChainLink();
-          if (cancelled) return;
-          setGameLink(data);
-          setGameLinkState("ready");
-        } catch {
-          if (!cancelled) setGameLinkState("error");
-        }
-      })();
-    }, 0);
-    return () => { cancelled = true; window.clearTimeout(timeout); };
-  }, [passport?.connected]);
 
   // Holdings feed both the Vault and the top-bar chips, so they load once per
   // connected session rather than per view.
@@ -973,7 +884,7 @@ export function Dashboard() {
       grantAttemptRef.current = null;
       setToast(result.alreadyGranted
         ? "同じ付与がすでに記録されています"
-        : `付与を記録しました(新残高 ${number.format(result.balance)} pt)`);
+        : `付与を記録しました(新残高 ${number.format(result.balance)} SGP)`);
       setGrantForm((current) => ({ ...current, amount: "", note: "" }));
       setAdminPlayers(null);
       setAdminRosterState("idle");
@@ -986,17 +897,6 @@ export function Dashboard() {
     }
   };
 
-  // Low-frequency clock so「たった今 / N分前」stays honest without re-fetching.
-  useEffect(() => {
-    const tick = () => setClock(Date.now());
-    const timeout = window.setTimeout(tick, 0);
-    const interval = window.setInterval(tick, 30_000);
-    return () => {
-      window.clearTimeout(timeout);
-      window.clearInterval(interval);
-    };
-  }, []);
-
   useEffect(() => {
     const syncHash = () => setActiveView(viewFromHash());
     syncHash();
@@ -1006,57 +906,6 @@ export function Dashboard() {
       window.removeEventListener("hashchange", syncHash);
       window.removeEventListener("popstate", syncHash);
     };
-  }, []);
-
-  useEffect(() => {
-    const isTypingTarget = (target: EventTarget | null) =>
-      target instanceof HTMLElement &&
-      (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        searchRef.current?.focus();
-        setSearchOpen(true);
-        return;
-      }
-      if (event.key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey && !isTypingTarget(event.target)) {
-        event.preventDefault();
-        searchRef.current?.focus();
-        setSearchOpen(true);
-        return;
-      }
-      if (event.key === "Escape") {
-        setSearchOpen(false);
-        if (notificationsOpen) {
-          setNotificationsOpen(false);
-          notificationTriggerRef.current?.focus();
-        }
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [notificationsOpen]);
-
-  useEffect(() => {
-    if (!notificationsOpen) return;
-    const frame = window.requestAnimationFrame(() => notificationPanelRef.current?.focus());
-    return () => window.cancelAnimationFrame(frame);
-  }, [notificationsOpen]);
-
-  // Popovers close on outside interaction, matching standard menu behavior.
-  useEffect(() => {
-    const onPointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (notificationRef.current && !notificationRef.current.contains(target)) {
-        setNotificationsOpen(false);
-      }
-      if (searchBoxRef.current && !searchBoxRef.current.contains(target)) {
-        setSearchOpen(false);
-      }
-    };
-    window.addEventListener("pointerdown", onPointerDown);
-    return () => window.removeEventListener("pointerdown", onPointerDown);
   }, []);
 
   useEffect(() => {
@@ -1071,9 +920,6 @@ export function Dashboard() {
 
   const changeView = (view: View) => {
     setActiveView(view);
-    setSearch("");
-    setSearchOpen(false);
-    setNotificationsOpen(false);
     if (window.location.hash !== `#${view}`) window.history.pushState(null, "", `#${view}`);
     window.requestAnimationFrame(() => mainRef.current?.focus());
     window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
@@ -1090,93 +936,7 @@ export function Dashboard() {
       : "この端末ではウォッチ設定を保存できません");
   };
 
-  const markRead = (id: string, target: View) => {
-    const next = new Set(readIds).add(id);
-    setReadIds(next);
-    const saved = persistSet("my-sgg-read", next);
-    if (!saved) setToast("この端末では既読状態を保存できません");
-    changeView(target);
-  };
-
-  const markAllRead = () => {
-    const next = new Set(systemNotifications.map((item) => item.id));
-    setReadIds(next);
-    const saved = persistSet("my-sgg-read", next);
-    if (!saved) setToast("この端末では既読状態を保存できません");
-  };
-
-  const toggleChannel = (channel: string) => {
-    const next = new Set(followedChannels);
-    if (next.has(channel)) next.delete(channel);
-    else next.add(channel);
-    setFollowedChannels(next);
-    const saved = persistSet("my-sgg-followed", next);
-    setToast(saved
-      ? next.has(channel) ? `${channel}の購読希望をこの端末に保存しました` : `${channel}の購読希望を解除しました`
-      : "この端末では購読希望を保存できません");
-  };
-
-  const searchResults = useMemo(() => {
-    const query = search.trim().toLocaleLowerCase("ja");
-    if (!query) return [];
-    const results: { id: string; category: string; title: string; meta: string; view: View }[] = [];
-    for (const game of games) {
-      if (`${game.title} ${game.subtitle} ${game.genre} ${game.description}`.toLocaleLowerCase("ja").includes(query)) {
-        results.push({ id: game.id, category: "PLAY", title: game.title, meta: game.subtitle, view: "games" });
-      }
-    }
-    for (const item of competitions) {
-      if (`${item.title} ${item.game} ${item.rule}`.toLocaleLowerCase("ja").includes(query)) {
-        results.push({ id: item.id, category: "ARENA", title: item.title, meta: item.game, view: "arena" });
-      }
-    }
-    for (const pair of characterPairs) {
-      if (`${pair.godName} ${pair.godId} ${pair.otomoName} ${pair.otomoId}`.toLocaleLowerCase("ja").includes(query)) {
-        results.push({ id: pair.otomoId, category: "COLLECTION", title: `${pair.godName} × ${pair.otomoName}`, meta: `${pair.godId} / ${pair.otomoId}`, view: "collection" });
-      }
-    }
-    for (const item of communityItems) {
-      if (`${item.title} ${item.channel} ${item.description}`.toLocaleLowerCase("ja").includes(query)) {
-        results.push({ id: item.id, category: "FEED", title: item.title, meta: item.channel, view: "community" });
-      }
-    }
-    return results.slice(0, 8);
-  }, [search]);
-
-  const activeResultIndex = searchResults.length
-    ? Math.min(activeSearchIndex, searchResults.length - 1)
-    : -1;
-
-  const selectSearchResult = (index: number) => {
-    const result = searchResults[index];
-    if (result) changeView(result.view);
-  };
-
-  const handleSearchKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-    if (!searchOpen || !searchResults.length) {
-      if (event.key === "Escape") setSearchOpen(false);
-      return;
-    }
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      setActiveSearchIndex((current) => (current + 1) % searchResults.length);
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      setActiveSearchIndex((current) => (current - 1 + searchResults.length) % searchResults.length);
-    } else if (event.key === "Enter" && activeResultIndex >= 0) {
-      event.preventDefault();
-      selectSearchResult(activeResultIndex);
-    } else if (event.key === "Escape") {
-      event.preventDefault();
-      setSearchOpen(false);
-    }
-  };
-
-  const filteredGames = games.filter((game) => gameFilter === "ALL" || game.releaseState === gameFilter);
-  const featuredGame = filteredGames.find((game) => game.featured) ?? filteredGames[0];
-  const libraryGames = featuredGame
-    ? filteredGames.filter((game) => game.id !== featuredGame.id)
-    : filteredGames;
+  const filteredGames = games.filter((game) => game.releaseState === gameFilter);
   const currentForm = otomoForms.find((form) => form.code === formFilter) ?? otomoForms[0];
   const getRuntimeState = (gameId: string): SourceState => {
     const runtimeKey = runtimeKeyByGameId[gameId];
@@ -1184,8 +944,6 @@ export function Dashboard() {
     if (liveState === "error" || !runtimeKey) return "unavailable";
     return liveData.runtimes[runtimeKey];
   };
-  const oracleSourceState: SourceState = liveState === "loading" ? "checking" : liveData.sources.oracle;
-  const questSourceState: SourceState = liveState === "loading" ? "checking" : liveData.sources.quest;
   const runtimeSummary = liveState === "loading"
     ? "CHECKING"
     : liveState === "error"
@@ -1200,15 +958,6 @@ export function Dashboard() {
         : passport?.authConfigured === false
           ? "PLAYER BRIDGE · SETUP REQUIRED"
           : "PLAYER BRIDGE · NOT CONNECTED";
-  const passportProfileLabel = passportState === "loading" && !passport
-    ? "確認中"
-    : passportState === "error" && !passport
-      ? "取得不可"
-      : passport?.connected
-        ? (passport.player.globalName ?? passport.player.username)
-        : passport?.authConfigured === false
-          ? "準備中"
-          : "未接続";
   const dmOtpAvailable = passport?.connected === false && passport.authMethods?.dmOtp === true;
   const oauthAvailable = passport?.authMethods?.oauth === true ||
     (passport?.connected === false && passport.authMethods === undefined && passport.authConfigured);
@@ -1262,134 +1011,9 @@ export function Dashboard() {
       </aside>
 
       <div className={styles.shell}>
-        <header className={styles.topbar}>
-          <div className={styles.mobileBrand}><Brand compact /></div>
-          <div className={styles.breadcrumb}><span>MY SGG</span><i>/</i><strong>{activeNav.label}</strong></div>
-          <div className={styles.searchBox} ref={searchBoxRef}>
-            <label className={styles.srOnly} htmlFor="global-search">SGG全体を検索</label>
-            <span aria-hidden="true">⌕</span>
-            <input
-              ref={searchRef}
-              id="global-search"
-              type="search"
-              role="combobox"
-              aria-expanded={searchOpen && Boolean(search)}
-              aria-controls="global-search-results"
-              aria-autocomplete="list"
-              aria-activedescendant={searchOpen && activeResultIndex >= 0 ? `global-search-option-${activeResultIndex}` : undefined}
-              placeholder="ゲーム・番付・キャラクター・更新を検索"
-              value={search}
-              onFocus={() => setSearchOpen(true)}
-              onChange={(event) => { setSearch(event.target.value); setSearchOpen(true); setActiveSearchIndex(0); }}
-              onKeyDown={handleSearchKeyDown}
-            />
-            <kbd>⌘ K</kbd>
-            {searchOpen && search && (
-              <div id="global-search-results" className={styles.searchResults} role="listbox" aria-label="検索結果">
-                <p>SEARCH / {searchResults.length} RESULTS</p>
-                {searchResults.length ? searchResults.map((result, index) => (
-                  <button
-                    id={`global-search-option-${index}`}
-                    key={`${result.category}-${result.id}`}
-                    type="button"
-                    role="option"
-                    tabIndex={-1}
-                    aria-selected={activeResultIndex === index}
-                    onMouseEnter={() => setActiveSearchIndex(index)}
-                    onClick={() => selectSearchResult(index)}
-                  >
-                    <span>{result.category}</span><strong>{result.title}</strong><small>{result.meta}</small>
-                  </button>
-                )) : <div className={styles.searchEmpty}>一致する公開情報はありません</div>}
-              </div>
-            )}
-          </div>
-          {/* Real balances only. A value that is not connected reads 未接続,
-              never a placeholder number. */}
-          <div className={styles.walletStrip} aria-label="保有状況">
-            <span data-tone="gold">
-              <i aria-hidden="true">◈</i>
-              <b>{passport?.connected ? number.format(passport.points.balance) : "未接続"}</b>
-              <small>SGP</small>
-            </span>
-            <span data-tone="violet">
-              <i aria-hidden="true">☽</i>
-              <b>{passport?.connected ? number.format(passport.points.balances?.MAGATAMA ?? 0) : "未接続"}</b>
-              <small>勾玉</small>
-            </span>
-            <span data-tone="violet">
-              <i aria-hidden="true">◆</i>
-              <b>{holdingValue(holdings, "sdt")}</b>
-              <small>SDT</small>
-            </span>
-            <span data-tone="cyan">
-              <i aria-hidden="true">❖</i>
-              <b>{otomoHoldingTotal(holdings)}</b>
-              <small>OTOMO</small>
-            </span>
-          </div>
-          <div className={styles.topActions}>
-            <button type="button" className={styles.iconButton} onClick={() => void loadLiveData()} aria-label="公開データを再同期" aria-busy={syncing} disabled={syncing}>
-              <span aria-hidden="true" className={syncing ? styles.spin : undefined}>↻</span>
-            </button>
-            <div className={styles.notificationWrap} ref={notificationRef}>
-              <button
-                ref={notificationTriggerRef}
-                type="button"
-                className={styles.iconButton}
-                aria-label={`通知 ${unread.length}件`}
-                aria-expanded={notificationsOpen}
-                aria-controls="notification-panel"
-                aria-haspopup="dialog"
-                onClick={() => setNotificationsOpen((open) => !open)}
-              >
-                <span aria-hidden="true">◌</span>{unread.length > 0 && <b>{unread.length}</b>}
-              </button>
-              {notificationsOpen && (
-                <div
-                  id="notification-panel"
-                  ref={notificationPanelRef}
-                  className={styles.notificationPanel}
-                  role="dialog"
-                  aria-modal="false"
-                  aria-labelledby="notification-title"
-                  tabIndex={-1}
-                >
-                  <div><strong id="notification-title">アクション通知</strong><button type="button" onClick={markAllRead}>すべて既読</button></div>
-                  {systemNotifications.map((item) => (
-                    <button key={item.id} type="button" className={readIds.has(item.id) ? "" : styles.notificationUnread} onClick={() => markRead(item.id, item.target)}>
-                      <span>{item.kind}</span><strong>{item.title}</strong><small>{item.detail}</small>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <button type="button" className={styles.profileButton} onClick={() => changeView("mysgg")}>
-              {passport?.connected && passport.player.avatarUrl ? (
-                // Discord CDN avatars are session-specific; next/image optimization is unnecessary here.
-                // eslint-disable-next-line @next/next/no-img-element
-                <img className={styles.profileAvatar} src={passport.player.avatarUrl} alt="" width={30} height={30} />
-              ) : (
-                <span aria-hidden="true">MY</span>
-              )}
-              <div>
-                <small>PLAYER PASSPORT</small>
-                <strong>{passportProfileLabel}</strong>
-              </div>
-            </button>
-          </div>
-        </header>
 
         <main id="main-content" ref={mainRef} tabIndex={-1} className={styles.content}>
           <p className={styles.srOnly} aria-live="polite">{activeNav.label}を表示中</p>
-          <div className={styles.truthBanner} role="status">
-            <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount > 0} />LIVE SOURCES</span>
-            <p>公開確認済みのゲーム・ランキング・投稿だけを表示。個人データは共通認証が接続されるまで「未接続」です。</p>
-            <small title={liveData.checkedAt ? `同期時刻 ${formatSyncTime(liveData.checkedAt)} MYT` : undefined}>
-              SYNC {formatSyncAge(liveData.checkedAt, clock)}
-              {liveData.servedFrom === "cache" && " · 共有snapshot"}
-            </small>
-          </div>
 
           {activeView === "home" && (
             <div className={styles.homeLayout}>
@@ -1398,13 +1022,45 @@ export function Dashboard() {
                   <div className={styles.stageBackdrop}>
                     <Image src="/dashboard-art/bg-zipangu-dusk.png" alt="" fill priority sizes="(max-width: 900px) 100vw, 62vw" />
                   </div>
-                  {(() => { const duty = dutyPair(); return (
-                    <div className={styles.stageActor} data-tone={duty.accent}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`/dashboard-art/stage/duty-${duty.godId.toLowerCase()}.png`} alt={`本日の当番 ${duty.godName}`} />
-                      <p className={styles.stageDuty}><small>本日の当番</small><strong>{duty.godName}</strong><span>× {duty.otomoName}</span></p>
-                    </div>
-                  ); })()}
+                  {(() => {
+                    const duty = characterPairs.find((pair) => pair.godId === stageGodId) ?? dutyPair();
+                    return (
+                      <>
+                        <div className={styles.stageActor} data-tone={duty.accent}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={`/dashboard-art/stage/duty-${duty.godId.toLowerCase()}.png`} alt={duty.godName} />
+                        </div>
+                        <div className={styles.stageOshi} data-tone={duty.accent}>
+                          {stagePickerOpen && (
+                            <div className={styles.stagePicker} role="listbox" aria-label="推しGODSを選ぶ">
+                              {characterPairs.map((pair) => (
+                                <button
+                                  key={pair.godId}
+                                  type="button"
+                                  role="option"
+                                  aria-selected={pair.godId === duty.godId}
+                                  data-tone={pair.accent}
+                                  onClick={() => selectStageGod(pair.godId)}
+                                >
+                                  <span>{pair.glyph}</span>{pair.godName}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            className={styles.stageDuty}
+                            aria-expanded={stagePickerOpen}
+                            onClick={() => setStagePickerOpen((open) => !open)}
+                          >
+                            <small>推しGODS</small>
+                            <strong>{duty.godName}</strong>
+                            <span>× {duty.otomoName}</span>
+                          </button>
+                        </div>
+                      </>
+                    );
+                  })()}
                   <div className={styles.stageCopy}>
                     <p>SEVENGODS GAMES / PLAYER OS</p>
                     <h1 id="hero-title">遊ぶ。競う。集める。<br /><em>すべてを、ひとつに。</em></h1>
@@ -1412,7 +1068,7 @@ export function Dashboard() {
                   <nav className={styles.stageMenu} aria-label="クイックメニュー">
                     <button type="button" onClick={() => changeView("collection")}><span className={styles.stageMenuIcon} data-tone="violet">☽</span>ガチャ</button>
                     <button type="button" onClick={() => changeView("collection")}><IconVault className={styles.stageMenuSvg} />図鑑</button>
-                    <button type="button" onClick={() => changeView("arena")}><IconArena className={styles.stageMenuSvg} />番付</button>
+                    <button type="button" onClick={() => changeView("arena")}><IconArena className={styles.stageMenuSvg} />闘技</button>
                     <button type="button" onClick={() => changeView("games")}><IconGames className={styles.stageMenuSvg} />出撃</button>
                     <button type="button" onClick={() => changeView("mysgg")}><IconPassport className={styles.stageMenuSvg} />連携</button>
                   </nav>
@@ -1432,7 +1088,10 @@ export function Dashboard() {
                       <i aria-hidden="true">→</i>
                     </a>
                   )}
-                  <OtomoSwarm className={styles.swarmStage} spec={{ seed: 7, count: 18, size: 46, bandHeight: 92, walkRatio: 0.5 }} />
+                  <OtomoVignette className={styles.swarmStage} items={[
+                    { sprite: "taimaru", pose: "sit", left: "16%", bottom: "6px", size: 84 },
+                    { sprite: "kotone", pose: "sleep", right: "14%", bottom: "4px", size: 72, flip: true },
+                  ]} />
                   <div className={styles.heroSignal}>
                     <small>NETWORK</small><strong>{runtimeSummary}</strong><span>LIVE HEALTH · {formatSyncTime(liveData.checkedAt)}</span>
                   </div>
@@ -1451,9 +1110,9 @@ export function Dashboard() {
                     <div className={styles.featureArt}>
                       <Image src="/dashboard-art/cards/card-02.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 50%" }} />
                     </div>
-                    <small>LIVE RANKING</small><h3>ライブ番付</h3>
-                    <b>{competitions.length}</b><span>公開中の番付</span>
-                    <button type="button" onClick={() => changeView("arena")}>ランキングを見る</button>
+                    <small>LIVE RANKING</small><h3>開催中の大会</h3>
+                    <b>準備中</b><span>公開後にここへ表示されます</span>
+                    <button type="button" onClick={() => changeView("arena")}>アリーナを見る</button>
                   </article>
                   <article data-tone="cyan">
                     <div className={styles.featureArt}>
@@ -1475,103 +1134,18 @@ export function Dashboard() {
                     <div className={styles.featureArt}>
                       <Image src="/dashboard-art/cards/card-05.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "70% 40%" }} />
                     </div>
-                    <small>COMMUNITY FEED</small><h3>コミュニティ</h3>
+                    <small>COMMUNITY SNS</small><h3>コミュニティSNS</h3>
                     <b>{communityItems.filter((item) => item.status === "PUBLISHED").length}</b><span>公開済みの更新</span>
                     <button type="button" onClick={() => changeView("community")}>もっと見る</button>
                   </article>
                 </section>
-
-                <section className={styles.todaySection}>
-                  <SectionTitle kicker="TODAY / PLAY NOW" title="いま戻る場所" copy="ログイン後の進行は各ゲームで安全に確認。公開プレイはここから直接起動できます。" action={<button type="button" className={styles.textButton} onClick={() => changeView("games")}>全ゲームを見る →</button>} />
-                  <div className={styles.todayGrid}>
-                    {games.filter((game) => game.releaseState === "LIVE").map((game) => {
-                      const runtimeState = getRuntimeState(game.id);
-                      return <article key={game.id} data-tone={game.accent}>
-                        <div className={styles.todayGlyph} aria-hidden="true">{game.glyph}</div>
-                        <span><Dot active={runtimeState === "online"} />{game.shortTitle} · {runtimeState === "online" ? "ONLINE" : runtimeState === "checking" ? "CHECKING" : "稼働確認不可"}</span>
-                        <h3>{game.nextAction}</h3>
-                        <p>{game.nextActionMeta}</p>
-                        {game.officialUrl && <ExternalLink href={game.officialUrl}>{game.primaryAction}</ExternalLink>}
-                      </article>;
-                    })}
-                  </div>
-                </section>
-
-                <section className={styles.feedPreview}>
-                  <SectionTitle kicker="OFFICIAL FEED" title="公開済みアップデート" copy="公開台帳が確認できた投稿のみ。" />
-                  {communityItems.filter((item) => item.status === "PUBLISHED").map((item) => (
-                    <article key={item.id} data-tone={item.accent}>
-                      <span>{item.channel} · {item.dateLabel}</span>
-                      <h3>{item.title}</h3>
-                      <p>{item.description}</p>
-                      {item.href && <ExternalLink href={item.href}>{item.actionLabel}</ExternalLink>}
-                    </article>
-                  ))}
-                  <button type="button" className={styles.textButton} onClick={() => changeView("community")}>コミュニティセンターへ →</button>
-                </section>
               </div>
-
-              <aside className={styles.homeRail} aria-label="あなたの状態">
-                <section data-tone="green">
-                  <small>OTOMO STATUS</small>
-                  <h3>育成状況</h3>
-                  {/* No game exposes a signed player snapshot yet, so this stays empty. */}
-                  <p>ゲーム内の育成・進行はまだ接続されていません。署名済みスナップショットAPIが公開されると、Lv・EXP・絆がここに入ります。</p>
-                  <StatusPill accent="green">未接続</StatusPill>
-                </section>
-
-                <section data-tone="cyan">
-                  <small>LIVE ARENA</small>
-                  <h3>今日の番付 TOP 3</h3>
-                  {liveData.oracle.entries.length > 0 ? (
-                    <ol className={styles.railRanks}>
-                      {liveData.oracle.entries.slice(0, 3).map((entry) => (
-                        <li key={entry.rank}><b>{entry.rank}</b><span>{entry.name}</span><em>{number.format(entry.score)}</em></li>
-                      ))}
-                    </ol>
-                  ) : <p>{oracleSourceState === "checking" ? "公開番付を確認しています…" : "公開情報なし"}</p>}
-                  <button type="button" className={styles.textButton} onClick={() => changeView("arena")}>もっと見る →</button>
-                </section>
-
-                <section data-tone="violet">
-                  <small>SEVEN COLLECTION</small>
-                  <h3>オンチェーン保有</h3>
-                  <b className={styles.railBig}>{otomoHoldingTotal(holdings)}</b>
-                  {/* The bar shows how many of the four SGG collections the
-                      wallet holds at all — a counted fact, not a completion
-                      estimate against an unknown target. */}
-                  {holdings?.linked && (
-                    <>
-                      <div className={styles.meterLabel}>
-                        <span>COLLECTIONS HELD</span><span>{heldCollections(holdings)} / 4</span>
-                      </div>
-                      <div className={styles.meter}>
-                        <span style={{ width: `${(heldCollections(holdings) / 4) * 100}%` }} />
-                      </div>
-                    </>
-                  )}
-                  <p>OTOMO 精霊体・受肉体・童子の合計。GODS {holdingValue(holdings, "gods")}体。</p>
-                  <button type="button" className={styles.textButton} onClick={() => changeView("collection")}>コレクションへ →</button>
-                </section>
-
-                <section data-tone="gold">
-                  <small>NEXT STEPS</small>
-                  <h3>次にできること</h3>
-                  {/* Real outstanding actions for this player, not a fabricated mission list. */}
-                  <ul className={styles.railSteps}>
-                    <li data-done={passport?.connected ? "true" : "false"}>Discord Passportへ接続</li>
-                    <li data-done={passport?.connected && passport.player.walletAddress ? "true" : "false"}>Walletを連携して保有を表示</li>
-                    <li data-done={gameLink?.verified ? "true" : "false"}>OTOMO CHAINのアカウントを連携</li>
-                  </ul>
-                  <button type="button" className={styles.textButton} onClick={() => changeView("mysgg")}>マイSGGへ →</button>
-                </section>
-              </aside>
             </div>
           )}
 
           {activeView === "games" && (
             <div className={styles.viewStack}>
-              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 77, count: 26, size: 42 }} />
+              <OtomoVignette className={styles.swarmGround} items={[{ sprite: "juka", pose: "sleep", right: "6%", bottom: "2px", size: 78 }, { sprite: "haku", pose: "sit", left: "4%", bottom: "0px", size: 66, flip: true }]} />
               <header className={styles.pageHeader}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className={styles.headerBand} src="/dashboard-art/headers/header-taiyo.png" alt="" aria-hidden="true" />
@@ -1579,19 +1153,17 @@ export function Dashboard() {
                 <div className={styles.pageStats}><span><b>{releaseStateCounts.LIVE}</b>PLAYABLE</span><span><b>{releaseStateCounts.DRAFT}</b>IN DEVELOPMENT</span><span><b>7·77·777</b>TIME AXES</span></div>
               </header>
               <div className={styles.filterBar} aria-label="ゲーム公開状態フィルター">
-                {(["ALL", "LIVE", "DORMANT"] as GameFilter[]).map((filter) => (
+                {(["LIVE", "DORMANT"] as GameFilter[]).map((filter) => (
                   <button key={filter} type="button" aria-pressed={gameFilter === filter} className={gameFilter === filter ? styles.filterActive : ""} onClick={() => setGameFilter(filter)}>
-                    {filter === "ALL" ? "すべて" : releaseStateLabels[filter]}
+                    {releaseStateLabels[filter]}
                   </button>
                 ))}
               </div>
-              {featuredGame && <GameCard game={featuredGame} runtimeState={getRuntimeState(featuredGame.id)} watched={watchedIds.has(featuredGame.id)} onWatch={toggleWatched} featured />}
-              <section>
-                <SectionTitle kicker="VERIFIED CATALOG" title="ゲームライブラリ" copy={`${filteredGames.length}タイトルを表示`} />
-                <div className={styles.gameGrid}>
-                  {libraryGames.map((game) => <GameCard key={game.id} game={game} runtimeState={getRuntimeState(game.id)} watched={watchedIds.has(game.id)} onWatch={toggleWatched} />)}
-                </div>
-              </section>
+              <div className={styles.gameStack}>
+                {filteredGames.map((game) => (
+                  <GameCard key={game.id} game={game} runtimeState={getRuntimeState(game.id)} watched={watchedIds.has(game.id)} onWatch={toggleWatched} />
+                ))}
+              </div>
               <section className={styles.timeAxes}>
                 <article><span>7</span><div><strong>熱狂</strong><p>短時間の挑戦・競争・更新</p></div></article>
                 <article><span>77</span><div><strong>物語</strong><p>育成・待機・探索・シーズン</p></div></article>
@@ -1602,38 +1174,21 @@ export function Dashboard() {
 
           {activeView === "arena" && (
             <div className={styles.viewStack}>
-              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 777, count: 22, size: 42 }} />
+              <OtomoVignette className={styles.swarmGround} items={[{ sprite: "momokatsu", pose: "cheer", right: "5%", bottom: "0px", size: 80 }]} />
               <header className={styles.pageHeader}>
-                <div><p>ARENA / VERIFIED COMPETITION</p><h1>アリーナ</h1><span>公開APIと公開ページで確認できる競争だけを表示します。</span></div>
+                <div><p>ARENA / VERIFIED COMPETITION</p><h1>アリーナ</h1><span>大会と番付をここに集めます。</span></div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className={styles.headerBand} src="/dashboard-art/headers/header-sobi.png" alt="" aria-hidden="true" />
-                <button type="button" className={styles.refreshButton} onClick={() => void loadLiveData()} disabled={syncing}>{syncing ? "同期中…" : "公開データを再同期"}</button>
               </header>
-              <div className={styles.arenaBoards}>
-                <Leaderboard title="神託番付" subtitle={`ORACLE DAY ${liveData.oracle.day ?? "—"} / RAW SCORE`} entries={liveData.oracle.entries} state={oracleSourceState} accent="cyan" />
-                <Leaderboard
-                  title="シーズン序列"
-                  subtitle={liveData.quest.season ? `${liveData.quest.season.name} · DAY ${liveData.quest.season.day}/${liveData.quest.season.totalDays} · ${liveData.quest.participants} PLAYERS` : "QUEST 77 / GAME PROGRESS METRIC"}
-                  entries={liveData.quest.entries}
-                  state={questSourceState}
-                  accent="violet"
-                />
-              </div>
-              <section>
-                <SectionTitle kicker="PUBLIC BOARDS" title="公開ランキング" copy="順位の意味はゲームごとに異なり、SGG_GAME_POINTSや資産保有とは分離されます。" />
-                <div className={styles.competitionGrid}>{competitions.map((item) => <CompetitionCard key={item.id} competition={item} runtimeState={getRuntimeState(item.gameId)} />)}</div>
-              </section>
               <section className={styles.eventEmpty}>
-                <span aria-hidden="true">冠</span>
-                <div><p>PUBLISHED EVENTS</p><h2>現在、公開確認済みの大会はありません</h2><span>公式発表と参加導線が確認されると、受付・締切・戦績がここに表示されます。</span></div>
+                <div><p>ARENA</p><h2>準備中</h2><span>大会の受付・締切・戦績と、ゲームごとの番付をここに表示します。中身を見せられる状態になるまで、この画面には何も出しません。</span></div>
               </section>
-              <aside className={styles.integrityNote}><strong>FAIR PLAY</strong><p>raw gameplay → ranking → SGG_GAME_POINTS → reward candidateを別々に扱います。Walletや保有資産で順位を変えません。</p></aside>
             </div>
           )}
 
           {activeView === "collection" && (
             <div className={styles.viewStack}>
-              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 7777, count: 30, size: 42 }} />
+              <OtomoVignette className={styles.swarmGround} items={[{ sprite: "shofuku", pose: "sit", right: "6%", bottom: "2px", size: 80 }, { sprite: "kozuchi", pose: "sleep", left: "5%", bottom: "0px", size: 64 }]} />
               <header className={styles.pageHeader}>
                 <div><p>COLLECTION / SOURCE-AWARE VAULT</p><h1>コレクション</h1><span>オンチェーン保有、ゲーム内資産、公式キャラクター図鑑を混ぜずに統合。</span></div>
                 <div className={styles.pageStats}><span><b>7</b>PAIRS</span><span><b>3</b>FORMS</span><span><b>未接続</b>MY ASSETS</span></div>
@@ -1656,37 +1211,32 @@ export function Dashboard() {
                 {holdingsState === "ready" && holdings?.linked && (
                   <>
                     <div className={styles.holdingsGrid}>
-                      {holdings.holdings.map((item) => (
-                        <article key={item.id} data-tone={item.kind === "TOKEN" ? "violet" : "gold"}>
-                          <span>{item.kind}</span>
-                          <h3>{item.label}</h3>
-                          {/* A failed read must never render as 0. */}
-                          <b>{item.balance ?? "未取得"}</b>
-                        </article>
-                      ))}
+                      {holdings.holdings.map((item) => {
+                        const enumerable = item.kind === "NFT" && Number(item.balance ?? 0) > 0;
+                        return (
+                          <article
+                            key={item.id}
+                            data-tone={item.kind === "TOKEN" ? "violet" : "gold"}
+                            data-tappable={enumerable ? "true" : undefined}
+                            role={enumerable ? "button" : undefined}
+                            tabIndex={enumerable ? 0 : undefined}
+                            onClick={enumerable ? () => void openNftViewer(item.id, item.label) : undefined}
+                            onKeyDown={enumerable ? (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); void openNftViewer(item.id, item.label); } } : undefined}
+                          >
+                            <span>{item.kind}</span>
+                            <h3>{item.label}</h3>
+                            {/* A failed read must never render as 0. */}
+                            <b>{item.balance ?? "未取得"}</b>
+                            {enumerable && <small className={styles.holdingsTapHint}>タップで画像を見る</small>}
+                          </article>
+                        );
+                      })}
                     </div>
                     <p className={styles.holdingsNote}>
                       {shortAddress(holdings.address ?? "")} の保有数。SDTはSEVENDAOのトークンで、SGGポイントとは別制度です。
                     </p>
                   </>
                 )}
-              </section>
-              <section className={styles.connectionEmpty}>
-                <div className={styles.connectionIcon} aria-hidden="true">◇</div>
-                <div><p>IN-GAME ASSET BRIDGE</p><h2>ゲーム内資産はまだ接続されていません</h2><span>各ゲームの署名済みplayer snapshot APIが接続されると、ゲーム内の資源や進行状況がここへ加わります。</span></div>
-                <StatusPill accent="gold">WALLET OPTIONAL</StatusPill>
-              </section>
-              <section>
-                <SectionTitle kicker="ASSET SOURCES" title="接続する資産ソース" copy="missingを0件と表示せず、未接続・要ログイン・利用可能を区別します。" />
-                <div className={styles.sourceGrid}>
-                  {assetSources.map((source) => (
-                    <article key={source.id} data-tone={source.accent}>
-                      <span>{source.kind}</span><h3>{source.label}</h3><p>{source.description}</p>
-                      <StatusPill accent={source.accent}>{source.status}</StatusPill>
-                      {source.href ? <ExternalLink href={source.href}>ゲームで確認</ExternalLink> : <button type="button" disabled>{source.status === "CONNECT" ? "共通Wallet連携を準備中" : "この画面で確認"}</button>}
-                    </article>
-                  ))}
-                </div>
               </section>
               <section className={styles.gachaSection} data-tone="violet">
                 <SectionTitle
@@ -1704,7 +1254,7 @@ export function Dashboard() {
                   <div className={styles.gachaPanel}>
                     <div className={styles.gachaMeter}>
                       <span data-tone="violet"><i aria-hidden="true">☽</i><b>{number.format(gacha.balance)}</b><small>勾玉</small></span>
-                      <p>1回 {gacha.cost.amount} 勾玉。勾玉はイベント・大会参加で授与されます。</p>
+                      <p>1回 {gacha.cost.amount} 勾玉。勾玉の配布はイベント・大会と連動予定（配布運用は準備中）。</p>
                       <button
                         type="button"
                         className={styles.primaryAction}
@@ -1773,7 +1323,7 @@ export function Dashboard() {
 
           {activeView === "mysgg" && (
             <div className={styles.viewStack}>
-              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 777777, count: 20, size: 42 }} />
+              <OtomoVignette className={styles.swarmGround} items={[{ sprite: "kozuchi", pose: "sleep", right: "7%", bottom: "2px", size: 70 }]} />
               <header className={styles.pageHeader}>
                 <div><p>MY SGG / PLAYER PASSPORT</p><h1>マイSGG</h1><span>本人、履歴、ポイント、報酬、セキュリティを一つに。制度は混ぜません。</span></div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1781,23 +1331,27 @@ export function Dashboard() {
                 <StatusPill accent="coral">{passportBridgeLabel}</StatusPill>
               </header>
               <section className={styles.passportHero} aria-busy={passportState === "loading"}>
-                {passport?.connected && passport.player.avatarUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className={styles.passportAvatar} src={passport.player.avatarUrl.replace("size=64", "size=128")} alt="" width={64} height={64} />
-                ) : (
-                  <div className={styles.passportMark} aria-hidden="true">MY</div>
-                )}
+                <div className={styles.passportIdentity}>
+                  {passport?.connected && passport.player.avatarUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className={styles.passportAvatar} src={passport.player.avatarUrl.replace("size=64", "size=128")} alt="" width={64} height={64} />
+                  ) : (
+                    <div className={styles.passportMark} aria-hidden="true">MY</div>
+                  )}
+                  <div>
+                    <small>UNIFIED PLAYER ID</small>
+                    <h2>{passportState === "loading" && !passport
+                      ? "Player Passportを確認中"
+                      : passportState === "error" && !passport
+                        ? "Passportを読み込めません"
+                        : passport?.connected
+                          ? (passport.player.globalName ?? passport.player.username)
+                          : "SGG Player Passport"}</h2>
+                  </div>
+                </div>
                 <div>
-                  <small>UNIFIED PLAYER ID</small>
-                  <h2>{passportState === "loading" && !passport
-                    ? "Player Passportを確認中"
-                    : passportState === "error" && !passport
-                      ? "Passportを読み込めません"
-                      : passport?.connected
-                        ? (passport.player.globalName ?? passport.player.username)
-                        : "SGG Player Passport"}</h2>
                   <p>{passport?.connected
-                    ? `Discord @${passport.player.username} として接続中。この本人確認にSGGポイントが記録されます。`
+                    ? `ディスコード @${passport.player.username} として接続中。このディスコードでのゲームプレイにSGPが反映されます。`
                     : passportState === "loading"
                       ? "Discord連携状況とポイント台帳を安全に確認しています。"
                       : passportState === "error"
@@ -1823,6 +1377,45 @@ export function Dashboard() {
                       <button type="button" className={styles.primaryAction} disabled>Discord連携を準備中</button>
                     ) : null}
                   </div>
+                  {passport?.connected && (
+                    <div className={styles.heroWallet} data-tone="cyan">
+                      {passport.player.walletAddress ? (
+                        <>
+                          <code className={styles.walletAddress}>{passport.player.walletAddress}</code>
+                          <p>署名によるアドレス所有証明のみを記録しています。送金・トークン承認は行いません。</p>
+                          <button type="button" className={styles.textButton} onClick={() => void unlinkWallet()} disabled={walletBusy}>
+                            {walletBusy ? "処理中…" : "Wallet連携を解除"}
+                          </button>
+                        </>
+                      ) : walletChoices ? (
+                        <div className={styles.walletPicker} role="group" aria-label="使用するWalletを選択">
+                          <p>使用するWalletを選択してください</p>
+                          {walletChoices.map((choice) => (
+                            <button
+                              key={choice.info.uuid}
+                              type="button"
+                              onClick={() => void linkWallet(choice.provider)}
+                              disabled={walletBusy}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={choice.info.icon} alt="" width={18} height={18} />
+                              {choice.info.name}
+                            </button>
+                          ))}
+                          <button type="button" className={styles.textButton} onClick={() => setWalletChoices(null)}>
+                            キャンセル
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <button type="button" className={styles.primaryAction} onClick={() => void linkWallet()} disabled={walletBusy}>
+                            <WalletIcon />{walletBusy ? "署名を待っています…" : "Walletを連携する"}
+                          </button>
+                          <p>任意です。EVM系Wallet(Rabby、Phantom、MetaMask等)の署名でアドレス所有を証明します。無くてもポイント付与に影響はありません。</p>
+                        </>
+                      )}
+                    </div>
+                  )}
                   {adminUpgradeRequired && (
                     <p className={styles.dmAuthHelp}>DM認証はPlayer Passport専用です。管理機能には通常のDiscord認証が必要です。{oauthAvailable ? "上のボタンから再認証してください。" : "OAuthの準備が整うまで管理機能は利用できません。"}</p>
                   )}
@@ -1917,117 +1510,39 @@ export function Dashboard() {
                 <div className={styles.passportGrid}>
                   <section className={styles.pointsCard} data-tone="gold">
                     <div className={styles.pointsHead}>
-                      <div><p>SGG POINTS</p><h3>ポイント残高</h3></div>
+                      <div><p>SGG POINT</p><h3>SGP残高</h3></div>
                       <StatusPill accent="gold">PASSPORT LEDGER</StatusPill>
                     </div>
-                    <strong className={styles.pointsBalance}>{number.format(passport.points.balance)}<small>pt</small></strong>
+                    <strong className={styles.pointsBalance}>{number.format(passport.points.balance)}<small>SGP</small></strong>
                     {passport.points.grants.length ? (
-                      <ul className={styles.grantList}>
-                        {passport.points.grants.map((grant, index) => (
-                          <li key={`${grant.createdAt}-${index}`}>
-                            <div>
-                              <strong>{grant.reasonCode}</strong>
-                              {grant.note && <small>{grant.note}</small>}
-                              <small>{formatGrantDate(grant.createdAt)}</small>
-                            </div>
-                            <b data-negative={grant.amount < 0 || undefined}>
-                              {grant.amount > 0 ? "+" : ""}{number.format(grant.amount)}
-                            </b>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className={styles.grantEmpty}>まだ付与履歴はありません。テスター報奨が付与されるとここに記録されます。</p>
-                    )}
-                  </section>
-                  <section className={styles.walletCard} data-tone="cyan">
-                    <div className={styles.pointsHead}>
-                      <div><p>OPTIONAL WALLET</p><h3><WalletIcon />Wallet連携</h3></div>
-                      <StatusPill accent="cyan">{passport.player.walletAddress ? "LINKED" : "OPTIONAL"}</StatusPill>
-                    </div>
-                    {passport.player.walletAddress ? (
                       <>
-                        <code className={styles.walletAddress}>{passport.player.walletAddress}</code>
-                        <p>署名によるアドレス所有証明のみを記録しています。送金・トークン承認は行いません。</p>
-                        <button type="button" className={styles.textButton} onClick={() => void unlinkWallet()} disabled={walletBusy}>
-                          {walletBusy ? "処理中…" : "連携を解除"}
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <p>EVM系Wallet(Rabby、Phantom、MetaMask等)の署名でアドレス所有を証明します。Walletが無くてもポイント付与に影響はありません。</p>
-                        {walletChoices ? (
-                          <div className={styles.walletPicker} role="group" aria-label="使用するWalletを選択">
-                            <p>使用するWalletを選択してください</p>
-                            {walletChoices.map((choice) => (
-                              <button
-                                key={choice.info.uuid}
-                                type="button"
-                                onClick={() => void linkWallet(choice.provider)}
-                                disabled={walletBusy}
-                              >
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src={choice.info.icon} alt="" width={18} height={18} />
-                                {choice.info.name}
-                              </button>
-                            ))}
-                            <button type="button" className={styles.textButton} onClick={() => setWalletChoices(null)}>
-                              キャンセル
-                            </button>
-                          </div>
-                        ) : (
-                          <button type="button" className={styles.primaryAction} onClick={() => void linkWallet()} disabled={walletBusy}>
-                            <WalletIcon />{walletBusy ? "署名を待っています…" : "Walletを連携する"}
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </section>
-                  <section className={styles.gameLinkCard} data-tone="gold">
-                    <div className={styles.pointsHead}>
-                      <div><p>OTOMO CHAIN 7 / TOURNAMENT LINK</p><h3>大会アカウント連携</h3></div>
-                      <StatusPill accent="gold">
-                        {gameLinkState !== "ready" ? "—" : gameLink?.verified ? "VERIFIED" : "NOT VERIFIED"}
-                      </StatusPill>
-                    </div>
-                    {gameLinkState === "loading" && <p>連携コードを確認しています…</p>}
-                    {gameLinkState === "error" && (
-                      <p>連携コードを取得できませんでした。時間をおいて再読み込みしてください。</p>
-                    )}
-                    {gameLinkState === "ready" && gameLink && (
-                      <>
-                        <p>
-                          OTOMO CHAIN 7 はDiscordログインを持たないため、下のコードをゲーム側プロフィールの
-                          「Discord / X など」欄に貼ることで、この Passport とゲームアカウントを結び付けます。
-                        </p>
-                        <code className={styles.linkCode}>{gameLink.linkCode}</code>
                         <button
                           type="button"
-                          className={styles.primaryAction}
-                          onClick={() => {
-                            void navigator.clipboard?.writeText(gameLink.linkCode)
-                              .then(() => setToast("連携コードをコピーしました"))
-                              .catch(() => setToast("コピーできませんでした。手入力してください"));
-                          }}
+                          className={styles.historyToggle}
+                          aria-expanded={grantHistoryOpen}
+                          onClick={() => setGrantHistoryOpen((open) => !open)}
                         >
-                          コードをコピー
+                          履歴<i aria-hidden="true">{grantHistoryOpen ? "▲" : "▼"}</i>
                         </button>
-                        <ol className={styles.linkSteps}>
-                          <li>OTOMO CHAIN 7 を開き、プロフィール画面を表示します。</li>
-                          <li>「Discord / X など」欄にこのコードを貼り付けて保存します。</li>
-                          <li>大会終了後、運営が照合します。ここの表示は照合後に VERIFIED へ変わります。</li>
-                        </ol>
-                        {gameLink.verified ? (
-                          <p>
-                            照合済みです({gameLink.verifiedSeasonId ?? "シーズン未記録"})。
-                          </p>
-                        ) : (
-                          <p>
-                            まだ照合されていません。コードを貼っただけでは順位もSGPも確定しません。
-                            付与は大会終了後の確定処理でのみ行われます。
-                          </p>
+                        {grantHistoryOpen && (
+                          <ul className={styles.grantList}>
+                            {passport.points.grants.map((grant, index) => (
+                              <li key={`${grant.createdAt}-${index}`}>
+                                <div>
+                                  <strong>{grant.reasonCode}</strong>
+                                  {grant.note && <small>{grant.note}</small>}
+                                  <small>{formatGrantDate(grant.createdAt)}</small>
+                                </div>
+                                <b data-negative={grant.amount < 0 || undefined}>
+                                  {grant.amount > 0 ? "+" : ""}{number.format(grant.amount)}
+                                </b>
+                              </li>
+                            ))}
+                          </ul>
                         )}
                       </>
+                    ) : (
+                      <p className={styles.grantEmpty}>まだ付与履歴はありません。テスター報奨が付与されるとここに記録されます。</p>
                     )}
                   </section>
                   <section className={styles.guildCard} data-tone="violet">
@@ -2062,23 +1577,10 @@ export function Dashboard() {
                   </section>
                 </div>
               )}
-              <div className={styles.identityGrid}>
-                <article data-tone="violet"><span>01</span><h3>Discord Identity</h3><p>ゲームごとに分かれたsessionを、server-sideの署名済みassertionで一人のプレイヤーへ統合。</p><StatusPill accent="violet">CENTRAL BRIDGE REQUIRED</StatusPill></article>
-                <article data-tone="gold"><span>02</span><h3>Optional Wallet</h3><p>1 Discord ↔ 1 Wallet。保有確認はsnapshot時刻とchain基準点を記録します。</p><StatusPill accent="gold">PLAY WITHOUT WALLET</StatusPill></article>
-                <article data-tone="cyan"><span>03</span><h3>Account Protection</h3><p>Passkey、復旧コード、再認証、待機期間、session失効、append-only監査を設計。</p><StatusPill accent="cyan">SECURITY FIRST</StatusPill></article>
-              </div>
               <section>
-                <SectionTitle kicker="TRUSTED LEDGER" title="記録と経済の境界" copy="未接続の値を0にせず、取得元・制度・確定状態を明示します。" />
-                <div className={styles.ledgerGrid}>
-                  {ledgerSystems.map((system) => (
-                    <article key={system.id} data-tone={system.accent}>
-                      <div><span>{system.category}</span><StatusPill accent={system.accent}>{system.status}</StatusPill></div>
-                      <h3>{system.label}</h3><p>{system.description}</p><small>SOURCE / {system.source}</small>
-                    </article>
-                  ))}
-                </div>
+                <SectionTitle kicker="TRUSTED LEDGER" title="SGGでの軌跡" copy="これまでのランキングや称号がある場所。" />
+                <p className={styles.grantEmpty}>まだ確定したランキング・称号はありません。大会の結果が確定するとここに記録されます。</p>
               </section>
-              <aside className={styles.tokenBoundary}><span aria-hidden="true">!</span><div><strong>SGG TokenはPLANNEDです</strong><p>chain、contract、供給量、公開日、価格は未確定。ポイント残高や報酬からToken価値を推測しません。</p></div></aside>
               {isAdmin && (
                 <section className={styles.adminPanel} data-tone="coral">
                   <SectionTitle kicker="ADMIN / POINT OPERATIONS" title="ポイント付与(管理者)" copy="付与はappend-onlyの台帳と監査recordに記録されます。取り消しはマイナス付与で行います。" />
@@ -2147,7 +1649,7 @@ export function Dashboard() {
                               <small>{row.walletLabel ? `Wallet ${row.walletLabel}` : "Wallet未連携"}</small>
                             </div>
                             <div className={styles.adminRosterRight}>
-                              <b>{number.format(row.balance)} pt</b>
+                              <b>{number.format(row.balance)} SGP</b>
                               <button type="button" className={styles.textButton} onClick={() => setGrantForm((current) => ({ ...current, discordId: row.discordId }))}>
                                 付与先にセット
                               </button>
@@ -2164,40 +1666,23 @@ export function Dashboard() {
 
           {activeView === "community" && (
             <div className={styles.viewStack}>
-              <OtomoSwarm className={styles.swarmGround} spec={{ seed: 77777, count: 22, size: 42 }} />
+              <OtomoVignette className={styles.swarmGround} items={[{ sprite: "haku", pose: "cheer", left: "5%", bottom: "0px", size: 74 }]} />
               <header className={styles.pageHeader}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className={styles.headerBand} src="/dashboard-art/headers/header-shouren.png" alt="" aria-hidden="true" />
-                <div><p>COMMUNITY / OFFICIAL SIGNALS</p><h1>コミュニティ</h1><span>公開済みニュース、参加導線、学び、貢献を一つのフィードへ。</span></div>
-                <div className={styles.pageStats}><span><b>02</b>PUBLISHED</span><span><b>02</b>PREPARING</span><span><b>01</b>MVP DEMO</span></div>
+                <div><p>COMMUNITY / OFFICIAL SIGNALS</p><h1>コミュニティSNS</h1><span>SGGの公式アカウントと外部アプリへの導線です。</span></div>
               </header>
-              <div className={styles.communityLayout}>
-                <section>
-                  <SectionTitle kicker="OFFICIAL & COMMUNITY HUB" title="コミュニティハブ" copy="公開済み、準備中、MVP／DEMOを状態ラベルで分離して掲載。" />
-                  <div className={styles.communityFeed}>
-                    {communityItems.map((item) => (
-                      <article key={item.id} data-tone={item.accent}>
-                        <div><StatusPill accent={item.accent}>{item.status}</StatusPill><span>{item.channel} · {item.dateLabel}</span></div>
-                        <h3>{item.title}</h3><p>{item.description}</p>
-                        {item.href ? <ExternalLink href={item.href}>{item.actionLabel}</ExternalLink> : <button type="button" disabled>{item.actionLabel}</button>}
-                      </article>
-                    ))}
-                  </div>
-                </section>
-                <aside className={styles.followPanel}>
-                  <p>MY SIGNALS</p><h2>購読希望</h2><span>この端末だけに保存する希望設定です。外部通知はまだ配信しません。</span>
-                  {["X", "DISCORD", "SUBSTACK", "SEVENDAO"].map((channel) => (
-                    <label key={channel}><input type="checkbox" checked={followedChannels.has(channel)} onChange={() => toggleChannel(channel)} /><span>{channel}</span><small>{followedChannels.has(channel) ? "ON" : "OFF"}</small></label>
-                  ))}
-                </aside>
-              </div>
-              <section className={styles.eventEmpty}>
-                <span aria-hidden="true">暦</span><div><p>COMMUNITY EVENTS</p><h2>現在、公開確認済みのイベントはありません</h2><span>公式発表が確認されると、日時・参加方法・チェックインがここに表示されます。</span></div>
-              </section>
-              <aside className={styles.integrityNote}><strong>PUBLICATION RULE</strong><p>APPROVEDやREVIEWは公開済みではありません。Xは公開台帳、Discordは送信記録、Dispatchは公開URLを確認してから表示します。</p></aside>
+              <aside className={styles.followPanel}>
+                <p>COMMUNITY SNS</p><h2>公式チャンネル</h2><span>SGGの公式SNS・外部アプリへの導線です。</span>
+                <div className={styles.snsList}>
+                  <a href="https://sevengodsgames.com/" target="_blank" rel="noopener noreferrer"><span>LP</span><small>公式サイト ↗</small></a>
+                  <a aria-disabled="true"><span>ディスコード</span><small>公開導線を準備中</small></a>
+                  <a href="https://x.com/SEVENGODSGAMES" target="_blank" rel="noopener noreferrer"><span>X</span><small>@SEVENGODSGAMES ↗</small></a>
+                  <a href="https://app.seven-terakoya.com/" target="_blank" rel="noopener noreferrer"><span>SEVENDAOapp</span><small>MVP／DEMO ↗</small></a>
+                </div>
+              </aside>
             </div>
           )}
-          <OtomoSwarm className={styles.swarmFooter} spec={{ seed: 20260801, count: 34, size: 46, bandHeight: 96, walkRatio: 0.55 }} />
         </main>
 
         {/* Illustrated dock mirroring the primary destinations. Every entry
@@ -2206,9 +1691,8 @@ export function Dashboard() {
           <button type="button" onClick={() => changeView("games")}><IconGames className={styles.dockIcon} /><span>ゲーム一覧</span></button>
           <button type="button" onClick={() => changeView("arena")}><IconArena className={styles.dockIcon} /><span>アリーナ</span></button>
           <button type="button" onClick={() => changeView("collection")}><IconVault className={styles.dockIcon} /><span>コレクション</span></button>
-          <button type="button" onClick={() => changeView("collection")}><IconOtomo className={styles.dockIcon} /><span>OTOMO広場</span></button>
+          <button type="button" onClick={() => changeView("collection")}><IconOtomo className={styles.dockIcon} /><span>ガチャ</span></button>
           <button type="button" onClick={() => changeView("community")}><IconCommunity className={styles.dockIcon} /><span>コミュニティ</span></button>
-          <button type="button" onClick={() => changeView("arena")}><IconOracle className={styles.dockIcon} /><span>神託</span></button>
           <button type="button" onClick={() => changeView("mysgg")}><IconLedger className={styles.dockIcon} /><span>SGP台帳</span></button>
           <button type="button" onClick={() => changeView("mysgg")}><IconPassport className={styles.dockIcon} /><span>Passport</span></button>
         </nav>
@@ -2224,6 +1708,44 @@ export function Dashboard() {
         ))}
       </nav>
 
+      {nftViewer && (
+        <div className={styles.nftViewer} role="dialog" aria-modal="true" aria-label={`${nftViewer.label}の保有一覧`} onClick={(event) => { if (event.target === event.currentTarget) setNftViewer(null); }}>
+          <div className={styles.nftViewerPanel}>
+            <header>
+              <div><small>ONCHAIN COLLECTION</small><strong>{nftViewer.label}</strong><span>{nftPage.total > 0 ? `${nftPage.total}体` : ""}</span></div>
+              <button type="button" onClick={() => setNftViewer(null)} aria-label="閉じる">×</button>
+            </header>
+            {nftState === "error" && <p>読み込みに失敗しました。時間をおいて再度お試しください。</p>}
+            {nftState === "loading" && nftTokens.length === 0 && <p>チェーンから保有トークンを読み取っています…</p>}
+            <div className={styles.nftStrip}>
+              {nftTokens.map((token, index) => (
+                <figure key={token.tokenId}>
+                  {(token.thumb ?? token.image)
+                    // eslint-disable-next-line @next/next/no-img-element
+                    ? <img
+                        src={token.thumb ?? token.image ?? undefined}
+                        alt={token.name ?? `#${token.tokenId}`}
+                        loading={index < 3 ? "eager" : "lazy"}
+                        onError={(event) => {
+                          // サムネイル欠落時のみ原寸へ一度だけ差し替える。
+                          if (token.image && event.currentTarget.src !== token.image) {
+                            event.currentTarget.src = token.image;
+                          }
+                        }}
+                      />
+                    : <span className={styles.nftNoImage} aria-hidden="true">画像未取得</span>}
+                  <figcaption>{token.name ?? `#${token.tokenId}`}</figcaption>
+                </figure>
+              ))}
+              {nftPage.nextOffset !== null && (
+                <button type="button" className={styles.nftMore} onClick={() => void loadMoreNftTokens()} disabled={nftState === "loading"}>
+                  {nftState === "loading" ? "読み込み中…" : `続きを見る（残り${nftPage.total - nftTokens.length}）`}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       {toast && <div className={styles.toast} role="status" aria-live="polite"><span aria-hidden="true">✓</span>{toast}<button type="button" onClick={() => setToast("")} aria-label="通知を閉じる">×</button></div>}
     </div>
   );

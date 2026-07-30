@@ -6,6 +6,7 @@ import {
   discordDmChallenges,
   discordDmRateLimits,
   gachaPulls,
+  gameAccountLinks,
   players,
   pointGrants,
   walletChallenges,
@@ -541,6 +542,36 @@ export async function getGachaInventory(db: Db, discordId: string) {
     .from(gachaPulls)
     .where(eq(gachaPulls.discordId, discordId))
     .groupBy(gachaPulls.cardId);
+}
+
+/**
+ * 永続台帳の全行スナップショット。オーナー管理インフラへの移行用で、
+ * 一時データ（セッション・チャレンジ・レート制限）は含めない。
+ */
+export async function exportDurableState(db: Db) {
+  const [playerRows, grantRows, pullRows, linkRows, auditRows] = await Promise.all([
+    db.select().from(players),
+    db.select().from(pointGrants),
+    db.select().from(gachaPulls),
+    db.select().from(gameAccountLinks),
+    db.select().from(auditEvents),
+  ]);
+  return {
+    counts: {
+      players: playerRows.length,
+      pointGrants: grantRows.length,
+      gachaPulls: pullRows.length,
+      gameAccountLinks: linkRows.length,
+      auditEvents: auditRows.length,
+    },
+    tables: {
+      players: playerRows,
+      point_grants: grantRows,
+      gacha_pulls: pullRows,
+      game_account_links: linkRows,
+      audit_events: auditRows,
+    },
+  };
 }
 
 export async function getGrantByIdempotencyKey(db: Db, idempotencyKey: string) {

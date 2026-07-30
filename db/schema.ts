@@ -209,3 +209,21 @@ export const auditEvents = sqliteTable("audit_events", {
   index("audit_events_actor_created_idx").on(table.actor, table.createdAt),
   index("audit_events_subject_created_idx").on(table.subject, table.createdAt),
 ]);
+
+/**
+ * Short-lived cache of on-chain NFT enumeration pages. Display-only data:
+ * a stale row can never affect rank, SGP or eligibility, so a small TTL
+ * window (enforced at read time, not here) trades freshness for not hitting
+ * the public RPC on every gallery open.
+ */
+export const holdingsTokenCache = sqliteTable("holdings_token_cache", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  walletAddress: text("wallet_address").notNull(),
+  collectionId: text("collection_id").notNull(),
+  offset: integer("offset").notNull(),
+  /** Serialized TokenPage exactly as served. */
+  payload: text("payload").notNull(),
+  fetchedAt: text("fetched_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+  uniqueIndex("holdings_token_cache_key_idx").on(table.walletAddress, table.collectionId, table.offset),
+]);

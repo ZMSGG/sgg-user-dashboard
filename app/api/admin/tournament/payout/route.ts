@@ -7,9 +7,10 @@ import {
   playerOsEnv,
   readSession,
 } from "../../../../../server/auth";
-import { listIssuedLinks, OTOMO_CHAIN_GAME_ID } from "../../../../../server/game-link";
+import { listIssuedLinks, OTOMO_CHAIN_GAME_ID, resolveIdentities } from "../../../../../server/game-link";
 import {
   fetchOtomoChainExport,
+  fetchOtomoChainPreEntries,
   otomoChainExportConfigFromEnv,
 } from "../../../../../server/otomo-chain-export";
 import {
@@ -116,21 +117,29 @@ export async function POST(request: Request) {
     return jsonError(502, "EXPORT_UNAVAILABLE", "成績エクスポートを取得できませんでした。");
   }
 
-  const confirmedLinks = (await listIssuedLinks(db, OTOMO_CHAIN_GAME_ID))
-    .filter((row) => row.gamePlayerId);
-  const gameAccountToDiscordId = new Map(
-    confirmedLinks.map((row) => [row.gamePlayerId as string, row.discordId]),
-  );
+  // 強い順に解決: ゲーム検証済みdiscord_id > pre-entry名簿 > 確認済みリンク > 連携コード。
+  const issuedLinks = await listIssuedLinks(db, OTOMO_CHAIN_GAME_ID);
+  const preEntries = env.OTOMO_CHAIN_PREENTRY_URL
+    ? await fetchOtomoChainPreEntries(config, env.OTOMO_CHAIN_PREENTRY_URL) ?? []
+    : [];
+  const identities = resolveIdentities({
+    records: exported.records.map((r) => ({
+      gamePlayerId: r.playerId, recordDiscordId: r.discordId, externalId: r.externalId,
+    })),
+    preEntries: preEntries.map((e) => ({ gamePlayerId: e.playerId, discordId: e.discordId })),
+    issuedLinks,
+  });
 
-  const planned: { discordId: string; finalRank: number | null; amount: number }[] = [];
+  const planned: { discordId: string; finalRank: number | null; amount: number; identitySource: string }[] = [];
   const withheld: { gamePlayerId: string; reason: string }[] = [];
 
   for (const record of exported.records) {
-    const discordId = gameAccountToDiscordId.get(record.playerId);
-    if (!discordId) {
-      withheld.push({ gamePlayerId: record.playerId, reason: "NO_CONFIRMED_LINK" });
+    const identity = identities.get(record.playerId);
+    if (!identity) {
+      withheld.push({ gamePlayerId: record.playerId, reason: "NO_IDENTITY" });
       continue;
     }
+    const discordId = identity.discordId;
     if (record.suspiciousFlag) {
       withheld.push({ gamePlayerId: record.playerId, reason: "SUSPICIOUS_FLAG" });
       continue;
@@ -144,7 +153,7 @@ export async function POST(request: Request) {
       withheld.push({ gamePlayerId: record.playerId, reason: "NO_MATCHING_AWARD_TIER" });
       continue;
     }
-    planned.push({ discordId, finalRank: record.finalRank, amount });
+    planned.push({ discordId, finalRank: record.finalRank, amount, identitySource: identity.source });
   }
 
   const granted: string[] = [];

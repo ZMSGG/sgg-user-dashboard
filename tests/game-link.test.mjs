@@ -236,3 +236,46 @@ test("pins the verified SGG contract set", () => {
     assert.equal(contract.kind === "NFT" ? contract.decimals : 18, contract.decimals);
   }
 });
+
+const { resolveIdentities } = await import("../server/game-link.ts");
+const { parsePreEntryPayload } = await import("../server/otomo-chain-export.ts");
+
+test("identity resolution prefers the strongest source per account", () => {
+  const resolved = resolveIdentities({
+    records: [
+      { gamePlayerId: "plr_a", recordDiscordId: "900000000000000001", externalId: `also has ${CODE_A}` },
+      { gamePlayerId: "plr_b", recordDiscordId: null, externalId: null },
+      { gamePlayerId: "plr_c", recordDiscordId: null, externalId: CODE_A },
+      { gamePlayerId: "plr_d", recordDiscordId: null, externalId: null },
+    ],
+    preEntries: [
+      { gamePlayerId: "plr_b", discordId: "900000000000000002" },
+      { gamePlayerId: "plr_d", discordId: null },
+    ],
+    issuedLinks: [
+      { linkCode: CODE_A, discordId: "111111111", gamePlayerId: null },
+    ],
+  });
+
+  assert.equal(resolved.get("plr_a")?.source, "RECORD_DISCORD");
+  assert.equal(resolved.get("plr_a")?.discordId, "900000000000000001");
+  assert.equal(resolved.get("plr_b")?.source, "PRE_ENTRY");
+  assert.equal(resolved.get("plr_c")?.source, "LINK_CODE");
+  assert.equal(resolved.get("plr_c")?.discordId, "111111111");
+  assert.equal(resolved.get("plr_d"), undefined, "no source resolves nothing");
+});
+
+test("pre-entry payload parses verified ids and drops malformed ones", () => {
+  const parsed = parsePreEntryPayload({
+    season_id: "s",
+    records: [
+      { player_id: "plr_a", discord_id: "900000000000000001", discord_username: "alice", pre_entered_at: "2026-07-30T00:00:00Z" },
+      { player_id: "plr_b", discord_id: "not-a-snowflake", discord_username: null, pre_entered_at: "2026-07-30T00:00:00Z" },
+    ],
+  });
+  assert.equal(parsed.length, 2);
+  assert.equal(parsed[0].discordId, "900000000000000001");
+  assert.equal(parsed[1].discordId, null, "malformed id treated as absent, not trusted");
+  assert.equal(parsePreEntryPayload({ records: [] }), null, "season id required");
+  assert.equal(parsePreEntryPayload({ season_id: "s", records: [{ player_id: "" }] }), null);
+});

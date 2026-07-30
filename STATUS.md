@@ -3,19 +3,19 @@
 > Derived view. `PROJECT_STATE.json` and its immutable checkpoint are authoritative.
 
 Project ID: `PRJ-202607-sgg-user-dashboard`  
-State version: `37`  
-Updated: `2026-07-29T17:29:40+08:00`  
+State version: `45`  
+Updated: `2026-07-30T21:18:52+08:00`  
 Status: `REVIEW`  
 Phase: `PRIVATE_DEPLOYED`
 
 ## Current objective
 
-Preserve the owner-only Sites Version 14 release and complete interactive desktop, mobile and console verification when the supported Codex in-app browser control capability is available.
+Deploy the verified connection layer and the complete NFT gallery (all four collections including SEVEN GODS) through Sites, then have the owner flip the two external switches: CHAIN's Discord credentials in Vercel, and the export/pre-entry secrets in Sites after the season.
 
 ## Last checkpoint
 
-- ID: `CP-000037`
-- Summary: Committed the CP-000033-approved Zipangu lobby and gacha release as c675ac76bc6812c2a962dc034d3a2beaa9e3926d, pushed that exact commit to the existing Sites source main branch, saved Sites Version 14, and deployed it successfully as appgdep_6a69c62f72c4819182c1388847120b38 with environment revision 2. Migration 0005 is present in the saved version with its exact source hash and contains the currency column, gacha tables and database balance guard. All rejected swarm sprites were excluded from the release commit, clean build and archive; SWARM_ENABLED remains false and a production swarm probe returns 404. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access and no custom domain; no access, owner, group, domain, environment or indexing control was changed. Production verification confirmed anonymous application-level GET /api/gacha and GET /api/passport return 401, the approved Zipangu backdrop and current transparent duty GOD match their source hashes, the Sites screenshot shows the full-bleed dusk lobby and duty GOD in the street, the production responsive bundle exposes one mobile navigation while hiding the duplicate dock, and no recent Worker errors were present. The mandatory in-app browser control capability is unavailable in this task, so a new muted tab, interactive responsive viewport and console verification remain explicitly unclaimed. The two known command-center policy hash drifts remain unresolved and were not refreshed.
+- ID: `CP-000045`
+- Summary: アリーナ emptied to an honest 準備中 placeholder on the owner's direction (four mobile screenshots of the arena, then 「削除」; the owner chose to keep the tab and delete the contents). Removed: the 神託番付 and シーズン序列 live boards, the 公開ランキング competition-card grid, the PUBLISHED EVENTS empty state, and the FAIR PLAY note whose copy was untranslated pipeline jargon (raw gameplay → ranking → SGG_GAME_POINTS → reward candidate). What replaces them states plainly what the screen will hold and that nothing ships until it can be shown. The removal was followed through the rest of the surface rather than left half-done: the home 開催中の大会 card no longer prints a competition count that nothing backs and now reads 準備中/アリーナを見る; the desktop dock's 神託 button, a shortcut to the deleted oracle board that merely duplicated アリーナ, is gone; the home quick menu's 番付 became 闘技 to match its destination. Dead code went with it — CompetitionCard, Leaderboard, the competitions/Competition/LiveRanking/IconOracle imports, oracleSourceState/questSourceState, loadLiveData and the syncing flag — leaving lint clean; syncLiveData and its effects are untouched, so the home banner and play-view runtime health still load. A layout defect the near-empty screen exposed was fixed at the root: .shell is now a flex column with .content growing, so a short view pushes the footer to the bottom instead of stranding it mid-screen above ~300px of dead space. The two honesty guards in rendered-html.test.mjs were re-pointed at the new copy rather than weakened. Verified at 375x812 and on desktop: arena, home, play, collection, community, マイSGG all lay out with no horizontal overflow. 91 tests, lint, typecheck, production build pass.
 
 ## Blockers
 
@@ -30,17 +30,15 @@ Preserve the owner-only Sites Version 14 release and complete interactive deskto
 
 ## Next actions
 
-1. `ACT-036` [BLOCKED] When supported Codex in-app browser control is available, open Version 14 in a new muted tab without touching the protected existing tab and complete interactive desktop, 390px and console verification. — Owner: Codex runtime capability
-2. `ACT-033` [READY] Review the replacement mochi swarm separately; keep it disabled and outside production until explicitly approved. — Owner: SGG project owner
-3. `ACT-022` [READY] Set the OTOMO CHAIN Discord credentials in Vercel. — Owner: SGG project owner
+1. `ACT-039` [READY] Owner redeploys through Sites (the NFT gallery, widened image CSP and connection layer ride it). — Owner: SGG project owner
+2. `ACT-022` [READY] Add the OTOMO CHAIN redirect URI to the MY SGG Discord app and set DISCORD_CLIENT_ID/SECRET in Vercel so discord_enabled becomes true. — Owner: SGG project owner
+3. `ACT-018` [BLOCKED] After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table. — Owner: SGG project owner
 4. `ACT-024` [READY] Review the two drifted command-center policy hashes. — Owner: SGG project owner
 5. `ACT-015` [BLOCKED] Two-account isolation check before adding any viewer. — Owner: SGG project owner
-6. `ACT-021` [BLOCKED] Adapt reconciliation to verified Discord IDs when the game work lands. — Owner: SGG project owner
-7. `ACT-018` [BLOCKED] Post-season export secrets, reconcile and pay out with a decided award table. — Owner: SGG project owner
-8. `ACT-012` [BLOCKED] Upgrade Sharp when supported by stable framework dependencies. — Owner: SGG engineering owner
-9. `ACT-006` [BLOCKED] Implement player snapshot bridges per game. — Owner: SGG game platform owner
-10. `ACT-008` [BLOCKED] Request separate authority before any audience expansion. — Owner: SGG project owner
+6. `ACT-012` [BLOCKED] Sharp upgrade when supported. — Owner: SGG engineering owner
+7. `ACT-006` [BLOCKED] Player snapshot bridges per game. — Owner: SGG game platform owner
+8. `ACT-008` [BLOCKED] Separate authority before audience expansion. — Owner: SGG project owner
 
 ## Resume exactly here
 
-`ACT-036` — Read CP-000037 and deployments/PRIVATE_DEPLOYMENT-20260729-001.json. Sites Version 14 from commit c675ac76bc6812c2a962dc034d3a2beaa9e3926d is live at https://sgg-player-archive.axie-b-ac.chatgpt.site with D1 migration 0005, SWARM_ENABLED=false, environment revision 2 and unchanged custom owner-only access. When the supported Codex in-app browser control capability is available, preserve the existing protected tab, open the exact production URL in a new muted tab and complete interactive desktop, 390px and console verification.
+`ACT-039` — Deployment through Sites remains the owner's step (migration 0006 must ride it). アリーナ stays 準備中 until real competition data exists; the deleted boards are recoverable from git history for the rebuild.

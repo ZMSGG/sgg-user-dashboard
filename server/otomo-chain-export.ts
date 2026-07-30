@@ -20,6 +20,8 @@ export type OtomoChainExportConfig = {
 export type OtomoChainRecord = {
   playerId: string;
   displayName: string;
+  /** Verified Discord ID once the game adds it to the reward export. */
+  discordId: string | null;
   externalId: string | null;
   finalRank: number | null;
   seasonScore: number;
@@ -69,10 +71,16 @@ function parseRecord(value: unknown): OtomoChainRecord | null {
   if (typeof record.season_score !== "number" || !Number.isFinite(record.season_score)) return null;
   if (record.external_id !== null && typeof record.external_id !== "string") return null;
   if (record.final_rank !== null && typeof record.final_rank !== "number") return null;
+  // discord_id is optional until the game ships it; a malformed value is
+  // treated as absent rather than trusted.
+  const discordId = typeof record.discord_id === "string" && /^\d{5,25}$/.test(record.discord_id)
+    ? record.discord_id
+    : null;
 
   return {
     playerId: record.player_id,
     displayName: record.display_name.slice(0, 64),
+    discordId,
     externalId: record.external_id,
     finalRank: typeof record.final_rank === "number" ? record.final_rank : null,
     seasonScore: record.season_score,
@@ -102,6 +110,73 @@ export function parseExportPayload(value: unknown): OtomoChainExport | null {
     seasonId: payload.season_id,
     records,
   };
+}
+
+export type OtomoChainPreEntry = {
+  playerId: string;
+  discordId: string | null;
+  discordUsername: string | null;
+  preEnteredAt: string;
+};
+
+/**
+ * Pre-entry roster: the game's own Discord-verified participant list.
+ * {player_id, display_name, discord_id, discord_username, pre_entered_at}.
+ */
+export function parsePreEntryPayload(value: unknown): OtomoChainPreEntry[] | null {
+  if (!value || typeof value !== "object") return null;
+  const payload = value as { season_id?: unknown; records?: unknown };
+  if (typeof payload.season_id !== "string" || !Array.isArray(payload.records)) return null;
+  if (payload.records.length > MAX_RECORDS) return null;
+
+  const entries: OtomoChainPreEntry[] = [];
+  for (const entry of payload.records) {
+    if (!entry || typeof entry !== "object") return null;
+    const record = entry as Record<string, unknown>;
+    if (typeof record.player_id !== "string" || record.player_id.length === 0) return null;
+    if (typeof record.pre_entered_at !== "string") return null;
+    entries.push({
+      playerId: record.player_id,
+      discordId: typeof record.discord_id === "string" && /^\d{5,25}$/.test(record.discord_id)
+        ? record.discord_id
+        : null,
+      discordUsername: typeof record.discord_username === "string"
+        ? record.discord_username.slice(0, 64)
+        : null,
+      preEnteredAt: record.pre_entered_at,
+    });
+  }
+  return entries;
+}
+
+export async function fetchOtomoChainPreEntries(
+  config: OtomoChainExportConfig,
+  preEntryUrl: string,
+): Promise<OtomoChainPreEntry[] | null> {
+  let parsed: URL;
+  try {
+    parsed = new URL(preEntryUrl);
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "https:") return null;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const response = await fetch(parsed.toString(), {
+      method: "GET",
+      headers: { accept: "application/json", "x-admin-secret": config.adminSecret },
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+    return parsePreEntryPayload(await response.json());
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export async function fetchOtomoChainExport(

@@ -2,24 +2,23 @@
   "schema_version": 1,
   "authority": "SGG_PROJECT_STATE",
   "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 37,
-  "updated_at": "2026-07-29T17:29:40+08:00",
-  "updated_by": "Codex MY SGG private deployment operator",
+  "state_version": 45,
+  "updated_at": "2026-07-30T21:18:52+08:00",
+  "updated_by": "Claude",
   "status": "REVIEW",
   "phase": "PRIVATE_DEPLOYED",
-  "current_objective": "Preserve the owner-only Sites Version 14 release and complete interactive desktop, mobile and console verification when the supported Codex in-app browser control capability is available.",
-  "last_summary": "Committed the CP-000033-approved Zipangu lobby and gacha release as c675ac76bc6812c2a962dc034d3a2beaa9e3926d, pushed that exact commit to the existing Sites source main branch, saved Sites Version 14, and deployed it successfully as appgdep_6a69c62f72c4819182c1388847120b38 with environment revision 2. Migration 0005 is present in the saved version with its exact source hash and contains the currency column, gacha tables and database balance guard. All rejected swarm sprites were excluded from the release commit, clean build and archive; SWARM_ENABLED remains false and a production swarm probe returns 404. Sites access remained custom owner-only at policy revision 1 with one allowed user, zero groups, no public access and no custom domain; no access, owner, group, domain, environment or indexing control was changed. Production verification confirmed anonymous application-level GET /api/gacha and GET /api/passport return 401, the approved Zipangu backdrop and current transparent duty GOD match their source hashes, the Sites screenshot shows the full-bleed dusk lobby and duty GOD in the street, the production responsive bundle exposes one mobile navigation while hiding the duplicate dock, and no recent Worker errors were present. The mandatory in-app browser control capability is unavailable in this task, so a new muted tab, interactive responsive viewport and console verification remain explicitly unclaimed. The two known command-center policy hash drifts remain unresolved and were not refreshed.",
-  "last_checkpoint_id": "CP-000037",
-  "last_checkpoint_path": "checkpoints/CP-000037.json",
+  "current_objective": "Deploy the verified connection layer and the complete NFT gallery (all four collections including SEVEN GODS) through Sites, then have the owner flip the two external switches: CHAIN's Discord credentials in Vercel, and the export/pre-entry secrets in Sites after the season.",
+  "last_summary": "アリーナ emptied to an honest 準備中 placeholder on the owner's direction (four mobile screenshots of the arena, then 「削除」; the owner chose to keep the tab and delete the contents). Removed: the 神託番付 and シーズン序列 live boards, the 公開ランキング competition-card grid, the PUBLISHED EVENTS empty state, and the FAIR PLAY note whose copy was untranslated pipeline jargon (raw gameplay → ranking → SGG_GAME_POINTS → reward candidate). What replaces them states plainly what the screen will hold and that nothing ships until it can be shown. The removal was followed through the rest of the surface rather than left half-done: the home 開催中の大会 card no longer prints a competition count that nothing backs and now reads 準備中/アリーナを見る; the desktop dock's 神託 button, a shortcut to the deleted oracle board that merely duplicated アリーナ, is gone; the home quick menu's 番付 became 闘技 to match its destination. Dead code went with it — CompetitionCard, Leaderboard, the competitions/Competition/LiveRanking/IconOracle imports, oracleSourceState/questSourceState, loadLiveData and the syncing flag — leaving lint clean; syncLiveData and its effects are untouched, so the home banner and play-view runtime health still load. A layout defect the near-empty screen exposed was fixed at the root: .shell is now a flex column with .content growing, so a short view pushes the footer to the bottom instead of stranding it mid-screen above ~300px of dead space. The two honesty guards in rendered-html.test.mjs were re-pointed at the new copy rather than weakened. Verified at 375x812 and on desktop: arena, home, play, collection, community, マイSGG all lay out with no horizontal overflow. 91 tests, lint, typecheck, production build pass.",
+  "last_checkpoint_id": "CP-000045",
+  "last_checkpoint_path": "checkpoints/CP-000045.json",
   "active_work": {
-    "work_id": "ACT-036",
-    "objective": "Open the exact Sites Version 14 production URL in a new muted in-app browser tab, without touching the protected existing tab, and verify desktop, 390px mobile and console behavior.",
-    "status": "BLOCKED",
+    "work_id": "ACT-041",
+    "objective": "アリーナ held as an honest 準備中 tab until real competition data exists.",
+    "status": "DONE",
     "acceptance_criteria": [
-      "The protected existing in-app browser tab remains open and is not navigated away.",
-      "A new muted in-app browser tab shows the Zipangu dusk lobby and transparent duty GOD.",
-      "At 390px exactly one bottom navigation bar is visible.",
-      "No major console error or display failure is present."
+      "No ranking board, competition card or jargon note ships on アリーナ.",
+      "No other surface promises rankings that no longer exist.",
+      "A short view keeps the footer at the bottom of the viewport."
     ]
   },
   "recently_completed": [
@@ -130,30 +129,31 @@
   ],
   "next_actions": [
     {
-      "action_id": "ACT-036",
+      "action_id": "ACT-039",
       "order": 1,
-      "action": "When supported Codex in-app browser control is available, open Version 14 in a new muted tab without touching the protected existing tab and complete interactive desktop, 390px and console verification.",
-      "owner": "Codex runtime capability",
-      "status": "BLOCKED",
-      "blocker_ids": [
-        "BLK-IN-APP-BROWSER-001"
-      ]
-    },
-    {
-      "action_id": "ACT-033",
-      "order": 2,
-      "action": "Review the replacement mochi swarm separately; keep it disabled and outside production until explicitly approved.",
+      "action": "Owner redeploys through Sites (the NFT gallery, widened image CSP and connection layer ride it).",
       "owner": "SGG project owner",
       "status": "READY",
       "blocker_ids": []
     },
     {
       "action_id": "ACT-022",
-      "order": 3,
-      "action": "Set the OTOMO CHAIN Discord credentials in Vercel.",
+      "order": 2,
+      "action": "Add the OTOMO CHAIN redirect URI to the MY SGG Discord app and set DISCORD_CLIENT_ID/SECRET in Vercel so discord_enabled becomes true.",
       "owner": "SGG project owner",
       "status": "READY",
       "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 3,
+      "action": "After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-OTOMO-CHAIN-EXPORT-001",
+        "BLK-SGP-AWARD-TABLE-001"
+      ]
     },
     {
       "action_id": "ACT-024",
@@ -174,30 +174,9 @@
       ]
     },
     {
-      "action_id": "ACT-021",
-      "order": 6,
-      "action": "Adapt reconciliation to verified Discord IDs when the game work lands.",
-      "owner": "SGG project owner",
-      "status": "BLOCKED",
-      "blocker_ids": [
-        "BLK-CONCURRENT-GAME-SESSION-001"
-      ]
-    },
-    {
-      "action_id": "ACT-018",
-      "order": 7,
-      "action": "Post-season export secrets, reconcile and pay out with a decided award table.",
-      "owner": "SGG project owner",
-      "status": "BLOCKED",
-      "blocker_ids": [
-        "BLK-OTOMO-CHAIN-EXPORT-001",
-        "BLK-SGP-AWARD-TABLE-001"
-      ]
-    },
-    {
       "action_id": "ACT-012",
-      "order": 8,
-      "action": "Upgrade Sharp when supported by stable framework dependencies.",
+      "order": 6,
+      "action": "Sharp upgrade when supported.",
       "owner": "SGG engineering owner",
       "status": "BLOCKED",
       "blocker_ids": [
@@ -206,8 +185,8 @@
     },
     {
       "action_id": "ACT-006",
-      "order": 9,
-      "action": "Implement player snapshot bridges per game.",
+      "order": 7,
+      "action": "Player snapshot bridges per game.",
       "owner": "SGG game platform owner",
       "status": "BLOCKED",
       "blocker_ids": [
@@ -216,8 +195,8 @@
     },
     {
       "action_id": "ACT-008",
-      "order": 10,
-      "action": "Request separate authority before any audience expansion.",
+      "order": 8,
+      "action": "Separate authority before audience expansion.",
       "owner": "SGG project owner",
       "status": "BLOCKED",
       "blocker_ids": [
@@ -327,14 +306,24 @@
   ],
   "changed_files": [
     {
-      "path": "deployments/PRIVATE_DEPLOYMENT-20260729-001.json",
-      "sha256": "38c0013aafb1da1c4fb70da49cd003b435f3bbc1d70fbcf05793b32517e46b3c",
-      "reason": "Record the exact release commit, Sites Version 14, successful owner-only deployment, D1 migration 0005, unchanged access controls, approved asset hashes, excluded swarm files and production verification evidence."
+      "path": "migration/STATE_UPDATE_CP000045_ARENA_PLACEHOLDER.json",
+      "sha256": "6016e739b6587598d81ecf0b6d2729867e0083d3558863a5ad7ad7b667a908f1",
+      "reason": "Record the arena emptying and its follow-through."
     },
     {
-      "path": "migration/STATE_UPDATE_CP000037_SOSHAGE_PRIVATE_DEPLOYED.json",
-      "sha256": "9b44addffb2ee07a29309ba21c671541bd0f4051629acd335a135741de640555",
-      "reason": "Record completion of ACT-035, the immutable Sites Version 14 release facts and the remaining in-app browser capability boundary."
+      "path": "app/Dashboard.tsx",
+      "sha256": "93911ca7e8a3690fb94df6e6dc894db6952c6c7850440fe2866ae3d23b0ba168",
+      "reason": "Arena 準備中 placeholder; home card, dock and quick-menu corrections; arena-only code removed."
+    },
+    {
+      "path": "app/Dashboard.module.css",
+      "sha256": "d9c77799899707e52b881352c33dd668ed37cc0a5940af3bbc38d2aff5051c67",
+      "reason": "Flex-column shell so short views keep the footer at the bottom."
+    },
+    {
+      "path": "tests/rendered-html.test.mjs",
+      "sha256": "f9628947ce7f5f71dd3653ba15bd76e4053c5d687d2ed249dc2f351615add933",
+      "reason": "Honesty guards re-pointed at the 準備中 copy."
     }
   ],
   "last_known_good": {
@@ -365,14 +354,11 @@
     "VALIDATION_REPORT.json"
   ],
   "resume": {
-    "action_id": "ACT-036",
-    "instruction": "Read CP-000037 and deployments/PRIVATE_DEPLOYMENT-20260729-001.json. Sites Version 14 from commit c675ac76bc6812c2a962dc034d3a2beaa9e3926d is live at https://sgg-player-archive.axie-b-ac.chatgpt.site with D1 migration 0005, SWARM_ENABLED=false, environment revision 2 and unchanged custom owner-only access. When the supported Codex in-app browser control capability is available, preserve the existing protected tab, open the exact production URL in a new muted tab and complete interactive desktop, 390px and console verification.",
+    "action_id": "ACT-039",
+    "instruction": "Deployment through Sites remains the owner's step (migration 0006 must ride it). アリーナ stays 準備中 until real competition data exists; the deleted boards are recoverable from git history for the rebuild.",
     "do_not_assume": [
-      "The existing protected production tab may be navigated, closed or reused; it may not.",
-      "Any swarm sprite is approved or may enter production; every swarm file remains excluded and disabled.",
-      "Access, viewers, groups, domains, environment values or indexing may change; they may not.",
-      "The in-app browser, interactive 390px viewport or console verification passed; only the Sites screenshot and production HTTP, asset-hash, HTML/CSS and Worker-log checks passed.",
-      "The two command-center policy hashes may be refreshed; they remain known unresolved drift and must not be changed."
+      "The arena boards were broken; the oracle board did carry live data, and it was removed by owner direction, not by failure.",
+      "Live data fetching was removed; syncLiveData still runs for the home banner and play-view health."
     ]
   }
 }
