@@ -253,23 +253,6 @@ function formatSyncTime(value: string) {
 }
 
 
-function Brand({ compact = false }: { compact?: boolean }) {
-  return (
-    <span className={styles.brand}>
-      <span className={styles.brandMark} aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/my-sgg-icon-v003.png" alt="" width={44} height={44} />
-      </span>
-      {!compact && (
-        <span className={styles.brandText}>
-          <strong>MY SGG</strong>
-          <small>PLAYER OS</small>
-        </span>
-      )}
-    </span>
-  );
-}
-
 function Dot({ active = false }: { active?: boolean }) {
   return <span className={active ? styles.dotActive : styles.dot} aria-hidden="true" />;
 }
@@ -410,6 +393,7 @@ export function Dashboard() {
   const [dmCode, setDmCode] = useState("");
   const [dmChallenge, setDmChallenge] = useState<DiscordDmChallenge | null>(null);
   const [dmAuthBusy, setDmAuthBusy] = useState(false);
+  const [dmPanelOpen, setDmPanelOpen] = useState(false);
   const [dmAuthMessage, setDmAuthMessage] = useState("");
   const [holdings, setHoldings] = useState<HoldingsData | null>(null);
   const [holdingsState, setHoldingsState] = useState<LoadState>("idle");
@@ -915,7 +899,6 @@ export function Dashboard() {
       <a href="#main-content" className={styles.skipLink}>メインコンテンツへ移動</a>
 
       <aside className={styles.sidebar} aria-label="メインナビゲーション">
-        <Brand />
         <p className={styles.sidebarTagline}>ALL OF SGG.<br />ONE PLAYER OS.</p>
         <nav className={styles.sideNav}>
           {navItems.map((item, index) => (
@@ -1300,7 +1283,7 @@ export function Dashboard() {
                         ? "ネットワークエラーのため連携状況を確認できません。ゲームと公開ランキングは引き続き利用できます。"
                         : passport?.authConfigured === false
                           ? "Discord認証は現在セットアップ中です。ゲームと公開ランキングは未接続のまま利用できます。"
-                          : "正式identityはDiscord user ID。Walletは任意で、未接続でもゲームとraw rankingへ参加できます。"}</p>
+                          : "Discordでログインすると、SGPとプレイ記録がここに集まります。"}</p>
                   <div className={styles.passportActions}>
                     {passportState === "loading" && !passport ? (
                       <button type="button" className={styles.primaryAction} disabled>Passportを確認中…</button>
@@ -1314,19 +1297,11 @@ export function Dashboard() {
                     ) : passport?.connected ? (
                       <button type="button" className={styles.textButton} onClick={() => void logout()}>ログアウト</button>
                     ) : oauthAvailable ? (
-                      <a className={styles.primaryAction} href="/api/auth/discord"><span className={styles.stepBadge}>STEP 1</span>Discordでログイン<span aria-hidden="true">→</span></a>
+                      <a className={styles.primaryAction} href="/api/auth/discord">Discordでログイン<span aria-hidden="true">→</span></a>
                     ) : !dmOtpAvailable ? (
                       <button type="button" className={styles.primaryAction} disabled>Discord連携を準備中</button>
                     ) : null}
                   </div>
-                  {!passport?.connected && (
-                    <div className={styles.heroWallet} data-tone="cyan" data-disabled="true">
-                      <button type="button" className={styles.primaryAction} disabled>
-                        <WalletIcon /><span className={styles.stepBadge}>STEP 2</span>Walletを連携する（任意）
-                      </button>
-                      <p>Discordログイン後に連携できます。NFT・SDT保有の表示に使い、署名のみで送金・承認は行いません。無くてもポイント付与に影響はありません。</p>
-                    </div>
-                  )}
                   {passport?.connected && (
                     <div className={styles.heroWallet} data-tone="cyan">
                       {passport.player.walletAddress ? (
@@ -1369,7 +1344,12 @@ export function Dashboard() {
                   {adminUpgradeRequired && (
                     <p className={styles.dmAuthHelp}>DM認証はPlayer Passport専用です。管理機能には通常のDiscord認証が必要です。{oauthAvailable ? "上のボタンから再認証してください。" : "OAuthの準備が整うまで管理機能は利用できません。"}</p>
                   )}
-                  {dmOtpAvailable && (
+                  {dmOtpAvailable && !dmPanelOpen && (
+                    <button type="button" className={styles.textButton} onClick={() => setDmPanelOpen(true)}>
+                      Discordでログインできない場合
+                    </button>
+                  )}
+                  {dmOtpAvailable && dmPanelOpen && (
                     <div className={styles.dmAuthPanel}>
                       <strong className={styles.dmAuthTitle}>{oauthAvailable ? "OAuthが使えない場合 / BOT DM" : "BOT DMで本人確認"}</strong>
                       {dmChallenge ? (
@@ -1426,24 +1406,21 @@ export function Dashboard() {
                     </div>
                   )}
                 </div>
+                {/* 接続前は空欄だらけのリストになるため、状態一覧は接続後のみ。 */}
+                {passport?.connected && (
                 <div className={styles.passportStatus}>
-                  <span><Dot active={passport?.connected === true} />Discord<strong>{passportState === "loading" && !passport ? "確認中" : passportState === "error" && !passport ? "取得不可" : passport?.connected ? "接続済み" : dmOtpAvailable ? "DM認証可能" : passport?.authConfigured === false ? "準備中" : "未接続"}</strong></span>
-                  <span><Dot active={passport?.connected === true && Boolean(passport.player.walletAddress)} />Wallet<strong>{passportState === "loading" && !passport ? "確認中" : passport?.connected && passport.player.walletAddress ? shortAddress(passport.player.walletAddress) : "任意"}</strong></span>
-                  <span><Dot active={passport?.connected === true && passport.guild.member === true} />コミュニティ<strong>{passportState === "loading" && !passport
-                    ? "確認中"
-                    : passport?.connected
-                      ? (!passport.guild.configured
-                        ? "準備中"
-                        : passport.guild.member === true
-                          ? "参加済み"
-                          : passport.guild.member === false
-                            ? "未参加"
-                            : "未確認")
-                      : passport?.authConfigured === false
-                        ? "準備中"
-                        : "Discord連携後"}</strong></span>
+                  <span><Dot active />Discord<strong>接続済み</strong></span>
+                  <span><Dot active={Boolean(passport.player.walletAddress)} />Wallet<strong>{passport.player.walletAddress ? shortAddress(passport.player.walletAddress) : "任意"}</strong></span>
+                  <span><Dot active={passport.guild.member === true} />コミュニティ<strong>{!passport.guild.configured
+                    ? "準備中"
+                    : passport.guild.member === true
+                      ? "参加済み"
+                      : passport.guild.member === false
+                        ? "未参加"
+                        : "未確認"}</strong></span>
                   <span><Dot />Passkey<strong>準備中</strong></span>
                 </div>
+                )}
               </section>
               {passportState === "error" && (
                 <div className={styles.resilienceNotice} role="alert">

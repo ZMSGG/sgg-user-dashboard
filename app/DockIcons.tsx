@@ -128,3 +128,4 @@ export function IconHome({ className }: IconProps) {
     </Frame>
   );
 }
+
