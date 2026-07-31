@@ -1551,7 +1551,8 @@
   min-width: 0;
   min-height: 270px;
   grid-template-columns: 1fr auto 1fr;
-  align-content: end;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-content: stretch;
   align-items: center;
   gap: 8px;
   padding: 19px;
@@ -1607,6 +1608,12 @@
   font-family: "Yu Mincho", serif;
   font-size: 16px;
   font-style: normal;
+}
+
+.pairGrid article > .statusPill {
+  position: absolute;
+  top: 10px;
+  right: 12px;
 }
 
 .pairGrid small {
@@ -3546,19 +3553,21 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  padding: 10px 22px;
+  width: max-content;
+  padding: 8px 18px;
   border: 3px double rgba(214, 69, 69, 0.92);
   border-radius: 6px;
   transform: translate(-50%, -50%) rotate(-10deg);
-  font-family: var(--font-display, serif);
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
-  letter-spacing: 0.32em;
-  text-indent: 0.32em;
-  color: rgba(224, 82, 82, 0.95);
-  background: rgba(20, 8, 10, 0.42);
+  line-height: 1;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  white-space: nowrap;
+  color: rgba(228, 88, 88, 0.96);
+  background: rgba(22, 9, 11, 0.55);
   box-shadow: 0 0 0 1px rgba(214, 69, 69, 0.28), inset 0 0 14px rgba(214, 69, 69, 0.18);
-  text-shadow: 0 0 12px rgba(214, 69, 69, 0.5);
+  text-shadow: 0 0 12px rgba(214, 69, 69, 0.55);
   pointer-events: none;
 }
 
@@ -3695,12 +3704,15 @@ b[data-rarity="SR"] { background: rgba(230, 196, 111, 0.18); color: #e6c46f; }
 .pairArt {
   display: grid;
   place-items: center;
-  height: 128px;
+  grid-column: 1 / -1;
+  height: 100%;
+  min-height: 184px;
+  padding-top: 10px;
 }
 
 .pairArt img {
-  max-width: 118px;
-  max-height: 124px;
+  max-width: 100%;
+  max-height: 190px;
   object-fit: contain;
   filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45));
 }

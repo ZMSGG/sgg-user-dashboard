@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 46,
+  "updated_by": "Claude",
+  "summary": "Cutover executed with the owner driving the browser. my.sevengodsgames.com now serves the dashboard from the owner's own Cloudflare account, gated by a Zero Trust Access application whose core-members policy allows one email today. Order was kept deliberately: Access application first, custom domain attached only afterwards, so the site was never reachable without the gate. Anonymous requests 302 to the Access login; the Worker itself keeps workers_dev false. Two blocking discoveries, both resolved rather than worked around. First, the Sites data export was impossible: /api/admin/export returns 404 on Version 14 because it was built in CP-000039 and never rode a deployment, and the Sites D1 is unreachable from the owner's account. Since the endpoint answers 401 rather than 404 when it exists, the 404 was proof of absence, not of auth. The owner confirmed no real usage on Sites, so the new production starts clean and nothing was reconstructed. Second, Discord OAuth had never worked anywhere: the stored client secret was 480 characters where Discord issues 32, and Discord answered invalid_client to a direct probe. It was rotated in the developer portal, verified against Discord's token endpoint before deployment (invalid_client became invalid_grant, which proves the credential and disproves only the dummy code), then uploaded and mirrored into .dev.vars so local development finally has a working OAuth path too. Login then completed end to end: the player row and its DISCORD_LOGIN audit event exist in the new D1, and the session resolves as admin. Verified on production: passport, gacha, holdings, admin players and admin export all 200 for the authenticated admin; live is public by design; anonymous is gated. Temporary branch logging added to diagnose the callback was reverted and redeployed, so production carries no diagnostic output. Wallet is unlinked on the new production, so the NFT gallery has nothing to show until the owner links a wallet from a browser with a wallet extension.",
+  "status": "REVIEW",
+  "phase": "PRIVATE_DEPLOYED",
+  "current_objective": "Run the two-account isolation check, then add core members to the Access policy. Rotate the Discord client secret once more at a convenient moment, since the working value appeared in a session screenshot.",
+  "active_work": {
+    "work_id": "ACT-042",
+    "objective": "Owner-owned production live behind Access; open to core members after the isolation check.",
+    "status": "IN_PROGRESS",
+    "acceptance_criteria": [
+      "Access gate proven: anonymous 302, allowed email reaches the dashboard.",
+      "Discord login writes a durable player row and audit event in the new D1.",
+      "Two distinct Discord accounts cannot read each other's Passport, ledger or holdings."
+    ]
+  },
+  "next_actions": [
+    {
+      "action_id": "ACT-015",
+      "order": 1,
+      "action": "2アカウント分離テスト（オーナー＋協力者1名）。コアメンバー追加はこの後。",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DISCORD-E2E-001"
+      ]
+    },
+    {
+      "action_id": "ACT-043",
+      "order": 2,
+      "action": "Discord client secret をもう一度リセットして投入（動作する値がセッションのスクリーンショットに写ったため）。手順は確立済み。",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-044",
+      "order": 3,
+      "action": "Cloudflare Access の core-members ポリシーにコアメンバーのメールを追加。",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DISCORD-E2E-001"
+      ]
+    },
+    {
+      "action_id": "ACT-045",
+      "order": 4,
+      "action": "Wallet拡張のあるブラウザで my.sevengodsgames.com にログインしWalletを連携（NFTギャラリーの本番確認）。",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 5,
+      "action": "After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-SGP-AWARD-TABLE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-024",
+      "order": 6,
+      "action": "Review the two drifted command-center policy hashes.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 7,
+      "action": "Sharp upgrade when supported.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPENDENCY-SHARP-001"
+      ]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 8,
+      "action": "Player snapshot bridges per game.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PLAYER-BRIDGE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-008",
+      "order": 9,
+      "action": "Separate authority before audience expansion.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PUBLICATION-001"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-IN-APP-BROWSER-001",
+      "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+      "severity": "P1",
+      "description": "This Codex task exposes the Browser skill but not its required in-app browser control capability after mandatory discovery. The existing protected production tab remains untouched. Version 14 has Sites screenshot, production HTTP, asset-hash, HTML/CSS and Worker-log evidence, but no new muted tab, interactive 390px viewport or console session was available.",
+      "owner": "Codex runtime capability",
+      "status": "OPEN",
+      "resolution_required": "Expose the supported Codex in-app browser control capability, then open the exact Version 14 URL in a new muted tab without navigating or closing the protected tab and complete desktop, 390px, interaction and console verification."
+    },
+    {
+      "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+      "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+      "severity": "P1",
+      "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+    },
+    {
+      "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+      "scope": "REWARD_VALUE_AUTHORITY",
+      "severity": "P1",
+      "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger or holdings before expanding access beyond the current owner-only site."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "Production moved to the owner-owned Worker at my.sevengodsgames.com behind Cloudflare Access with a single allowed email. Public or shared access, additional viewers, search indexing and public release remain unauthorized; the old Sites Version 14 stays frozen as rollback.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency and actual-screen gates before any audience expansion."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+    },
+    {
+      "blocker_id": "BLK-SITES-EXPORT-UNAVAILABLE-001",
+      "scope": "LEGACY_DATA_RECOVERY",
+      "severity": "P3",
+      "description": "Sites Version 14 predates /api/admin/export, and its D1 lives in an account the owner cannot reach, so legacy ledger data cannot be extracted by any available means. The owner confirmed there was no real usage, so nothing of value is stranded; recording this so a future request to recover it is not attempted as if possible.",
+      "owner": "SGG project owner",
+      "status": "RESOLVED",
+      "resolution_required": "None. Confirmed unrecoverable and confirmed empty of real usage; the new production starts clean."
+    },
+    {
+      "blocker_id": "BLK-SECRET-EXPOSURE-001",
+      "scope": "CREDENTIAL_HYGIENE",
+      "severity": "P2",
+      "description": "The working Discord client secret was rendered in plaintext by the developer portal and captured in a session screenshot before it could be avoided. It is valid and in use.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Reset the client secret once more and upload it; the verified procedure takes two minutes."
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "migration/STATE_UPDATE_CP000047_CUTOVER.json",
+      "reason": "Record the production cutover and its two blocking discoveries."
+    },
+    {
+      "path": "wrangler.owner.jsonc",
+      "reason": "Custom domain route attached after Access was confirmed."
+    },
+    {
+      "path": "docs/OWNER_DEPLOY_RUNBOOK.md",
+      "reason": "Creation step marked done; migration loop covers 0006."
+    },
+    {
+      "path": ".dev.vars.example",
+      "reason": "Env surface unchanged; secret rotation mirrored locally."
+    }
+  ],
+  "resume": {
+    "action_id": "ACT-015",
+    "instruction": "Production is live behind Access for one email. Do the two-account isolation check before adding anyone, rotate the exposed client secret, and link a wallet from a wallet-capable browser to verify the NFT gallery on production.",
+    "do_not_assume": [
+      "Legacy Sites data can be recovered; the export endpoint does not exist there and the D1 is unreachable.",
+      "The NFT gallery is broken on production; no wallet is linked yet, which is why it shows nothing.",
+      "The current Discord client secret is private; it appeared in a session screenshot and should be rotated.",
+      "Sites may be deleted; it stays frozen as the rollback target."
+    ]
+  }
+}
