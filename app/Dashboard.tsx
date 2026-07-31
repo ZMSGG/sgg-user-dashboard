@@ -177,35 +177,6 @@ function otomoHoldingTotal(data: HoldingsData | null): string {
   return String(otomo.reduce((sum, item) => sum + Number(item.balance ?? 0), 0));
 }
 
-type GachaCardView = {
-  id: string;
-  pairId: string;
-  godName: string;
-  otomoName: string;
-  form: "SPIRIT" | "INCARNATE" | "DOJI";
-  formLabel: string;
-  rarity: "N" | "R" | "SR";
-  art: string;
-  accent: Accent;
-  owned: number;
-};
-
-type GachaData = {
-  poolId: string;
-  cost: { currency: string; amount: number };
-  balance: number;
-  cards: GachaCardView[];
-};
-
-async function requestGacha(): Promise<GachaData> {
-  const response = await fetch("/api/gacha", {
-    headers: { accept: "application/json" },
-    cache: "no-store",
-  });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return await response.json() as GachaData;
-}
-
 type OwnedTokenView = { tokenId: number; name: string | null; image: string | null; thumb: string | null };
 type TokenPageView = { supported: boolean; total: number; tokens: OwnedTokenView[]; nextOffset: number | null };
 
@@ -371,6 +342,11 @@ function GameCard({
 }) {
   return (
     <article className={styles.gameCard} data-tone={game.accent}>
+      {game.releaseState === "MAINTENANCE" && (
+        <div className={styles.constructionTape} aria-hidden="true">
+          <span>⚠ UNDER CONSTRUCTION ⚠</span>
+        </div>
+      )}
       <div className={styles.gameCardTop}>
         <StatusPill accent={game.accent}>
           {game.releaseState === "LIVE" && <Dot active={runtimeState === "online"} />}
@@ -402,7 +378,11 @@ function GameCard({
         <div><strong>{game.nextAction}</strong><small>{game.nextActionMeta}</small></div>
       </div>
       <div className={styles.cardActions}>
-        {game.officialUrl ? (
+        {game.releaseState === "MAINTENANCE" ? (
+          // Under construction: the deployment exists but play links are
+          // withheld until the rework is done.
+          <button type="button" className={styles.primaryAction} disabled>工事中</button>
+        ) : game.officialUrl ? (
           <ExternalLink href={game.officialUrl} className={styles.primaryAction}>
             {game.primaryAction}
           </ExternalLink>
@@ -411,8 +391,8 @@ function GameCard({
             {watched ? "ウォッチ中" : game.primaryAction}<span aria-hidden="true">{watched ? "✓" : "+"}</span>
           </button>
         )}
-        {game.rankingUrl && <ExternalLink href={game.rankingUrl}>ランキング</ExternalLink>}
-        {game.guideUrl && <ExternalLink href={game.guideUrl}>ガイド</ExternalLink>}
+        {game.releaseState !== "MAINTENANCE" && game.rankingUrl && <ExternalLink href={game.rankingUrl}>ランキング</ExternalLink>}
+        {game.releaseState !== "MAINTENANCE" && game.guideUrl && <ExternalLink href={game.guideUrl}>ガイド</ExternalLink>}
       </div>
     </article>
   );
@@ -438,10 +418,6 @@ export function Dashboard() {
   const [nftTokens, setNftTokens] = useState<OwnedTokenView[]>([]);
   const [nftPage, setNftPage] = useState<{ total: number; nextOffset: number | null }>({ total: 0, nextOffset: null });
   const [nftState, setNftState] = useState<LoadState>("idle");
-  const [gacha, setGacha] = useState<GachaData | null>(null);
-  const [gachaState, setGachaState] = useState<LoadState>("idle");
-  const [gachaBusy, setGachaBusy] = useState(false);
-  const [lastPull, setLastPull] = useState<GachaCardView | null>(null);
   const [walletBusy, setWalletBusy] = useState(false);
   const [walletChoices, setWalletChoices] = useState<WalletProviderDetail[] | null>(null);
   const [guildBusy, setGuildBusy] = useState(false);
@@ -605,29 +581,6 @@ export function Dashboard() {
     }
   }, [nftViewer, nftPage.nextOffset, nftState]);
 
-  const drawGacha = useCallback(async () => {
-    if (gachaBusy) return;
-    setGachaBusy(true);
-    try {
-      const result = await postJson<{ ok: boolean; card: GachaCardView; balance: number }>(
-        "/api/gacha",
-        { idempotencyKey: crypto.randomUUID() },
-      );
-      setLastPull(result.card);
-      setGacha((prev) => prev && {
-        ...prev,
-        balance: result.balance,
-        cards: prev.cards.map((card) =>
-          card.id === result.card.id ? { ...card, owned: card.owned + 1 } : card),
-      });
-      void refreshPassport();
-    } catch (error) {
-      setToast(error instanceof Error ? error.message : "ガチャを引けませんでした");
-    } finally {
-      setGachaBusy(false);
-    }
-  }, [gachaBusy, refreshPassport]);
-
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       void refreshPassport();
@@ -656,17 +609,6 @@ export function Dashboard() {
           setHoldingsState("ready");
         } catch {
           if (!cancelled) setHoldingsState("error");
-        }
-      })();
-      setGachaState("loading");
-      void (async () => {
-        try {
-          const data = await requestGacha();
-          if (cancelled) return;
-          setGacha(data);
-          setGachaState("ready");
-        } catch {
-          if (!cancelled) setGachaState("error");
         }
       })();
     }, 0);
@@ -936,7 +878,11 @@ export function Dashboard() {
       : "この端末ではウォッチ設定を保存できません");
   };
 
-  const filteredGames = games.filter((game) => game.releaseState === gameFilter);
+  // 工事中 titles stay on the front shelf next to the live ones — visible but
+  // closed — rather than disappearing into 休眠中.
+  const filteredGames = games.filter((game) => gameFilter === "LIVE"
+    ? game.releaseState === "LIVE" || game.releaseState === "MAINTENANCE"
+    : game.releaseState === gameFilter);
   const currentForm = otomoForms.find((form) => form.code === formFilter) ?? otomoForms[0];
   const getRuntimeState = (gameId: string): SourceState => {
     const runtimeKey = runtimeKeyByGameId[gameId];
@@ -1066,7 +1012,7 @@ export function Dashboard() {
                     <h1 id="hero-title">遊ぶ。競う。集める。<br /><em>すべてを、ひとつに。</em></h1>
                   </div>
                   <nav className={styles.stageMenu} aria-label="クイックメニュー">
-                    <button type="button" onClick={() => changeView("collection")}><span className={styles.stageMenuIcon} data-tone="violet">☽</span>ガチャ</button>
+                    <button type="button" onClick={() => changeView("collection")}><IconOtomo className={styles.stageMenuSvg} />ガチャ</button>
                     <button type="button" onClick={() => changeView("collection")}><IconVault className={styles.stageMenuSvg} />図鑑</button>
                     <button type="button" onClick={() => changeView("arena")}><IconArena className={styles.stageMenuSvg} />闘技</button>
                     <button type="button" onClick={() => changeView("games")}><IconGames className={styles.stageMenuSvg} />出撃</button>
@@ -1240,58 +1186,29 @@ export function Dashboard() {
               </section>
               <section className={styles.gachaSection} data-tone="violet">
                 <SectionTitle
-                  kicker="ZUKAN GACHA / 図鑑ガチャ"
-                  title="勾玉で図鑑カードを引く"
+                  kicker="GODS GACHA / GODSガチャ"
+                  title="GコインでGODSガチャを引く"
                   copy="ダッシュボード限定のコレクションカード。NFTでもゲームアイテムでもなく、順位や報酬には影響しません。"
                 />
-                {!passport?.connected ? (
-                  <p className={styles.holdingsNote}>Discord Passportに接続するとガチャが利用できます。</p>
-                ) : gachaState === "loading" ? (
-                  <p className={styles.holdingsNote}>ガチャを準備しています…</p>
-                ) : gachaState === "error" ? (
-                  <p className={styles.holdingsNote}>ガチャ情報を取得できませんでした。再読み込みしてください。</p>
-                ) : gacha && (
-                  <div className={styles.gachaPanel}>
-                    <div className={styles.gachaMeter}>
-                      <span data-tone="violet"><i aria-hidden="true">☽</i><b>{number.format(gacha.balance)}</b><small>勾玉</small></span>
-                      <p>1回 {gacha.cost.amount} 勾玉。勾玉の配布はイベント・大会と連動予定（配布運用は準備中）。</p>
-                      <button
-                        type="button"
-                        className={styles.primaryAction}
-                        onClick={() => void drawGacha()}
-                        disabled={gachaBusy || gacha.balance < gacha.cost.amount}
-                      >
-                        {gachaBusy ? "召喚中…" : gacha.balance < gacha.cost.amount ? "勾玉が足りません" : "ガチャを引く"}
-                      </button>
-                    </div>
-                    {lastPull && (
-                      <figure className={styles.gachaResult} data-tone={lastPull.accent} data-rarity={lastPull.rarity}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={lastPull.art} alt={`${lastPull.otomoName}（${lastPull.formLabel}）`} />
-                        <figcaption>
-                          <b data-rarity={lastPull.rarity}>{lastPull.rarity}</b>
-                          <strong>{lastPull.otomoName}</strong>
-                          <span>{lastPull.godName} × {lastPull.otomoName} · {lastPull.formLabel}</span>
-                        </figcaption>
-                      </figure>
-                    )}
-                  </div>
-                )}
-                {passport?.connected && gacha && (
-                  <div className={styles.cardShelf}>
-                    {gacha.cards.map((card) => (
-                      <figure key={card.id} data-tone={card.accent} data-owned={card.owned > 0 ? "true" : "false"}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={card.art} alt={card.owned > 0 ? `${card.otomoName}（${card.formLabel}）` : "未獲得カード"} loading="lazy" />
-                        <figcaption>
-                          <b data-rarity={card.rarity}>{card.rarity}</b>
-                          <span>{card.otomoName} · {card.formLabel}</span>
-                          <small>{card.owned > 0 ? `×${card.owned}` : "未獲得"}</small>
-                        </figcaption>
-                      </figure>
-                    ))}
-                  </div>
-                )}
+                <div className={styles.gachaTeaser}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/dashboard-art/gacha/gacha-teaser.png" alt="OTOMOたちが金色の宝珠ガチャを覗き込むティザービジュアル" loading="lazy" />
+                  <span className={styles.prepSeal}>準備中</span>
+                </div>
+                <p className={styles.holdingsNote}>GODSガチャは準備中です。Gコインの配布はイベント・大会と連動予定。公開までお待ちください。</p>
+              </section>
+              <section className={styles.gachaSection} data-tone="gold">
+                <SectionTitle
+                  kicker="OTOMO ZUKAN / OTOMO図鑑"
+                  title="出会ったOTOMOを図鑑に記録"
+                  copy="ガチャやイベントで出会ったOTOMOが自動で埋まっていくコレクション図鑑。"
+                />
+                <div className={styles.gachaTeaser}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/dashboard-art/gacha/zukan-teaser.png" alt="開いた図鑑の上で遊ぶOTOMOたちのティザービジュアル" loading="lazy" />
+                  <span className={styles.prepSeal}>準備中</span>
+                </div>
+                <p className={styles.holdingsNote}>OTOMO図鑑は準備中です。GODSガチャと同時に公開予定。公開までお待ちください。</p>
               </section>
               <section>
                 <SectionTitle
@@ -1308,7 +1225,7 @@ export function Dashboard() {
                       <span className={styles.pairNumber}>PAIR {String(index + 1).padStart(2, "0")}</span>
                       <div className={styles.pairArt}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={`/dashboard-art/pairs/pair-${pair.godId.toLowerCase()}.png`} alt={`${pair.godName}と${pair.otomoName}の肖像`} loading="lazy" />
+                        <img src={`/dashboard-art/pairs/pair-${pair.godId.toLowerCase()}-${formFilter.toLowerCase()}.png`} alt={`${pair.godName}と${pair.otomoName}（${currentForm.label}）の肖像`} loading="lazy" />
                       </div>
                       <div><small>{pair.godId}</small><h3>{pair.godName}</h3></div>
                       <i aria-hidden="true">×</i>
@@ -1675,10 +1592,24 @@ export function Dashboard() {
               <aside className={styles.followPanel}>
                 <p>COMMUNITY SNS</p><h2>公式チャンネル</h2><span>SGGの公式SNS・外部アプリへの導線です。</span>
                 <div className={styles.snsList}>
-                  <a href="https://sevengodsgames.com/" target="_blank" rel="noopener noreferrer"><span>LP</span><small>公式サイト ↗</small></a>
-                  <a aria-disabled="true"><span>ディスコード</span><small>公開導線を準備中</small></a>
+                  <a href="https://sevengodsgames.com/" target="_blank" rel="noopener noreferrer"><span>SGG LP</span><small>sevengodsgames.com ↗</small></a>
+                  <a href="https://seven-gods.com/" target="_blank" rel="noopener noreferrer"><span>SG LP</span><small>seven-gods.com ↗</small></a>
                   <a href="https://x.com/SEVENGODSGAMES" target="_blank" rel="noopener noreferrer"><span>X</span><small>@SEVENGODSGAMES ↗</small></a>
-                  <a href="https://app.seven-terakoya.com/" target="_blank" rel="noopener noreferrer"><span>SEVENDAOapp</span><small>MVP／DEMO ↗</small></a>
+                  <a href="https://discord.gg/3ByquYMHUp" target="_blank" rel="noopener noreferrer"><span>ディスコード</span><small>招待リンク ↗</small></a>
+                  <a aria-disabled="true"><span>SEVENDAOapp</span><small>準備中</small></a>
+                </div>
+              </aside>
+              {/* 公式マーケット — the collections' own OpenSea pages and the SDT
+                  DEX. Labels follow each collection's actual contents, which the
+                  slugs match (SEIREITAI / JUNIKUTAI / DOUJI). */}
+              <aside className={styles.followPanel}>
+                <p>OFFICIAL MARKET</p><h2>公式マーケット</h2><span>SEVENGODSとOTOMOの公式コレクション、SDTの取引先です。</span>
+                <div className={styles.snsList}>
+                  <a href="https://opensea.io/ja/collection/seven-gods?activityTypes=sale" target="_blank" rel="noopener noreferrer"><span>SEVENGODS</span><small>OpenSea ↗</small></a>
+                  <a href="https://opensea.io/ja/collection/otomo-douji" target="_blank" rel="noopener noreferrer"><span>OTOMO 童子</span><small>OpenSea ↗</small></a>
+                  <a href="https://opensea.io/ja/collection/otomo-junikutai" target="_blank" rel="noopener noreferrer"><span>OTOMO 受肉体</span><small>OpenSea ↗</small></a>
+                  <a href="https://opensea.io/ja/collection/otomo-seireitai" target="_blank" rel="noopener noreferrer"><span>OTOMO 精霊体</span><small>OpenSea ↗</small></a>
+                  <a href="https://dex.scenttoken.com/trade" target="_blank" rel="noopener noreferrer"><span>SDT</span><small>SCENT DEX ↗</small></a>
                 </div>
               </aside>
             </div>

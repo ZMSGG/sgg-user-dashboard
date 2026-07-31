@@ -1,0 +1,24 @@
+Use case: stylized-concept
+Asset type: landscape game thumbnail for the cultivation-and-harvest game “OTOMO FARM 77”
+Output: one single finished landscape image, exactly 1536×1024 pixels, 3:2 aspect ratio
+
+Input images and roles:
+- Image 1: identity reference only for HAKU, Incarnate Form. Preserve the exact recognizable crane-like white OTOMO design shown in Image 1: red crown/cap, long golden beak, simple black oval eyes, soft pink cheek blush, pale gray-blue head and neck, white rounded body and wings with dark gray feather tips, thin dark legs, golden chrysanthemum motifs, and the same soft polished anime texture and proportions. Do not turn HAKU into a fox. Ignore and do not reproduce Image 1’s background or human figure.
+- Image 2: identity reference only for JUKA, Incarnate Form. Preserve the exact recognizable orange deer OTOMO design shown in Image 2: large branching brown antlers, rounded orange body, simple black dot eyes, cheek blush, white muzzle and belly, white forehead spots, yellow leaf/sun motif on the side, dark hooves, and the same soft polished anime texture and proportions. Ignore and do not reproduce Image 2’s background or human figure.
+- Image 3: identity reference only for TAIMARU, Incarnate Form. Preserve the exact recognizable round red-pink sea-bream OTOMO design shown in Image 3: simple black oval eyes, pink cheek blush, small oval mouth, white cherry-blossom markings, glossy rounded fish body, translucent coral fins and tail, and the same soft polished anime texture and proportions. Ignore and do not reproduce Image 3’s background or human figure.
+
+Primary request: Create a completely new farming scene featuring exactly these three OTOMO characters, each immediately recognizable as the same character from its identity reference. HAKU uses a small hand hoe to till a neat vegetable bed. JUKA cheerfully waters young glowing crops with a small traditional watering can. TAIMARU carries a generous harvested bundle containing golden ripe rice stalks and clean white daikon radishes. Their poses, camera angle, action, and scene must be fully original and must not copy any reference composition.
+
+Scene/backdrop: Beautiful terraced rice paddies and cultivated fields in a sacred realm at twilight. Luminous divine crops grow in tidy rows. Golden particles drift through the air. In the middle distance are a vermilion torii gate, warm paper lanterns, stone edging, irrigation channels catching the sunset, and a cozy Japanese farming village among soft hills. No people anywhere.
+
+Style/medium: premium Japanese mythic-future anime game key art; polished cel shading blended with painterly environmental detail; cute mascot clarity; rich depth; cohesive lighting; crisp silhouette readability at thumbnail size.
+
+Composition/framing: wide 3:2 cinematic establishing view with the three OTOMO at clear foreground-to-midground working positions, each fully visible and substantial in frame, balanced triangular grouping, no collage, no panels, no borders. Keep faces and signature motifs unobstructed. The farm actions must read instantly at small thumbnail scale while still showing the terraced landscape.
+
+Lighting/mood: warm golden twilight against soft indigo-violet sky, gentle lantern glow, luminous crops and floating gold motes; idyllic, wholesome, peaceful, playful, joyful.
+
+Color palette: harvest gold, vermilion, rice-field green, warm earth, twilight indigo; preserve each character’s exact reference colors.
+
+Identity invariants: Preserve each character’s face construction, black eyes, cheek blush, body shape, proportions, colors, Japanese motifs, material finish, and Incarnate Form identity. Do not redesign, hybridize, recolor, add clothing, or change species. Exactly three OTOMO only: HAKU, JUKA, TAIMARU.
+
+Constraints: completely new poses and background; all tools held naturally; rice stalks and daikon clearly identifiable; family-friendly; no human characters; no humanoid characters; no extra animals or mascots; no gods; no text; no title lettering; no logo; no watermark; no signature; no UI; no buttons; no icons; no labels; no frame.

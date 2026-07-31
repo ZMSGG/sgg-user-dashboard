@@ -251,8 +251,10 @@ test("keeps publication claims aligned with the deployment registry", async () =
   assert.match(data, /otomo-farm-77\.vercel\.app/);
   // Only OTOMO CHAIN 7 and OTOMO FARM 77 are being taken to market; every
   // other built title reads 休眠中 rather than claiming a release state.
+  // FARM is closed for rework (工事中, owner direction 2026-07-31): still on
+  // the front shelf, but its play links are withheld.
   assert.match(data, /id: "otomo-chain-7"[\s\S]*?releaseState: "LIVE"/);
-  assert.match(data, /id: "otomo-farm-77"[\s\S]*?releaseState: "LIVE"/);
+  assert.match(data, /id: "otomo-farm-77"[\s\S]*?releaseState: "MAINTENANCE"/);
   for (const dormant of ["otomo-quest-77", "otomo-oracle-7", "taiyo-action-rpg", "ebisu-fishing-77"]) {
     assert.match(data, new RegExp(`id: "${dormant}"[\\s\\S]*?releaseState: "DORMANT"`));
   }

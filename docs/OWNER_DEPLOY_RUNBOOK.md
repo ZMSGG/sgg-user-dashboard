@@ -21,10 +21,11 @@ export→import 往復（実データで件数一致）。
 ## 2. 新D1の作成と適用
 
 ```bash
-npx wrangler d1 create my-sgg-player-os
-# 出力の database_id を wrangler.owner.jsonc に転記
-for f in drizzle/0000*.sql drizzle/0001*.sql drizzle/0002*.sql drizzle/0003*.sql drizzle/0004*.sql drizzle/0005*.sql; do
-  npx wrangler d1 execute my-sgg-player-os --remote --file="$f"
+# 実行済み 2026-07-30: database_id d64ba138-578d-4c4b-b16d-5150de56d992（APAC）
+# npx wrangler d1 create my-sgg-player-os
+# マイグレーションは 0000〜0006 を順に。新規追加時はここも伸ばすこと。
+for f in drizzle/000*.sql; do
+  npx wrangler d1 execute my-sgg-player-os --remote --config wrangler.owner.jsonc --file="$f"
 done
 node scripts/import-export.mjs my-sgg-export.json > import.sql
 npx wrangler d1 execute my-sgg-player-os --remote --file=import.sql

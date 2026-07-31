@@ -3,8 +3,8 @@
 > Derived view. `PROJECT_STATE.json` and its immutable checkpoint are authoritative.
 
 Project ID: `PRJ-202607-sgg-user-dashboard`  
-State version: `45`  
-Updated: `2026-07-30T21:18:52+08:00`  
+State version: `46`  
+Updated: `2026-07-30T21:35:12+08:00`  
 Status: `REVIEW`  
 Phase: `PRIVATE_DEPLOYED`
 
@@ -14,8 +14,8 @@ Deploy the verified connection layer and the complete NFT gallery (all four coll
 
 ## Last checkpoint
 
-- ID: `CP-000045`
-- Summary: アリーナ emptied to an honest 準備中 placeholder on the owner's direction (four mobile screenshots of the arena, then 「削除」; the owner chose to keep the tab and delete the contents). Removed: the 神託番付 and シーズン序列 live boards, the 公開ランキング competition-card grid, the PUBLISHED EVENTS empty state, and the FAIR PLAY note whose copy was untranslated pipeline jargon (raw gameplay → ranking → SGG_GAME_POINTS → reward candidate). What replaces them states plainly what the screen will hold and that nothing ships until it can be shown. The removal was followed through the rest of the surface rather than left half-done: the home 開催中の大会 card no longer prints a competition count that nothing backs and now reads 準備中/アリーナを見る; the desktop dock's 神託 button, a shortcut to the deleted oracle board that merely duplicated アリーナ, is gone; the home quick menu's 番付 became 闘技 to match its destination. Dead code went with it — CompetitionCard, Leaderboard, the competitions/Competition/LiveRanking/IconOracle imports, oracleSourceState/questSourceState, loadLiveData and the syncing flag — leaving lint clean; syncLiveData and its effects are untouched, so the home banner and play-view runtime health still load. A layout defect the near-empty screen exposed was fixed at the root: .shell is now a flex column with .content growing, so a short view pushes the footer to the bottom instead of stranding it mid-screen above ~300px of dead space. The two honesty guards in rendered-html.test.mjs were re-pointed at the new copy rather than weakened. Verified at 375x812 and on desktop: arena, home, play, collection, community, マイSGG all lay out with no horizontal overflow. 91 tests, lint, typecheck, production build pass.
+- ID: `CP-000046`
+- Summary: Owner chose the Codex-independent path and a core-member audience, so the owner-side production was actually stood up rather than left as a validated plan. Preconditions were checked on the live account rather than trusted from the runbook: wrangler is authenticated as the owner (8b32932…), sevengodsgames.com is an active zone there, and my.sevengodsgames.com resolves to nothing yet. A release commit was made first (7bb40f0). Preparing it exposed a real leak the previous Sites releases had avoided by hand: the rejected swarm lot still sat in public/, and the build copies public/ wholesale into dist/client, so 29 unapproved sprites would have shipped as fetchable production assets. They were moved to assets/rejected/swarm-v002/ with a .gitignore guard, and a clean rebuild confirms dist carries none. Then: D1 my-sgg-player-os created in APAC (d64ba138-578d-4c4b-b16d-5150de56d992), migrations 0000–0006 applied and verified remotely (all 9 expected tables present, including the 0006 cache table), the id written into wrangler.owner.jsonc, the runbook corrected to cover 0006, and the Worker deployed with both bindings resolving. It is deliberately unreachable: workers_dev stays false, wrangler reports no deploy targets, and the workers.dev host returns 404. What remains needs the owner: the Sites data export (admin login), ten secrets (values Claude must not handle), the Cloudflare Access application, and the Discord redirect URI. Access must exist before the domain is attached, or the site is briefly public — Claude will attach the domain only after Access is confirmed. BLK-DISCORD-E2E-001 still gates adding any viewer. 91 tests, lint, typecheck and a clean build pass.
 
 ## Blockers
 
@@ -30,15 +30,18 @@ Deploy the verified connection layer and the complete NFT gallery (all four coll
 
 ## Next actions
 
-1. `ACT-039` [READY] Owner redeploys through Sites (the NFT gallery, widened image CSP and connection layer ride it). — Owner: SGG project owner
-2. `ACT-022` [READY] Add the OTOMO CHAIN redirect URI to the MY SGG Discord app and set DISCORD_CLIENT_ID/SECRET in Vercel so discord_enabled becomes true. — Owner: SGG project owner
-3. `ACT-018` [BLOCKED] After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table. — Owner: SGG project owner
-4. `ACT-024` [READY] Review the two drifted command-center policy hashes. — Owner: SGG project owner
-5. `ACT-015` [BLOCKED] Two-account isolation check before adding any viewer. — Owner: SGG project owner
-6. `ACT-012` [BLOCKED] Sharp upgrade when supported. — Owner: SGG engineering owner
-7. `ACT-006` [BLOCKED] Player snapshot bridges per game. — Owner: SGG game platform owner
-8. `ACT-008` [BLOCKED] Separate authority before audience expansion. — Owner: SGG project owner
+1. `ACT-042A` [READY] Sites本番に管理者ログインし GET /api/admin/export を保存してClaudeに渡す（インポートはClaudeが実行）。 — Owner: SGG project owner
+2. `ACT-042B` [READY] wrangler secret put で10個のシークレットを投入（APP_ORIGIN=https://my.sevengodsgames.com）。値はClaudeが扱えない。 — Owner: SGG project owner
+3. `ACT-042C` [READY] Cloudflare Zero Trust で my.sevengodsgames.com のAccess applicationとコアメンバー許可ポリシーを作成（ドメイン接続より先）。 — Owner: SGG project owner
+4. `ACT-042D` [READY] Discord Developer Portal に redirect URI https://my.sevengodsgames.com/api/auth/discord/callback を追加。 — Owner: SGG project owner
+5. `ACT-042E` [BLOCKED] Access確認後、Claudeがカスタムドメインを接続し到達確認・401確認・データ突合を実施。 — Owner: Claude
+6. `ACT-015` [BLOCKED] 2アカウント分離テスト（オーナー＋協力者1名）。閲覧者追加はこの後。 — Owner: SGG project owner
+7. `ACT-018` [BLOCKED] After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table. — Owner: SGG project owner
+8. `ACT-024` [READY] Review the two drifted command-center policy hashes. — Owner: SGG project owner
+9. `ACT-012` [BLOCKED] Sharp upgrade when supported. — Owner: SGG engineering owner
+10. `ACT-006` [BLOCKED] Player snapshot bridges per game. — Owner: SGG game platform owner
+11. `ACT-008` [BLOCKED] Separate authority before audience expansion. — Owner: SGG project owner
 
 ## Resume exactly here
 
-`ACT-039` — Deployment through Sites remains the owner's step (migration 0006 must ride it). アリーナ stays 準備中 until real competition data exists; the deleted boards are recoverable from git history for the rebuild.
+`ACT-042A` — Owner supplies the export, the ten secrets, the Access application and the Discord redirect URI. Only then does Claude attach the domain. Nothing is reachable until that point.

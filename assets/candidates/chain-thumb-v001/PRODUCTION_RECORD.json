@@ -1,0 +1,110 @@
+{
+  "recordVersion": 1,
+  "recordedAt": "2026-07-31T08:55:16+08:00",
+  "projectId": "PRJ-202607-sgg-user-dashboard",
+  "assetId": "MEDIA-otomo-chain-7-thumb-a-v001",
+  "batchId": "chain-thumb-v001",
+  "tool": {
+    "provider": "OpenAI",
+    "product": "GPT Image / Image 2.0",
+    "mode": "Codex built-in image generation with identity references",
+    "externalGeneratorUsed": false
+  },
+  "use": {
+    "surface": "OTOMO CHAIN 7 game thumbnail",
+    "characterUsage": "OTOMO",
+    "characterUsageReason": "The three OTOMO are the subject of the game thumbnail.",
+    "status": "CANDIDATE",
+    "selected": false,
+    "approved": false,
+    "published": false,
+    "runtimeIntegrated": false,
+    "scope": "private owner review only"
+  },
+  "sourceRights": {
+    "status": "APPROVED_FOR_REFERENCE",
+    "evidence": [
+      {
+        "file": "assets/ASSET_MANIFEST.csv",
+        "sha256": "c856ccbf3055eb9b7d779e58f8602c43d03cac4d4d5ba1d8ccbd44a6cd2e5391",
+        "result": "The three referenced batch-01 cardfaces are recorded as approved Image 2.0 assets."
+      },
+      {
+        "file": "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260729-001.json",
+        "sha256": "8497389f3943c4577930460082f519cedab09ab297554c39c70d5735b9186bd3",
+        "result": "The batch-01 cardfaces lot is owner-approved; public/shared release remains separately gated."
+      }
+    ]
+  },
+  "identityReferences": [
+    {
+      "role": "Image 1: Taimaru INCARNATE identity reference",
+      "characterFamily": "OTOMO",
+      "canonicalId": "taimaru",
+      "form": "INCARNATE",
+      "file": "public/dashboard-art/cards/faces/taimaru-incarnate.png",
+      "sha256": "175e7a694433d4aa5633564e55cd937b31079644a9c24f38087859538fee1a74"
+    },
+    {
+      "role": "Image 2: Juka INCARNATE identity reference",
+      "characterFamily": "OTOMO",
+      "canonicalId": "juka",
+      "form": "INCARNATE",
+      "file": "public/dashboard-art/cards/faces/juka-incarnate.png",
+      "sha256": "c464a7badcee15f1fe22fc7ac9a6096de8c6f3f958bfd7f1c2573ce5fb349836"
+    },
+    {
+      "role": "Image 3: Haku INCARNATE identity reference",
+      "characterFamily": "OTOMO",
+      "canonicalId": "haku",
+      "form": "INCARNATE",
+      "file": "public/dashboard-art/cards/faces/haku-incarnate.png",
+      "sha256": "46a260dc65a879ccdf6ef5a2a3510219dd312e3d42837af69866fa2c602845ff",
+      "canonResolution": "The supplied description called Haku a white fox, but the reference and project evidence identify Haku as a white crane chick. The generated asset preserves the crane identity."
+    }
+  ],
+  "image2Production": {
+    "mode": "GENERATE_NEW_SCENE_FROM_IDENTITY_REFERENCES",
+    "referenceBackgroundsOrPosesCopied": false,
+    "privateSourceDirectlyEmbedded": false,
+    "recreation": "A new three-quarter rear view on a shrine engawa, with the three OTOMO playing separate abstract lantern-shaped holographic games at night.",
+    "finalPrompt": "Use case: stylized-concept\nAsset type: landscape game thumbnail for 『OTOMO CHAIN 7』, exact final canvas 1536×1024 pixels, 3:2 landscape, full bleed.\nInput images: Image 1 is the identity reference for OTOMO Taimaru in INCARNATE form; Image 2 is the identity reference for OTOMO Juka in INCARNATE form; Image 3 is the identity reference for OTOMO Haku in INCARNATE form. Use the images only as character-identity references. Do not copy their poses, camera angles, background scenes, human figures, props, or layouts.\nPrimary request: Create a completely new warm, playful cinematic thumbnail. At a twilight-to-night Japanese shrine sanctuary, the three spirit beasts sit in one horizontal row on a wooden engawa veranda, seen from behind to a three-quarter rear angle. Each is absorbed in playing a game on a separate floating Japanese lantern-shaped holographic display directly in front of them. The displays are magical luminous frames with abstract non-textual light patterns only, not literal app UI.\nCharacter identity invariants: Keep each character immediately recognizable and faithful to its reference: same species, silhouette, proportions, body shape, facial construction when partly visible in three-quarter profile, simple black dot eyes, soft rosy cheeks, canonical color placement, Japanese motifs, and smooth plush/glossy illustrated texture. Taimaru is the round coral-red/pink tai fish spirit with sakura-blossom markings and small fins. Juka is the round orange fawn/deer spirit with dark antlers, pale muzzle and belly, white forehead spots, and yellow leaf-like side marking. Haku is the white crane chick spirit shown in Image 3, with a red crown patch, gray neck/wing accents, golden beak, slender dark legs, and golden chrysanthemum motifs. Haku must remain a crane/bird and must not become a fox.\nNew actions: Give all three clearly different poses while still seated: one leans far forward in concentration; one lifts a fin/foreleg/wing in delighted victory; one sits still and stares intensely at the screen. Preserve anatomical logic for each species. No duplicated pose.\nScene/backdrop: sacred Japanese shrine precinct at blue hour fading into night, wooden veranda, hints of shrine pillars and garden beyond, warm hanging lantern glow, delicate golden particles drifting in the air. No torii copied from the references; create a new setting.\nComposition/framing: cinematic wide thumbnail, camera slightly elevated behind the trio, all three full silhouettes clearly separated and readable, centered group across the middle, displays hovering in front of them, layered depth from veranda foreground to shrine garden background. Keep important characters and displays inside safe margins; no cropping of heads or defining features.\nLighting/mood: warm, cozy, joyful and magical. Cool indigo ambient night light plus amber lanterns and soft cyan-gold hologram light wrapping around the three bodies. Strong readable rim light, polished high-end Japanese mythic game key art.\nStyle/medium: premium stylized Japanese fantasy game illustration; cute mascot proportions; crisp clean character edges combined with painterly cinematic environment; rich detail but uncluttered focal hierarchy.\nText: none.\nConstraints: exactly three OTOMO only; OTOMO forms are INCARNATE / INCARNATE / INCARNATE; no humans; no human characters from the source images; no extra creatures; no readable text, title, logo, watermark, signature, numbers, letters, labels, captions, interface buttons, controller icons, menus, HUD, badges, borders, or frames. The lantern-shaped holograms may contain only abstract luminous lines, linked-orb motifs, and non-semantic magical patterns. Do not reproduce source backgrounds or poses. Do not redesign any character."
+  },
+  "otomoFormPlan": {
+    "file": "assets/candidates/chain-thumb-v001/OTOMO_FORM_PLAN.csv",
+    "distribution": {
+      "SPIRIT": 0,
+      "INCARNATE": 3,
+      "DOJI": 0
+    },
+    "balanceStatus": "CANDIDATE_REQUIRES_UPPER_PERIOD_REVIEW",
+    "note": "All three source identities are explicitly INCARNATE. Before approval or release, account for this single-thumbnail concentration in the OTOMO CHAIN 7 MARKETING-channel period plan or record a valid exception."
+  },
+  "output": {
+    "generatedSource": "codex-generated://019fb5a6-a763-7042-9e52-a38a7b590db4/call_IziUaEMhvmJI7IuQPCzZKLqN.png",
+    "finalFile": "assets/candidates/chain-thumb-v001/chain-thumb-a.png",
+    "format": "PNG",
+    "dimensions": "1536x1024",
+    "colorType": "8-bit RGB",
+    "sha256": "010b1464c9f500f71ed2988c71528738b2f3d25cffe02300c1f4495acbff85f5"
+  },
+  "visualQa": {
+    "reviewer": "Codex visual QA",
+    "reviewedAt": "2026-07-31T08:55:16+08:00",
+    "result": "PASS_AS_CANDIDATE",
+    "finalCropChecked": true,
+    "identityCheck": "Taimaru, Juka, and Haku remain distinguishable by species, silhouette, palette, markings, and texture.",
+    "sceneCheck": "New rear three-quarter shrine-engawa composition; exactly three OTOMO; three separate lantern holograms; no human character.",
+    "textCheck": "No readable text, logo, watermark, labels, UI buttons, or OCR-detected text.",
+    "machineChecks": [
+      "PNG decodes as non-interlaced 1536x1024 RGB.",
+      "SHA-256 recorded.",
+      "Tesseract returned no text."
+    ]
+  },
+  "releaseBoundary": {
+    "approved": false,
+    "publishable": false,
+    "reason": "This record documents generation and candidate QA only. Owner visual approval, form-balance review, project checkpointing, and release authorization remain separate."
+  }
+}

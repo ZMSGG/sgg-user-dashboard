@@ -1,0 +1,409 @@
+{
+  "schema_version": 1,
+  "authority": "SGG_PROJECT_CHECKPOINT",
+  "checkpoint_id": "CP-000046",
+  "state_version": 46,
+  "created_at": "2026-07-30T21:35:12+08:00",
+  "previous_checkpoint_id": "CP-000045",
+  "summary": "Owner chose the Codex-independent path and a core-member audience, so the owner-side production was actually stood up rather than left as a validated plan. Preconditions were checked on the live account rather than trusted from the runbook: wrangler is authenticated as the owner (8b32932…), sevengodsgames.com is an active zone there, and my.sevengodsgames.com resolves to nothing yet. A release commit was made first (7bb40f0). Preparing it exposed a real leak the previous Sites releases had avoided by hand: the rejected swarm lot still sat in public/, and the build copies public/ wholesale into dist/client, so 29 unapproved sprites would have shipped as fetchable production assets. They were moved to assets/rejected/swarm-v002/ with a .gitignore guard, and a clean rebuild confirms dist carries none. Then: D1 my-sgg-player-os created in APAC (d64ba138-578d-4c4b-b16d-5150de56d992), migrations 0000–0006 applied and verified remotely (all 9 expected tables present, including the 0006 cache table), the id written into wrangler.owner.jsonc, the runbook corrected to cover 0006, and the Worker deployed with both bindings resolving. It is deliberately unreachable: workers_dev stays false, wrangler reports no deploy targets, and the workers.dev host returns 404. What remains needs the owner: the Sites data export (admin login), ten secrets (values Claude must not handle), the Cloudflare Access application, and the Discord redirect URI. Access must exist before the domain is attached, or the site is briefly public — Claude will attach the domain only after Access is confirmed. BLK-DISCORD-E2E-001 still gates adding any viewer. 91 tests, lint, typecheck and a clean build pass.",
+  "project_basis_sha256": "6acb2b5ec04e53ccf538614be1d9577a8e82f669cab72f17d37a6bd34c3717ab",
+  "resulting_state": {
+    "schema_version": 1,
+    "authority": "SGG_PROJECT_STATE",
+    "project_id": "PRJ-202607-sgg-user-dashboard",
+    "state_version": 46,
+    "updated_at": "2026-07-30T21:35:12+08:00",
+    "updated_by": "Claude",
+    "status": "REVIEW",
+    "phase": "PRIVATE_DEPLOYED",
+    "current_objective": "Deploy the verified connection layer and the complete NFT gallery (all four collections including SEVEN GODS) through Sites, then have the owner flip the two external switches: CHAIN's Discord credentials in Vercel, and the export/pre-entry secrets in Sites after the season.",
+    "last_summary": "Owner chose the Codex-independent path and a core-member audience, so the owner-side production was actually stood up rather than left as a validated plan. Preconditions were checked on the live account rather than trusted from the runbook: wrangler is authenticated as the owner (8b32932…), sevengodsgames.com is an active zone there, and my.sevengodsgames.com resolves to nothing yet. A release commit was made first (7bb40f0). Preparing it exposed a real leak the previous Sites releases had avoided by hand: the rejected swarm lot still sat in public/, and the build copies public/ wholesale into dist/client, so 29 unapproved sprites would have shipped as fetchable production assets. They were moved to assets/rejected/swarm-v002/ with a .gitignore guard, and a clean rebuild confirms dist carries none. Then: D1 my-sgg-player-os created in APAC (d64ba138-578d-4c4b-b16d-5150de56d992), migrations 0000–0006 applied and verified remotely (all 9 expected tables present, including the 0006 cache table), the id written into wrangler.owner.jsonc, the runbook corrected to cover 0006, and the Worker deployed with both bindings resolving. It is deliberately unreachable: workers_dev stays false, wrangler reports no deploy targets, and the workers.dev host returns 404. What remains needs the owner: the Sites data export (admin login), ten secrets (values Claude must not handle), the Cloudflare Access application, and the Discord redirect URI. Access must exist before the domain is attached, or the site is briefly public — Claude will attach the domain only after Access is confirmed. BLK-DISCORD-E2E-001 still gates adding any viewer. 91 tests, lint, typecheck and a clean build pass.",
+    "last_checkpoint_id": "CP-000046",
+    "last_checkpoint_path": "checkpoints/CP-000046.json",
+    "active_work": {
+      "work_id": "ACT-042",
+      "objective": "Cut over to the owner-owned production and open it to a few core members.",
+      "status": "IN_PROGRESS",
+      "acceptance_criteria": [
+        "Owner-side Worker serves the dashboard behind Cloudflare Access on my.sevengodsgames.com.",
+        "Ledger data from Sites is imported with count parity before anyone logs in.",
+        "Two distinct Discord accounts cannot read each other's Passport, ledger or holdings.",
+        "No unapproved creative asset is fetchable from the new production."
+      ]
+    },
+    "recently_completed": [
+      {
+        "action_id": "BOOTSTRAP-001",
+        "result": "Initial zero-to-one scaffold generated atomically.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "COMMAND_CENTER_LINK.json",
+          "QUALITY_SCORECARD.md"
+        ]
+      },
+      {
+        "action_id": "ACT-001",
+        "result": "Confirmed the structured intake, in-place canonical path, command-center registry alias, policy locks, pre-existing Git state, secret boundary, scope, and current blockers from filesystem evidence.",
+        "evidence": [
+          "PROJECT_PROFILE.json",
+          "migration/INTAKE.json",
+          "migration/MIGRATION_EVIDENCE.md",
+          "COMMAND_CENTER_LINK.json"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-003",
+        "result": "Completed and verified the declared Public Hub plus Player Passport vertical slice with revocable Discord sessions, one-time address-bound Wallet proof, atomic audited points, resilient UI states, truthful release labels, security headers, and upstream refresh protection.",
+        "evidence": [
+          "app/Dashboard.tsx",
+          "server/auth.ts",
+          "server/passport-db.ts",
+          "db/schema.ts",
+          "drizzle/0001_majestic_boomer.sql",
+          "tests/passport-security.test.mjs",
+          "tests/dashboard-resilience.test.mjs",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-20T22:48:58+08:00",
+        "checkpoint_id": "CP-000002"
+      },
+      {
+        "action_id": "ACT-007",
+        "result": "Approved the exact v002 icon, key visual, and social card with Image 2.0 source records, SHA-256 hashes, character_usage NONE rationale, final-crop QA, reviewer, and timezone-aware approval timestamp.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json",
+          "assets/ASSET_MANIFEST.csv",
+          "references/SOURCE_LOCK.json"
+        ],
+        "completed_at": "2026-07-22T16:05:03+08:00",
+        "checkpoint_id": "CP-000012"
+      },
+      {
+        "action_id": "ACT-017",
+        "result": "Deployed Sites Version 12 from commit 10d287d02e77eba76030e5a8abf20218d807f499 with D1 migration 0004, verified the application-level unauthenticated 401 contract, and proved the Sites access policy remained unchanged.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260726-001.json",
+          "drizzle/0004_yielding_dormammu.sql",
+          "app/api/link/otomo-chain/route.ts"
+        ],
+        "completed_at": "2026-07-26T18:55:57+08:00",
+        "checkpoint_id": "CP-000022"
+      },
+      {
+        "action_id": "ACT-025",
+        "result": "Deployed Sites Version 13 from commit 7e725f499cd47313b5bb1776b304873a99f71514 as an owner-only private production release, preserved access policy revision 1, and recorded production HTTP, asset, screenshot, CSS, and Worker-log evidence.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json",
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260728-001.json",
+          "checkpoints/CP-000025.json"
+        ],
+        "completed_at": "2026-07-28T17:15:00+08:00",
+        "checkpoint_id": "CP-000026"
+      },
+      {
+        "action_id": "ACT-027",
+        "result": "Recorded the production Worker/account facts, unknown production D1 identity, owner-side D1 candidate boundary, Sites environment variable names, official Wrangler deployment path, and official D1 export path without changing external state or exposing secret values.",
+        "evidence": [
+          "docs/DEPLOY_HANDOVER_FACTS.md",
+          ".openai/hosting.json",
+          "deployments/PRIVATE_DEPLOYMENT-20260728-001.json"
+        ],
+        "completed_at": "2026-07-28T17:27:01+08:00",
+        "checkpoint_id": "CP-000027"
+      },
+      {
+        "action_id": "ACT-034",
+        "result": "The owner supplied the production instruction with an explicit no-swarm boundary; the pending replacement lot was not approved for this release and the runtime switch was restored to false.",
+        "evidence": [
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260729-001.json",
+          "app/OtomoSwarm.tsx",
+          "tests/rendered-html.test.mjs"
+        ],
+        "completed_at": "2026-07-29T17:14:46+08:00",
+        "checkpoint_id": "CP-000035"
+      },
+      {
+        "action_id": "ACT-035",
+        "result": "Committed and pushed the approved release, saved and deployed Sites Version 14 with D1 migration 0005, excluded all rejected swarm files, preserved the exact owner-only access policy, and recorded production HTTP, asset-hash, screenshot, responsive CSS and Worker-log evidence.",
+        "evidence": [
+          "deployments/PRIVATE_DEPLOYMENT-20260729-001.json",
+          "rights/RIGHTS-AND-IMAGE2-APPROVAL-20260729-001.json",
+          "drizzle/0005_same_madripoor.sql",
+          "checkpoints/CP-000033.json"
+        ],
+        "completed_at": "2026-07-29T17:29:40+08:00",
+        "checkpoint_id": "CP-000037"
+      }
+    ],
+    "next_actions": [
+      {
+        "action_id": "ACT-042A",
+        "order": 1,
+        "action": "Sites本番に管理者ログインし GET /api/admin/export を保存してClaudeに渡す（インポートはClaudeが実行）。",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-042B",
+        "order": 2,
+        "action": "wrangler secret put で10個のシークレットを投入（APP_ORIGIN=https://my.sevengodsgames.com）。値はClaudeが扱えない。",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-042C",
+        "order": 3,
+        "action": "Cloudflare Zero Trust で my.sevengodsgames.com のAccess applicationとコアメンバー許可ポリシーを作成（ドメイン接続より先）。",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-042D",
+        "order": 4,
+        "action": "Discord Developer Portal に redirect URI https://my.sevengodsgames.com/api/auth/discord/callback を追加。",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-042E",
+        "order": 5,
+        "action": "Access確認後、Claudeがカスタムドメインを接続し到達確認・401確認・データ突合を実施。",
+        "owner": "Claude",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      },
+      {
+        "action_id": "ACT-015",
+        "order": 6,
+        "action": "2アカウント分離テスト（オーナー＋協力者1名）。閲覧者追加はこの後。",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DISCORD-E2E-001"
+        ]
+      },
+      {
+        "action_id": "ACT-018",
+        "order": 7,
+        "action": "After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-OTOMO-CHAIN-EXPORT-001",
+          "BLK-SGP-AWARD-TABLE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-024",
+        "order": 8,
+        "action": "Review the two drifted command-center policy hashes.",
+        "owner": "SGG project owner",
+        "status": "READY",
+        "blocker_ids": []
+      },
+      {
+        "action_id": "ACT-012",
+        "order": 9,
+        "action": "Sharp upgrade when supported.",
+        "owner": "SGG engineering owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-DEPENDENCY-SHARP-001"
+        ]
+      },
+      {
+        "action_id": "ACT-006",
+        "order": 10,
+        "action": "Player snapshot bridges per game.",
+        "owner": "SGG game platform owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PLAYER-BRIDGE-001"
+        ]
+      },
+      {
+        "action_id": "ACT-008",
+        "order": 11,
+        "action": "Separate authority before audience expansion.",
+        "owner": "SGG project owner",
+        "status": "BLOCKED",
+        "blocker_ids": [
+          "BLK-PUBLICATION-001"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-IN-APP-BROWSER-001",
+        "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+        "severity": "P1",
+        "description": "This Codex task exposes the Browser skill but not its required in-app browser control capability after mandatory discovery. The existing protected production tab remains untouched. Version 14 has Sites screenshot, production HTTP, asset-hash, HTML/CSS and Worker-log evidence, but no new muted tab, interactive 390px viewport or console session was available.",
+        "owner": "Codex runtime capability",
+        "status": "OPEN",
+        "resolution_required": "Expose the supported Codex in-app browser control capability, then open the exact Version 14 URL in a new muted tab without navigating or closing the protected tab and complete desktop, 390px, interaction and console verification."
+      },
+      {
+        "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+        "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+        "severity": "P1",
+        "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+      },
+      {
+        "blocker_id": "BLK-OTOMO-CHAIN-EXPORT-001",
+        "scope": "TOURNAMENT_RESULT_RECONCILIATION",
+        "severity": "P1",
+        "description": "OTOMO CHAIN 7 exposes external_id only through its admin-secret reward-export endpoint. The reconciliation and payout code is deployed but remains disabled until OTOMO_CHAIN_EXPORT_URL and OTOMO_CHAIN_ADMIN_SECRET are configured after season end.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "After the season ends, provide the OTOMO CHAIN 7 reward-export endpoint and admin secret as Sites runtime secrets, then start with a reconciliation dry run."
+      },
+      {
+        "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+        "scope": "REWARD_VALUE_AUTHORITY",
+        "severity": "P1",
+        "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+      },
+      {
+        "blocker_id": "BLK-DISCORD-E2E-001",
+        "scope": "REAL_IDENTITY_ISOLATION_GATE",
+        "severity": "P1",
+        "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Run one real ordinary-player DM login and confirm two distinct Discord accounts cannot read each other's Passport, ledger or holdings before expanding access beyond the current owner-only site."
+      },
+      {
+        "blocker_id": "BLK-PUBLICATION-001",
+        "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+        "severity": "P0_AT_RELEASE_PHASE",
+        "description": "Version 14 is deployed owner-only, and public or shared access, custom domain attachment, search indexing, extra viewers or groups and public release remain unauthorized.",
+        "owner": "SGG project owner",
+        "status": "OPEN",
+        "resolution_required": "Record separate explicit owner authority and satisfy the release identity, privacy, domain, rollback, real-account isolation, dependency and actual-screen gates before any audience expansion."
+      },
+      {
+        "blocker_id": "BLK-PLAYER-BRIDGE-001",
+        "scope": "CROSS_GAME_PERSONAL_DATA",
+        "severity": "P1",
+        "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+        "owner": "SGG game platform owner",
+        "status": "OPEN",
+        "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+      },
+      {
+        "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+        "scope": "DEPENDENCY_HYGIENE",
+        "severity": "P2",
+        "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+        "owner": "SGG engineering owner",
+        "status": "OPEN",
+        "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+      }
+    ],
+    "decisions_needed": [
+      {
+        "decision_id": "DEC-DEPLOY-HANDOVER-001",
+        "question": "Will Sites/OpenAI provide the production D1 identifier and a supported export or transfer path, or must the owner create a new D1 and migrate through a separate application-level export?",
+        "owner": "SGG project owner and Sites/OpenAI resource provider",
+        "required_by": "Before authorizing any move from Sites to owner-managed Cloudflare deployment"
+      }
+    ],
+    "authorizations": [
+      {
+        "authorization_id": "AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001",
+        "scope": "commit and push to the existing private Sites source repository, packaged D1 migrations, and owner-only deployment to the existing MY SGG Sites project",
+        "status": "GRANTED",
+        "granted_by": "SGG project owner",
+        "granted_at": "2026-07-20T22:47:24+08:00",
+        "evidence": "rights/AUTH-SGG-USER-DASHBOARD-PRIVATE-DEPLOY-20260720-001.json"
+      },
+      {
+        "authorization_id": "AUTH-EXTERNAL-ACTIONS",
+        "scope": "public/shared publish, custom domain, search indexing, added viewers or groups, external sending, or unrelated production writes",
+        "status": "NOT_GRANTED",
+        "granted_by": "",
+        "granted_at": "",
+        "evidence": ""
+      }
+    ],
+    "changed_files": [
+      {
+        "path": "migration/STATE_UPDATE_CP000046_OWNER_PRODUCTION.json",
+        "sha256": "a8293efe58b2e90b572611e77cb8c2956e24d88d6860ea002d56b1a701050481",
+        "reason": "Record the owner-side production stand-up."
+      },
+      {
+        "path": "wrangler.owner.jsonc",
+        "sha256": "999d783ba8be7f52a894bf6436e305a7174ec98049e1a175e2bfe12ee9af94d5",
+        "reason": "Real database_id for the created D1."
+      },
+      {
+        "path": "docs/OWNER_DEPLOY_RUNBOOK.md",
+        "sha256": "af8df4f7911fa5b794b8755dc89a762b22b5789772459ed059211d1c2c842a93",
+        "reason": "Migration loop covers 0006; creation step marked done."
+      },
+      {
+        "path": "assets/rejected/swarm-v002/haku-cheer.png",
+        "sha256": "0db0947627e5760db3c53594ecc2b2129e0c608834f2cbf79a41155092d3f9c0",
+        "reason": "Rejected lot moved out of public/ (28 sprites) so the build cannot ship it."
+      },
+      {
+        "path": ".gitignore",
+        "sha256": "2ff08ee1b6b39922a3910c35bc797c5fe0c9d31d790f0be7e92fcf9727da254d",
+        "reason": "Guard against the rejected lot returning to public/."
+      }
+    ],
+    "last_known_good": {
+      "validation_report": "VALIDATION_REPORT.json",
+      "commands": [
+        [
+          "python3",
+          "../../launches/tools/validate_sgg_project.py",
+          ".",
+          "--kickoff",
+          "--record"
+        ],
+        [
+          "python3",
+          "../../launches/tools/validate_pack.py",
+          "."
+        ]
+      ]
+    },
+    "authoritative_files": [
+      "AGENTS.md",
+      "COMMAND_CENTER_LINK.json",
+      "PROJECT_PROFILE.json",
+      "PROJECT_STATE.json",
+      "DECISIONS.md",
+      "CANON_AND_COPY.md",
+      "WORLD_AND_CHARACTER_BRIEF.md",
+      "VALIDATION_REPORT.json"
+    ],
+    "resume": {
+      "action_id": "ACT-042A",
+      "instruction": "Owner supplies the export, the ten secrets, the Access application and the Discord redirect URI. Only then does Claude attach the domain. Nothing is reachable until that point.",
+      "do_not_assume": [
+        "The new production works yet; it has no secrets and no route, so it cannot serve a request.",
+        "The domain may be attached before Access exists; that order would briefly expose the site.",
+        "Sites may be deleted; it stays frozen as the rollback target.",
+        "Session rows migrate; they do not, so everyone re-logs in after cutover."
+      ]
+    }
+  },
+  "resulting_state_sha256": "f606bfa33e613c35ed67d82116fa85b34356f954b609e407a00d9ceacd134dc8"
+}

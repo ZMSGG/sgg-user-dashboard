@@ -1,6 +1,6 @@
 export type Accent = "cyan" | "violet" | "coral" | "gold" | "green";
 
-export type ReleaseState = "LIVE" | "DORMANT" | "DRAFT" | "NOT_DEPLOYED";
+export type ReleaseState = "LIVE" | "MAINTENANCE" | "DORMANT" | "DRAFT" | "NOT_DEPLOYED";
 export type SyncMode = "PUBLIC" | "AUTH_REQUIRED" | "UNAVAILABLE";
 
 export type GameSummary = {
@@ -56,9 +56,9 @@ export const games: readonly GameSummary[] = [
     id: "otomo-chain-7",
     title: "OTOMO CHAIN 7",
     shortTitle: "CHAIN 7",
-    subtitle: "七日間・一日七走の番付戦",
+    subtitle: "7つで神連鎖。爽快なぞり消しパズル",
     description:
-      "神域の連鎖を駆け抜け、日々の最高記録を積み上げる7日間シーズン。上位3日分の合計で序列が決まる。",
+      "同じOTOMOをなぞって消すタイムアタックパズル。ただし狙いは『ちょうど7個』——PERFECT 7で777点、3回決めればGOD RUSH。ルールが毎日変わる7日間、番付に残るのは今日のベスト1走だけ。",
     releaseState: "LIVE",
     releaseLabel: "配信中 · 重点タイトル",
     sourceLabel: "PRODUCTION API · /api/season",
@@ -67,7 +67,8 @@ export const games: readonly GameSummary[] = [
     glyph: "C7",
     genre: "SHORT-RUN RANKING",
     duration: "7",
-    keyArt: "/dashboard-art/cards/card-02.png",
+    // OTOMO3体が縁側で行灯画面のCHAINをプレイする公式サムネ (2026-07-31生成)。
+    keyArt: "/dashboard-art/games/chain.png",
     officialUrl: "https://otomochain.sevengodsgames.com/",
     rankingUrl: "https://otomochain.sevengodsgames.com/",
     guideUrl: null,
@@ -80,24 +81,25 @@ export const games: readonly GameSummary[] = [
     id: "otomo-farm-77",
     title: "OTOMO FARM 77",
     shortTitle: "FARM 77",
-    subtitle: "育成・収穫・資源蓄積",
+    subtitle: "毎日3分で神域を耕す。ほのぼの農園番付",
     description:
-      "神域の畑で種をまき、収穫し、OTOMOを育てる77日シーズン。自動農作業にも対応。",
-    releaseState: "LIVE",
-    releaseLabel: "配信中 · 重点タイトル",
+      "相棒OTOMOを卵から満願Lv.77まで育てる77日の農園シーズン。加護予報を読んで種をまき、寝ている間に実らせる。課金や保有のブーストは一切なし——収穫も番付も、毎日の3分を積んだ者だけが強い完全平等の畑。",
+    releaseState: "MAINTENANCE",
+    releaseLabel: "工事中 · 重点タイトル",
     sourceLabel: "DEPLOYMENT REGISTRY · 2026.07.20",
     syncMode: "AUTH_REQUIRED",
     accent: "green",
     glyph: "F7",
     genre: "LONG-FORM FARMING",
     duration: "77",
-    keyArt: "/dashboard-art/cards/card-04.png",
+    // 鶴のハク・寿鹿・鯛丸が棚田で農作業する公式サムネ (2026-07-31生成)。
+    keyArt: "/dashboard-art/games/farm.png",
     officialUrl: "https://otomo-farm-77.vercel.app/",
     rankingUrl: "https://otomo-farm-77.vercel.app/rankings",
     guideUrl: null,
     primaryAction: "FARMを開く",
-    nextAction: "収穫・畑の状態を確認",
-    nextActionMeta: "Discordログイン後にゲーム側で同期",
+    nextAction: "工事完了までお待ちください",
+    nextActionMeta: "再開は公式発表でお知らせ",
   },
   {
     id: "otomo-oracle-7",
@@ -412,6 +414,9 @@ export const systemNotifications = [
 
 export const releaseStateLabels: Record<ReleaseState, string> = {
   LIVE: "プレイ可能",
+  // Deployed and being taken to market, but currently closed for rework.
+  // Play links are withheld until the construction ends.
+  MAINTENANCE: "工事中",
   // Built and reachable, but not part of the titles currently being taken to
   // market. Deliberately distinct from 開発中 and 未公開.
   DORMANT: "休眠中",
@@ -424,5 +429,5 @@ export const releaseStateCounts = games.reduce(
     counts[game.releaseState] += 1;
     return counts;
   },
-  { LIVE: 0, DORMANT: 0, DRAFT: 0, NOT_DEPLOYED: 0 } as Record<ReleaseState, number>,
+  { LIVE: 0, MAINTENANCE: 0, DORMANT: 0, DRAFT: 0, NOT_DEPLOYED: 0 } as Record<ReleaseState, number>,
 );

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "asset_id": "MEDIA-my-sgg-farm-thumb-a-candidate-v001",
+  "status": "CANDIDATE_REVIEW_REQUIRED",
+  "publication_status": "NOT_PUBLIC_APPROVED",
+  "purpose": "OTOMO FARM 77 landscape game thumbnail candidate",
+  "character_usage": "OTOMO",
+  "character_usage_reason": "The three OTOMO are the playable farming subjects and the primary visual message of this thumbnail.",
+  "characters": [
+    {
+      "family": "OTOMO",
+      "canonical_id": "haku",
+      "form": "INCARNATE",
+      "reference": "SGG createve/canon/characters.json",
+      "identity_reference": "../../../public/dashboard-art/cards/faces/haku-incarnate.png",
+      "source_asset_id": "MEDIA-my-sgg-cardface-haku-incarnate-v001",
+      "source_sha256": "46a260dc65a879ccdf6ef5a2a3510219dd312e3d42837af69866fa2c602845ff",
+      "source_rights_status": "APPROVED",
+      "source_rights_record": "assets/ASSET_MANIFEST.csv",
+      "identity_note": "Preserved the crane-like HAKU shown in the approved image reference: red crown, golden beak, white wings, dark feather tips, chrysanthemum motif, and thin dark legs."
+    },
+    {
+      "family": "OTOMO",
+      "canonical_id": "juka",
+      "form": "INCARNATE",
+      "reference": "SGG createve/canon/characters.json",
+      "identity_reference": "../../../public/dashboard-art/cards/faces/juka-incarnate.png",
+      "source_asset_id": "MEDIA-my-sgg-cardface-juka-incarnate-v001",
+      "source_sha256": "c464a7badcee15f1fe22fc7ac9a6096de8c6f3f958bfd7f1c2573ce5fb349836",
+      "source_rights_status": "APPROVED",
+      "source_rights_record": "assets/ASSET_MANIFEST.csv"
+    },
+    {
+      "family": "OTOMO",
+      "canonical_id": "taimaru",
+      "form": "INCARNATE",
+      "reference": "SGG createve/canon/characters.json",
+      "identity_reference": "../../../public/dashboard-art/cards/faces/taimaru-incarnate.png",
+      "source_asset_id": "MEDIA-my-sgg-cardface-taimaru-incarnate-v001",
+      "source_sha256": "175e7a694433d4aa5633564e55cd937b31079644a9c24f38087859538fee1a74",
+      "source_rights_status": "APPROVED",
+      "source_rights_record": "assets/ASSET_MANIFEST.csv"
+    }
+  ],
+  "generation": {
+    "tool": "OpenAI built-in GPT Image",
+    "mode": "reference-guided generation",
+    "generated_at": "2026-07-31T08:54:55+08:00",
+    "final_prompt": "farm-thumb-a.prompt.txt",
+    "production_summary": "Recomposed the three identity references into a wholly new twilight sacred-farm scene. HAKU tills with a hoe, JUKA waters luminous crops, and TAIMARU carries harvested rice and daikon. No source pose, source background, or source human figure was reused."
+  },
+  "output": {
+    "file": "farm-thumb-a.png",
+    "format": "PNG",
+    "width": 1536,
+    "height": 1024,
+    "version": "v001",
+    "sha256": "17237aa5a852eefdd2a098284a0b926cf74e62e8ff536c6f26656bca46c2552b"
+  },
+  "visual_review": {
+    "reviewer": "Codex",
+    "reviewed_at": "2026-07-31T08:54:55+08:00",
+    "final_crop_checked": true,
+    "thumbnail_scale_checked": true,
+    "identity_checked": true,
+    "new_composition_checked": true,
+    "human_absence_checked": true,
+    "text_logo_watermark_ui_absence_checked": true,
+    "result": "PASS_AS_CANDIDATE"
+  }
+}

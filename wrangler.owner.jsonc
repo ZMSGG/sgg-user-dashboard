@@ -16,6 +16,11 @@
   "compatibility_date": "2026-05-15",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
+  // 到達経路はこのカスタムドメインのみ。Cloudflare Access（core-members）が
+  // 前段に立っていることを確認してから接続した（2026-07-31）。
+  "routes": [
+    { "pattern": "my.sevengodsgames.com", "custom_domain": true }
+  ],
   "assets": {
     "directory": "dist/client",
     "binding": "ASSETS"
@@ -24,8 +29,8 @@
     {
       "binding": "DB",
       "database_name": "my-sgg-player-os",
-      // 移行実行時に `wrangler d1 create my-sgg-player-os` の結果で置き換える。
-      "database_id": "TO_BE_CREATED_AT_MIGRATION"
+      // 2026-07-30 に `wrangler d1 create my-sgg-player-os` で作成（APAC）。
+      "database_id": "d64ba138-578d-4c4b-b16d-5150de56d992"
     }
   ]
 }
