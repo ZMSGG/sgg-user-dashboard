@@ -1010,6 +1010,32 @@ export function Dashboard() {
                   <div className={styles.stageCopy}>
                     <p>SEVENGODS GAMES / PLAYER OS</p>
                     <h1 id="hero-title">遊ぶ。競う。集める。<br /><em>すべてを、ひとつに。</em></h1>
+                  {passport?.connected !== true ? (
+                    <div className={styles.stageConnect}>
+                      {oauthAvailable ? (
+                        <a className={styles.stageConnectPrimary} href="/api/auth/discord">
+                          <IconPassport className={styles.stageMenuSvg} />Discordでログイン
+                        </a>
+                      ) : (
+                        <button type="button" className={styles.stageConnectPrimary} onClick={() => changeView("mysgg")}>
+                          <IconPassport className={styles.stageMenuSvg} />ログイン方法を見る
+                        </button>
+                      )}
+                      <small>大会の成績・SGP・NFTの表示に使います。Wallet連携は任意です。</small>
+                    </div>
+                  ) : !passport.player.walletAddress ? (
+                    <div className={styles.stageConnect}>
+                      <button
+                        type="button"
+                        className={styles.stageConnectPrimary}
+                        onClick={() => { changeView("mysgg"); void linkWallet(); }}
+                        disabled={walletBusy}
+                      >
+                        <WalletIcon />{walletBusy ? "署名を待っています…" : "Walletを連携する（任意）"}
+                      </button>
+                      <small>NFT・SDTの保有を表示できます。署名のみで送金は行いません。</small>
+                    </div>
+                  ) : null}
                   </div>
                   <nav className={styles.stageMenu} aria-label="クイックメニュー">
                     <button type="button" onClick={() => changeView("collection")}><IconOtomo className={styles.stageMenuSvg} />ガチャ</button>
@@ -1289,11 +1315,19 @@ export function Dashboard() {
                     ) : passport?.connected ? (
                       <button type="button" className={styles.textButton} onClick={() => void logout()}>ログアウト</button>
                     ) : oauthAvailable ? (
-                      <a className={styles.primaryAction} href="/api/auth/discord">Discordで連携する<span aria-hidden="true">→</span></a>
+                      <a className={styles.primaryAction} href="/api/auth/discord"><span className={styles.stepBadge}>STEP 1</span>Discordでログイン<span aria-hidden="true">→</span></a>
                     ) : !dmOtpAvailable ? (
                       <button type="button" className={styles.primaryAction} disabled>Discord連携を準備中</button>
                     ) : null}
                   </div>
+                  {!passport?.connected && (
+                    <div className={styles.heroWallet} data-tone="cyan" data-disabled="true">
+                      <button type="button" className={styles.primaryAction} disabled>
+                        <WalletIcon /><span className={styles.stepBadge}>STEP 2</span>Walletを連携する（任意）
+                      </button>
+                      <p>Discordログイン後に連携できます。NFT・SDT保有の表示に使い、署名のみで送金・承認は行いません。無くてもポイント付与に影響はありません。</p>
+                    </div>
+                  )}
                   {passport?.connected && (
                     <div className={styles.heroWallet} data-tone="cyan">
                       {passport.player.walletAddress ? (
@@ -1425,7 +1459,7 @@ export function Dashboard() {
               )}
               {passport?.connected && (
                 <div className={styles.passportGrid}>
-                  <section className={styles.pointsCard} data-tone="gold">
+                  <section id="sgp-ledger" className={styles.pointsCard} data-tone="gold">
                     <div className={styles.pointsHead}>
                       <div><p>SGG POINT</p><h3>SGP残高</h3></div>
                       <StatusPill accent="gold">PASSPORT LEDGER</StatusPill>
@@ -1624,7 +1658,7 @@ export function Dashboard() {
           <button type="button" onClick={() => changeView("collection")}><IconVault className={styles.dockIcon} /><span>コレクション</span></button>
           <button type="button" onClick={() => changeView("collection")}><IconOtomo className={styles.dockIcon} /><span>ガチャ</span></button>
           <button type="button" onClick={() => changeView("community")}><IconCommunity className={styles.dockIcon} /><span>コミュニティ</span></button>
-          <button type="button" onClick={() => changeView("mysgg")}><IconLedger className={styles.dockIcon} /><span>SGP台帳</span></button>
+          <button type="button" onClick={() => { changeView("mysgg"); window.setTimeout(() => document.getElementById("sgp-ledger")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }}><IconLedger className={styles.dockIcon} /><span>SGP台帳</span></button>
           <button type="button" onClick={() => changeView("mysgg")}><IconPassport className={styles.dockIcon} /><span>Passport</span></button>
         </nav>
 

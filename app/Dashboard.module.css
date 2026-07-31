@@ -4325,3 +4325,70 @@ b[data-rarity="SR"] { background: rgba(230, 196, 111, 0.18); color: #e6c46f; }
   font-weight: 700;
   cursor: pointer;
 }
+
+/* ホームの接続CTA: ステージ上で最初に目に入る一枚。未連携のときだけ出る。 */
+.stageConnect {
+  position: relative;
+  /* キャラ絵(.stageActor, z-index:1)より前に出す。CTAが絵に隠れてはいけない。 */
+  z-index: 2;
+  display: flex;
+  max-width: 340px;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.stageConnectPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border: 1px solid rgba(240, 200, 120, 0.55);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(212, 160, 70, 0.92), rgba(160, 96, 38, 0.92));
+  color: #fff8ec;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.stageConnectPrimary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+}
+
+.stageConnectPrimary:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+}
+
+.stageConnect small {
+  padding-left: 2px;
+  color: rgba(255, 244, 224, 0.82);
+  font-size: 10px;
+  line-height: 1.6;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* マイSGGの2ステップ表記 */
+.stepBadge {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+
+/* 未ログイン時のWallet枠: 存在は見せるが押せないことが分かる見た目 */
+.heroWallet[data-disabled="true"] {
+  opacity: 0.66;
+}

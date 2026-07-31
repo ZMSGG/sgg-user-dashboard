@@ -12,7 +12,7 @@ test("keeps Passport and admin roster load outcomes distinct and retryable", asy
   assert.match(source, /PLAYER BRIDGE · CHECKING/);
   assert.match(source, /PLAYER BRIDGE · UNAVAILABLE/);
   assert.match(source, /Discord連携を準備中/);
-  assert.match(source, /Discordで連携する/);
+  assert.match(source, /Discordでログイン/);
   assert.match(source, /DMコードを受け取る/);
   assert.match(source, /\/api\/auth\/discord\/dm\/start/);
   assert.match(source, /\/api\/auth\/discord\/dm\/verify/);
@@ -28,7 +28,7 @@ test("keeps Passport and admin roster load outcomes distinct and retryable", asy
   assert.match(source, /OAuthの準備が整うまで管理機能は利用できません/);
   assert.doesNotMatch(source, /ABCDE-FGHIJ/);
   assert.ok(
-    source.indexOf("Discordで連携する") < source.indexOf("OAuthが使えない場合"),
+    source.indexOf("Discordでログイン") < source.indexOf("OAuthが使えない場合"),
     "OAuth remains the primary route before the low-assurance DM fallback",
   );
   assert.match(source, /Passport情報を取得できませんでした/);
