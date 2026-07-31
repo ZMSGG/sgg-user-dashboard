@@ -25,7 +25,6 @@ import {
   IconCommunity,
   IconGames,
   IconHome,
-  IconLedger,
   IconOtomo,
   IconPassport,
   IconVault,
@@ -1652,15 +1651,6 @@ export function Dashboard() {
 
         {/* Illustrated dock mirroring the primary destinations. Every entry
             routes to a real view; nothing here is a placeholder. */}
-        <nav className={styles.dock} aria-label="クイックアクセス">
-          <button type="button" onClick={() => changeView("games")}><IconGames className={styles.dockIcon} /><span>ゲーム一覧</span></button>
-          <button type="button" onClick={() => changeView("arena")}><IconArena className={styles.dockIcon} /><span>アリーナ</span></button>
-          <button type="button" onClick={() => changeView("collection")}><IconVault className={styles.dockIcon} /><span>コレクション</span></button>
-          <button type="button" onClick={() => changeView("collection")}><IconOtomo className={styles.dockIcon} /><span>ガチャ</span></button>
-          <button type="button" onClick={() => changeView("community")}><IconCommunity className={styles.dockIcon} /><span>コミュニティ</span></button>
-          <button type="button" onClick={() => { changeView("mysgg"); window.setTimeout(() => document.getElementById("sgp-ledger")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }}><IconLedger className={styles.dockIcon} /><span>SGP台帳</span></button>
-          <button type="button" onClick={() => changeView("mysgg")}><IconPassport className={styles.dockIcon} /><span>Passport</span></button>
-        </nav>
 
         <footer className={styles.footer}><span>MY SGG / ALL OF SGG, ONE PLAYER OS</span><span>PUBLIC TRUTH · PRIVATE PREFERENCES · NO FABRICATED DATA</span></footer>
       </div>
