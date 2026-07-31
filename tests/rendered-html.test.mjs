@@ -31,8 +31,8 @@ test("server-renders the truthful SGG Player OS", async () => {
   assert.match(html, /開催中の大会/);
   assert.doesNotMatch(html, /いま戻る場所/);
   assert.match(html, /name="robots" content="noindex, nofollow"/);
-  assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v002\.png"/);
-  assert.match(html, /name="twitter:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v002\.png"/);
+  assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v003\.png"/);
+  assert.match(html, /name="twitter:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v003\.png"/);
   assert.match(response.headers.get("content-security-policy") ?? "", /frame-ancestors 'none'/);
   assert.equal(response.headers.get("x-frame-options"), "DENY");
   assert.equal(response.headers.get("x-content-type-options"), "nosniff");
@@ -267,7 +267,7 @@ test("keeps publication claims aligned with the deployment registry", async () =
 
 test("ships the finished visual surface and retires legacy demo art", async () => {
   const swarm = await readFile(new URL("../app/OtomoSwarm.tsx", import.meta.url), "utf8");
-  const og = await readFile(new URL("../public/my-sgg-social-og-v002.png", import.meta.url));
+  const og = await readFile(new URL("../public/my-sgg-social-og-v003.png", import.meta.url));
   assert.match(swarm, /SWARM_ENABLED = false/);
   assert.equal(og.toString("ascii", 1, 4), "PNG");
   assert.equal(og.readUInt32BE(16), 1200);

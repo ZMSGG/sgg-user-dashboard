@@ -51,7 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "ja_JP",
       images: [
         {
-          url: "/my-sgg-social-og-v002.png",
+          url: "/my-sgg-social-og-v003.png",
           width: 1200,
           height: 630,
           alt: "MY SGG — All of SGG. One Player OS.",
@@ -62,7 +62,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: "MY SGG｜All of SGG. One Player OS.",
       description: "遊ぶ。競う。集める。すべてのSGGを、ひとつに。",
-      images: ["/my-sgg-social-og-v002.png"],
+      images: ["/my-sgg-social-og-v003.png"],
     },
   };
 }

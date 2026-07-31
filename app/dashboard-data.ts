@@ -72,7 +72,7 @@ export const games: readonly GameSummary[] = [
     officialUrl: "https://otomochain.sevengodsgames.com/",
     rankingUrl: "https://otomochain.sevengodsgames.com/",
     guideUrl: null,
-    primaryAction: "CHAINを開く",
+    primaryAction: "CHAINをプレイする",
     nextAction: "シーズンの開催状況を確認",
     nextActionMeta: "第1回大会は公式発表の日程で開催",
     featured: true,

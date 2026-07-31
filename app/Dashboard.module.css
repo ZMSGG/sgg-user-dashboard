@@ -143,6 +143,28 @@
 
 
 
+.sidebarBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-inline: 7px;
+}
+
+.brandMark {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5));
+}
+
+.brandWord {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
 .sidebarTagline {
   margin: 15px 7px 18px !important;
   color: #706c78;
@@ -4278,7 +4300,7 @@ b[data-rarity="SR"] { background: rgba(230, 196, 111, 0.18); color: #e6c46f; }
   margin-top: 14px;
 }
 
-.stageConnectPrimary {
+.connectPrimary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4297,12 +4319,12 @@ b[data-rarity="SR"] { background: rgba(230, 196, 111, 0.18); color: #e6c46f; }
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
-.stageConnectPrimary:hover {
+.connectPrimary:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
 }
 
-.stageConnectPrimary:disabled {
+.connectPrimary:disabled {
   opacity: 0.6;
   cursor: default;
   transform: none;

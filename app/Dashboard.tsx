@@ -899,6 +899,11 @@ export function Dashboard() {
       <a href="#main-content" className={styles.skipLink}>メインコンテンツへ移動</a>
 
       <aside className={styles.sidebar} aria-label="メインナビゲーション">
+        <div className={styles.sidebarBrand}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className={styles.brandMark} src="/dashboard-art/brand/sgg-mark.png" alt="" aria-hidden="true" />
+          <span className={styles.brandWord}>MY SGG</span>
+        </div>
         <p className={styles.sidebarTagline}>ALL OF SGG.<br />ONE PLAYER OS.</p>
         <nav className={styles.sideNav}>
           {navItems.map((item, index) => (
@@ -995,11 +1000,11 @@ export function Dashboard() {
                   {passport?.connected !== true ? (
                     <div className={styles.stageConnect}>
                       {oauthAvailable ? (
-                        <a className={styles.stageConnectPrimary} href="/api/auth/discord">
+                        <a className={styles.connectPrimary} href="/api/auth/discord">
                           <IconPassport className={styles.stageMenuSvg} />Discordでログイン
                         </a>
                       ) : (
-                        <button type="button" className={styles.stageConnectPrimary} onClick={() => changeView("mysgg")}>
+                        <button type="button" className={styles.connectPrimary} onClick={() => changeView("mysgg")}>
                           <IconPassport className={styles.stageMenuSvg} />ログイン方法を見る
                         </button>
                       )}
@@ -1009,7 +1014,7 @@ export function Dashboard() {
                     <div className={styles.stageConnect}>
                       <button
                         type="button"
-                        className={styles.stageConnectPrimary}
+                        className={styles.connectPrimary}
                         onClick={() => { changeView("mysgg"); void linkWallet(); }}
                         disabled={walletBusy}
                       >
@@ -1297,7 +1302,11 @@ export function Dashboard() {
                     ) : passport?.connected ? (
                       <button type="button" className={styles.textButton} onClick={() => void logout()}>ログアウト</button>
                     ) : oauthAvailable ? (
-                      <a className={styles.primaryAction} href="/api/auth/discord">Discordでログイン<span aria-hidden="true">→</span></a>
+                      // Same solid CTA as the Wallet link: as a bordered row
+                      // with a trailing arrow this read as text, not a button.
+                      <a className={styles.connectPrimary} href="/api/auth/discord">
+                        <IconPassport className={styles.stageMenuSvg} />Discordでログイン
+                      </a>
                     ) : !dmOtpAvailable ? (
                       <button type="button" className={styles.primaryAction} disabled>Discord連携を準備中</button>
                     ) : null}
