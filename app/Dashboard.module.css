@@ -1560,19 +1560,30 @@
   border: 1px solid var(--hairline);
   border-radius: 11px;
   background:
-    radial-gradient(circle at 50% 27%, rgba(var(--tone-rgb), 0.13), transparent 34%),
+    radial-gradient(circle at 50% 27%, rgba(var(--tone-rgb), 0.16), transparent 42%),
+    linear-gradient(180deg, rgba(var(--tone-rgb), 0.055), transparent 46%),
+    radial-gradient(circle at 50% 108%, rgba(var(--tone-rgb), 0.1), transparent 52%),
     var(--surface-solid);
 }
 
-.pairNumber {
+.pairBackdrop {
   position: absolute;
-  top: 14px;
-  left: 15px;
-  color: var(--tone);
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  top: 34px;
+  left: 50%;
+  display: grid;
+  width: min(58%, 206px);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(var(--tone-rgb), 0.24);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  color: rgba(var(--tone-rgb), 0.15);
+  background: radial-gradient(circle, rgba(var(--tone-rgb), 0.17), rgba(var(--tone-rgb), 0.05) 58%, transparent 74%);
+  box-shadow: 0 0 0 10px rgba(var(--tone-rgb), 0.045), 0 0 46px rgba(var(--tone-rgb), 0.14);
+  font-family: "Yu Mincho", serif;
+  font-size: clamp(72px, 24vw, 100px);
+  line-height: 1;
+  pointer-events: none;
 }
 
 .pairGlyph {

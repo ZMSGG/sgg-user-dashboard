@@ -1220,9 +1220,9 @@ export function Dashboard() {
                   </div>}
                 />
                 <div className={styles.pairGrid}>
-                  {characterPairs.map((pair, index) => (
+                  {characterPairs.map((pair) => (
                     <article key={pair.otomoId} data-tone={pair.accent}>
-                      <span className={styles.pairNumber}>PAIR {String(index + 1).padStart(2, "0")}</span>
+                      <span className={styles.pairBackdrop} aria-hidden="true">{pair.glyph}</span>
                       <div className={styles.pairArt}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={`/dashboard-art/pairs/pair-${pair.godId.toLowerCase()}-${formFilter.toLowerCase()}.png`} alt={`${pair.godName}と${pair.otomoName}（${currentForm.label}）の肖像`} loading="lazy" />
