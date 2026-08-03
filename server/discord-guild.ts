@@ -99,7 +99,11 @@ export async function fetchGuildMember(
       `https://discord.com/api/v10/guilds/${config.guildId}/members/${discordId}`,
       {
         headers: { authorization: `Bot ${config.botToken}` },
-        redirect: "error",
+        // "manual", not "error": workerd rejects "error" outright, which threw
+        // before the request was even sent and made every sync fail. "manual"
+        // keeps the same guarantee — a redirect is returned unfollowed, so the
+        // bot token never reaches another host, and a 3xx fails the 200 check.
+        redirect: "manual",
         signal: AbortSignal.timeout(timeoutMs),
       },
     );

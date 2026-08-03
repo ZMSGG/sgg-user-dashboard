@@ -25,7 +25,7 @@ function mockFetch(t, responses) {
   return t.mock.method(globalThis, "fetch", async (url, init) => {
     assert.equal(url, MEMBER_URL);
     assert.equal(init.headers.authorization, `Bot ${CONFIG.botToken}`);
-    assert.equal(init.redirect, "error");
+    assert.equal(init.redirect, "manual");
     assert.ok(init.signal instanceof AbortSignal);
     const response = responses[index++];
     if (response instanceof Error) throw response;
@@ -112,4 +112,34 @@ test("guild sync rejects malformed or identity-mismatched 200 payloads", async (
   assert.equal(await fetchGuildMember(CONFIG, DISCORD_ID), null);
   assert.equal(await fetchGuildMember(CONFIG, DISCORD_ID), null);
   assert.equal(await fetchGuildMember(CONFIG, DISCORD_ID), null);
+});
+
+// Regression guard for a bug that shipped because the unit tests above mock
+// fetch with Node's implementation, where redirect: "error" is legal. workerd
+// implements only "follow" and "manual" and throws on anything else *before*
+// sending the request, so every Bot-token call failed in production while the
+// suite stayed green. Scan the real sources rather than a mock.
+test("every fetch redirect mode is one workerd implements", async () => {
+  const { readdir, readFile } = await import("node:fs/promises");
+  const roots = ["server", "worker", "app"];
+  const allowed = new Set(["follow", "manual"]);
+  const offenders = [];
+
+  const walk = async (dir) => {
+    for (const entry of await readdir(new URL(`../${dir}/`, import.meta.url), { withFileTypes: true })) {
+      const child = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) await walk(child);
+      else if (/\.(ts|tsx|mjs|js)$/.test(entry.name)) {
+        const source = await readFile(new URL(`../${child}`, import.meta.url), "utf8");
+        for (const [, mode] of source.matchAll(/redirect:\s*"([^"]+)"/g)) {
+          if (!allowed.has(mode)) offenders.push(`${child}: ${mode}`);
+        }
+      }
+    }
+  };
+
+  await walk(roots[0]);
+  await walk(roots[1]);
+  await walk(roots[2]);
+  assert.deepEqual(offenders, []);
 });

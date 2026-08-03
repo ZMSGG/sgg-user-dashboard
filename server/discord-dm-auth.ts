@@ -294,7 +294,9 @@ async function readDiscordJson(response: Response): Promise<unknown | null> {
 function discordRequestInit(config: DiscordDmAuthConfig, timeoutMs: number): RequestInit {
   return {
     headers: { authorization: `Bot ${config.botToken}` },
-    redirect: "error",
+    // See discord-guild.ts: workerd rejects "error", so every Bot-token call
+    // threw before being sent. "manual" still never follows a redirect.
+    redirect: "manual",
     signal: AbortSignal.timeout(timeoutMs),
   };
 }

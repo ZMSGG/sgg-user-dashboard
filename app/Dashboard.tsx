@@ -577,7 +577,10 @@ export function Dashboard() {
   }, [refreshPassport]);
 
   // Holdings feed both the Vault and the top-bar chips, so they load once per
-  // connected session rather than per view.
+  // connected session rather than per view. Keyed on the linked address too:
+  // linking a wallet leaves `connected` true, so watching that alone left the
+  // Vault reading "未連携" until the page was reloaded.
+  const linkedWallet = passport?.connected ? passport.player.walletAddress ?? null : null;
   useEffect(() => {
     const connected = Boolean(passport?.connected);
     let cancelled = false;
@@ -596,7 +599,7 @@ export function Dashboard() {
       })();
     }, 0);
     return () => { cancelled = true; window.clearTimeout(timeout); };
-  }, [passport?.connected]);
+  }, [passport?.connected, linkedWallet]);
 
   useEffect(() => {
     if (!dmChallenge) return;

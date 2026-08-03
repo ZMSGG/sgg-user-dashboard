@@ -104,7 +104,7 @@ function fullDiscordMock() {
   const fetcher = async (input, init = {}) => {
     const url = String(input);
     calls.push({ url, init });
-    assert.equal(init.redirect, "error");
+    assert.equal(init.redirect, "manual");
     assert.ok(init.signal instanceof AbortSignal);
     if (url.includes("/members/search?")) {
       return Response.json([memberPayload()]);
@@ -200,7 +200,7 @@ test("guild lookup accepts one exact case-insensitive username and fails closed 
     normalizeDiscordIdentity("@CASEUSER"),
     async (input, init) => {
       observedUrl = String(input);
-      assert.equal(init.redirect, "error");
+      assert.equal(init.redirect, "manual");
       return Response.json([memberPayload(), memberPayload(OTHER_ID, "caseuser-prefix")]);
     },
   );
