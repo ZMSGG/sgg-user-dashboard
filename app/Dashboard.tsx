@@ -860,6 +860,11 @@ export function Dashboard() {
     return [record.name, record.game, record.edition, record.seasonId, ...record.podium.map((entry) => entry.name)]
       .some((text) => text.toLowerCase().includes(trajectoryNeedle));
   });
+  // 自分の成績: the passport carries the player's own confirmed results, so
+  // each record card can show their rank, score and SGP alongside the podium.
+  const myTournamentResults = new Map(
+    (passport?.connected ? passport.tournaments ?? [] : []).map((result) => [result.tournamentId, result]),
+  );
   const trajectoryPageCount = Math.max(1, Math.ceil(trajectoryMatches.length / TRAJECTORY_PAGE_SIZE));
   const trajectoryCurrentPage = Math.min(trajectoryPage, trajectoryPageCount);
   const trajectoryPageRecords = trajectoryMatches.slice(
@@ -1622,11 +1627,18 @@ export function Dashboard() {
                     ))}
                   </div>
                 </div>
+                {!passport?.connected && trajectoryRecords.length > 0 && (
+                  <p className={styles.recordSelfHint}>
+                    Discordでログインすると、各大会でのあなたの順位・得点・獲得SGPがカードに表示されます。
+                  </p>
+                )}
                 {trajectoryPageRecords.length === 0 ? (
                   <p className={styles.grantEmpty}>条件に合う大会記録はありません。検索語やフィルターを変えてみてください。</p>
                 ) : (
                   <ol className={styles.recordList}>
-                    {trajectoryPageRecords.map((record) => (
+                    {trajectoryPageRecords.map((record) => {
+                      const myResult = myTournamentResults.get(record.id);
+                      return (
                       <li key={record.id} className={styles.recordCard} data-tone={record.accent}>
                         <header>
                           <div>
@@ -1639,6 +1651,27 @@ export function Dashboard() {
                         <p className={styles.recordPeriod}>
                           {formatRecordPeriod(record.startAt, record.endAt)} · {record.participants}名参加
                         </p>
+                        {passport?.connected && (myResult ? (
+                          <div className={styles.recordSelf}>
+                            <p>YOUR RESULT / あなたの成績</p>
+                            <dl>
+                              <div><dt>順位</dt><dd>{myResult.rank}<small>位 / {record.participants}名</small></dd></div>
+                              <div><dt>得点</dt><dd>{number.format(myResult.score)}</dd></div>
+                              <div>
+                                <dt>獲得SGP</dt>
+                                <dd>
+                                  {number.format(myResult.sgpAmount)}
+                                  <em data-granted={myResult.granted ? "" : undefined}>
+                                    {myResult.granted ? "付与済み" : "付与予定"}
+                                  </em>
+                                </dd>
+                              </div>
+                            </dl>
+                            {myResult.breakdown && <small>{myResult.breakdown}</small>}
+                          </div>
+                        ) : (
+                          <p className={styles.recordSelfNone}>この大会でのあなたの参加記録はありません。</p>
+                        ))}
                         <ol className={styles.recordPodium}>
                           {record.podium.map((entry) => (
                             <li key={entry.rank} data-champion={entry.rank === 1 ? "" : undefined}>
@@ -1665,7 +1698,8 @@ export function Dashboard() {
                           )}
                         </footer>
                       </li>
-                    ))}
+                      );
+                    })}
                   </ol>
                 )}
                 {trajectoryPageCount > 1 && (

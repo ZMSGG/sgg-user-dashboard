@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { SqliteD1Database, applyProjectMigrations } from "./helpers/sqlite-d1.mjs";
 
@@ -13,6 +14,7 @@ const {
   getPlayer,
   getPointBalance,
   getRecentGrants,
+  getTournamentResults,
   grantRequestFingerprint,
   linkWalletWithAudit,
 } = await import("../server/passport-db.ts");
@@ -59,6 +61,33 @@ async function grant(db, discordId, amount, key) {
     }),
   });
 }
+
+async function recordResult(db, discordId, rank, score, amount) {
+  await db.run(sql`INSERT INTO tournament_results
+    (tournament_id, season_id, discord_id, "rank", score, sgp_amount, breakdown)
+    VALUES ('chain-7-tournament-1', 'season-2026-08-01', ${discordId}, ${rank}, ${score}, ${amount}, NULL)`);
+}
+
+test("tournament results and their SGP grant state never cross between players", async (t) => {
+  const db = await fixture(t);
+  await recordResult(db, ALICE, 1, 911_367, 226);
+  await recordResult(db, BOB, 52, 777, 5);
+
+  const alice = await getTournamentResults(db, ALICE);
+  const bob = await getTournamentResults(db, BOB);
+  assert.equal(alice.length, 1);
+  assert.equal(bob.length, 1);
+  assert.equal(alice[0].rank, 1);
+  assert.equal(bob[0].rank, 52);
+
+  // The result reads 付与予定 until the ledger actually carries the
+  // distribution's idempotency key for this exact player...
+  assert.equal(alice[0].grantedAt, null);
+  await grant(db, ALICE, 226, `tournament:season-2026-08-01:${ALICE}`);
+  assert.notEqual((await getTournamentResults(db, ALICE))[0].grantedAt, null);
+  // ...and one player's grant never flips the other's state.
+  assert.equal((await getTournamentResults(db, BOB))[0].grantedAt, null);
+});
 
 test("point balances and grant history never cross between players", async (t) => {
   const db = await fixture(t);

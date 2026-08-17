@@ -2939,6 +2939,106 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* あなたの成績 — the personal band that makes the 軌跡 *my* record. */
+.recordSelfHint {
+  margin-bottom: 12px;
+  padding: 11px 14px;
+  border: 1px dashed rgba(230, 196, 111, 0.35);
+  border-radius: 10px;
+  color: #a89f92;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.recordSelf {
+  display: grid;
+  gap: 9px;
+  padding: 14px 16px;
+  border: 1px solid rgba(230, 196, 111, 0.4);
+  border-radius: 4px 14px 4px 14px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(230, 196, 111, 0.1), transparent 55%),
+    rgba(230, 196, 111, 0.04);
+}
+
+.recordSelf > p {
+  color: var(--gold);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.recordSelf dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 30px;
+  margin: 0;
+}
+
+.recordSelf dl div {
+  display: grid;
+  gap: 3px;
+}
+
+.recordSelf dt {
+  color: #7d7566;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.recordSelf dd {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+  color: var(--gold-pale);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 21px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.recordSelf dd small {
+  color: #8d8577;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* 付与予定 stays muted; 付与済み earns the gold. */
+.recordSelf dd em {
+  padding: 3px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: #8d8577;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.recordSelf dd em[data-granted] {
+  border-color: rgba(230, 196, 111, 0.5);
+  color: var(--gold);
+}
+
+.recordSelf > small {
+  color: #8d8577;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.recordSelfNone {
+  padding: 10px 14px;
+  border: 1px dashed var(--hairline);
+  border-radius: 10px;
+  color: #6f6a78;
+  font-size: 11px;
+}
+
 .recordPodium {
   display: grid;
   gap: 6px;

@@ -9,6 +9,7 @@ import {
   gameAccountLinks,
   players,
   pointGrants,
+  tournamentResults,
   walletChallenges,
 } from "../db/schema";
 import {
@@ -33,6 +34,7 @@ const schema = {
   discordDmRateLimits,
   walletChallenges,
   pointGrants,
+  tournamentResults,
   auditEvents,
 };
 
@@ -460,6 +462,35 @@ export async function getCurrencyBalances(
   const balances: Record<string, number> = {};
   for (const row of rows) balances[row.currency] = row.total;
   return balances;
+}
+
+/**
+ * The player's own confirmed tournament results, newest first. Whether the
+ * decided SGP actually landed is read from the grant ledger through the
+ * distribution's idempotency key (`tournament:<season_id>:<discord_id>`),
+ * never stored alongside the result — the ledger stays the only SGP truth.
+ */
+export async function getTournamentResults(db: Db, discordId: string) {
+  return db
+    .select({
+      tournamentId: tournamentResults.tournamentId,
+      seasonId: tournamentResults.seasonId,
+      rank: tournamentResults.rank,
+      score: tournamentResults.score,
+      sgpAmount: tournamentResults.sgpAmount,
+      breakdown: tournamentResults.breakdown,
+      grantedAt: pointGrants.createdAt,
+    })
+    .from(tournamentResults)
+    .leftJoin(pointGrants, and(
+      eq(pointGrants.discordId, tournamentResults.discordId),
+      eq(
+        pointGrants.idempotencyKey,
+        sql`'tournament:' || ${tournamentResults.seasonId} || ':' || ${tournamentResults.discordId}`,
+      ),
+    ))
+    .where(eq(tournamentResults.discordId, discordId))
+    .orderBy(desc(tournamentResults.createdAt), desc(tournamentResults.tournamentId));
 }
 
 export async function getRecentGrants(db: Db, discordId: string, limit = 20) {

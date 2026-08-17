@@ -7,7 +7,7 @@ import {
 } from "../../../server/auth";
 import { discordDmAuthConfigFromEnv } from "../../../server/discord-dm-auth";
 import { guildSyncConfigFromEnv, parseGuildRoles } from "../../../server/discord-guild";
-import { getCurrencyBalances, getDb, getPlayer, getPointBalance, getRecentGrants } from "../../../server/passport-db";
+import { getCurrencyBalances, getDb, getPlayer, getPointBalance, getRecentGrants, getTournamentResults } from "../../../server/passport-db";
 
 export const dynamic = "force-dynamic";
 
@@ -42,10 +42,11 @@ export async function GET(request: Request) {
     );
   }
 
-  const [balance, grants, balances] = await Promise.all([
+  const [balance, grants, balances, tournamentRows] = await Promise.all([
     getPointBalance(db, player.discordId),
     getRecentGrants(db, player.discordId),
     getCurrencyBalances(db, player.discordId),
+    getTournamentResults(db, player.discordId),
   ]);
   const adminAllowlisted = (await adminDiscordIds()).has(player.discordId);
   const highAssurance = isHighAssuranceSession(session);
@@ -74,6 +75,16 @@ export async function GET(request: Request) {
         syncedAt: player.guildSyncedAt,
       },
       points: { balance, grants, balances },
+      tournaments: tournamentRows.map((row) => ({
+        tournamentId: row.tournamentId,
+        seasonId: row.seasonId,
+        rank: row.rank,
+        score: row.score,
+        sgpAmount: row.sgpAmount,
+        breakdown: row.breakdown,
+        granted: row.grantedAt !== null,
+        grantedAt: row.grantedAt,
+      })),
       isAdmin: adminAllowlisted && highAssurance,
       adminUpgradeRequired: adminAllowlisted && !highAssurance,
     },

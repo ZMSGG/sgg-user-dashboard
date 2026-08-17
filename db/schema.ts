@@ -227,3 +227,30 @@ export const holdingsTokenCache = sqliteTable("holdings_token_cache", {
 }, (table) => [
   uniqueIndex("holdings_token_cache_key_idx").on(table.walletAddress, table.collectionId, table.offset),
 ]);
+
+/**
+ * Confirmed per-player tournament results — the personal half of SGGでの軌跡.
+ *
+ * Rows are imported by the operator flow from a finished tournament's locked
+ * leaderboard together with the decided award table, keyed by the dashboard's
+ * tournament record id. Deliberately no foreign key to players: most finishers
+ * have never opened MY SGG, and their result must already be waiting when they
+ * first log in. Whether the SGP actually landed is never stored here — it is
+ * read from the point_grants ledger via the grant's idempotency key, so this
+ * table cannot contradict the ledger.
+ */
+export const tournamentResults = sqliteTable("tournament_results", {
+  tournamentId: text("tournament_id").notNull(),
+  seasonId: text("season_id").notNull(),
+  discordId: text("discord_id").notNull(),
+  rank: integer("rank").notNull(),
+  score: integer("score").notNull(),
+  /** Decided SGP award for this finisher (the award table's row total). */
+  sgpAmount: integer("sgp_amount").notNull(),
+  /** Human-readable award breakdown, written with canon character names. */
+  breakdown: text("breakdown"),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+  primaryKey({ columns: [table.tournamentId, table.discordId] }),
+  index("tournament_results_discord_idx").on(table.discordId),
+]);

@@ -94,9 +94,10 @@ test("migration journal packages the guild and DM auth migrations exactly once",
       "0004_yielding_dormammu",
       "0005_same_madripoor",
       "0006_married_nighthawk",
+      "0007_greedy_speed_demon",
     ],
   );
-  assert.equal(journal.entries.at(-1)?.idx, 6);
+  assert.equal(journal.entries.at(-1)?.idx, 7);
   assert.match(await readMigration("0002_bent_spiral.sql"), /ADD `guild_synced_at` text/);
   assert.match(await readMigration("0003_previous_nitro.sql"), /CREATE TABLE `discord_dm_challenges`/);
   assert.match(await readMigration("0004_yielding_dormammu.sql"), /CREATE TABLE `game_account_links`/);

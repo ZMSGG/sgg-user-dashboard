@@ -80,3 +80,17 @@ test("the 軌跡 view searches, filters by game, and pages five at a time", asyn
   // Every card states where its numbers come from.
   assert.match(dashboard, /record\.provenance/);
 });
+
+test("each card carries the viewer's own result, honestly staged", async () => {
+  const dashboard = await readFile(new URL("../app/Dashboard.tsx", import.meta.url), "utf8");
+
+  // The personal band exists and comes from the passport, keyed by record id.
+  assert.match(dashboard, /myTournamentResults\.get\(record\.id\)/);
+  assert.match(dashboard, /YOUR RESULT \/ あなたの成績/);
+  // SGP state mirrors the ledger: 付与済み only when the grant exists.
+  assert.match(dashboard, /myResult\.granted \? "付与済み" : "付与予定"/);
+  // Signed in without a row says "no participation", never a zero result.
+  assert.match(dashboard, /この大会でのあなたの参加記録はありません/);
+  // Signed out, the section explains what logging in unlocks.
+  assert.match(dashboard, /あなたの順位・得点・獲得SGPがカードに表示されます/);
+});

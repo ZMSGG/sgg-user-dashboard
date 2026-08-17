@@ -39,6 +39,23 @@ export type PassportAuthMethods = {
 
 export type PassportLoginMethod = "discord_oauth" | "discord_dm";
 
+/**
+ * The player's own confirmed result in one finished tournament.
+ * `granted` reflects the point ledger, not the award table: it is true only
+ * when the SGP grant actually exists, so the UI can say 付与済み vs 付与予定
+ * without ever overstating what happened.
+ */
+export type PassportTournamentResult = {
+  tournamentId: string;
+  seasonId: string;
+  rank: number;
+  score: number;
+  sgpAmount: number;
+  breakdown: string | null;
+  granted: boolean;
+  grantedAt: string | null;
+};
+
 export type PassportData =
   | {
     connected: false;
@@ -53,6 +70,7 @@ export type PassportData =
     player: PassportPlayer;
     guild: PassportGuild;
     points: { balance: number; grants: PassportGrant[]; balances?: Record<string, number> };
+    tournaments?: PassportTournamentResult[];
     isAdmin: boolean;
     adminUpgradeRequired?: boolean;
   };
