@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "asset_id": "MEDIA-my-sgg-social-og-b-v004",
+  "recorded_at": "2026-08-07T18:10:39+08:00",
+  "recorded_by": "Codex GPT Image operator",
+  "purpose": "MY SGG SNS share key visual, composition B: 神域の天守を望む高台",
+  "status": "CANDIDATE_REVIEW_REQUIRED",
+  "publication_status": "NOT_PUBLIC_APPROVED",
+  "character_usage": "GODS",
+  "character_usage_reason": "The requested SNS key visual is a narrative world scene in which Taiyo, Juraku, and Fukuei look across the MY SGG divine city.",
+  "characters": [
+    {
+      "family": "GODS",
+      "canonical_id": "taiyo",
+      "name_ja": "大耀",
+      "reference": "SGG createve/canon/characters.json",
+      "identity_reference": "assets/candidates/og-v004/taiyo_main.webp",
+      "source_sha256": "1aaaba617b387ceac5ac3a121983e9e474f6f7c246147419cbef5719a1cd0bf9",
+      "source_rights_status": "APPROVED_FOR_REFERENCE",
+      "source_rights_record": "assets/ASSET_MANIFEST.csv: MEDIA-canon-taiyo_main",
+      "visual_identity_check": "PASS: blond hair, oversized dark olive brocade hood, orange visor, dark patterned orange-lit outfit, and large gold hammer-cannon remain clearly identifiable."
+    },
+    {
+      "family": "GODS",
+      "canonical_id": "juraku",
+      "name_ja": "寿楽",
+      "reference": "SGG createve/canon/characters.json",
+      "identity_reference": "assets/candidates/og-v004/juraku_main.webp",
+      "source_sha256": "8a3a91e60a671b8e0d3878358f3cb8dec66bf2a02c88a744278ed750f32c6f6b",
+      "source_rights_status": "APPROVED_FOR_REFERENCE",
+      "source_rights_record": "assets/ASSET_MANIFEST.csv: MEDIA-canon-juraku_main",
+      "visual_identity_check": "PASS: silver-black hair, pale forelock, green eye, long braided rope and tassel, blue-gold robe, neon-green trim, and waist gourds remain clearly identifiable."
+    },
+    {
+      "family": "GODS",
+      "canonical_id": "fukuei",
+      "name_ja": "福永",
+      "reference": "SGG createve/canon/characters.json",
+      "identity_reference": "assets/candidates/og-v004/fukuei_main.webp",
+      "source_sha256": "6967566c588f2b4abd23b71afe85c33f157c5d945f9daa6189d65fc7c92ed0b1",
+      "source_rights_status": "APPROVED_FOR_REFERENCE",
+      "source_rights_record": "assets/ASSET_MANIFEST.csv: MEDIA-canon-fukuei_main",
+      "visual_identity_check": "PASS: long silver twin tails, lime-green helmet, gold-framed goggles, green-violet outfit and black-gold patterned limbs remain clearly identifiable."
+    }
+  ],
+  "source_rights": {
+    "status": "APPROVED_FOR_REFERENCE",
+    "evidence": "assets/ASSET_MANIFEST.csv",
+    "evidence_sha256": "c856ccbf3055eb9b7d779e58f8602c43d03cac4d4d5ba1d8ccbd44a6cd2e5391",
+    "scope": "The task-supplied files are used only as identity references. The generated scene is a new purpose-built composition and does not directly embed the source files."
+  },
+  "generation": {
+    "provider": "OpenAI",
+    "product": "GPT Image / Image 2.0",
+    "mode": "Codex built-in reference-guided generation",
+    "generated_at": "2026-08-07T18:08:00+08:00",
+    "prompt_file": "assets/candidates/og-v004/og-b.prompt.txt",
+    "generated_source": "codex-generated://019fdbae-e1f0-7f70-a42c-c2069bcf166b/exec-214916ef-2a3d-41fd-956a-2d7c28b62090.png",
+    "image2_recreation": "Recomposed the three GODS into a new three-quarter overlook pose on a foreground cliff and created a purpose-specific sunset cloud sea, floating Japanese tenshu, suspended shrine islands, atmospheric haze, rim lighting and gold particles. No source pose or source background was reused."
+  },
+  "output": {
+    "file": "assets/candidates/og-v004/og-b.png",
+    "format": "PNG",
+    "width": 1536,
+    "height": 1024,
+    "color_type": "8-bit RGB",
+    "version": "v004-b",
+    "sha256": "e20fd0a013a3b0636047cd682af0bbe2705cf94007faa0c82e037ba4140bcf2f"
+  },
+  "visual_review": {
+    "reviewer": "Codex visual QA",
+    "reviewed_at": "2026-08-07T18:10:39+08:00",
+    "result": "PASS_AS_CANDIDATE",
+    "full_canvas_checked": true,
+    "final_crop_checked": true,
+    "final_crop": "center scale-and-crop to 1200x630",
+    "crop_result": "All three faces, hairstyles, outfits, Taiyo's full gold hammer-cannon, Juraku's braid and tassel, and Fukuei's helmet and goggles remain visible. The floating castle and shrine-city depth remain dominant.",
+    "composition_check": "PASS: exactly three GODS on the left foreground cliff; background occupies more than half the image; floating tenshu is the center-right architectural focal point.",
+    "text_logo_watermark_check": "PASS by visual inspection: no readable text, title, logo, signature, or watermark is present.",
+    "machine_checks": [
+      "PNG decodes as non-interlaced 1536x1024 8-bit RGB.",
+      "SHA-256 recorded.",
+      "OCR utility was unavailable; text absence was verified visually at full resolution and in the 1200x630 crop."
+    ]
+  },
+  "durable_state": {
+    "update_file": "assets/candidates/og-v004/STATE_UPDATE_OG_B.json",
+    "checkpoint_preview": "PASS: prepared CP-000052 from state version 51",
+    "checkpoint_written": false,
+    "checkpoint_blocker": "The current workspace write boundary permits this candidate folder but not the project root, so the checkpoint tool could not create .project-state.lock.",
+    "validation": "Expected FAIL after asset creation: project files changed without a durable checkpoint and VALIDATION_REPORT fingerprints are stale. No other validation issue remains."
+  },
+  "release_boundary": {
+    "approved": false,
+    "publishable": false,
+    "reason": "This record documents generation and candidate QA only. Owner visual approval and any runtime integration, publication, push or deployment are separate actions."
+  }
+}

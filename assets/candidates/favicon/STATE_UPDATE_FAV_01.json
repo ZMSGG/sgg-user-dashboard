@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 51,
+  "updated_by": "Codex Image 2.0 favicon candidate production",
+  "summary": "Generated one new Image 2.0 SGG favicon candidate from the owner-provided torii-and-seven-stars brand reference, saved it as assets/candidates/favicon/fav-01.png, recorded portable provenance and exact hashes, and visually verified the opaque square full-size asset plus a 16x16 downsample. The asset remains CANDIDATE and is not integrated, approved, published, committed, pushed, or deployed.",
+  "status": "REVIEW",
+  "phase": "PUBLIC_RELEASED",
+  "current_objective": "Keep the current public dashboard stable while preserving fav-01.png as a private Image 2.0 favicon candidate for owner review; do not replace the active icon until the exact candidate hash is approved and integrated in a separate task.",
+  "active_work": {
+    "work_id": "ACT-048",
+    "objective": "Create and record one high-contrast SGG favicon candidate with a white torii, exactly seven white stars, and a blue-to-mint opaque background.",
+    "status": "DONE",
+    "acceptance_criteria": [
+      "Save exactly one generated image as assets/candidates/favicon/fav-01.png.",
+      "Keep the generated output fully opaque, square, text-free, and character-free.",
+      "Verify one torii, exactly seven stars, and recognizable 16x16 downsample geometry.",
+      "Record Image 2.0 provenance, reference rights, reconstruction summary, final hash, crop QA, reviewer, and timezone-aware review time."
+    ]
+  },
+  "next_actions": [
+    {
+      "action_id": "ACT-045",
+      "order": 1,
+      "action": "オーナー自身のWallet連携（Wallet拡張のあるブラウザで）— NFTギャラリーの本番確認。",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-047",
+      "order": 2,
+      "action": "最初の一般ユーザーの流入を観察し、ログイン・表示の不具合報告を拾う。",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 3,
+      "action": "After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": ["BLK-SGP-AWARD-TABLE-001"]
+    },
+    {
+      "action_id": "ACT-024",
+      "order": 4,
+      "action": "Review the two drifted command-center policy hashes.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 5,
+      "action": "Sharp upgrade when supported.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": ["BLK-DEPENDENCY-SHARP-001"]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 6,
+      "action": "Player snapshot bridges per game.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": ["BLK-PLAYER-BRIDGE-001"]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-IN-APP-BROWSER-001",
+      "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+      "severity": "P1",
+      "description": "This Codex task exposes the Browser skill but not its required in-app browser control capability after mandatory discovery. The existing protected production tab remains untouched.",
+      "owner": "Codex runtime capability",
+      "status": "OPEN",
+      "resolution_required": "Expose the supported Codex in-app browser control capability, then complete the required new-muted-tab production verification without disturbing protected tabs or runtimes."
+    },
+    {
+      "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+      "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+      "severity": "P1",
+      "description": "A separate owner-run session owns the concurrent OTOMO CHAIN 7 repository work; this dashboard task does not write there.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before adapting dashboard reconciliation or editing that repository."
+    },
+    {
+      "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+      "scope": "REWARD_VALUE_AUTHORITY",
+      "severity": "P1",
+      "description": "SGP amounts per final rank are not recorded; the payout endpoint requires an operator-supplied award table.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Decide and record the season-0 SGP award table before any payout apply request."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "The real two-account isolation test was completed and the temporary tester access was removed.",
+      "owner": "SGG project owner",
+      "status": "RESOLVED",
+      "resolution_required": "None; resolved on 2026-07-31."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "The owner explicitly completed the public-release access change after application isolation and rollback checks.",
+      "owner": "SGG project owner",
+      "status": "RESOLVED",
+      "resolution_required": "None; resolved on 2026-07-31."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, while the built Worker has no reachable untrusted image-processing path.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp."
+    },
+    {
+      "blocker_id": "BLK-SITES-EXPORT-UNAVAILABLE-001",
+      "scope": "LEGACY_DATA_RECOVERY",
+      "severity": "P3",
+      "description": "The legacy Sites data is unrecoverable but was confirmed to contain no real usage.",
+      "owner": "SGG project owner",
+      "status": "RESOLVED",
+      "resolution_required": "None."
+    },
+    {
+      "blocker_id": "BLK-SECRET-EXPOSURE-001",
+      "scope": "CREDENTIAL_HYGIENE",
+      "severity": "P2",
+      "description": "The previously exposed Discord client secret was rotated and re-tested without placing the replacement in model context.",
+      "owner": "SGG project owner",
+      "status": "RESOLVED",
+      "resolution_required": "None."
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "assets/candidates/favicon/fav-01.png",
+      "reason": "Store the single requested Image 2.0 favicon candidate."
+    },
+    {
+      "path": "assets/candidates/favicon/fav-01.provenance.json",
+      "reason": "Record reference rights, Image 2.0 reconstruction, exact hash, dimensions, crop QA, 16px QA, reviewer, and timestamp."
+    },
+    {
+      "path": "assets/candidates/favicon/STATE_UPDATE_FAV_01.json",
+      "reason": "Persist the asset-generation milestone through the required durable checkpoint workflow."
+    }
+  ],
+  "resume": {
+    "action_id": "ACT-047",
+    "instruction": "The site remains public and unchanged. Continue watching first-user behavior. Keep assets/candidates/favicon/fav-01.png at CANDIDATE status unless the owner separately requests exact-hash approval and runtime integration.",
+    "do_not_assume": [
+      "fav-01.png is approved, active, public, committed, pushed, deployed, or integrated; it is only a private candidate.",
+      "Generating a candidate authorized replacement of the current production favicon.",
+      "The existing protected browser tabs or development runtimes may be stopped, restarted, repurposed, or closed."
+    ]
+  }
+}

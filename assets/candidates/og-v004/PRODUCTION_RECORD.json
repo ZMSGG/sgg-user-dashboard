@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "asset_id": "MEDIA-my-sgg-social-og-d-v004",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "status": "CANDIDATE_OWNER_REVIEW",
+  "purpose": "MY SGG (SEVEN GODS GAMES) SNS share key visual, composition D: 対決の刻",
+  "version": "v004-d",
+  "final_file": "og-d.png",
+  "dimensions": {
+    "width": 1536,
+    "height": 1024,
+    "format": "PNG",
+    "color_mode": "RGB"
+  },
+  "generation": {
+    "provider": "OpenAI",
+    "workflow": "Built-in GPT Image / image_gen Image 2.0 generation with two identity references",
+    "generated_at": "2026-08-07T18:08:03+08:00",
+    "reference_handling": "Identity and costume references only; neither source image was pasted or used as the production background.",
+    "recreation_summary": "Both canonical GODS were newly staged back-to-back in a moonlit ruined sacred plaza with cinematic blue-versus-gold combat energy, dust, cherry blossoms, cracked paving, torii silhouettes, and atmospheric depth.",
+    "prompt_summary": "High-detail anime battle-game cover; giant full moon; ruined sacred-domain plaza; exactly two low-proportion characters centered for a 1200x630 crop; SOBI with cyan trident and TAIYO with gold hammer cannon; no text, logo, watermark, border, UI, extra people, or extra creatures."
+  },
+  "source_references": [
+    {
+      "file": "sobi_main.webp",
+      "role": "Canonical identity reference for SOBI / 蒼毘",
+      "sha256": "8d7ea50a2a75177346f90e46f6aac209d9366c9adecb5db39eab3b52df0fe5d8",
+      "source_rights": "SGG official public Creator Kit-derived reference; identity-reference use only; runtime direct-paste prohibited."
+    },
+    {
+      "file": "taiyo_main.webp",
+      "role": "Canonical identity reference for TAIYO / 大耀",
+      "sha256": "1aaaba617b387ceac5ac3a121983e9e474f6f7c246147419cbef5719a1cd0bf9",
+      "source_rights": "SGG official public Creator Kit-derived reference; identity-reference use only; runtime direct-paste prohibited."
+    }
+  ],
+  "character_usage": "GODS",
+  "character_usage_reason": "The two canonical GODS are the primary subjects of this social key visual.",
+  "characters": [
+    {
+      "family": "GODS",
+      "canonical_id": "sobi",
+      "name_ja": "蒼毘",
+      "reference": "SGG createve/canon/characters.json and sobi_main.webp",
+      "rights_status": "REFERENCE_APPROVED",
+      "identity_check": "PASS: black hair with turquoise forelocks, blue eyes, pale-gold/aqua crested helmet with pink-white plume, white/aqua/gold armor, patterned skirt armor, and blue-glowing trident remain recognizable."
+    },
+    {
+      "family": "GODS",
+      "canonical_id": "taiyo",
+      "name_ja": "大耀",
+      "reference": "SGG createve/canon/characters.json and taiyo_main.webp",
+      "rights_status": "REFERENCE_APPROVED",
+      "identity_check": "PASS: blond hair, brown eyes, orange visor and headset, dark olive brocade hood and outfit, orange accents, black-and-gold boots, and gold hammer cannon remain recognizable."
+    }
+  ],
+  "visual_qa": {
+    "reviewer": "Codex visual QA",
+    "reviewed_at": "2026-08-07T18:08:25+08:00",
+    "full_canvas_check": "PASS: 1536x1024 landscape; full moon, ruined shrine depth, dust, cherry blossoms, cracked stone, backlight, cyan/gold auras, exactly two characters, and no visible text/logo/watermark.",
+    "final_crop_check": "PASS: a center-fit 1200x630 simulation preserves both faces, headgear, torsos, signature clothing, Sobi's trident head, Taiyo's hammer-cannon head, moon, torii, and the blue/gold combat read. Nonessential lower-leg detail trims as intended.",
+    "identity_check": "PASS: both characters remain individually identifiable and retain the requested low proportions.",
+    "background_check": "PASS: the moonlit sacred plaza provides substantial depth, light, and atmosphere rather than functioning as a flat backdrop.",
+    "production_approval": "Not inferred; owner review remains required before marking this candidate approved or publishable."
+  },
+  "final_sha256": "1614ff08eb9da79d365a67045db9397817c0451ad1695ce7ddb882b8c964f127"
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "asset_id": "fav-04",
+  "asset_role": "favicon_candidate",
+  "purpose": "和モダンなアプリアイコン案04。16pxで日輪と三本の波線を判別できる不透明な正方形ファビコン候補。",
+  "final_file": "fav-04.png",
+  "version": 1,
+  "generation_tool": "OpenAI built-in GPT Image via image_gen",
+  "generation_mode": "generate",
+  "source_reference": "NONE",
+  "source_rights": "User-authored brief; no external image reference used; original GPT Image generation.",
+  "rights_status": "PENDING",
+  "character_usage": "NONE",
+  "character_usage_reason": "汎用UIアイコンであり、日輪と波のみが用途上の主題。装飾的なGODS／OTOMOは不要。",
+  "final_prompt": "Use case: logo-brand\nAsset type: production favicon PNG, square 1:1\nCreate a strict two-ink flat graphic, as if exported from a simple vector drawing program—NOT a rendered scene and NOT an illustration with lighting.\nCanvas/background: one single uniform opaque sky-blue color across every background pixel, edge to edge. Absolutely no lighting, no bright center, no dark corners, no radial effect, no gradient, no vignette, no glow, no noise, no texture.\nForeground: exactly four pure-white shapes only: (1) one solid white circle centered in the upper half; (2) exactly three separate, very thick, smooth horizontal wave strokes stacked beneath it. Each stroke has rounded ends and only broad slow curves. All four foreground shapes use a single uniform pure-white fill with no shading.\nComposition: centered, balanced, generous outer padding, app-icon safe area; circle separated from the top wave; all three waves separated by large blue gaps. Full-bleed square image, no transparent pixels.\nCritical favicon requirement: recognizable at 16×16 px. Favor an unmistakable silhouette, very thick strokes, large gaps, no fine features.\nPalette: exactly two flat colors only: sky blue and white.\nDo not add anything else: no text, no letters, no border, no rounded frame outline, no sun rays, no foam, no droplets, no clouds, no birds, no ornaments, no watermark, no mockup, no shadows, no bevels, no highlights.",
+  "generated_at": "2026-08-04T12:39:27+08:00",
+  "reviewer": "Codex",
+  "reviewed_at": "2026-08-04T12:39:27+08:00",
+  "visual_review": {
+    "square_canvas": "PASS: 1254x1254",
+    "opaque_background": "PASS: RGB PNG, no alpha channel",
+    "element_count": "PASS: one white circle and three separate white wave lines",
+    "forbidden_detail": "PASS: no text or decorative pictorial elements observed",
+    "final_crop": "PASS: all required shapes remain inside the square crop with generous padding",
+    "favicon_16px": "PASS: inspected a true 16x16 downscale; circle and all three wave lines remain individually recognizable"
+  },
+  "final_sha256": "34c2d8dcf77516c7644d968e3f2f7d72b0f7dc2c938b601d65a7e59502dbff06",
+  "delivery_status": "CANDIDATE_NOT_PUBLIC_APPROVED"
+}

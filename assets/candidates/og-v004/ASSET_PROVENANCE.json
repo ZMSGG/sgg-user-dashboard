@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "record_type": "SGG_IMAGE2_CANDIDATE_PROVENANCE",
+  "asset": {
+    "id": "MEDIA-my-sgg-social-og-a-v004",
+    "path": "og-a.png",
+    "purpose": "MY SGG (SEVENGODS Games) social-share key visual",
+    "concept": "暁の千本鳥居",
+    "width": 1536,
+    "height": 1024,
+    "format": "PNG",
+    "version": "og-v004-a",
+    "sha256": "238947b40494e2f8702d7fbd1dde29b966170bfb1186126479f008254b699e77",
+    "generated_at": "2026-08-07T18:11:52+08:00",
+    "timezone": "Asia/Kuala_Lumpur",
+    "status": "CANDIDATE",
+    "public_approval": "NOT_ASSERTED"
+  },
+  "generation": {
+    "tool": "OpenAI built-in image_gen",
+    "model_family": "GPT Image / Image 2.0 workflow",
+    "mode": "generate-with-identity-references, followed by two targeted built-in edits",
+    "use_case": "stylized-concept",
+    "source_output_record": "generated_images/019fdbae-c66b-7d40-aa0e-b1c27a3f6428/exec-51022559-9347-488a-a339-381468b6dd20.png (Codex generated store; copied into this project as og-a.png)",
+    "image2_recreation_summary": "The three source artworks were used only as identity anchors. A new shared walking performance, new dawn torii environment, new one-point perspective, new rim lighting, new mist, new wet-stone reflections, and crop-safe social composition were generated. No source cutout, crop, trace, background swap, or direct production placement was used.",
+    "prompt_history": [
+      {
+        "stage": "initial_generation",
+        "prompt": "Create a completely new 1536x1024 high-detail anime cinematic MY SGG social-share key visual, conceptually 'Dawn of a Thousand Torii', with no rendered title or text. Exactly SOBI, EBISU, and SAIKA walk toward the viewer in the mid-foreground slightly right of center. Use sobi_main.webp, ebisu_main.webp, and saika_main.webp only as identity anchors; faithfully preserve each face, compact proportions, hair, eyes, costume colors/details, and signature weapon, but redraw all three in a coherent new walking action and shared dawn lighting. Make the immense vermilion torii avenue, deep one-point perspective, sunrise, blue-gray mist, volumetric beams, wet stone paving, moss, and reflections at least half of the visual narrative. Keep the characters in the horizontal center-safe band for a centered 1200x630 crop. No pasted cutout look, collage, panels, extra characters, OTOMO, text, logo, watermark, UI, border, modern objects, sexualization, or photorealism."
+      },
+      {
+        "stage": "crop_safety_scale_and_place",
+        "prompt": "Keep the generated torii scene, dawn lighting, rendering, and all three character identities unchanged. Change only the group scale and placement: uniformly reduce the complete three-character group and all equipment by about 18%, move it upward and left, keep the walking poses and order, and fit complete bodies, hair, faces, and signature weapons inside the centered 1200x630 crop of the 1536x1024 canvas. Add nothing and remove nothing."
+      },
+      {
+        "stage": "final_crop_safety_shift",
+        "prompt": "Move the entire existing three-character group and every part of their equipment straight upward by approximately 40 pixels. Do not scale, rotate, redraw, restyle, reorder, or otherwise change the group or environment. Preserve exact identities, costumes, poses, torii geometry, wet paving, mist, dawn lighting, color grade, anime rendering, and 1536x1024 size. Keep exactly three characters and no text, logo, watermark, border, or UI."
+      }
+    ]
+  },
+  "character_usage": {
+    "selection": "GODS",
+    "reason": "This is a character-led social key visual whose brief explicitly requires three canonical GODS; no OTOMO is needed.",
+    "characters": [
+      {
+        "family": "GODS",
+        "canonical_id": "sobi",
+        "name_ja": "蒼毘",
+        "canon_reference": "SGG createve/canon/characters.json",
+        "identity_reference": "sobi_main.webp",
+        "identity_reference_sha256": "8d7ea50a2a75177346f90e46f6aac209d9366c9adecb5db39eab3b52df0fe5d8",
+        "reference_rights_status": "PENDING_EXACT_BINARY_MATCH",
+        "reference_rights_evidence": "User-provided identity reference. The parent project manifest contains a REFERENCE entry for the same filename from the SGG public creator-kit, but its recorded binary hash differs, so exact file equivalence is not asserted."
+      },
+      {
+        "family": "GODS",
+        "canonical_id": "ebisu",
+        "name_ja": "恵比寿",
+        "canon_reference": "SGG createve/canon/characters.json",
+        "identity_reference": "ebisu_main.webp",
+        "identity_reference_sha256": "11d2595ef74941dd790af7c91b3b3a4d0f69138f79d7e2728641643e0c756862",
+        "reference_rights_status": "PENDING_EXACT_BINARY_MATCH",
+        "reference_rights_evidence": "User-provided identity reference. The parent project manifest contains a REFERENCE entry for the same filename from the SGG public creator-kit, but its recorded binary hash differs, so exact file equivalence is not asserted."
+      },
+      {
+        "family": "GODS",
+        "canonical_id": "saika",
+        "name_ja": "才華",
+        "canon_reference": "SGG createve/canon/characters.json",
+        "identity_reference": "saika_main.webp",
+        "identity_reference_sha256": "32213880bd50f36b4f6797257f2c10dab11d597dc414aa6007ca310e4fe19e56",
+        "reference_rights_status": "PENDING_EXACT_BINARY_MATCH",
+        "reference_rights_evidence": "User-provided identity reference. The parent project manifest contains a REFERENCE entry for the same filename from the SGG public creator-kit, but its recorded binary hash differs, so exact file equivalence is not asserted."
+      }
+    ],
+    "otomo_form": null
+  },
+  "visual_qa": {
+    "reviewer": "Codex",
+    "reviewed_at": "2026-08-07T18:11:52+08:00",
+    "review_timezone": "Asia/Kuala_Lumpur",
+    "method": "Original-resolution inspection plus centered diagnostic crop at 1200x630",
+    "checks": {
+      "dimensions_1536x1024": "PASS",
+      "exactly_three_canonical_gods": "PASS",
+      "recognizable_identity_hair_eyes_costume_weapons": "PASS",
+      "low_character_proportions_preserved": "PASS",
+      "background_carries_at_least_half_the_scene": "PASS",
+      "torii_depth_dawn_mist_rim_light_reflections": "PASS",
+      "centered_1200x630_crop_safety": "PASS",
+      "no_text_logo_or_watermark": "PASS",
+      "no_direct_source_art_paste": "PASS",
+      "human_final_approval": "NOT_ASSERTED"
+    },
+    "crop_note": "The centered 1200x630 diagnostic crop keeps all three faces, defining hairstyles, complete bodies, and signature equipment visible while retaining substantial torii depth and atmospheric context.",
+    "review_result": "VISUALLY_ACCEPTABLE_AS_CANDIDATE"
+  }
+}

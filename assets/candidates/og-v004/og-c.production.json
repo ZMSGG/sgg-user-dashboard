@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "asset_id": "MY-SGG-OG-C-V004",
+  "asset_role": "MY SGG social-share key visual / OGP candidate",
+  "version": "og-v004-c-1",
+  "status": "GENERATED_QA_PASS",
+  "public_approval_status": "NOT_REQUESTED",
+  "final_file": "og-c.png",
+  "format": "PNG",
+  "dimensions": {
+    "width": 1536,
+    "height": 1024
+  },
+  "sha256": "1449a0cc21f2789181df510029a079c7e6c359a9245b39bd0b46632cf3a0127b",
+  "generated_at": "2026-08-07T18:08:25+08:00",
+  "generator": {
+    "provider": "OpenAI",
+    "workflow": "Codex built-in image generation",
+    "model_family": "GPT Image / Image 2.0",
+    "mode": "reference-guided generation",
+    "prompt_file": "og-c.prompt.txt"
+  },
+  "character_usage": "GODS",
+  "character_usage_reason": "The requested SNS key visual is a character-led celebratory scene featuring three canonical GODS in a purpose-built environment.",
+  "characters": [
+    {
+      "family": "GODS",
+      "canonical_id": "ebisu",
+      "canonical_name_ja": "恵比寿",
+      "identity_reference": "ebisu_main.webp",
+      "identity_reference_sha256": "11d2595ef74941dd790af7c91b3b3a4d0f69138f79d7e2728641643e0c756862",
+      "rights_status": "PENDING",
+      "rights_note": "User-provided task reference; used only as identity input for a new Image 2.0 composition, not pasted into the final asset."
+    },
+    {
+      "family": "GODS",
+      "canonical_id": "shouren",
+      "canonical_name_ja": "笑蓮",
+      "identity_reference": "shouren_main.webp",
+      "identity_reference_sha256": "6a479c0459984b648c5a4ea26cc230fe3d867a6f9807b5adec78ab379aa1e613",
+      "rights_status": "PENDING",
+      "rights_note": "User-provided task reference; used only as identity input for a new Image 2.0 composition, not pasted into the final asset."
+    },
+    {
+      "family": "GODS",
+      "canonical_id": "saika",
+      "canonical_name_ja": "才華",
+      "identity_reference": "saika_main.webp",
+      "identity_reference_sha256": "32213880bd50f36b4f6797257f2c10dab11d597dc414aa6007ca310e4fe19e56",
+      "rights_status": "PENDING",
+      "rights_note": "User-provided task reference; used only as identity input for a new Image 2.0 composition, not pasted into the final asset."
+    }
+  ],
+  "canonical_reference": "SGG createve/canon/characters.json",
+  "image2_recreation": {
+    "summary": "Recomposed all three characters into a new night-festival waterside scene with new poses, interaction, lantern lighting, reflections, atmospheric depth, vermilion bridge, shrine, and crop-safe staging.",
+    "direct_paste_used": false,
+    "purpose_fit": "Landscape SNS/OGP key visual with a meaningful environment and centered character band."
+  },
+  "visual_review": {
+    "reviewer": "Codex visual QA",
+    "reviewed_at": "2026-08-07T18:08:52+08:00",
+    "identity_check": "PASS - EBISU, SHOUREN, and SAIKA are separately recognizable by face, hair, costume, and signature props.",
+    "similarity_and_recomposition_check": "PASS - the final is a materially new environment, composition, pose set, interaction, and lighting treatment rather than a reference-image paste or light filter.",
+    "exposure_check": "PASS - SHOUREN does not exceed the exposure level of the supplied reference.",
+    "background_check": "PASS - lantern waterway, reflections, depth, bridge, shrine, haze, and bokeh share the visual emphasis with the characters.",
+    "text_logo_watermark_check": "PASS - no text, logo, watermark, signature, or UI is visible.",
+    "anatomy_prop_check": "PASS - no obvious extra limbs; the fishing rod, green accessory, and guitar remain visually coherent.",
+    "final_crop_check": {
+      "target": "1200x630 centered crop",
+      "method": "Scale 1536x1024 to 1200x800, then center-crop vertically to 1200x630.",
+      "result": "PASS - all three faces, core costumes, and signature props remain readable; the bridge, water reflections, and lantern depth remain visible."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "record_type": "SGG_IMAGE2_CANDIDATE_PRODUCTION_RECORD",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "asset_id": "MEDIA-my-sgg-favicon-fav-03-v001",
+  "version": "v001",
+  "status": "CANDIDATE",
+  "purpose": "Minimal SGG torii app-icon and favicon candidate optimized for recognition at 16px",
+  "character_usage": "NONE",
+  "character_usage_reason": "This is a reusable brand and UI icon whose sole subject is the torii mark; no GODS or OTOMO character is required.",
+  "image_generation": {
+    "tool": "GPT Image via Codex built-in image generation",
+    "mode": "SUBSTANTIVE_REFERENCE_REDESIGN_WITH_TARGETED_REVISION",
+    "generated_at": "2026-08-04T12:36:00+08:00",
+    "revised_at": "2026-08-04T12:38:00+08:00",
+    "reference_input": {
+      "file": "sgg-mark.png",
+      "role": "SGG brand reference for the high-level torii identity only; stars, palette, outlines, proportions, and ornament were explicitly excluded from the final design",
+      "sha256": "41503fe927cc1346f419a7598c8cb25bb9e6291fa73e69ff62286f40a39e7f0e",
+      "rights_status": "OWNER_PROVIDED_SGG_BRAND_REFERENCE",
+      "rights_scope": "Reference input for a project-specific GPT Image reconstruction; source pixels are not used as the production asset"
+    },
+    "substantive_reconstruction": "Rebuilt the supplied red-and-gold torii-and-seven-stars mark as a new favicon-specific composition: one large front-facing geometric torii in vivid turquoise, broad negative openings, very thick beams and pillars, no stars, no ornament, and a fully opaque white-to-near-white square background. A second GPT Image revision removed the initial dark outer corners and flattened the result for maximum small-size contrast.",
+    "prompt_set": [
+      "Use case: logo-brand. Asset type: square app icon and favicon master, intended to remain recognizable at 16x16 px. Use sgg-mark.png as a brand-motif reference only; preserve the unmistakable high-level identity of a Japanese torii gate, but create a substantively new, purpose-built minimal favicon composition. Do not reproduce the reference's stars, colors, highlights, outlines, proportions, or ornamental details. Create one clean rounded-square app icon with a single bold torii gate silhouette centered and very large. Use a fully opaque solid pure-white to extremely pale neutral-gray backdrop. Render exactly one front-facing, perfectly symmetrical, simplified torii with an emphatic gently upturned top lintel, a thick secondary crossbeam, and two very thick vertical pillars in vivid saturated turquoise blue, approximately #00AFC4. Keep negative openings broad and simple so the gate reads clearly at 16 px. Ultra-minimal flat vector-like raster icon, crisp geometric edges, square 1:1, torii occupying roughly 78-84% of the canvas, no text, no stars, no other object, no decoration, no shadow, glow, gradient, texture, bevel, 3D, transparency, scenery, watermark, or outline.",
+      "Edit fav-03.png while keeping the existing torii composition, scale, symmetry, and simplified silhouette. Replace every black or dark pixel in all four outer corners with the same opaque near-white background used behind the torii. Remove visible shadow, glow, gradient, texture, bevel, blur, and lighting variation. Keep exactly one centered, front-facing, vivid-turquoise torii with thick pillars and beams, broad negative openings, no stars, no text, no other symbols or decoration, and an opaque 1:1 background."
+    ]
+  },
+  "final_asset": {
+    "file": "fav-03.png",
+    "format": "PNG",
+    "dimensions": "1254x1254",
+    "color_mode": "RGB",
+    "opaque_background": true,
+    "sha256": "18d450f14548f942fb607578596b5e16824d9b4e159ef05c90ca2da7b8427010"
+  },
+  "visual_qa": {
+    "reviewed_by": "Codex visual QA",
+    "reviewed_at": "2026-08-04T12:39:45+08:00",
+    "full_size": "PASS: one large turquoise torii on an opaque white-to-near-white square background; no stars, text, characters, watermark, scenery, or additional subject.",
+    "final_crop": "PASS: the torii is centered, front-facing, symmetric, and contained within an even favicon safe area; all four canvas corners are near-white rather than black or transparent.",
+    "favicon_16px": "PASS: a Lanczos 16x16 downsample retains the upturned top beam, secondary crossbeam, two thick pillars, and broad central opening as an immediately legible torii silhouette.",
+    "contrast": "PASS: sampled 16px background corners remain approximately #FEFEFE while core torii pixels remain saturated turquoise; no fine decorative detail is required for recognition.",
+    "reference_similarity": "PASS: the output preserves only the high-level torii identity and materially changes the palette, construction, proportions, element count, spacing, and visual treatment; all seven stars and source ornament are removed."
+  },
+  "approval": {
+    "status": "OWNER_REVIEW_REQUIRED",
+    "publishable": false
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "asset_id": "fav-05",
+  "purpose": "MY SGG favicon candidate 05",
+  "final_file": "fav-05.png",
+  "version": "v1",
+  "character_usage": "NONE",
+  "character_usage_reason": "A generic UI/favicon component whose legibility and reuse would be reduced by decorative characters.",
+  "generation": {
+    "system": "OpenAI built-in image_gen (GPT Image)",
+    "mode": "generate followed by one targeted GPT Image edit",
+    "generated_at": "2026-08-04T12:41:32+08:00",
+    "external_input_images": [],
+    "prompt_owner": "SGG project owner",
+    "final_prompt_summary": "Opaque square app icon with one centered pure-white U+4E03 kanji glyph on a flat sky-blue field; extremely bold sans-serif strokes, generous safe-area padding, no other text or decoration.",
+    "selected_source_generation_id": "019fcb0e-3e4a-7252-8c26-252b7e400ce1",
+    "selected_source_artifact": "exec-9e432610-bd2c-4867-b682-82ce58b8f806.png",
+    "selected_source_sha256": "6a835daa6e554fe5ace1827430f9336636317351e79a35c03ce3c5f90f0d9137",
+    "reproduction_notes": "The selected GPT Image result supplied the final glyph silhouette and composition. A deterministic conformance pass scaled it to 1024 square and normalized the generated color variation to pure white plus one solid #0B84C6 background, preserving antialiased glyph edges."
+  },
+  "rights": {
+    "source_rights": "ORIGINAL_AI_GENERATION_NO_EXTERNAL_IMAGE_INPUTS",
+    "rights_status": "PENDING",
+    "notes": "Rights status is recorded as project metadata and is not a release gate under the active project policy."
+  },
+  "final_spec": {
+    "width": 1024,
+    "height": 1024,
+    "format": "PNG",
+    "color_type": "RGB",
+    "opaque": true,
+    "background_hex": "#0B84C6",
+    "foreground_hex": "#FFFFFF",
+    "text": "七",
+    "unicode": "U+4E03",
+    "sha256": "b503135403f4832726c4dc46772d25d18ed59627ea8153c54536dfaf6c9277bc"
+  },
+  "visual_review": {
+    "reviewer": "Codex",
+    "reviewed_at": "2026-08-04T12:41:32+08:00",
+    "status": "PASS",
+    "final_crop_checked": true,
+    "checks": [
+      "Exactly one visible glyph: 七 (U+4E03)",
+      "No other text, punctuation, symbol, logo, border, shadow, gradient, texture, or decoration",
+      "Square 1024 by 1024 output with no alpha channel",
+      "All four corner samples are the same flat background color",
+      "Manual review of a 16 by 16 downsample confirms the two-stroke glyph remains distinguishable"
+    ]
+  }
+}

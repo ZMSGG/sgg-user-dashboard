@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_type": "SGG_IMAGE2_CANDIDATE_PROVENANCE",
+  "asset_id": "FAV-sgg-mark-06",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "status": "CANDIDATE_QA_PASS",
+  "purpose": "SGG app icon and favicon candidate 06",
+  "character_usage": "NONE",
+  "character_usage_reason": "This is a reusable brand and UI icon whose subject is the SGG torii-and-seven-stars mark; no GODS or OTOMO character is required.",
+  "generation": {
+    "tool": "OpenAI GPT Image via Codex built-in image generation",
+    "workflow": "substantive reference redesign followed by a targeted exact-count correction",
+    "generated_at": "2026-08-04T12:39:51+08:00",
+    "reference_input": {
+      "file": "sgg-mark.png",
+      "sha256": "41503fe927cc1346f419a7598c8cb25bb9e6291fa73e69ff62286f40a39e7f0e",
+      "role": "brand identity and composition reference only",
+      "source": "current SGG brand mark supplied by the user in this request",
+      "rights_status": "PENDING_RECORD_ONLY",
+      "directly_embedded_in_final": false
+    },
+    "substantive_reconstruction": "Rebuilt the complete palette, background, torii geometry, foreground silhouette, seven-mark representation, spacing, and rounded-square app-icon composition for high-contrast 16 px use; no source pixels were pasted or retained.",
+    "final_prompt": "Keep the entire generated icon design, square composition, opaque mint-to-white rounded-square background, deep-indigo color, and bold centered torii silhouette unchanged. Change only the celestial-dot row so it contains exactly seven small solid indigo circular dots in a symmetric upward arc: two lower outer dots, two slightly higher mid-outer dots, two higher inner dots, and one highest center dot. All seven must be fully visible, evenly spaced, separated, and individually countable. Preserve one bold unmistakable torii with extremely thick shapes and large negative spaces. No star polygons, extra marks, text, letters, numbers, characters, ornaments, texture, shadows, watermark, or transparency. Keep the full square canvas filled and opaque.",
+    "final_file": "fav-06.png",
+    "final_sha256": "99f7b485979767ab9338aff07072ec61893ab755f37c42eade27fccdb6e1baf4",
+    "final_dimensions": "1254x1254",
+    "final_format": "PNG RGB"
+  },
+  "qa": {
+    "status": "PASS",
+    "reviewed_by": "Codex visual QA",
+    "reviewed_at": "2026-08-04T12:40:10+08:00",
+    "square": true,
+    "opaque_background": true,
+    "alpha_channel": false,
+    "exact_indigo_dot_count": 7,
+    "torii_recognizable_at_16px": true,
+    "thick_high_contrast_silhouette": true,
+    "final_crop_visual_check": "PASS: the centered torii and all seven dots remain inside the rounded-square safe area; the 16x16 downscale retains the broad roof, crossbar, and two pillars.",
+    "forbidden_detail_check": "PASS: no text, characters, fine ornament, texture, watermark, transparency, or extra celestial marks are visible."
+  },
+  "publication": {
+    "public_approved": false,
+    "note": "Candidate generation and visual QA do not by themselves authorize publication or deployment."
+  }
+}

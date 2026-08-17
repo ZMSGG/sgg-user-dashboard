@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "expected_state_version": 51,
+  "updated_by": "Codex GPT Image social key visual production",
+  "summary": "Generated the owner-requested MY SGG social key visual composition D with GPT Image, saved the 1536x1024 PNG as assets/candidates/og-v004/og-d.png, and recorded Image 2.0 provenance, canonical GODS identity references, source rights, exact hashes, and full-canvas plus 1200x630 center-crop visual QA. The asset remains an unintegrated candidate and was not approved, published, committed, pushed, or deployed.",
+  "status": "REVIEW",
+  "phase": "PUBLIC_RELEASED",
+  "current_objective": "Keep the current public dashboard stable while preserving og-d.png as a private GPT Image social-key-visual candidate for owner review; do not replace an active social image until the exact candidate hash is approved and integrated in a separate task.",
+  "active_work": {
+    "work_id": "ACT-OG-D-20260807",
+    "objective": "Create and record one 1536x1024 MY SGG social key visual for composition D, 対決の刻, featuring canonical GODS sobi and taiyo.",
+    "status": "DONE",
+    "acceptance_criteria": [
+      "Save exactly one generated image as assets/candidates/og-v004/og-d.png at 1536x1024.",
+      "Preserve canonical sobi and taiyo identity, low proportions, clothing, and signature weapons while rebuilding the scene through GPT Image.",
+      "Stage both GODS back-to-back in the central horizontal band against a full moon and ruined sacred plaza with cyan and gold battle energy.",
+      "Exclude all text, logos, watermarks, UI, extra people, and extra creatures.",
+      "Record GPT Image provenance, source rights, canonical IDs, final hash, full-canvas QA, 1200x630 crop QA, reviewer, and timezone-aware review time."
+    ]
+  },
+  "next_actions": [
+    {
+      "action_id": "ACT-045",
+      "order": 1,
+      "action": "オーナー自身のWallet連携（Wallet拡張のあるブラウザで）— NFTギャラリーの本番確認。",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-047",
+      "order": 2,
+      "action": "最初の一般ユーザーの流入を観察し、ログイン・表示の不具合報告を拾う。",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-018",
+      "order": 3,
+      "action": "After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table.",
+      "owner": "SGG project owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-SGP-AWARD-TABLE-001"
+      ]
+    },
+    {
+      "action_id": "ACT-024",
+      "order": 4,
+      "action": "Review the two drifted command-center policy hashes.",
+      "owner": "SGG project owner",
+      "status": "READY",
+      "blocker_ids": []
+    },
+    {
+      "action_id": "ACT-012",
+      "order": 5,
+      "action": "Sharp upgrade when supported.",
+      "owner": "SGG engineering owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-DEPENDENCY-SHARP-001"
+      ]
+    },
+    {
+      "action_id": "ACT-006",
+      "order": 6,
+      "action": "Player snapshot bridges per game.",
+      "owner": "SGG game platform owner",
+      "status": "BLOCKED",
+      "blocker_ids": [
+        "BLK-PLAYER-BRIDGE-001"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "BLK-IN-APP-BROWSER-001",
+      "scope": "INTERACTIVE_DELIVERY_VERIFICATION",
+      "severity": "P1",
+      "description": "This Codex task exposes the Browser skill but not its required in-app browser control capability after mandatory discovery. The existing protected production tab remains untouched. Version 14 has Sites screenshot, production HTTP, asset-hash, HTML/CSS and Worker-log evidence, but no new muted tab, interactive 390px viewport or console session was available.",
+      "owner": "Codex runtime capability",
+      "status": "OPEN",
+      "resolution_required": "Expose the supported Codex in-app browser control capability, then open the exact Version 14 URL in a new muted tab without navigating or closing the protected tab and complete desktop, 390px, interaction and console verification."
+    },
+    {
+      "blocker_id": "BLK-CONCURRENT-GAME-SESSION-001",
+      "scope": "CONCURRENT_REPOSITORY_OWNERSHIP",
+      "severity": "P1",
+      "description": "A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository."
+    },
+    {
+      "blocker_id": "BLK-SGP-AWARD-TABLE-001",
+      "scope": "REWARD_VALUE_AUTHORITY",
+      "severity": "P1",
+      "description": "SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one.",
+      "owner": "SGG project owner",
+      "status": "OPEN",
+      "resolution_required": "Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request."
+    },
+    {
+      "blocker_id": "BLK-DISCORD-E2E-001",
+      "scope": "REAL_IDENTITY_ISOLATION_GATE",
+      "severity": "P1",
+      "description": "Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities.",
+      "owner": "SGG project owner",
+      "status": "RESOLVED",
+      "resolution_required": "Done 2026-07-31: real two-account test (owner + type.wolf). Client-side four-point check and server-side row inspection agree; tester's email removed from the Access policy immediately after."
+    },
+    {
+      "blocker_id": "BLK-PUBLICATION-001",
+      "scope": "PUBLICATION_DOMAIN_AND_AUDIENCE",
+      "severity": "P0_AT_RELEASE_PHASE",
+      "description": "Production moved to the owner-owned Worker at my.sevengodsgames.com behind Cloudflare Access with a single allowed email. Public or shared access, additional viewers, search indexing and public release remain unauthorized; the old Sites Version 14 stays frozen as rollback.",
+      "owner": "SGG project owner",
+      "status": "RESOLVED",
+      "resolution_required": "Done 2026-07-31: the owner explicitly ordered immediate public release for the 8/1 tournament and personally executed the access-widening step (deleting the Access application) after the permission boundary correctly stopped Claude from doing it. Isolation, rollback, domain, dependency and screen gates were each verified and recorded across CP-000042..049."
+    },
+    {
+      "blocker_id": "BLK-PLAYER-BRIDGE-001",
+      "scope": "CROSS_GAME_PERSONAL_DATA",
+      "severity": "P1",
+      "description": "No game currently exposes the required side-effect-free signed player snapshot contract, so in-game progress and resources remain intentionally unconnected. On-chain wallet holdings are separate and do not depend on this bridge.",
+      "owner": "SGG game platform owner",
+      "status": "OPEN",
+      "resolution_required": "Implement and review the documented short-lived audience-bound assertion and player snapshot contract per game before connecting in-game data."
+    },
+    {
+      "blocker_id": "BLK-DEPENDENCY-SHARP-001",
+      "scope": "DEPENDENCY_HYGIENE",
+      "severity": "P2",
+      "description": "Stable Next and Miniflare still require Sharp 0.34.5, which npm audit flags for inherited libvips advisories. The built Worker has no Sharp or libvips import and the application has no untrusted image-processing path, so the documented owner-only non-reachable exception remains in force.",
+      "owner": "SGG engineering owner",
+      "status": "OPEN",
+      "resolution_required": "Upgrade when stable Next and Cloudflare or Miniflare officially support patched Sharp; reassess immediately if image upload or server-side untrusted processing is added."
+    },
+    {
+      "blocker_id": "BLK-SITES-EXPORT-UNAVAILABLE-001",
+      "scope": "LEGACY_DATA_RECOVERY",
+      "severity": "P3",
+      "description": "Sites Version 14 predates /api/admin/export, and its D1 lives in an account the owner cannot reach, so legacy ledger data cannot be extracted by any available means. The owner confirmed there was no real usage, so nothing of value is stranded; recording this so a future request to recover it is not attempted as if possible.",
+      "owner": "SGG project owner",
+      "status": "RESOLVED",
+      "resolution_required": "None. Confirmed unrecoverable and confirmed empty of real usage; the new production starts clean."
+    },
+    {
+      "blocker_id": "BLK-SECRET-EXPOSURE-001",
+      "scope": "CREDENTIAL_HYGIENE",
+      "severity": "P2",
+      "description": "The working Discord client secret was rendered in plaintext by the developer portal and captured in a session screenshot before it could be avoided. It is valid and in use.",
+      "owner": "SGG project owner",
+      "status": "RESOLVED",
+      "resolution_required": "Done: rotated 2026-07-31 via a localhost receiver so the value never entered Claude's context, verified against Discord, and re-tested through a full login."
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "assets/candidates/og-v004/og-d.png",
+      "reason": "Store the single requested GPT Image social key visual composition D."
+    },
+    {
+      "path": "assets/candidates/og-v004/PRODUCTION_RECORD.json",
+      "reason": "Record GPT Image provenance, source rights, canonical GODS identities, exact final hash, and full-canvas plus 1200x630 crop visual QA."
+    },
+    {
+      "path": "assets/candidates/og-v004/STATE_UPDATE_OG_D.json",
+      "reason": "Persist the social-key-visual candidate milestone for the required durable checkpoint workflow."
+    }
+  ],
+  "resume": {
+    "action_id": "ACT-047",
+    "instruction": "The public site and active social image remain unchanged. Continue monitoring first-user behavior. Keep assets/candidates/og-v004/og-d.png at candidate status unless the owner separately requests exact-hash approval and runtime integration.",
+    "do_not_assume": [
+      "og-d.png is approved, active, public, committed, pushed, deployed, or integrated; it is only a private candidate.",
+      "Generating a candidate authorized replacement of the current production social image.",
+      "Existing protected browser tabs or development runtimes may be stopped, restarted, repurposed, or closed."
+    ]
+  }
+}

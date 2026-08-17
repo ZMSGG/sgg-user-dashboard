@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_id": "MEDIA-sgg-favicon-fav-02-v001",
+  "file": "fav-02.png",
+  "role": "favicon-candidate",
+  "purpose": "SEVENGODS Games application icon and favicon candidate",
+  "status": "CANDIDATE",
+  "version": "v001",
+  "dimensions": "1254x1254",
+  "format": "PNG",
+  "background": {
+    "opaque": true,
+    "alpha_channel": false,
+    "visual": "white outer corners with a very-pale sky-blue rounded-square field"
+  },
+  "character_usage": "NONE",
+  "character_usage_reason": "A reusable UI favicon component does not require decorative GODS or OTOMO characters.",
+  "provenance": {
+    "tool": "OpenAI GPT Image via Codex built-in image generation (Image 2.0 workflow)",
+    "mode": "generate followed by targeted built-in edits",
+    "generated_at": "2026-08-04T12:40:22+08:00",
+    "source_rights": "Original GPT Image generation with no third-party, private, or pre-existing production image input.",
+    "source_generated_file": "$CODEX_HOME/generated_images/019fcb0e-0d48-7eb1-af40-deee4d22a8ac/exec-d5dfc871-594c-46ce-9252-dbf99207660a.png",
+    "reconstruction_summary": "Created a purpose-specific rounded-square favicon composition with one seven-pointed sky-blue star; corrected black outer corners and simplified the palette for small-size legibility."
+  },
+  "final_prompt": "Preserve the exact rounded-square icon silhouette and single centered seven-pointed star. Replace outside corners with opaque pure white, use a very-pale sky-blue rounded-square field, and use one vivid sky-blue fill for the star. Keep exactly seven outer tips and seven inner notches, broad thick geometry, generous padding, no transparency, no text, no secondary elements, no decorative detail, and maintain recognition at 16x16 pixels.",
+  "visual_review": {
+    "reviewer": "Codex visual QA",
+    "reviewed_at": "2026-08-04T12:40:22+08:00",
+    "final_crop": "PASS: centered single star with generous padding inside the rounded-square field.",
+    "seven_point_count": "PASS: exactly seven outer tips are visible.",
+    "sixteen_pixel_check": "PASS: the seven-direction star silhouette remains identifiable in a 16x16 PNG reduction.",
+    "contrast": "PASS: vivid sky blue against white to very-pale sky blue.",
+    "text_and_clutter": "PASS: no text, watermark, secondary symbol, or fine ornament.",
+    "opacity": "PASS: PNG reports no alpha channel."
+  },
+  "sha256": "ac1af5a53b102eed6b529cba7488f1eeba99024b2549fdd22e6394d14c9db4e7"
+}

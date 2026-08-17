@@ -1,0 +1,49 @@
+Use case: stylized-concept
+Asset type: MY SGG (SEVENGODS Games) social-share key visual, exact final canvas 1536×1024 pixels, 3:2 landscape, full bleed.
+
+Input images and roles:
+- Image 1: canonical identity reference for GOD Taiyo / 大耀.
+- Image 2: canonical identity reference for GOD Juraku / 寿楽.
+- Image 3: canonical identity reference for GOD Fukuei / 福永.
+Use all three only as strict character-identity references. Create a wholly new pose, camera, setting, lighting, and arrangement. Do not paste, collage, trace, or copy the original white backgrounds or original poses.
+
+Primary request:
+Create composition B, “神域の天守を望む高台 / The high overlook facing the divine castle.” At sunset above a vast sea of clouds, a monumental Japanese tenshu castle and several small floating shrine sanctuaries hover in the distance. On a rocky cliff in the left foreground, exactly the three referenced GODS stand together, looking across the airborne sacred city. The environment and immense atmosphere must occupy at least half of the visual impact; this must feel like an epic world key visual, not a lineup or group photo.
+
+Character identity invariants — preserve aggressively:
+1) Taiyo / 大耀, matching Image 1: low chibi proportions; short blond hair; huge asymmetrical dark olive-green brocade hood/hat with gold Japanese cloud and deity patterns; orange translucent visor; warm brown eye; black headset microphone; sleeveless dark-green patterned outfit with vivid orange energy piping and orange knee panels; black fingerless gloves; dark boots with gold armor plates. Taiyo MUST visibly carry the large gold hammer-cannon from Image 1, with its thick black handle and round glowing orange-gold muzzle. The hammer-cannon must not be omitted, miniaturized into an unrecognizable prop, or changed into a sword, staff, gun, or ordinary hammer.
+2) Juraku / 寿楽, matching Image 2: low chibi proportions; silver-and-black spiky hair, one long pale-gold/ivory forelock across the face; bright green eye; very long thick braided silver sacred-rope ponytail ending in a large white tassel; blue Japanese robe with gold patterned bands, vivid neon-green piping and glowing green sash; red inner sleeve accents; black shoes with green light; the black double-gourd ornament at the waist. Preserve the unmistakable hair, braid/tassel, robe palette, trim, and gourd.
+3) Fukuei / 福永, matching Image 3: low chibi proportions; extremely long pale silver twin tails/ponytails flowing behind; lime-green helmet with black and violet details; large gold-framed goggles with amber-purple lenses worn with the helmet; lime-green cropped technical outfit with violet accents; black sleeves/leggings carrying fine gold circuit-like lines; lime gloves and dark violet-black lower garment. The green helmet AND goggles are mandatory and clearly visible. Do not remove either one.
+
+Pose and staging:
+All three stand on the same foreground-left cliff ledge in a compact, natural expedition group, seen from a three-quarter rear/side angle while their faces turn partly toward the glowing city so their identities remain recognizable. Give each a distinct stance and silhouette. Taiyo rests or braces the gold hammer-cannon at their side; Juraku’s braided tassel catches the wind; Fukuei shades the goggles or points toward the castle. Exactly three characters. No OTOMO, no extra people, no duplicate character, no giant portrait overlays.
+
+Composition and crop safety:
+- Keep all three characters in the horizontal central band of the 1536×1024 canvas, roughly y=220 to y=800.
+- Preserve generous image-only breathing room above and below because the artwork will later be center-cropped to 1200×630; no head, hair, face, defining clothing, hammer-cannon, helmet, goggles, braid, hand, or foot may enter the top/bottom crop-risk zones.
+- Foreground cliff and characters occupy the left 35–42% of the frame.
+- The floating tenshu is the distant architectural focal point around center-right, with smaller floating shrines receding through the cloudscape.
+- Strong depth layers: dark textured cliff and grasses in foreground; characters in the near middle; luminous cloud sea, floating shrines, bridges and castle in the far middle; hazy mountain silhouettes and sunset sky in the far distance.
+- Background must remain at least half the image and clearly legible.
+
+Scene/backdrop:
+A vast mythic Japanese divine realm above clouds. A refined multi-tiered Japanese tenshu with curved tiled eaves floats on a rock island, surrounded by several smaller airborne shrine buildings, torii-like silhouettes, suspended paths and waterfalls of cloud-light. Do not imply any invented religion or readable lore. Add distant haze, layered cloud banks, soft god rays, and drifting luminous particles. Keep architecture original and purpose-built for MY SGG.
+
+Style/medium:
+High-resolution premium anime game key art; crisp expressive linework and polished cel shading on the characters faithful to the reference style; richly painted cinematic background with fine Japanese architectural detail; coherent perspective; atmospheric perspective; high production value; no photorealism; no 3D render look.
+
+Lighting/mood:
+Majestic, hopeful, awe-inspiring dusk. Gold-to-orange sunset gradient, warm rim light on all three characters, orange-gold windows and shrine lantern glow, cool muted cloud shadows, floating gold particles. The light must unify characters and environment.
+
+Color palette:
+Dominant gold, amber, orange and soft cream, balanced by smoky indigo-gray cloud shadows and the canonical green/blue/lime character colors. Do not recolor the characters away from their references.
+
+Text:
+None.
+
+Constraints and avoid:
+No text, no title, no logo, no letters, no numbers, no signature, no watermark, no UI, no border, no frame.
+No character redesign. No altered hair color, eye color, clothing identity, or weapon identity. No missing Taiyo hammer-cannon. No missing Fukuei helmet or goggles.
+No adult realistic proportions; preserve the references’ low-headed chibi scale.
+No lineup, no front-facing promotional group pose, no isolated white background, no empty generic landscape, no source-pose copying, no source-background copying.
+Ensure clean hands, coherent limbs, intact faces, readable silhouettes, and exactly three GODS.

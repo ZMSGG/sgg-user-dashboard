@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "record_type": "SGG_IMAGE2_CANDIDATE_PRODUCTION_RECORD",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "asset_id": "MEDIA-my-sgg-favicon-fav-01-v001",
+  "version": "v001",
+  "status": "CANDIDATE",
+  "purpose": "SGG app icon and favicon candidate optimized for recognition at 16px",
+  "character_usage": "NONE",
+  "character_usage_reason": "This is a reusable brand and UI icon; no GODS or OTOMO character is required.",
+  "image_generation": {
+    "tool": "OpenAI Image 2.0 via Codex built-in image generation",
+    "mode": "SUBSTANTIVE_REFERENCE_REDESIGN",
+    "generated_at": "2026-08-04T12:37:31+08:00",
+    "reference_input": {
+      "file": "sgg-mark.png",
+      "role": "brand reference for the semantic motifs torii plus seven stars only",
+      "sha256": "41503fe927cc1346f419a7598c8cb25bb9e6291fa73e69ff62286f40a39e7f0e",
+      "rights_status": "OWNER_PROVIDED_SGG_BRAND_REFERENCE"
+    },
+    "substantive_reconstruction": "Rebuilt the mark as a modern rounded-square app icon with a sky-blue-to-mint field, a new pure-white geometric torii silhouette, new spacing and proportions, and exactly seven new white stars. No source pixels, original palette, texture, outline treatment, or detailed construction were reused.",
+    "prompt": "Create one fresh SGG square app icon inspired only by the semantic motifs in the supplied brand reference: one torii and exactly seven stars. Use a fully opaque rounded-square field with one smooth sky-blue-to-mint-green gradient. Center a large pure-white, extremely simplified geometric torii with very thick pillars and beams, broad negative space, and no inner ornament. Place exactly seven small but chunky pure-white five-point stars in one balanced shallow arc above it. Preserve maximum contrast and recognition at 16x16 pixels. No text, characters, red, orange, yellow, gold, outlines, shadows, glow, 3D, bevel, texture, patterns, extra gradients, scenery, watermark, or transparency. Substantively redesign rather than recolor, trace, crop, or closely reproduce the reference."
+  },
+  "final_asset": {
+    "file": "fav-01.png",
+    "format": "PNG",
+    "dimensions": "1254x1254",
+    "color_mode": "RGB",
+    "opaque_background": true,
+    "sha256": "13fed2ec1507b74171c1a301bb918d99492dc25c7486d0837f555f6e5a3d81e2"
+  },
+  "visual_qa": {
+    "reviewed_by": "Codex visual QA",
+    "reviewed_at": "2026-08-04T12:37:31+08:00",
+    "full_size": "PASS: centered white torii, exactly seven individually countable white stars, a single blue-to-mint gradient, no text, no character, no watermark, and no transparency.",
+    "final_crop": "PASS: all foreground shapes remain inside the rounded-square field and the composition is symmetric with generous safe margins.",
+    "favicon_16px": "PASS: a 16x16 downsample retains the two-pillar torii silhouette and a seven-point star arc as a distinct light cluster; no hairline detail is required for recognition.",
+    "reference_similarity": "PASS: the output preserves only the torii-plus-seven-stars identity concept and materially changes palette, geometry, spacing, detail level, and overall app-icon construction."
+  },
+  "approval": {
+    "status": "OWNER_REVIEW_REQUIRED",
+    "publishable": false
+  }
+}
