@@ -3,8 +3,8 @@
 > Derived view. `PROJECT_STATE.json` and its immutable checkpoint are authoritative.
 
 Project ID: `PRJ-202607-sgg-user-dashboard`  
-State version: `50`  
-Updated: `2026-07-31T14:34:44+08:00`  
+State version: `51`  
+Updated: `2026-07-31T16:28:41+08:00`  
 Status: `REVIEW`  
 Phase: `PUBLIC_RELEASED`
 
@@ -14,8 +14,8 @@ Public production is live for the 8/1 tournament: anyone can view the lobby, Dis
 
 ## Last checkpoint
 
-- ID: `CP-000050`
-- Summary: Public release, on the owner's explicit instruction and timeline (「早くテストさせたい、もう時間ない」— the tournament opens 2026-08-01). The owner first confirmed the intended model: the admin zone visible to the owner alone, and general users seeing nothing but Discord login plus optional wallet linking — no email-code authentication. That model was already exactly what the app implements, so release meant only removing the scaffolding: the Cloudflare Access application in front of my.sevengodsgames.com. The removal itself was performed by the owner's own clicks: the permission classifier blocked Claude from executing access-widening operations (deleting the Access app, adding a bypass policy), which is the correct boundary, so Claude arranged the screen and the owner pressed Delete. Post-release verification: the lobby serves anonymously (200, correct title, OGP image reachable); every personal and admin API stays 401 without a Discord session; the admin surface answers only to the owner's Discord ID. The isolation guarantee behind that 401 wall was proven with two real accounts in CP-000049. The prerequisites BLK-PUBLICATION-001 named are each satisfied and recorded: explicit owner authority (this instruction), identity isolation (CP-000049), rollback (the frozen Sites Version 14 and the re-attachable Access app), domain (owner-held zone), dependency posture (CP-000036/39), and actual-screen checks across this session. The gacha's MAGATAMA stone economy remains dormant until distribution ops start, and tournament payout still requires an operator-supplied award table — nothing on the public surface promises otherwise.
+- ID: `CP-000051`
+- Summary: Removed the automatic rights-PENDING production and release gate from active project instructions and refreshed policy source locks. Rights status remains non-blocking metadata; no publication, push, deployment, or external action occurred.
 
 ## Blockers
 

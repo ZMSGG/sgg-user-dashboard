@@ -22,7 +22,7 @@ The chat, context window, conversation summary, and model memory are disposable 
 - Select `NONE / GODS / OTOMO / BOTH` per asset purpose. Environment, architecture, background, texture, prop, and UI-component assets do not require decorative characters.
 - Record Image 2.0 provenance, source rights, purpose, final-crop visual check, reviewer, timezone-aware review time, version, and final hash for every production image.
 - When characters are used, also record family, canonical ID, reference, OTOMO form, and character-specific rights.
-- Do not paste private source art into public work. Do not generate or approve public derivatives while rights are `PENDING`.
+- Do not paste private source art into public work. Record rights metadata, but do not block generation, approval, repository visibility, publication, release, push, or deployment solely because rights are `PENDING`.
 - Do not mark a non-compliant visual approved, complete, deliverable, or publishable.
 
 ## Canon and delivery boundaries

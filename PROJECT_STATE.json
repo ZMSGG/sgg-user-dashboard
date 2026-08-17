@@ -2,15 +2,15 @@
   "schema_version": 1,
   "authority": "SGG_PROJECT_STATE",
   "project_id": "PRJ-202607-sgg-user-dashboard",
-  "state_version": 50,
-  "updated_at": "2026-07-31T14:34:44+08:00",
-  "updated_by": "Claude",
+  "state_version": 51,
+  "updated_at": "2026-07-31T16:28:41+08:00",
+  "updated_by": "Codex rights-gate remover",
   "status": "REVIEW",
   "phase": "PUBLIC_RELEASED",
   "current_objective": "Public production is live for the 8/1 tournament: anyone can view the lobby, Discord login opens the personal layer, wallet is optional. Watch the first real users, keep the owner's wallet link and the two policy-hash reviews as owner-paced items.",
-  "last_summary": "Public release, on the owner's explicit instruction and timeline (「早くテストさせたい、もう時間ない」— the tournament opens 2026-08-01). The owner first confirmed the intended model: the admin zone visible to the owner alone, and general users seeing nothing but Discord login plus optional wallet linking — no email-code authentication. That model was already exactly what the app implements, so release meant only removing the scaffolding: the Cloudflare Access application in front of my.sevengodsgames.com. The removal itself was performed by the owner's own clicks: the permission classifier blocked Claude from executing access-widening operations (deleting the Access app, adding a bypass policy), which is the correct boundary, so Claude arranged the screen and the owner pressed Delete. Post-release verification: the lobby serves anonymously (200, correct title, OGP image reachable); every personal and admin API stays 401 without a Discord session; the admin surface answers only to the owner's Discord ID. The isolation guarantee behind that 401 wall was proven with two real accounts in CP-000049. The prerequisites BLK-PUBLICATION-001 named are each satisfied and recorded: explicit owner authority (this instruction), identity isolation (CP-000049), rollback (the frozen Sites Version 14 and the re-attachable Access app), domain (owner-held zone), dependency posture (CP-000036/39), and actual-screen checks across this session. The gacha's MAGATAMA stone economy remains dormant until distribution ops start, and tournament payout still requires an operator-supplied award table — nothing on the public surface promises otherwise.",
-  "last_checkpoint_id": "CP-000050",
-  "last_checkpoint_path": "checkpoints/CP-000050.json",
+  "last_summary": "Removed the automatic rights-PENDING production and release gate from active project instructions and refreshed policy source locks. Rights status remains non-blocking metadata; no publication, push, deployment, or external action occurred.",
+  "last_checkpoint_id": "CP-000051",
+  "last_checkpoint_path": "checkpoints/CP-000051.json",
   "active_work": {
     "work_id": "ACT-046",
     "objective": "Public release for OTOMO CHAIN 7 season 0.",
@@ -294,9 +294,29 @@
   ],
   "changed_files": [
     {
-      "path": "migration/STATE_UPDATE_CP000050_PUBLIC_RELEASE.json",
-      "sha256": "1bace303301bbb7c62a8e34d1f63cd33e76eaaecd0ac9de683d0d1a50e09a13e",
-      "reason": "Record the public release and the owner-executed gate removal."
+      "path": "AGENTS.md",
+      "sha256": "3beeb1db2936ae7b53a4ecc57b637edc99be6d2f6a4c27a7bc871439b69d48d0",
+      "reason": "Removed the automatic rights-PENDING production and release gate from active project instructions and refreshed policy source locks. Rights status remains non-blocking metadata; no publication, push, deployment, or external action occurred."
+    },
+    {
+      "path": "START_HERE.md",
+      "sha256": "4123fb4a5edb21190c51229e639cccb94ac3f0245b9927fc52ad3caf6e45bf46",
+      "reason": "Removed the automatic rights-PENDING production and release gate from active project instructions and refreshed policy source locks. Rights status remains non-blocking metadata; no publication, push, deployment, or external action occurred."
+    },
+    {
+      "path": "CANON_AND_COPY.md",
+      "sha256": "646ea2725921d8eca84ded12802a5fe60d55c2959887ebe5d7367c098c7a5fc9",
+      "reason": "Removed the automatic rights-PENDING production and release gate from active project instructions and refreshed policy source locks. Rights status remains non-blocking metadata; no publication, push, deployment, or external action occurred."
+    },
+    {
+      "path": "COMMAND_CENTER_LINK.json",
+      "sha256": "b7cdeefac4e9aca979e5ba59a29f0b572f35cec2e533c750679a2f82d3745a92",
+      "reason": "Removed the automatic rights-PENDING production and release gate from active project instructions and refreshed policy source locks. Rights status remains non-blocking metadata; no publication, push, deployment, or external action occurred."
+    },
+    {
+      "path": "references/SOURCE_LOCK.json",
+      "sha256": "d10fbfd1e249c88371185b367227c4d5cceffe5411cd0c380177f46efbaa7efd",
+      "reason": "Removed the automatic rights-PENDING production and release gate from active project instructions and refreshed policy source locks. Rights status remains non-blocking metadata; no publication, push, deployment, or external action occurred."
     }
   ],
   "last_known_good": {

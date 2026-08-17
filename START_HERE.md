@@ -22,7 +22,7 @@
 
 - Recalculate kickoff readiness; do not trust the stored score alone.
 - Confirm policy hashes and character IDs against the command center.
-- Treat rights status `PENDING` as a real gate.
+- Treat rights status `PENDING` as recordkeeping metadata, not a production or release gate.
 - Keep the first release within the declared scope and `77`-day horizon.
 
 ## Validation
