@@ -241,9 +241,9 @@ export const characterPairs: readonly CharacterPair[] = [
   { godId: "EBISU", godName: "恵比寿", otomoId: "TAIMARU", otomoName: "鯛丸", glyph: "鯛", accent: "coral" },
   { godId: "TAIYO", godName: "大耀", otomoId: "KOZUCHI", otomoName: "小槌", glyph: "槌", accent: "gold" },
   { godId: "SOBI", godName: "蒼毘", otomoId: "MOMOKATSU", otomoName: "百勝", glyph: "百", accent: "cyan" },
-  { godId: "SAIKA", godName: "彩華", otomoId: "KOTONE", otomoName: "琴音", glyph: "琴", accent: "violet" },
+  { godId: "SAIKA", godName: "才華", otomoId: "KOTONE", otomoName: "琴音", glyph: "琴", accent: "violet" },
   { godId: "JURAKU", godName: "寿楽", otomoId: "JUKA", otomoName: "寿鹿", glyph: "寿", accent: "green" },
-  { godId: "FUKUEI", godName: "福栄", otomoId: "HAKU", otomoName: "ハク", glyph: "白", accent: "cyan" },
+  { godId: "FUKUEI", godName: "福永", otomoId: "HAKU", otomoName: "ハク", glyph: "白", accent: "cyan" },
   { godId: "SHOUREN", godName: "笑蓮", otomoId: "SHOFUKU", otomoName: "笑袋", glyph: "笑", accent: "gold" },
 ] as const;
 

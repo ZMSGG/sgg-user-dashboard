@@ -47,9 +47,9 @@ const PAIRS = [
   { pairId: "ebisu-taimaru", godName: "恵比寿", otomoName: "鯛丸", slug: "taimaru", accent: "coral" },
   { pairId: "taiyo-kozuchi", godName: "大耀", otomoName: "小槌", slug: "kozuchi", accent: "gold" },
   { pairId: "sobi-momokatsu", godName: "蒼毘", otomoName: "百勝", slug: "momokatsu", accent: "cyan" },
-  { pairId: "saika-kotone", godName: "彩華", otomoName: "琴音", slug: "kotone", accent: "violet" },
+  { pairId: "saika-kotone", godName: "才華", otomoName: "琴音", slug: "kotone", accent: "violet" },
   { pairId: "juraku-juka", godName: "寿楽", otomoName: "寿鹿", slug: "juka", accent: "green" },
-  { pairId: "fukuei-haku", godName: "福栄", otomoName: "ハク", slug: "haku", accent: "cyan" },
+  { pairId: "fukuei-haku", godName: "福永", otomoName: "ハク", slug: "haku", accent: "cyan" },
   { pairId: "shouren-shofuku", godName: "笑蓮", otomoName: "笑袋", slug: "shofuku", accent: "gold" },
 ] as const;
 
