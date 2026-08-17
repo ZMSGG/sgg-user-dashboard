@@ -12,9 +12,11 @@ import {
 import {
   characterPairs,
   communityItems,
+  competitions,
   games,
   otomoForms,
   releaseStateCounts,
+  tournamentRecords,
   releaseStateLabels,
   type Accent,
   type GameSummary,
@@ -30,7 +32,7 @@ import {
   IconVault,
 } from "./DockIcons";
 import { emptyLiveData, type LiveData } from "./live-contract";
-import type { AdminPlayerRow, PassportData } from "./passport-contract";
+import type { PassportData } from "./passport-contract";
 import { OtomoVignette } from "./OtomoSwarm";
 import styles from "./Dashboard.module.css";
 
@@ -253,6 +255,60 @@ function formatSyncTime(value: string) {
 }
 
 
+/** Season boundary with the date, so "終了 8/8 09:00" cannot be misread. */
+function formatSeasonMoment(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "未定";
+  return new Intl.DateTimeFormat("ja-JP", {
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Tokyo",
+  }).format(date);
+}
+
+/**
+ * Time left in the season, measured against the payload's own checkedAt
+ * rather than the device clock — a wrong local clock would otherwise show a
+ * deadline that disagrees with the game.
+ */
+function seasonRemaining(status: string, endAt: string, checkedAt: string) {
+  if (status === "ENDED") return "終了";
+  if (status === "UPCOMING") return "開始前";
+  const end = new Date(endAt).getTime();
+  const now = new Date(checkedAt || Date.now()).getTime();
+  if (Number.isNaN(end) || Number.isNaN(now)) return "—";
+  const minutes = Math.floor((end - now) / 60_000);
+  if (minutes <= 0) return "まもなく終了";
+  const days = Math.floor(minutes / 1440);
+  const hours = Math.floor((minutes % 1440) / 60);
+  if (days > 0) return `${days}日 ${hours}時間`;
+  if (hours > 0) return `${hours}時間 ${minutes % 60}分`;
+  return `${minutes}分`;
+}
+
+/** 2026/8/1〜8/8 — the year appears once; the end date drops it. */
+function formatRecordPeriod(startAt: string, endAt: string) {
+  const start = new Date(startAt);
+  const end = new Date(endAt);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return "日程未記録";
+  const day = (date: Date, withYear: boolean) =>
+    new Intl.DateTimeFormat("ja-JP", {
+      ...(withYear ? { year: "numeric" as const } : {}),
+      month: "numeric",
+      day: "numeric",
+      timeZone: "Asia/Tokyo",
+    }).format(date);
+  return `${day(start, true)}〜${day(end, false)}`;
+}
+
+/** 軌跡 shows finished tournaments newest first; the data file order is free. */
+const trajectoryRecords = [...tournamentRecords].sort((a, b) => b.endAt.localeCompare(a.endAt));
+const trajectoryGameChips = [...new Map(trajectoryRecords.map((record) => [record.gameId, record.game]))];
+const TRAJECTORY_PAGE_SIZE = 5;
+
 function Dot({ active = false }: { active?: boolean }) {
   return <span className={active ? styles.dotActive : styles.dot} aria-hidden="true" />;
 }
@@ -384,6 +440,9 @@ export function Dashboard() {
   const [activeView, setActiveView] = useState<View>("home");
   const [gameFilter, setGameFilter] = useState<GameFilter>("LIVE");
   const [formFilter, setFormFilter] = useState<FormFilter>("SPIRIT");
+  const [trajectoryGame, setTrajectoryGame] = useState<string>("ALL");
+  const [trajectoryQuery, setTrajectoryQuery] = useState("");
+  const [trajectoryPage, setTrajectoryPage] = useState(1);
   const [watchedIds, setWatchedIds] = useState<Set<string>>(new Set());
   const [liveData, setLiveData] = useState<LiveData>(emptyLiveData);
   const [liveState, setLiveState] = useState<"loading" | "ready" | "error">("loading");
@@ -404,10 +463,6 @@ export function Dashboard() {
   const [walletBusy, setWalletBusy] = useState(false);
   const [walletChoices, setWalletChoices] = useState<WalletProviderDetail[] | null>(null);
   const [guildBusy, setGuildBusy] = useState(false);
-  const [adminPlayers, setAdminPlayers] = useState<AdminPlayerRow[] | null>(null);
-  const [adminRosterState, setAdminRosterState] = useState<LoadState>("idle");
-  const [grantForm, setGrantForm] = useState({ discordId: "", amount: "", reasonCode: "TESTER_FEEDBACK", note: "" });
-  const [grantBusy, setGrantBusy] = useState(false);
   const [toast, setToast] = useState("");
   const [stageGodId, setStageGodId] = useState<string | null>(null);
   const [stagePickerOpen, setStagePickerOpen] = useState(false);
@@ -416,8 +471,6 @@ export function Dashboard() {
   const dmCodeInputRef = useRef<HTMLInputElement>(null);
   const dmIdentityInputRef = useRef<HTMLInputElement>(null);
   const checkedAtRef = useRef("");
-  const adminRosterRequestRef = useRef(0);
-  const grantAttemptRef = useRef<{ fingerprint: string; idempotencyKey: string } | null>(null);
 
   const activeNav = navItems.find((item) => item.id === activeView) ?? navItems[0];
 
@@ -613,31 +666,6 @@ export function Dashboard() {
     return () => window.clearTimeout(timeout);
   }, [dmChallenge]);
 
-  const isAdmin = passport?.connected === true && passport.isAdmin;
-
-  const loadAdminPlayers = useCallback(async () => {
-    const requestId = ++adminRosterRequestRef.current;
-    setAdminRosterState("loading");
-    try {
-      const response = await fetch("/api/admin/players", { cache: "no-store" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const data = await response.json() as { players: AdminPlayerRow[] };
-      if (requestId !== adminRosterRequestRef.current) return;
-      setAdminPlayers(data.players);
-      setAdminRosterState("ready");
-    } catch {
-      if (requestId !== adminRosterRequestRef.current) return;
-      setAdminRosterState("error");
-    }
-  }, []);
-
-  // Admin roster loads lazily, only on the passport view for admins.
-  useEffect(() => {
-    if (activeView !== "mysgg" || !isAdmin || adminRosterState !== "idle") return;
-    const timeout = window.setTimeout(() => void loadAdminPlayers(), 0);
-    return () => window.clearTimeout(timeout);
-  }, [activeView, adminRosterState, isAdmin, loadAdminPlayers]);
-
   const logout = async () => {
     try {
       await postJson("/api/auth/logout");
@@ -647,9 +675,6 @@ export function Dashboard() {
         authMethods: passport?.authMethods,
       });
       setPassportState("ready");
-      adminRosterRequestRef.current += 1;
-      setAdminPlayers(null);
-      setAdminRosterState("idle");
       setToast("ログアウトしました");
     } catch {
       setToast("ログアウトに失敗しました");
@@ -785,46 +810,6 @@ export function Dashboard() {
     }
   };
 
-  const submitGrant = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const amount = Number(grantForm.amount);
-    if (!Number.isInteger(amount) || amount === 0) {
-      setToast("付与量は0以外の整数で入力してください");
-      return;
-    }
-    const grantPayload = {
-      discordId: grantForm.discordId.trim(),
-      amount,
-      reasonCode: grantForm.reasonCode.trim(),
-      note: grantForm.note.trim() || undefined,
-    };
-    const fingerprint = JSON.stringify(grantPayload);
-    if (!grantAttemptRef.current || grantAttemptRef.current.fingerprint !== fingerprint) {
-      grantAttemptRef.current = { fingerprint, idempotencyKey: crypto.randomUUID() };
-    }
-    setGrantBusy(true);
-    try {
-      const result = await postJson<{ alreadyGranted: boolean; balance: number }>("/api/admin/grants", {
-        ...grantPayload,
-        idempotencyKey: grantAttemptRef.current.idempotencyKey,
-      });
-      // The server confirmed this exact attempt, so the retry key can rotate.
-      grantAttemptRef.current = null;
-      setToast(result.alreadyGranted
-        ? "同じ付与がすでに記録されています"
-        : `付与を記録しました(新残高 ${number.format(result.balance)} SGP)`);
-      setGrantForm((current) => ({ ...current, amount: "", note: "" }));
-      setAdminPlayers(null);
-      setAdminRosterState("idle");
-      await refreshPassport();
-    } catch (error) {
-      const message = error instanceof Error && error.message ? error.message : "付与に失敗しました";
-      setToast(`${message}。同じ内容のまま安全に再試行できます`);
-    } finally {
-      setGrantBusy(false);
-    }
-  };
-
   useEffect(() => {
     const syncHash = () => setActiveView(viewFromHash());
     syncHash();
@@ -866,6 +851,22 @@ export function Dashboard() {
 
   // 工事中 titles stay on the front shelf next to the live ones — visible but
   // closed — rather than disappearing into 休眠中.
+  // 軌跡: game filter and free-text search narrow the record list together;
+  // both reset paging so a new search never lands on an out-of-range page.
+  const trajectoryNeedle = trajectoryQuery.trim().toLowerCase();
+  const trajectoryMatches = trajectoryRecords.filter((record) => {
+    if (trajectoryGame !== "ALL" && record.gameId !== trajectoryGame) return false;
+    if (!trajectoryNeedle) return true;
+    return [record.name, record.game, record.edition, record.seasonId, ...record.podium.map((entry) => entry.name)]
+      .some((text) => text.toLowerCase().includes(trajectoryNeedle));
+  });
+  const trajectoryPageCount = Math.max(1, Math.ceil(trajectoryMatches.length / TRAJECTORY_PAGE_SIZE));
+  const trajectoryCurrentPage = Math.min(trajectoryPage, trajectoryPageCount);
+  const trajectoryPageRecords = trajectoryMatches.slice(
+    (trajectoryCurrentPage - 1) * TRAJECTORY_PAGE_SIZE,
+    trajectoryCurrentPage * TRAJECTORY_PAGE_SIZE,
+  );
+
   const filteredGames = games.filter((game) => gameFilter === "LIVE"
     ? game.releaseState === "LIVE" || game.releaseState === "MAINTENANCE"
     : game.releaseState === gameFilter);
@@ -1142,8 +1143,75 @@ export function Dashboard() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className={styles.headerBand} src="/dashboard-art/headers/header-sobi.png" alt="" aria-hidden="true" />
               </header>
-              <section className={styles.eventEmpty}>
-                <div><p>ARENA</p><h2>準備中</h2><span>大会の受付・締切・戦績と、ゲームごとの番付をここに表示します。中身を見せられる状態になるまで、この画面には何も出しません。</span></div>
+              {liveData.chainSeason ? (
+                <section className={styles.seasonCard} data-status={liveData.chainSeason.status}>
+                  <div className={styles.seasonHead}>
+                    <p>OPEN TOURNAMENT</p>
+                    <StatusPill accent={liveData.chainSeason.status === "ACTIVE" ? "cyan" : "gold"}>
+                      {liveData.chainSeason.status === "ACTIVE" ? "開催中" : liveData.chainSeason.status === "UPCOMING" ? "開催予定" : "終了"}
+                    </StatusPill>
+                  </div>
+                  <h2>{liveData.chainSeason.name}</h2>
+                  <dl className={styles.seasonMeta}>
+                    <div><dt>開始</dt><dd>{formatSeasonMoment(liveData.chainSeason.startAt)}</dd></div>
+                    <div><dt>終了</dt><dd>{formatSeasonMoment(liveData.chainSeason.endAt)}</dd></div>
+                    <div><dt>{liveData.chainSeason.status === "ACTIVE" ? "残り" : "状態"}</dt>
+                      <dd>{seasonRemaining(liveData.chainSeason.status, liveData.chainSeason.endAt, liveData.checkedAt)}</dd></div>
+                  </dl>
+                  <a className={styles.primaryAction} href="https://otomochain.sevengodsgames.com/" target="_blank" rel="noopener noreferrer">
+                    番付とプレイへ<span aria-hidden="true">↗</span>
+                  </a>
+                  <p className={styles.holdingsNote}>
+                    順位と得点はゲーム側の公開APIがそのまま出典です。MY SGGは集計せず、加工もしません。
+                  </p>
+                </section>
+              ) : (
+                <section className={styles.eventEmpty}>
+                  <div><p>ARENA</p><h2>開催中の大会はありません</h2><span>次の大会が始まると、日程と番付がここに出ます。</span></div>
+                </section>
+              )}
+
+              {/* Live standings we already fetch. Shown only when the upstream
+                  actually answered — an empty table would read as "nobody has
+                  played", which is a different and false claim. */}
+              {liveData.oracle.entries.length > 0 && (
+                <section>
+                  <SectionTitle
+                    kicker="LIVE RANKING · OTOMO ORACLE 7"
+                    title={liveData.oracle.day ? `神託番付 DAY ${liveData.oracle.day}` : "神託番付"}
+                    copy={`公開APIから直接読み取り。最終確認 ${formatSyncTime(liveData.checkedAt)}。`}
+                    action={<a className={styles.textButton} href="https://otomooracle.sevengodsgames.com/ranking" target="_blank" rel="noopener noreferrer">全体を見る ↗</a>}
+                  />
+                  <ol className={styles.rankBoard}>
+                    {liveData.oracle.entries.map((entry) => (
+                      <li key={`${entry.rank}-${entry.name}`}>
+                        <span className={styles.rankNo} data-top={entry.rank <= 3 ? "" : undefined}>{entry.rank}</span>
+                        <strong>{entry.name}</strong>
+                        <small>{entry.meta}</small>
+                        <b>{number.format(entry.score)}</b>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              )}
+
+              <section>
+                <SectionTitle kicker="ALL RANKINGS" title="ゲーム別の番付" copy="各タイトルの公式番付への導線です。" />
+                <div className={styles.sourceGrid}>
+                  {competitions.map((comp) => (
+                    <article key={comp.id} className={styles.competitionCard} data-tone={comp.accent}>
+                      <div><span>{comp.game}</span><span>{comp.cadence}</span></div>
+                      <h3>{comp.title}</h3>
+                      <dl>
+                        <div><dt>集計</dt><dd>{comp.rule}</dd></div>
+                        <div><dt>出典</dt><dd>{comp.integrity}</dd></div>
+                      </dl>
+                      {comp.href
+                        ? <a className={styles.primaryAction} href={comp.href} target="_blank" rel="noopener noreferrer">{comp.actionLabel}<span aria-hidden="true">↗</span></a>
+                        : <button type="button" className={styles.primaryAction} disabled>準備中</button>}
+                    </article>
+                  ))}
+                </div>
               </section>
             </div>
           )}
@@ -1517,89 +1585,104 @@ export function Dashboard() {
                 </div>
               )}
               <section>
-                <SectionTitle kicker="TRUSTED LEDGER" title="SGGでの軌跡" copy="これまでのランキングや称号がある場所。" />
-                <p className={styles.grantEmpty}>まだ確定したランキング・称号はありません。大会の結果が確定するとここに記録されます。</p>
-              </section>
-              {isAdmin && (
-                <section className={styles.adminPanel} data-tone="coral">
-                  <SectionTitle kicker="ADMIN / POINT OPERATIONS" title="ポイント付与(管理者)" copy="付与はappend-onlyの台帳と監査recordに記録されます。取り消しはマイナス付与で行います。" />
-                  <form className={styles.grantForm} onSubmit={submitGrant}>
-                    <label>
-                      <span>付与先 Discord ID</span>
-                      <input
-                        required
-                        value={grantForm.discordId}
-                        onChange={(event) => setGrantForm((current) => ({ ...current, discordId: event.target.value }))}
-                        placeholder="000000000000000000"
-                        pattern="\d{5,25}"
-                      />
-                    </label>
-                    <label>
-                      <span>付与量(整数・負数可)</span>
-                      <input
-                        required
-                        value={grantForm.amount}
-                        onChange={(event) => setGrantForm((current) => ({ ...current, amount: event.target.value }))}
-                        placeholder="100"
-                        inputMode="numeric"
-                        pattern="-?\d+"
-                      />
-                    </label>
-                    <label>
-                      <span>理由コード</span>
-                      <input
-                        required
-                        value={grantForm.reasonCode}
-                        onChange={(event) => setGrantForm((current) => ({ ...current, reasonCode: event.target.value.toUpperCase() }))}
-                        placeholder="TESTER_FEEDBACK"
-                        pattern="[A-Z0-9_]{3,64}"
-                      />
-                    </label>
-                    <label className={styles.grantNote}>
-                      <span>メモ(任意)</span>
-                      <input
-                        value={grantForm.note}
-                        onChange={(event) => setGrantForm((current) => ({ ...current, note: event.target.value }))}
-                        placeholder="2026.07 プレビューテスト参加"
-                      />
-                    </label>
-                    <button type="submit" className={styles.primaryAction} disabled={grantBusy}>
-                      {grantBusy ? "記録中…" : "ポイントを付与"}
+                <SectionTitle
+                  kicker="TRUSTED LEDGER"
+                  title="SGGでの軌跡"
+                  copy="終わった大会の確定結果だけが、ここに積み上がっていきます。"
+                />
+                <div className={styles.trajectoryControls}>
+                  <input
+                    type="search"
+                    className={styles.trajectorySearch}
+                    value={trajectoryQuery}
+                    onChange={(event) => { setTrajectoryQuery(event.target.value); setTrajectoryPage(1); }}
+                    placeholder="大会名・プレイヤー名で検索"
+                    aria-label="大会記録を検索"
+                    spellCheck={false}
+                  />
+                  <div className={styles.filterBar} aria-label="ゲーム別フィルター">
+                    <button
+                      type="button"
+                      aria-pressed={trajectoryGame === "ALL"}
+                      className={trajectoryGame === "ALL" ? styles.filterActive : ""}
+                      onClick={() => { setTrajectoryGame("ALL"); setTrajectoryPage(1); }}
+                    >
+                      すべて
                     </button>
-                  </form>
-                  <div className={styles.adminRoster} aria-busy={adminRosterState === "loading"}>
-                    <p>REGISTERED PLAYERS / {adminRosterState === "ready" ? (adminPlayers?.length ?? 0) : adminRosterState === "error" ? "取得不可" : "…"}</p>
-                    {adminRosterState === "idle" || adminRosterState === "loading" ? (
-                      <span className={styles.grantEmpty} role="status">プレイヤー一覧を読み込み中…</span>
-                    ) : adminRosterState === "error" ? (
-                      <div className={styles.inlineRetry} role="alert">
-                        <span>プレイヤー一覧を取得できませんでした。空の一覧としては扱っていません。</span>
-                        <button type="button" className={styles.textButton} onClick={() => void loadAdminPlayers()}>再試行</button>
-                      </div>
-                    ) : !adminPlayers?.length ? (
-                      <span className={styles.grantEmpty}>まだDiscord連携したプレイヤーがいません。</span>
-                    ) : (
-                      <ul>
-                        {adminPlayers.map((row) => (
-                          <li key={row.discordId}>
-                            <div>
-                              <strong>{row.globalName ?? row.username}</strong>
-                              <small>@{row.username} · {row.discordId}</small>
-                              <small>{row.walletLabel ? `Wallet ${row.walletLabel}` : "Wallet未連携"}</small>
-                            </div>
-                            <div className={styles.adminRosterRight}>
-                              <b>{number.format(row.balance)} SGP</b>
-                              <button type="button" className={styles.textButton} onClick={() => setGrantForm((current) => ({ ...current, discordId: row.discordId }))}>
-                                付与先にセット
-                              </button>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    {trajectoryGameChips.map(([gameId, gameName]) => (
+                      <button
+                        key={gameId}
+                        type="button"
+                        aria-pressed={trajectoryGame === gameId}
+                        className={trajectoryGame === gameId ? styles.filterActive : ""}
+                        onClick={() => { setTrajectoryGame(gameId); setTrajectoryPage(1); }}
+                      >
+                        {gameName}
+                      </button>
+                    ))}
                   </div>
-                </section>
-              )}
+                </div>
+                {trajectoryPageRecords.length === 0 ? (
+                  <p className={styles.grantEmpty}>条件に合う大会記録はありません。検索語やフィルターを変えてみてください。</p>
+                ) : (
+                  <ol className={styles.recordList}>
+                    {trajectoryPageRecords.map((record) => (
+                      <li key={record.id} className={styles.recordCard} data-tone={record.accent}>
+                        <header>
+                          <div>
+                            <span>{record.game}</span>
+                            <span>{record.edition}</span>
+                          </div>
+                          <StatusPill accent={record.accent}>結果確定</StatusPill>
+                        </header>
+                        <h3>{record.name}</h3>
+                        <p className={styles.recordPeriod}>
+                          {formatRecordPeriod(record.startAt, record.endAt)} · {record.participants}名参加
+                        </p>
+                        <ol className={styles.recordPodium}>
+                          {record.podium.map((entry) => (
+                            <li key={entry.rank} data-champion={entry.rank === 1 ? "" : undefined}>
+                              <span className={styles.rankNo} data-top={entry.rank <= 3 ? "" : undefined}>{entry.rank}</span>
+                              <strong>{entry.name}</strong>
+                              <small>{entry.godName}</small>
+                              <b>{number.format(entry.score)}</b>
+                            </li>
+                          ))}
+                        </ol>
+                        <dl className={styles.recordMeta}>
+                          {record.teamChampion && <div><dt>陣営優勝</dt><dd>{record.teamChampion}</dd></div>}
+                          {record.prizeSgpTotal !== null && (
+                            <div><dt>賞SGP総額</dt><dd>{number.format(record.prizeSgpTotal)} SGP</dd></div>
+                          )}
+                          <div><dt>SEASON</dt><dd>{record.seasonId}</dd></div>
+                        </dl>
+                        <footer>
+                          <small>{record.provenance}</small>
+                          {record.resultUrl && (
+                            <a className={styles.textButton} href={record.resultUrl} target="_blank" rel="noopener noreferrer">
+                              ゲームで見る ↗
+                            </a>
+                          )}
+                        </footer>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+                {trajectoryPageCount > 1 && (
+                  <nav className={styles.recordPager} aria-label="大会記録のページ切り替え">
+                    {Array.from({ length: trajectoryPageCount }, (_, index) => index + 1).map((page) => (
+                      <button
+                        key={page}
+                        type="button"
+                        aria-current={page === trajectoryCurrentPage ? "page" : undefined}
+                        onClick={() => setTrajectoryPage(page)}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </nav>
+                )}
+              </section>
             </div>
           )}
 

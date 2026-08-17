@@ -31,8 +31,8 @@ test("server-renders the truthful SGG Player OS", async () => {
   assert.match(html, /開催中の大会/);
   assert.doesNotMatch(html, /いま戻る場所/);
   assert.match(html, /name="robots" content="noindex, nofollow"/);
-  assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v003\.png"/);
-  assert.match(html, /name="twitter:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v003\.png"/);
+  assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v004\.jpg"/);
+  assert.match(html, /name="twitter:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v004\.jpg"/);
   assert.match(response.headers.get("content-security-policy") ?? "", /frame-ancestors 'none'/);
   assert.equal(response.headers.get("x-frame-options"), "DENY");
   assert.equal(response.headers.get("x-content-type-options"), "nosniff");
@@ -52,12 +52,12 @@ test("does not ship fabricated player, asset, tournament, or release data", asyn
   // The TRUSTED LEDGER card grid and SGG Token boundary note were removed from
   // マイSGG (owner direction 2026-07-30); the system definitions remain in
   // dashboard-data.ts as canon documentation.
-  // アリーナ emptied to a 準備中 state (owner direction 2026-07-30): the boards
-  // and competition cards are gone, so the honest placeholder copy is now what
-  // must ship in their place.
+  // アリーナ carries the live season and standings again (2026-08-07): a
+  // tournament was running while the view still said 準備中, so the placeholder
+  // copy must NOT ship. What must ship is the honest provenance line.
   for (const value of [
     "EBISU FISHING 77",
-    "大会の受付・締切・戦績と、ゲームごとの番付をここに表示します",
+    "順位と得点はゲーム側の公開APIがそのまま出典です",
     "COMMUNITY / OFFICIAL SIGNALS",
     "RAW GAMEPLAY SCORE",
     "SGG_GAME_POINTS",
@@ -127,10 +127,11 @@ test("derives current health, search selection, and filtered feature state", asy
   // filter alone decides which titles the play view lists, at one shared size.
   assert.match(dashboard, /filteredGames = games\.filter/);
   assert.match(dashboard, /filteredGames\.map/);
-  // アリーナ is a 準備中 placeholder (owner direction 2026-07-30), so the
-  // leaderboard empty-state copy no longer exists; the play view still carries
-  // the honest runtime label.
-  assert.match(dashboard, /準備中<\/h2>/);
+  // アリーナ renders the live season rather than a placeholder, and says so
+  // only when the upstream actually answered.
+  assert.match(dashboard, /liveData\.chainSeason \? \(/);
+  assert.match(dashboard, /liveData\.oracle\.entries\.length > 0/);
+  assert.doesNotMatch(dashboard, /大会の受付・締切・戦績と、ゲームごとの番付をここに表示します/);
   assert.match(dashboard, /稼働確認不可/);
   assert.doesNotMatch(dashboard, />5 \/ 5 ONLINE</);
 });
@@ -267,14 +268,32 @@ test("keeps publication claims aligned with the deployment registry", async () =
 
 test("ships the finished visual surface and retires legacy demo art", async () => {
   const swarm = await readFile(new URL("../app/OtomoSwarm.tsx", import.meta.url), "utf8");
-  const og = await readFile(new URL("../public/my-sgg-social-og-v003.png", import.meta.url));
+  const og = await readFile(new URL("../public/my-sgg-social-og-v004.jpg", import.meta.url));
   assert.match(swarm, /SWARM_ENABLED = false/);
-  assert.equal(og.toString("ascii", 1, 4), "PNG");
-  assert.equal(og.readUInt32BE(16), 1200);
-  assert.equal(og.readUInt32BE(20), 630);
+  // JPEG now: read the SOF marker rather than a PNG IHDR, and keep asserting
+  // the real 1200x630 so a mis-cropped card cannot ship.
+  assert.equal(og.readUInt16BE(0), 0xffd8, "share card must be a JPEG");
+  const sof = (() => {
+    for (let i = 2; i < og.length - 9; ) {
+      if (og[i] !== 0xff) { i += 1; continue; }
+      const marker = og[i + 1];
+      if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) {
+        return { height: og.readUInt16BE(i + 5), width: og.readUInt16BE(i + 7) };
+      }
+      i += 2 + og.readUInt16BE(i + 2);
+    }
+    return null;
+  })();
+  assert.ok(sof, "share card SOF marker not found");
+  assert.equal(sof.width, 1200);
+  assert.equal(sof.height, 630);
+  // A share card is fetched by every unfurling scraper; keep it lean.
+  assert.ok(og.length < 700_000, `share card is ${og.length} bytes`);
 
   await access(new URL("../public/dashboard-art/my-sgg-key-visual-v002.png", import.meta.url));
-  await access(new URL("../public/my-sgg-icon-v003.png", import.meta.url));
+  await access(new URL("../public/my-sgg-icon-v004.png", import.meta.url));
+  await access(new URL("../public/apple-touch-icon.png", import.meta.url));
+  await access(new URL("../public/favicon.ico", import.meta.url));
   await access(new URL("../app/Dashboard.module.css", import.meta.url));
   await access(new URL("../docs/PLAYER_OS_ARCHITECTURE.md", import.meta.url));
   await assert.rejects(access(new URL("../app/CharacterDeck.tsx", import.meta.url)));

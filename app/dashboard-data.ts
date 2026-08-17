@@ -228,6 +228,62 @@ export const competitions: readonly Competition[] = [
   },
 ] as const;
 
+/**
+ * SGGでの軌跡 — the permanent record of finished tournaments.
+ *
+ * Every row is a confirmed result read from the game's own locked public
+ * leaderboard after season end; nothing here is projected or provisional.
+ * CHAIN and FARM tournaments are meant to recur, so the shape assumes many
+ * editions per game: the passport view filters by game, searches by name,
+ * and pages five records at a time as this list grows.
+ */
+export type TournamentRecord = {
+  id: string;
+  gameId: string;
+  /** Display title of the game, matching GameSummary.title. */
+  game: string;
+  /** e.g. 第1回大会 — the recurring-edition label players search by. */
+  edition: string;
+  name: string;
+  seasonId: string;
+  startAt: string;
+  endAt: string;
+  participants: number;
+  podium: readonly { rank: number; name: string; godName: string; score: number }[];
+  /** 陣営 (team) result, when the tournament had one. */
+  teamChampion: string | null;
+  /** Total SGP awarded across all finishers, as decided in the award table. */
+  prizeSgpTotal: number | null;
+  resultUrl: string | null;
+  /** Where the numbers come from — shown verbatim on the card. */
+  provenance: string;
+  accent: Accent;
+};
+
+export const tournamentRecords: readonly TournamentRecord[] = [
+  {
+    id: "chain-7-tournament-1",
+    gameId: "otomo-chain-7",
+    game: "OTOMO CHAIN 7",
+    edition: "第1回大会",
+    name: "OTOMO CHAIN 7 第1回大会",
+    seasonId: "season-2026-08-01",
+    startAt: "2026-08-01T00:00:00.000Z",
+    endAt: "2026-08-08T00:00:00.000Z",
+    participants: 52,
+    podium: [
+      { rank: 1, name: "しるばー", godName: "寿楽", score: 911_367 },
+      { rank: 2, name: "ちゃろ", godName: "蒼毘", score: 472_396 },
+      { rank: 3, name: "toto_kichi", godName: "蒼毘", score: 415_628 },
+    ],
+    teamChampion: "大耀陣営",
+    prizeSgpTotal: 1_129,
+    resultUrl: "https://otomochain.sevengodsgames.com/",
+    provenance: "確定番付はゲーム公開API (leaderboard/season, ロック済み) をそのまま記載。",
+    accent: "cyan",
+  },
+] as const;
+
 export type CharacterPair = {
   godId: string;
   godName: string;
