@@ -3,23 +3,23 @@
 > Derived view. `PROJECT_STATE.json` and its immutable checkpoint are authoritative.
 
 Project ID: `PRJ-202607-sgg-user-dashboard`  
-State version: `53`  
-Updated: `2026-08-19T08:13:00+08:00`  
+State version: `54`  
+Updated: `2026-08-19T08:14:00+08:00`  
 Status: `REVIEW`  
-Phase: `RELEASE_READY`
+Phase: `PUBLIC_RELEASED`
 
 ## Current objective
 
-Commit and push the validated release, deploy the owner Worker without changing access or D1 data, then verify and record the public production result.
+Monitor the newly deployed public dashboard, complete in-app visual verification when the internal browser capability is available, and keep future wallet, payout, dependency, and player-bridge work owner-paced.
 
 ## Last checkpoint
 
-- ID: `CP-000053`
-- Summary: Finalized the deterministic production image registry after CP-000052 by enforcing LF-only CSV output, regenerated the active 73-row manifest and complete 74-row runtime index, and revalidated the draft launch pack. This is a serialization-only correction; runtime image hashes, approved mirrors, application build, D1 evidence, and the publication scope are unchanged.
+- ID: `CP-000054`
+- Summary: Published commit 2f959c81ec02a587502d4b5baf3068362384ffff to origin/main and deployed it through the canonical owner Cloudflare Worker my-sgg-player-os. Wrangler uploaded five changed assets, preserved the owner D1 and existing custom domain, and produced Worker version 63c113db-f0b3-4b01-afce-1d745b13d5ab. No migration was reapplied and no access, domain, search-index, runtime-secret, owner, or group setting changed. Production smoke passed: root 200; the new v002 brand asset 200 with an exact local/remote SHA-256 match; the retired brand URL 404; anonymous Passport, gacha, and admin export 401; live API 200; CSP and noindex remain present. In-app visual QA is not claimed because this task still lacks the required internal browser control capability; the protected existing tab remained untouched and no external browser was used.
 
 ## Blockers
 
-- `BLK-IN-APP-BROWSER-001` [OPEN]: This Codex task exposes the Browser skill but not its required in-app browser control capability after mandatory discovery. The existing protected production tab remains untouched. Version 14 has Sites screenshot, production HTTP, asset-hash, HTML/CSS and Worker-log evidence, but no new muted tab, interactive 390px viewport or console session was available. — Owner: Codex runtime capability — Unblock: Expose the supported Codex in-app browser control capability, then open the exact Version 14 URL in a new muted tab without navigating or closing the protected tab and complete desktop, 390px, interaction and console verification.
+- `BLK-IN-APP-BROWSER-001` [OPEN]: The 2026-08-19 owner Worker deployment is verified by exact production HTTP status, runtime asset hash, anonymous API boundaries, HTML markers, CSP and noindex evidence, but this Codex task still does not expose the Browser skill required in-app control capability. The protected existing tab remained untouched and no external browser was used. — Owner: Codex runtime capability — Unblock: Expose the supported Codex in-app browser control capability, then open https://my.sevengodsgames.com in a new muted tab without navigating or closing the protected tab and complete desktop, 390px, interaction and console verification.
 - `BLK-CONCURRENT-GAME-SESSION-001` [OPEN]: A separate owner-run session implements Discord login inside the OTOMO CHAIN 7 repository; its server side is committed and deployed with the feature disabled while its web side was still uncommitted. Writing there from this session would destroy concurrent work, and that session's git housekeeping has already deleted an untracked directory created here, so generated assets are produced outside the repository until they are committed. — Owner: SGG project owner — Unblock: Confirm the OTOMO CHAIN work is committed and its export shape final before this session adapts dashboard reconciliation or edits that repository.
 - `BLK-SGP-AWARD-TABLE-001` [OPEN]: SGP amounts per final rank are an official reward decision and are not recorded. The deployed payout endpoint requires an operator-supplied award table and rejects any request without one. — Owner: SGG project owner — Unblock: Decide and record the season-0 SGP award table, then pass it explicitly to the payout dry run before any apply=true request.
 - `BLK-DISCORD-E2E-001` [RESOLVED]: Automated tests and production smoke cover the DM protocol and fail-closed guards, but no real user DM was sent and a two-account isolation test requires interactive access to two consenting Discord identities. — Owner: SGG project owner — Unblock: Done 2026-07-31: real two-account test (owner + type.wolf). Client-side four-point check and server-side row inspection agree; tester's email removed from the Access policy immediately after.
@@ -31,14 +31,13 @@ Commit and push the validated release, deploy the owner Worker without changing 
 
 ## Next actions
 
-1. `ACT-052` [READY] Commit and push the validated release, deploy the owner Worker, smoke the public URL, and record deployment evidence. — Owner: Codex
-2. `ACT-045` [READY] オーナー自身のWallet連携（Wallet拡張のあるブラウザで）— NFTギャラリーの本番確認。 — Owner: SGG project owner
-3. `ACT-047` [READY] 最初の一般ユーザーの流入を観察し、ログイン・表示の不具合報告を拾う。 — Owner: SGG project owner
-4. `ACT-018` [BLOCKED] After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table. — Owner: SGG project owner
-5. `ACT-024` [READY] Review the two drifted command-center policy hashes. — Owner: SGG project owner
-6. `ACT-012` [BLOCKED] Sharp upgrade when supported. — Owner: SGG engineering owner
-7. `ACT-006` [BLOCKED] Player snapshot bridges per game. — Owner: SGG game platform owner
+1. `ACT-045` [READY] オーナー自身のWallet連携（Wallet拡張のあるブラウザで）— NFTギャラリーの本番確認。 — Owner: SGG project owner
+2. `ACT-047` [READY] 最初の一般ユーザーの流入を観察し、ログイン・表示の不具合報告を拾う。 — Owner: SGG project owner
+3. `ACT-018` [BLOCKED] After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table. — Owner: SGG project owner
+4. `ACT-024` [READY] Review the two drifted command-center policy hashes. — Owner: SGG project owner
+5. `ACT-012` [BLOCKED] Sharp upgrade when supported. — Owner: SGG engineering owner
+6. `ACT-006` [BLOCKED] Player snapshot bridges per game. — Owner: SGG game platform owner
 
 ## Resume exactly here
 
-`ACT-052` — Continue from the validated release-ready tree: commit only the scoped files, push main, deploy wrangler.owner.jsonc without reapplying migration 0007, smoke my.sevengodsgames.com, then create the deployment evidence checkpoint.
+`ACT-047` — The 2026-08-19 release is public on my.sevengodsgames.com. Watch first users and complete the remaining in-app visual pass in a new muted tab only when the internal browser control capability is exposed.

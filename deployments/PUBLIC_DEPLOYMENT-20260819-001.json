@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "deployment_id": "PUBLIC-OWNER-WORKER-20260819-001",
+  "project_id": "PRJ-202607-sgg-user-dashboard",
+  "deployed_at": "2026-08-19T08:11:43+08:00",
+  "deployed_by": "Codex",
+  "authorization": {
+    "granted_by": "SGG project owner",
+    "instruction": "公開して",
+    "scope": "Commit, push, and deploy the current release to the existing public production target without access, domain, owner, group, search-index, secret, or D1 data changes."
+  },
+  "source": {
+    "repository": "https://github.com/ZMSGG/sgg-user-dashboard.git",
+    "branch": "main",
+    "commit_sha": "2f959c81ec02a587502d4b5baf3068362384ffff",
+    "push_verified": true,
+    "unrelated_untracked_files_excluded": [
+      "assets/candidates/og-v004/*_main.webp",
+      "distributions/"
+    ]
+  },
+  "target": {
+    "provider": "Cloudflare Workers",
+    "worker_name": "my-sgg-player-os",
+    "config": "wrangler.owner.jsonc",
+    "production_url": "https://my.sevengodsgames.com",
+    "custom_domain": "my.sevengodsgames.com",
+    "workers_dev": false,
+    "version_id": "63c113db-f0b3-4b01-afce-1d745b13d5ab",
+    "sites_rollback_changed": false
+  },
+  "deployment_result": {
+    "status": "SUCCESS",
+    "uploaded_new_or_modified_assets": 5,
+    "reused_assets": 88,
+    "runtime_bindings": [
+      "DB: my-sgg-player-os",
+      "ASSETS"
+    ],
+    "access_settings_changed": false,
+    "domain_settings_changed": false,
+    "search_index_settings_changed": false,
+    "runtime_secrets_changed": false
+  },
+  "database": {
+    "binding": "DB",
+    "database_name": "my-sgg-player-os",
+    "migration_reapplied": false,
+    "predeploy_read_only_check": {
+      "tournament_results_table": "PRESENT",
+      "tournament_results_discord_idx": "PRESENT",
+      "schema_matches_0007": true,
+      "tournament_result_rows": 52,
+      "changed_db": false,
+      "rows_written": 0
+    }
+  },
+  "verification": {
+    "application": {
+      "db_check": "PASS",
+      "lint": "PASS",
+      "typecheck": "PASS",
+      "production_build": "PASS",
+      "tests": {
+        "passed": 98,
+        "failed": 0
+      },
+      "packaged_migrations_match_source": true,
+      "kickoff_validation": "PASS 100/100",
+      "asset_pack_draft": "PASS",
+      "release_mode_note": "One project-status gate remains because durable state intentionally stays REVIEW while future backlog blockers remain open; no functional, image, database, or security validation error remains."
+    },
+    "production_smoke": {
+      "GET /": 200,
+      "GET /dashboard-art/brand/sgg-mark-v002.png": 200,
+      "GET /dashboard-art/brand/sgg-mark.png": 404,
+      "GET /api/passport": 401,
+      "GET /api/gacha": 401,
+      "GET /api/admin/export": 401,
+      "GET /api/live": 200,
+      "root_contains_brand_v002": true,
+      "root_client_asset": "Dashboard-BOZc9SiN.js",
+      "brand_runtime_sha256": "d3bebff58d80cf7c33e22c5e60e3a6a85ce878600fa682f90e6268facde9d199",
+      "brand_source_sha256_matches": true,
+      "robots_meta": "noindex, nofollow",
+      "content_security_policy_present": true
+    },
+    "in_app_browser": {
+      "status": "BLOCKED_CAPABILITY_UNAVAILABLE",
+      "reason": "The Browser skill's required in-app browser control capability is not exposed in this task. No external browser was used.",
+      "protected_existing_tab_preserved": true,
+      "interactive_visual_qa_claimed": false
+    }
+  }
+}
