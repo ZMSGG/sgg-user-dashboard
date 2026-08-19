@@ -18,13 +18,16 @@ Project ID: `PRJ-202607-sgg-user-dashboard`
 
 各assetは用途に応じて `NONE / GODS / OTOMO / BOTH` を選びます。環境・system visualへ装飾目的のキャラクターを強制しません。production画像はImage 2.0生成元、prompt、権利、承認、最終hashを記録します。
 
-今回のrelease setは `character_family: NONE` です。v002 key visual／social cardとv003 iconの制作・承認記録は `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-001.json` および `rights/RIGHTS-AND-IMAGE2-APPROVAL-20260722-002.json`、現行正本は `standards/SGG_CREATIVE_CHARACTER_USAGE_V2.md` です。
+現行release setは `NONE / GODS / OTOMO / BOTH` を用途ごとに使い分けています。`ASSET_MANIFEST.csv` は公開treeのうちvalidatorが扱える73点をexact hashで記録し、`PRODUCTION_IMAGE_INDEX.csv` はfaviconを含む公開画像74点すべてのruntime path、承認mirror、制作元、最終hashを記録します。移行前の却下・置換・参照履歴は `history/ASSET_MANIFEST.pre-validator-migration-20260819.csv` に不変保存しています。
+
+ヘッダーのbrand mark v002は、旧markをsemantic referenceに限定し、Image 2.0で円環構図、七つの光印、立体表現、シルエットを用途専用に再制作しました。生成prompt、参照hash、chroma-key除去、最終hash、目視QAは `candidates/brand-v002/PRODUCTION_RECORD.json` に記録しています。
 
 ## Folder policy
 
 - `source/`: 正式な参照素材。原本を編集・上書きしない。
 - `candidates/`: 制作中の候補。外部公開しない。
-- `approved/`: 人間が用途とhashを確認した書き出しだけを置く。
+- `approved/`: 人間が用途とhashを確認した書き出しだけを置く。`approved/production/` は現行public treeのexact binary mirror。
+- `history/`: active registryから分離した旧status、却下、置換、参照の不変記録。
 
 ## 承認手順
 

@@ -910,7 +910,7 @@ export function Dashboard() {
       <aside className={styles.sidebar} aria-label="メインナビゲーション">
         <div className={styles.sidebarBrand}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={styles.brandMark} src="/dashboard-art/brand/sgg-mark.png" alt="" aria-hidden="true" />
+          <img className={styles.brandMark} src="/dashboard-art/brand/sgg-mark-v002.png" alt="" aria-hidden="true" />
           <span className={styles.brandWord}>MY SGG</span>
         </div>
         <p className={styles.sidebarTagline}>ALL OF SGG.<br />ONE PLAYER OS.</p>

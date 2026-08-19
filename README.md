@@ -44,7 +44,7 @@ npm run lint
 npm run db:check
 ```
 
-`.dev.vars.example` を `.dev.vars` へコピーし、32 bytes以上の十分にランダムな `SESSION_SECRET` とDiscord OAuth設定を入力します。本番値はSitesのruntime environmentで管理し、repositoryや`.openai/hosting.json`へ保存しません。D1 migrationは`drizzle/`へ保存され、配備はSitesのsource/version workflowだけを使用します。
+`.dev.vars.example` を `.dev.vars` へコピーし、32 bytes以上の十分にランダムな `SESSION_SECRET` とDiscord OAuth設定を入力します。本番値はCloudflare Workerのruntime environmentで管理し、repositoryや`.openai/hosting.json`へ保存しません。D1 migrationは`drizzle/`へ保存され、正規本番はowner管理の`wrangler.owner.jsonc`を使って配備します。Sites Version 14はrollback用として凍結しています。
 
 ## 主要な状態
 
@@ -53,4 +53,4 @@ npm run db:check
 - `UNAVAILABLE`: 公開・統合条件が未成立
 - `PLANNED`: 仕様・値・日程を確定表示しない構想
 
-サイトはowner-only private deploymentとして運用し、検索indexを拒否します。公開、custom domain、creative承認は別gateです。
+サイトは`my.sevengodsgames.com`で一般公開し、検索indexは引き続き拒否します。custom domain、creative承認、release証跡はそれぞれ独立したgateとして記録します。

@@ -1,0 +1,49 @@
+{
+  "record_id": "SGG-BRAND-V002-IMAGE2-20260819",
+  "created_at": "2026-08-19T08:00:35+08:00",
+  "created_by": "Codex",
+  "tool": "OpenAI Image 2.0 built-in image generation",
+  "purpose": "MY SGG dashboard header brand mark",
+  "reference": {
+    "role": "visual concept reference only",
+    "former_runtime_file": "public/dashboard-art/brand/sgg-mark.png",
+    "sha256": "41503fe927cc1346f419a7598c8cb25bb9e6291fa73e69ff62286f40a39e7f0e",
+    "preserved_concepts": [
+      "vermilion torii",
+      "seven golden divine lights"
+    ],
+    "not_reused": "No source pixels or traced geometry were reused. The silhouette, celestial-ring composition, materials, lighting, and seal arrangement were regenerated."
+  },
+  "generation": {
+    "use_case": "logo-brand",
+    "prompt": "Create a genuinely new, purpose-built compact emblem for the SGG player dashboard header. Frame a vermilion-and-gold torii with a circular celestial halo containing exactly seven distinct faceted golden light seals. Use premium Japanese fantasy game UI styling, crisp cel-shaded lacquer and brushed gold, a bold silhouette readable at 32–64px, centered square framing, generous padding, no people, no characters, no text, and a perfectly flat solid #00ff00 chroma-key background.",
+    "correction_prompt": "Correct only the seal count: preserve the six existing seals and add one distinct centered seal above the torii roof so the final emblem contains exactly seven seals, with no eighth seal.",
+    "chroma_source_file": "assets/candidates/brand-v002/sgg-mark-v002-chroma.png",
+    "chroma_source_sha256": "82568ffa4b3a7ea016fa6188f249dfde2fec4435d451f09b48f12a4eb99cec85"
+  },
+  "post_processing": {
+    "method": "OpenAI imagegen remove_chroma_key.py with border auto-key, soft matte, despill, then Lanczos delivery resize on a transparent 512x512 canvas",
+    "alpha_master_file": "assets/candidates/brand-v002/sgg-mark-v002-alpha.png",
+    "alpha_master_sha256": "3b8f7720a63f8522c54f005cd3486904b7e86dfb1a6fcdf0f1088a5e61731791",
+    "runtime_file": "public/dashboard-art/brand/sgg-mark-v002.png",
+    "runtime_sha256": "d3bebff58d80cf7c33e22c5e60e3a6a85ce878600fa682f90e6268facde9d199",
+    "runtime_dimensions": "512x512"
+  },
+  "rights": {
+    "source_type": "project-specific OpenAI Image 2.0 generation",
+    "scope": "SGG dashboard and public production deployment",
+    "production_approval": "SGG project owner explicit publication instruction on 2026-08-19"
+  },
+  "visual_qa": {
+    "checked_at": "2026-08-19T08:00:35+08:00",
+    "checked_by": "Codex",
+    "result": "PASS",
+    "checks": [
+      "Exactly seven distinct golden light seals are visible",
+      "One torii is visible and the silhouette is materially recomposed from the reference",
+      "No characters, letters, numbers, words, or watermark",
+      "Transparent corners and full alpha range confirmed",
+      "Visible content remains inside the 512x512 delivery canvas"
+    ]
+  }
+}

@@ -3,19 +3,19 @@
 > Derived view. `PROJECT_STATE.json` and its immutable checkpoint are authoritative.
 
 Project ID: `PRJ-202607-sgg-user-dashboard`  
-State version: `51`  
-Updated: `2026-07-31T16:28:41+08:00`  
+State version: `53`  
+Updated: `2026-08-19T08:13:00+08:00`  
 Status: `REVIEW`  
-Phase: `PUBLIC_RELEASED`
+Phase: `RELEASE_READY`
 
 ## Current objective
 
-Public production is live for the 8/1 tournament: anyone can view the lobby, Discord login opens the personal layer, wallet is optional. Watch the first real users, keep the owner's wallet link and the two policy-hash reviews as owner-paced items.
+Commit and push the validated release, deploy the owner Worker without changing access or D1 data, then verify and record the public production result.
 
 ## Last checkpoint
 
-- ID: `CP-000051`
-- Summary: Removed the automatic rights-PENDING production and release gate from active project instructions and refreshed policy source locks. Rights status remains non-blocking metadata; no publication, push, deployment, or external action occurred.
+- ID: `CP-000053`
+- Summary: Finalized the deterministic production image registry after CP-000052 by enforcing LF-only CSV output, regenerated the active 73-row manifest and complete 74-row runtime index, and revalidated the draft launch pack. This is a serialization-only correction; runtime image hashes, approved mirrors, application build, D1 evidence, and the publication scope are unchanged.
 
 ## Blockers
 
@@ -31,13 +31,14 @@ Public production is live for the 8/1 tournament: anyone can view the lobby, Dis
 
 ## Next actions
 
-1. `ACT-045` [READY] オーナー自身のWallet連携（Wallet拡張のあるブラウザで）— NFTギャラリーの本番確認。 — Owner: SGG project owner
-2. `ACT-047` [READY] 最初の一般ユーザーの流入を観察し、ログイン・表示の不具合報告を拾う。 — Owner: SGG project owner
-3. `ACT-018` [BLOCKED] After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table. — Owner: SGG project owner
-4. `ACT-024` [READY] Review the two drifted command-center policy hashes. — Owner: SGG project owner
-5. `ACT-012` [BLOCKED] Sharp upgrade when supported. — Owner: SGG engineering owner
-6. `ACT-006` [BLOCKED] Player snapshot bridges per game. — Owner: SGG game platform owner
+1. `ACT-052` [READY] Commit and push the validated release, deploy the owner Worker, smoke the public URL, and record deployment evidence. — Owner: Codex
+2. `ACT-045` [READY] オーナー自身のWallet連携（Wallet拡張のあるブラウザで）— NFTギャラリーの本番確認。 — Owner: SGG project owner
+3. `ACT-047` [READY] 最初の一般ユーザーの流入を観察し、ログイン・表示の不具合報告を拾う。 — Owner: SGG project owner
+4. `ACT-018` [BLOCKED] After the season: set OTOMO_CHAIN_EXPORT_URL, OTOMO_CHAIN_PREENTRY_URL and OTOMO_CHAIN_ADMIN_SECRET in Sites, then dry-run stones and reconcile and payout with a decided award table. — Owner: SGG project owner
+5. `ACT-024` [READY] Review the two drifted command-center policy hashes. — Owner: SGG project owner
+6. `ACT-012` [BLOCKED] Sharp upgrade when supported. — Owner: SGG engineering owner
+7. `ACT-006` [BLOCKED] Player snapshot bridges per game. — Owner: SGG game platform owner
 
 ## Resume exactly here
 
-`ACT-047` — The site is public. Watch first users, link the owner wallet when convenient. The Access scaffolding can be re-created in minutes if an emergency requires closing the doors.
+`ACT-052` — Continue from the validated release-ready tree: commit only the scoped files, push main, deploy wrangler.owner.jsonc without reapplying migration 0007, smoke my.sevengodsgames.com, then create the deployment evidence checkpoint.
