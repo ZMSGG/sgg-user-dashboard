@@ -99,53 +99,90 @@ export function formatBalance(raw: bigint, decimals: number): string {
   return fractionText ? `${whole}.${fractionText}` : whole.toString();
 }
 
-async function readBalance(
+/**
+ * One JSON-RPC batch for many `eth_call`s.
+ *
+ * These used to go out as one HTTP request per contract, five in parallel per
+ * page view, against a single free public node — which rate-limited under
+ * ordinary use and returned nothing for the whole vault (measured 2026-08-26:
+ * one full failure in eight loads). Batching makes it one request per view.
+ * A failed or malformed entry stays null so the UI keeps saying 未取得 rather
+ * than inventing a zero.
+ */
+async function rpcBatch(
   rpcUrl: string,
-  contract: HoldingContract,
-  wallet: string,
-): Promise<string | null> {
+  calls: readonly { to: string; data: string }[],
+): Promise<(string | null)[]> {
+  if (calls.length === 0) return [];
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const failed = calls.map(() => null);
 
   try {
     const response = await fetch(rpcUrl, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({
+      body: JSON.stringify(calls.map((call, index) => ({
         jsonrpc: "2.0",
-        id: 1,
+        id: index,
         method: "eth_call",
-        params: [{ to: contract.address, data: balanceOfCallData(wallet) }, "latest"],
-      }),
+        params: [call, "latest"],
+      }))),
       signal: controller.signal,
       cache: "no-store",
     });
-    if (!response.ok) return null;
+    if (!response.ok) return failed;
 
-    const payload = await response.json() as { result?: unknown };
-    if (typeof payload.result !== "string" || !/^0x[0-9a-fA-F]{1,64}$/.test(payload.result)) {
-      return null;
+    const payload = await response.json() as unknown;
+    // A node may answer a batch with a single error object rather than an array.
+    if (!Array.isArray(payload)) return failed;
+
+    const byId = new Map<number, unknown>();
+    for (const entry of payload) {
+      if (entry && typeof entry === "object" && typeof (entry as { id?: unknown }).id === "number") {
+        byId.set((entry as { id: number }).id, (entry as { result?: unknown }).result);
+      }
     }
-    return formatBalance(BigInt(payload.result), contract.decimals);
+    return calls.map((_, index) => {
+      const result = byId.get(index);
+      return typeof result === "string" && /^0x[0-9a-fA-F]{1,64}$/.test(result) ? result : null;
+    });
   } catch {
-    return null;
+    return failed;
   } finally {
     clearTimeout(timeout);
   }
 }
 
+/** Public nodes drop calls individually under load; one retry recovers them. */
+const RETRY_DELAY_MS = 250;
+
 export async function readHoldings(
   wallet: string,
   rpcUrl = DEFAULT_RPC_URL,
 ): Promise<HoldingsSnapshot> {
-  const holdings = await Promise.all(
-    SGG_CONTRACTS.map(async (contract) => ({
+  const calls = SGG_CONTRACTS.map((contract) => ({
+    to: contract.address,
+    data: balanceOfCallData(wallet),
+  }));
+
+  const results = [...await rpcBatch(rpcUrl, calls)];
+  const missing = results.flatMap((result, index) => (result === null ? [index] : []));
+  if (missing.length > 0) {
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+    const retried = await rpcBatch(rpcUrl, missing.map((index) => calls[index]));
+    missing.forEach((index, slot) => { results[index] = retried[slot]; });
+  }
+
+  const holdings = SGG_CONTRACTS.map((contract, index) => {
+    const raw = results[index];
+    return {
       id: contract.id,
       label: contract.label,
       kind: contract.kind,
-      balance: await readBalance(rpcUrl, contract, wallet),
-    })),
-  );
+      balance: raw === null ? null : formatBalance(BigInt(raw), contract.decimals),
+    };
+  });
 
   return {
     chainId: MAINNET_CHAIN_ID,

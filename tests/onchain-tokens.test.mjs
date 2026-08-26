@@ -76,3 +76,67 @@ test("deriveThumbUrl maps images to the bucket's 250px variants", () => {
   assert.equal(deriveThumbUrl("https://evil.example/images/1.png"), null);
   assert.equal(deriveThumbUrl("https://storage.googleapis.com/shichifuku/art/1.png"), null);
 });
+
+/* ---- balance reads: one batched request, retried once ------------------- */
+
+import { readHoldings, SGG_CONTRACTS } from "../server/onchain-holdings.ts";
+
+const okBody = (calls, value = 3) =>
+  calls.map((_, id) => ({ jsonrpc: "2.0", id, result: `0x${value.toString(16).padStart(64, "0")}` }));
+
+function stubFetch(handler) {
+  const calls = [];
+  const original = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    const body = JSON.parse(init.body);
+    calls.push(body);
+    return handler(body, calls.length);
+  };
+  return { calls, restore: () => { globalThis.fetch = original; } };
+}
+
+const json = (payload) => new Response(JSON.stringify(payload), {
+  status: 200, headers: { "content-type": "application/json" },
+});
+
+test("every balance is read in a single batched request", async () => {
+  const stub = stubFetch((body) => json(okBody(body)));
+  try {
+    const snapshot = await readHoldings("0x24fa54b3e99240c4c7b4b4a68f3f33f01eedec64");
+    // One HTTP request total, carrying one eth_call per contract.
+    assert.equal(stub.calls.length, 1);
+    assert.equal(stub.calls[0].length, SGG_CONTRACTS.length);
+    assert.ok(stub.calls[0].every((entry) => entry.method === "eth_call"));
+    assert.ok(snapshot.holdings.every((h) => h.balance !== null));
+  } finally {
+    stub.restore();
+  }
+});
+
+test("a dropped call is retried once, and only the dropped one", async () => {
+  // First response omits the last entry, as a rate-limited node does.
+  const stub = stubFetch((body, attempt) => attempt === 1
+    ? json(okBody(body).slice(0, -1))
+    : json(okBody(body)));
+  try {
+    const snapshot = await readHoldings("0x24fa54b3e99240c4c7b4b4a68f3f33f01eedec64");
+    assert.equal(stub.calls.length, 2);
+    // The retry carries only the one that failed, not the whole set again.
+    assert.equal(stub.calls[1].length, 1);
+    assert.ok(snapshot.holdings.every((h) => h.balance !== null), "retry recovered the missing balance");
+  } finally {
+    stub.restore();
+  }
+});
+
+test("a read that never succeeds reports unknown, never zero", async () => {
+  const stub = stubFetch(() => new Response("rate limited", { status: 429 }));
+  try {
+    const snapshot = await readHoldings("0x24fa54b3e99240c4c7b4b4a68f3f33f01eedec64");
+    assert.equal(stub.calls.length, 2, "one retry, then it gives up");
+    assert.ok(snapshot.holdings.every((h) => h.balance === null));
+    assert.ok(snapshot.holdings.every((h) => h.balance !== "0"), "a failed read must not read as a real zero");
+  } finally {
+    stub.restore();
+  }
+});
