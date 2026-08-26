@@ -28,7 +28,12 @@ test("server-renders the truthful SGG Player OS", async () => {
   // アップデート and the right rail were all removed. Per-title status lives in
   // プレイ, so home no longer names individual games server-side.
   assert.match(html, /公開中のゲーム/);
-  assert.match(html, /開催中の大会/);
+  // The home tournament card used to hardcode 開催中の大会 / 準備中 while a real
+  // tournament ran and ended behind it. It now reports the live season, or the
+  // count of confirmed records when nothing is running — never "準備中".
+  assert.match(html, /TOURNAMENT/);
+  assert.doesNotMatch(html, /公開後にここへ表示されます/);
+  assert.doesNotMatch(html, /ゲーム側ブリッジ待ち/);
   assert.doesNotMatch(html, /いま戻る場所/);
   assert.match(html, /name="robots" content="noindex, nofollow"/);
   assert.match(html, /property="og:image" content="http:\/\/localhost(?::3000)?\/my-sgg-social-og-v004\.jpg"/);
@@ -133,6 +138,19 @@ test("derives current health, search selection, and filtered feature state", asy
   assert.match(dashboard, /liveData\.oracle\.entries\.length > 0/);
   assert.doesNotMatch(dashboard, /大会の受付・締切・戦績と、ゲームごとの番付をここに表示します/);
   assert.match(dashboard, /稼働確認不可/);
+
+  // Hardcoded status strings that contradicted live state (2026-08-19 audit):
+  // the sidebar claimed NOT CONNECTED for signed-in players while the passport
+  // header said CONNECTED, and the vault stat said 未接続 above a rendered
+  // wallet. Both now read from the same state the rest of the view uses.
+  assert.doesNotMatch(dashboard, /PLAYER DATA BRIDGE · NOT CONNECTED/);
+  assert.match(dashboard, /<small>\{passportBridgeLabel\}<\/small>/);
+  assert.doesNotMatch(dashboard, /<b>未接続<\/b>MY ASSETS/);
+  // The gacha currency is 勾玉 in the ledger; "Gコイン" never existed.
+  assert.doesNotMatch(dashboard, /Gコイン/);
+  // Grant timestamps and season dates must share one timezone, or a player
+  // reads their own award an hour off from the tournament that produced it.
+  assert.doesNotMatch(dashboard, /Asia\/Kuala_Lumpur/);
   assert.doesNotMatch(dashboard, />5 \/ 5 ONLINE</);
 });
 

@@ -62,13 +62,13 @@ function withSecurityHeaders(request: Request, response: Response): Response {
   headers.set("Content-Security-Policy", [
     "default-src 'self'",
     "base-uri 'self'",
-    "connect-src 'self'",
+    "connect-src 'self' https://static.cloudflareinsights.com https://cloudflareinsights.com",
     "font-src 'self' data:",
     "form-action 'self'",
     "frame-ancestors 'none'",
     "img-src 'self' data: https://cdn.discordapp.com https://storage.googleapis.com",
     "object-src 'none'",
-    "script-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
     "style-src 'self' 'unsafe-inline'",
   ].join("; "));
   headers.set("Permissions-Policy", "camera=(), geolocation=(), microphone=(), payment=()");

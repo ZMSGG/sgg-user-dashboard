@@ -11,13 +11,13 @@ import {
 } from "react";
 import {
   characterPairs,
-  communityItems,
   competitions,
   games,
+  officialLinks,
   otomoForms,
   releaseStateCounts,
-  tournamentRecords,
   releaseStateLabels,
+  tournamentRecords,
   type Accent,
   type GameSummary,
   type ReleaseState,
@@ -38,7 +38,7 @@ import styles from "./Dashboard.module.css";
 
 type View = "home" | "games" | "arena" | "collection" | "mysgg" | "community";
 // 「すべて」は出さない — 休眠タイトルはプレイ可能の棚に混ぜず、休眠中タブに置く。
-type GameFilter = Extract<ReleaseState, "LIVE" | "DORMANT">;
+type GameFilter = Extract<ReleaseState, "LIVE" | "MAINTENANCE" | "DORMANT">;
 type FormFilter = "SPIRIT" | "INCARNATE" | "DOJI";
 type SourceState = "online" | "unavailable" | "checking";
 type LoadState = "idle" | "loading" | "ready" | "error";
@@ -207,7 +207,7 @@ function formatGrantDate(value: string) {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
-    timeZone: "Asia/Kuala_Lumpur",
+    timeZone: "Asia/Tokyo",
   }).format(date);
 }
 
@@ -250,7 +250,7 @@ function formatSyncTime(value: string) {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
-    timeZone: "Asia/Kuala_Lumpur",
+    timeZone: "Asia/Tokyo",
   }).format(date);
 }
 
@@ -872,9 +872,8 @@ export function Dashboard() {
     trajectoryCurrentPage * TRAJECTORY_PAGE_SIZE,
   );
 
-  const filteredGames = games.filter((game) => gameFilter === "LIVE"
-    ? game.releaseState === "LIVE" || game.releaseState === "MAINTENANCE"
-    : game.releaseState === gameFilter);
+  // 「プレイ可能」は本当に遊べるものだけ。工事中は自分のチップを持つ。
+  const filteredGames = games.filter((game) => game.releaseState === gameFilter);
   const currentForm = otomoForms.find((form) => form.code === formFilter) ?? otomoForms[0];
   const getRuntimeState = (gameId: string): SourceState => {
     const runtimeKey = runtimeKeyByGameId[gameId];
@@ -948,7 +947,7 @@ export function Dashboard() {
         )}
         <section className={styles.sidebarStatus}>
           <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount === 5} />{runtimeSummary}</span>
-          <small>PLAYER DATA BRIDGE · NOT CONNECTED</small>
+          <small>{passportBridgeLabel}</small>
         </section>
       </aside>
 
@@ -1078,8 +1077,18 @@ export function Dashboard() {
                     <div className={styles.featureArt}>
                       <Image src="/dashboard-art/cards/card-02.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 50%" }} />
                     </div>
-                    <small>LIVE RANKING</small><h3>開催中の大会</h3>
-                    <b>準備中</b><span>公開後にここへ表示されます</span>
+                    <small>TOURNAMENT</small><h3>大会</h3>
+                    {liveData.chainSeason?.status === "ACTIVE" || liveData.chainSeason?.status === "UPCOMING" ? (
+                      <>
+                        <b>{liveData.chainSeason.status === "ACTIVE" ? "開催中" : "開催予定"}</b>
+                        <span>{liveData.chainSeason.name}</span>
+                      </>
+                    ) : (
+                      // 開催していないときは「無い」と言わず、確定済みの記録数を出す。
+                      <>
+                        <b>{trajectoryRecords.length}</b><span>これまでの大会・結果確定済み</span>
+                      </>
+                    )}
                     <button type="button" onClick={() => changeView("arena")}>アリーナを見る</button>
                   </article>
                   <article data-tone="cyan">
@@ -1095,15 +1104,15 @@ export function Dashboard() {
                       <Image src="/dashboard-art/cards/card-04.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 34%" }} />
                     </div>
                     <small>OTOMO GROWTH</small><h3>OTOMO育成</h3>
-                    <b>未接続</b><span>ゲーム側ブリッジ待ち</span>
-                    <button type="button" onClick={() => changeView("collection")}>接続状況を見る</button>
+                    <b>未接続</b><span>ゲーム内データの連携は準備中</span>
+                    <button type="button" onClick={() => changeView("games")}>ゲームを見る</button>
                   </article>
                   <article data-tone="coral">
                     <div className={styles.featureArt}>
                       <Image src="/dashboard-art/cards/card-05.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "70% 40%" }} />
                     </div>
                     <small>COMMUNITY SNS</small><h3>コミュニティSNS</h3>
-                    <b>{communityItems.filter((item) => item.status === "PUBLISHED").length}</b><span>公開済みの更新</span>
+                    <b>{officialLinks.length}</b><span>公式チャンネル・マーケット</span>
                     <button type="button" onClick={() => changeView("community")}>もっと見る</button>
                   </article>
                 </section>
@@ -1118,10 +1127,10 @@ export function Dashboard() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className={styles.headerBand} src="/dashboard-art/headers/header-taiyo.png" alt="" aria-hidden="true" />
                 <div><p>PLAY / GAME UNIVERSE</p><h1>SGGを遊ぶ</h1><span>公開状態、進行タイプ、公式URLを正本とlive healthから統合。</span></div>
-                <div className={styles.pageStats}><span><b>{releaseStateCounts.LIVE}</b>PLAYABLE</span><span><b>{releaseStateCounts.DRAFT}</b>IN DEVELOPMENT</span><span><b>7·77·777</b>TIME AXES</span></div>
+                <div className={styles.pageStats}><span><b>{releaseStateCounts.LIVE}</b>PLAYABLE</span><span><b>{releaseStateCounts.MAINTENANCE}</b>UNDER REPAIR</span><span><b>7·77·777</b>TIME AXES</span></div>
               </header>
               <div className={styles.filterBar} aria-label="ゲーム公開状態フィルター">
-                {(["LIVE", "DORMANT"] as GameFilter[]).map((filter) => (
+                {(["LIVE", "MAINTENANCE", "DORMANT"] as GameFilter[]).map((filter) => (
                   <button key={filter} type="button" aria-pressed={gameFilter === filter} className={gameFilter === filter ? styles.filterActive : ""} onClick={() => setGameFilter(filter)}>
                     {releaseStateLabels[filter]}
                   </button>
@@ -1226,7 +1235,7 @@ export function Dashboard() {
               <OtomoVignette className={styles.swarmGround} items={[{ sprite: "shofuku", pose: "sit", right: "6%", bottom: "2px", size: 80 }, { sprite: "kozuchi", pose: "sleep", left: "5%", bottom: "0px", size: 64 }]} />
               <header className={styles.pageHeader}>
                 <div><p>COLLECTION / SOURCE-AWARE VAULT</p><h1>コレクション</h1><span>オンチェーン保有、ゲーム内資産、公式キャラクター図鑑を混ぜずに統合。</span></div>
-                <div className={styles.pageStats}><span><b>7</b>PAIRS</span><span><b>3</b>FORMS</span><span><b>未接続</b>MY ASSETS</span></div>
+                <div className={styles.pageStats}><span><b>{characterPairs.length}</b>PAIRS</span><span><b>{otomoForms.length}</b>FORMS</span><span><b>{holdings?.linked ? otomoHoldingTotal(holdings) : "未連携"}</b>MY ASSETS</span></div>
               </header>
               <section className={styles.holdingsSection}>
                 <SectionTitle
@@ -1276,7 +1285,7 @@ export function Dashboard() {
               <section className={styles.gachaSection} data-tone="violet">
                 <SectionTitle
                   kicker="GODS GACHA / GODSガチャ"
-                  title="GコインでGODSガチャを引く"
+                  title="勾玉でGODSガチャを引く"
                   copy="ダッシュボード限定のコレクションカード。NFTでもゲームアイテムでもなく、順位や報酬には影響しません。"
                 />
                 <div className={styles.gachaTeaser}>
@@ -1284,7 +1293,7 @@ export function Dashboard() {
                   <img src="/dashboard-art/gacha/gacha-teaser.png" alt="OTOMOたちが金色の宝珠ガチャを覗き込むティザービジュアル" loading="lazy" />
                   <span className={styles.prepSeal}>準備中</span>
                 </div>
-                <p className={styles.holdingsNote}>GODSガチャは準備中です。Gコインの配布はイベント・大会と連動予定。公開までお待ちください。</p>
+                <p className={styles.holdingsNote}>GODSガチャは準備中です。勾玉（まがたま）の授与はイベント・大会と連動予定。公開までお待ちください。</p>
               </section>
               <section className={styles.gachaSection} data-tone="gold">
                 <SectionTitle
@@ -1731,11 +1740,11 @@ export function Dashboard() {
               <aside className={styles.followPanel}>
                 <p>COMMUNITY SNS</p><h2>公式チャンネル</h2><span>SGGの公式SNS・外部アプリへの導線です。</span>
                 <div className={styles.snsList}>
-                  <a href="https://sevengodsgames.com/" target="_blank" rel="noopener noreferrer"><span>SGG LP</span><small>sevengodsgames.com ↗</small></a>
-                  <a href="https://seven-gods.com/" target="_blank" rel="noopener noreferrer"><span>SG LP</span><small>seven-gods.com ↗</small></a>
-                  <a href="https://x.com/SEVENGODSGAMES" target="_blank" rel="noopener noreferrer"><span>X</span><small>@SEVENGODSGAMES ↗</small></a>
-                  <a href="https://discord.gg/3ByquYMHUp" target="_blank" rel="noopener noreferrer"><span>ディスコード</span><small>招待リンク ↗</small></a>
-                  <a aria-disabled="true"><span>SEVENDAOapp</span><small>準備中</small></a>
+                  {officialLinks.filter((link) => link.group === "CHANNEL").map((link) => (
+                    <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer">
+                      <span>{link.label}</span><small>{link.meta} ↗</small>
+                    </a>
+                  ))}
                 </div>
               </aside>
               {/* 公式マーケット — the collections' own OpenSea pages and the SDT
@@ -1744,11 +1753,11 @@ export function Dashboard() {
               <aside className={styles.followPanel}>
                 <p>OFFICIAL MARKET</p><h2>公式マーケット</h2><span>SEVENGODSとOTOMOの公式コレクション、SDTの取引先です。</span>
                 <div className={styles.snsList}>
-                  <a href="https://opensea.io/ja/collection/seven-gods?activityTypes=sale" target="_blank" rel="noopener noreferrer"><span>SEVENGODS</span><small>OpenSea ↗</small></a>
-                  <a href="https://opensea.io/ja/collection/otomo-douji" target="_blank" rel="noopener noreferrer"><span>OTOMO 童子</span><small>OpenSea ↗</small></a>
-                  <a href="https://opensea.io/ja/collection/otomo-junikutai" target="_blank" rel="noopener noreferrer"><span>OTOMO 受肉体</span><small>OpenSea ↗</small></a>
-                  <a href="https://opensea.io/ja/collection/otomo-seireitai" target="_blank" rel="noopener noreferrer"><span>OTOMO 精霊体</span><small>OpenSea ↗</small></a>
-                  <a href="https://dex.scenttoken.com/trade" target="_blank" rel="noopener noreferrer"><span>SDT</span><small>SCENT DEX ↗</small></a>
+                  {officialLinks.filter((link) => link.group === "MARKET").map((link) => (
+                    <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer">
+                      <span>{link.label}</span><small>{link.meta} ↗</small>
+                    </a>
+                  ))}
                 </div>
               </aside>
             </div>

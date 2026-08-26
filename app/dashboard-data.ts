@@ -74,7 +74,7 @@ export const games: readonly GameSummary[] = [
     guideUrl: null,
     primaryAction: "CHAINをプレイする",
     nextAction: "シーズンの開催状況を確認",
-    nextActionMeta: "第1回大会は公式発表の日程で開催",
+    nextActionMeta: "第1回大会は終了。次回の日程は公式発表で",
     featured: true,
   },
   {
@@ -282,6 +282,33 @@ export const tournamentRecords: readonly TournamentRecord[] = [
     provenance: "確定番付はゲーム公開API (leaderboard/season, ロック済み) をそのまま記載。",
     accent: "cyan",
   },
+] as const;
+
+export type OfficialLink = {
+  group: "CHANNEL" | "MARKET";
+  label: string;
+  /** Shown under the label; the destination in the reader's words. */
+  meta: string;
+  href: string;
+};
+
+/**
+ * Every outbound official destination, in one place. The コミュニティ view
+ * renders these and the home card counts them, so a link added here appears
+ * in both without the count drifting away from the list.
+ */
+export const officialLinks: readonly OfficialLink[] = [
+  { group: "CHANNEL", label: "SGG LP", meta: "sevengodsgames.com", href: "https://sevengodsgames.com/" },
+  { group: "CHANNEL", label: "SG LP", meta: "seven-gods.com", href: "https://seven-gods.com/" },
+  { group: "CHANNEL", label: "X", meta: "@SEVENGODSGAMES", href: "https://x.com/SEVENGODSGAMES" },
+  { group: "CHANNEL", label: "Discord", meta: "招待リンク", href: "https://discord.gg/3ByquYMHUp" },
+  // SEVENDAOapp was listed as 準備中 while it was already serving; it is live.
+  { group: "CHANNEL", label: "SEVENDAOapp", meta: "app.seven-terakoya.com", href: "https://app.seven-terakoya.com/" },
+  { group: "MARKET", label: "SEVENGODS", meta: "OpenSea", href: "https://opensea.io/ja/collection/seven-gods?activityTypes=sale" },
+  { group: "MARKET", label: "OTOMO 童子", meta: "OpenSea", href: "https://opensea.io/ja/collection/otomo-douji" },
+  { group: "MARKET", label: "OTOMO 受肉体", meta: "OpenSea", href: "https://opensea.io/ja/collection/otomo-junikutai" },
+  { group: "MARKET", label: "OTOMO 精霊体", meta: "OpenSea", href: "https://opensea.io/ja/collection/otomo-seireitai" },
+  { group: "MARKET", label: "SDT", meta: "SCENT DEX", href: "https://dex.scenttoken.com/trade" },
 ] as const;
 
 export type CharacterPair = {
