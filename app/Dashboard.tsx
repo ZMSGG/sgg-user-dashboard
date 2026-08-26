@@ -909,7 +909,7 @@ export function Dashboard() {
       <aside className={styles.sidebar} aria-label="メインナビゲーション">
         <div className={styles.sidebarBrand}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={styles.brandMark} src="/dashboard-art/brand/sgg-mark-v002.png" alt="" aria-hidden="true" />
+          <img className={styles.brandMark} src="/dashboard-art/brand/sgg-mark-v002.webp" alt="" aria-hidden="true" />
           <span className={styles.brandWord}>MY SGG</span>
         </div>
         <p className={styles.sidebarTagline}>ALL OF SGG.<br />ONE PLAYER OS.</p>
@@ -961,7 +961,7 @@ export function Dashboard() {
               <div className={styles.homeMain}>
                 <section className={styles.stage} aria-labelledby="hero-title">
                   <div className={styles.stageBackdrop}>
-                    <Image src="/dashboard-art/bg-zipangu-dusk.png" alt="" fill priority sizes="(max-width: 900px) 100vw, 62vw" />
+                    <Image src="/dashboard-art/bg-zipangu-dusk.webp" alt="" fill priority sizes="(max-width: 900px) 100vw, 62vw" />
                   </div>
                   {(() => {
                     const duty = characterPairs.find((pair) => pair.godId === stageGodId) ?? dutyPair();
@@ -969,7 +969,7 @@ export function Dashboard() {
                       <>
                         <div className={styles.stageActor} data-tone={duty.accent}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={`/dashboard-art/stage/duty-${duty.godId.toLowerCase()}.png`} alt={duty.godName} />
+                          <img src={`/dashboard-art/stage/duty-${duty.godId.toLowerCase()}.webp`} alt={duty.godName} />
                         </div>
                         <div className={styles.stageOshi} data-tone={duty.accent}>
                           {stagePickerOpen && (
@@ -1067,7 +1067,7 @@ export function Dashboard() {
                 <section className={styles.featureRow} aria-label="主要導線">
                   <article data-tone="gold">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-01.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "82% 46%" }} />
+                      <Image src="/dashboard-art/cards/card-01.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "82% 46%" }} />
                     </div>
                     <small>PLAY NOW</small><h3>公開中のゲーム</h3>
                     <b>{releaseStateCounts.LIVE}</b><span>稼働中のruntime</span>
@@ -1075,7 +1075,7 @@ export function Dashboard() {
                   </article>
                   <article data-tone="violet">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-02.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 50%" }} />
+                      <Image src="/dashboard-art/cards/card-02.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 50%" }} />
                     </div>
                     <small>TOURNAMENT</small><h3>大会</h3>
                     {liveData.chainSeason?.status === "ACTIVE" || liveData.chainSeason?.status === "UPCOMING" ? (
@@ -1093,7 +1093,7 @@ export function Dashboard() {
                   </article>
                   <article data-tone="cyan">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-03.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "72% 38%" }} />
+                      <Image src="/dashboard-art/cards/card-03.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "72% 38%" }} />
                     </div>
                     <small>DIVINE COLLECTION</small><h3>神々コレクション</h3>
                     <b>{characterPairs.length}</b><span>GODS × OTOMO</span>
@@ -1101,7 +1101,7 @@ export function Dashboard() {
                   </article>
                   <article data-tone="green">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-04.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 34%" }} />
+                      <Image src="/dashboard-art/cards/card-04.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 34%" }} />
                     </div>
                     <small>OTOMO GROWTH</small><h3>OTOMO育成</h3>
                     <b>未接続</b><span>ゲーム内データの連携は準備中</span>
@@ -1109,7 +1109,7 @@ export function Dashboard() {
                   </article>
                   <article data-tone="coral">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-05.png" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "70% 40%" }} />
+                      <Image src="/dashboard-art/cards/card-05.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "70% 40%" }} />
                     </div>
                     <small>COMMUNITY SNS</small><h3>コミュニティSNS</h3>
                     <b>{officialLinks.length}</b><span>公式チャンネル・マーケット</span>
@@ -1125,7 +1125,7 @@ export function Dashboard() {
               <OtomoVignette className={styles.swarmGround} items={[{ sprite: "juka", pose: "sleep", right: "6%", bottom: "2px", size: 78 }, { sprite: "haku", pose: "sit", left: "4%", bottom: "0px", size: 66, flip: true }]} />
               <header className={styles.pageHeader}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className={styles.headerBand} src="/dashboard-art/headers/header-taiyo.png" alt="" aria-hidden="true" />
+                <img className={styles.headerBand} src="/dashboard-art/headers/header-taiyo.webp" alt="" aria-hidden="true" />
                 <div><p>PLAY / GAME UNIVERSE</p><h1>SGGを遊ぶ</h1><span>公開状態、進行タイプ、公式URLを正本とlive healthから統合。</span></div>
                 <div className={styles.pageStats}><span><b>{releaseStateCounts.LIVE}</b>PLAYABLE</span><span><b>{releaseStateCounts.MAINTENANCE}</b>UNDER REPAIR</span><span><b>7·77·777</b>TIME AXES</span></div>
               </header>
@@ -1155,7 +1155,7 @@ export function Dashboard() {
               <header className={styles.pageHeader}>
                 <div><p>ARENA / VERIFIED COMPETITION</p><h1>アリーナ</h1><span>大会と番付をここに集めます。</span></div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className={styles.headerBand} src="/dashboard-art/headers/header-sobi.png" alt="" aria-hidden="true" />
+                <img className={styles.headerBand} src="/dashboard-art/headers/header-sobi.webp" alt="" aria-hidden="true" />
               </header>
               {liveData.chainSeason ? (
                 <section className={styles.seasonCard} data-status={liveData.chainSeason.status}>
@@ -1290,7 +1290,7 @@ export function Dashboard() {
                 />
                 <div className={styles.gachaTeaser}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/dashboard-art/gacha/gacha-teaser.png" alt="OTOMOたちが金色の宝珠ガチャを覗き込むティザービジュアル" loading="lazy" />
+                  <img src="/dashboard-art/gacha/gacha-teaser.webp" alt="OTOMOたちが金色の宝珠ガチャを覗き込むティザービジュアル" loading="lazy" />
                   <span className={styles.prepSeal}>準備中</span>
                 </div>
                 <p className={styles.holdingsNote}>GODSガチャは準備中です。勾玉（まがたま）の授与はイベント・大会と連動予定。公開までお待ちください。</p>
@@ -1303,7 +1303,7 @@ export function Dashboard() {
                 />
                 <div className={styles.gachaTeaser}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/dashboard-art/gacha/zukan-teaser.png" alt="開いた図鑑の上で遊ぶOTOMOたちのティザービジュアル" loading="lazy" />
+                  <img src="/dashboard-art/gacha/zukan-teaser.webp" alt="開いた図鑑の上で遊ぶOTOMOたちのティザービジュアル" loading="lazy" />
                   <span className={styles.prepSeal}>準備中</span>
                 </div>
                 <p className={styles.holdingsNote}>OTOMO図鑑は準備中です。GODSガチャと同時に公開予定。公開までお待ちください。</p>
@@ -1323,7 +1323,7 @@ export function Dashboard() {
                       <span className={styles.pairBackdrop} aria-hidden="true">{pair.glyph}</span>
                       <div className={styles.pairArt}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={`/dashboard-art/pairs/pair-${pair.godId.toLowerCase()}-${formFilter.toLowerCase()}.png`} alt={`${pair.godName}と${pair.otomoName}（${currentForm.label}）の肖像`} loading="lazy" />
+                        <img src={`/dashboard-art/pairs/pair-${pair.godId.toLowerCase()}-${formFilter.toLowerCase()}.webp`} alt={`${pair.godName}と${pair.otomoName}（${currentForm.label}）の肖像`} loading="lazy" />
                       </div>
                       <div><small>{pair.godId}</small><h3>{pair.godName}</h3></div>
                       <i aria-hidden="true">×</i>
@@ -1342,7 +1342,7 @@ export function Dashboard() {
               <header className={styles.pageHeader}>
                 <div><p>MY SGG / PLAYER PASSPORT</p><h1>マイSGG</h1><span>本人、履歴、ポイント、報酬、セキュリティを一つに。制度は混ぜません。</span></div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className={styles.headerBand} src="/dashboard-art/headers/header-fukuei.png" alt="" aria-hidden="true" />
+                <img className={styles.headerBand} src="/dashboard-art/headers/header-fukuei.webp" alt="" aria-hidden="true" />
                 <StatusPill accent="coral">{passportBridgeLabel}</StatusPill>
               </header>
               <section className={styles.passportHero} aria-busy={passportState === "loading"}>
@@ -1734,7 +1734,7 @@ export function Dashboard() {
               <OtomoVignette className={styles.swarmGround} items={[{ sprite: "haku", pose: "cheer", left: "5%", bottom: "0px", size: 74 }]} />
               <header className={styles.pageHeader}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className={styles.headerBand} src="/dashboard-art/headers/header-shouren.png" alt="" aria-hidden="true" />
+                <img className={styles.headerBand} src="/dashboard-art/headers/header-shouren.webp" alt="" aria-hidden="true" />
                 <div><p>COMMUNITY / OFFICIAL SIGNALS</p><h1>コミュニティSNS</h1><span>SGGの公式アカウントと外部アプリへの導線です。</span></div>
               </header>
               <aside className={styles.followPanel}>

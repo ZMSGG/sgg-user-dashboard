@@ -239,12 +239,12 @@ test("degrades image optimization gracefully without Cloudflare bindings", async
   workerUrl.searchParams.set("test", `image-${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
   const response = await worker.fetch(
-    new Request("http://localhost/_vinext/image?url=%2Fdashboard-art%2Fmy-sgg-key-visual-v002.png&w=1080&q=75"),
+    new Request("http://localhost/_vinext/image?url=%2Fdashboard-art%2Fmy-sgg-key-visual-v002.webp&w=1080&q=75"),
     {},
     { waitUntil() {}, passThroughOnException() {} },
   );
   assert.equal(response.status, 302);
-  assert.equal(response.headers.get("location"), "/dashboard-art/my-sgg-key-visual-v002.png");
+  assert.equal(response.headers.get("location"), "/dashboard-art/my-sgg-key-visual-v002.webp");
 
   const rejected = await worker.fetch(
     new Request("http://localhost/_vinext/image?url=https%3A%2F%2Fevil.example%2Fx.png"),
@@ -308,8 +308,22 @@ test("ships the finished visual surface and retires legacy demo art", async () =
   // A share card is fetched by every unfurling scraper; keep it lean.
   assert.ok(og.length < 700_000, `share card is ${og.length} bytes`);
 
-  await access(new URL("../public/dashboard-art/my-sgg-key-visual-v002.png", import.meta.url));
+  await access(new URL("../public/dashboard-art/my-sgg-key-visual-v002.webp", import.meta.url));
   await access(new URL("../public/my-sgg-icon-v004.png", import.meta.url));
+
+  // Runtime art ships as WebP (2026-08-26): the PNG set was 42MB and a phone
+  // paid 7MB a visit for it. Icons stay PNG/ICO because browsers and iOS
+  // home screens need them, but nothing under dashboard-art may regress.
+  const { readdir } = await import("node:fs/promises");
+  const artFiles = await readdir(new URL("../public/dashboard-art", import.meta.url), { recursive: true });
+  const strayPng = artFiles.filter((name) => String(name).endsWith(".png"));
+  assert.deepEqual(strayPng, [], `dashboard art must be WebP: ${strayPng.join(", ")}`);
+
+  // public/_headers overrides the generated one, so it must keep the hashed
+  // bundle rule as well as the art caching it was added for.
+  const headers = await readFile(new URL("../public/_headers", import.meta.url), "utf8");
+  assert.match(headers, /\/assets\/\*\n\s*Cache-Control: public, max-age=31536000, immutable/);
+  assert.match(headers, /\/dashboard-art\/\*\n\s*Cache-Control: public, max-age=\d+/);
   await access(new URL("../public/apple-touch-icon.png", import.meta.url));
   await access(new URL("../public/favicon.ico", import.meta.url));
   await access(new URL("../app/Dashboard.module.css", import.meta.url));

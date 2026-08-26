@@ -29,7 +29,7 @@
       rgba(24, 13, 17, 0.16) 30%,
       rgba(24, 13, 17, 0.08) 60%,
       rgba(24, 13, 17, 0.02) 100%),
-    url("/dashboard-art/bg-zipangu-dusk.png") center bottom / cover no-repeat,
+    url("/dashboard-art/bg-zipangu-dusk.webp") center bottom / cover no-repeat,
     #1e1318;
   content: "";
   inset: 0;

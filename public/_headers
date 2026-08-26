@@ -1,0 +1,18 @@
+# Content-hashed bundles never change under a given name.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Runtime art is served under stable names, so it cannot be immutable — but it
+# changes rarely. A day of browser cache plus a week of stale-while-revalidate
+# keeps repeat visits from re-fetching several MB of key art.
+/dashboard-art/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/favicon.ico
+  Cache-Control: public, max-age=86400
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400
+/my-sgg-icon-v004.png
+  Cache-Control: public, max-age=86400
+/my-sgg-social-og-v004.jpg
+  Cache-Control: public, max-age=86400
