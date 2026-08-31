@@ -36,6 +36,12 @@ export type LiveData = {
     endAt: string;
     status: "UPCOMING" | "ACTIVE" | "ENDED";
   } | null;
+  /**
+   * OTOMO CHAIN standings — the one competition the dashboard actually runs
+   * tournaments for. Empty when the upstream did not answer; never rendered
+   * as "nobody played".
+   */
+  chain: { entries: LiveRanking[]; participants: number };
   oracle: { day: number | null; entries: LiveRanking[] };
   quest: {
     season: { name: string; day: number; totalDays: number } | null;
@@ -52,6 +58,7 @@ export const emptyLiveData: LiveData = {
   runtimes: { oracle: "unavailable", quest: "unavailable", farm: "unavailable", taiyo: "unavailable", chain: "unavailable" },
   runtimeOnlineCount: 0,
   chainSeason: null,
+  chain: { entries: [], participants: 0 },
   oracle: { day: null, entries: [] },
   quest: { season: null, entries: [], participants: 0 },
 };

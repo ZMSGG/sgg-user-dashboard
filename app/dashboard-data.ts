@@ -188,6 +188,32 @@ export type Competition = {
 
 export const competitions: readonly Competition[] = [
   {
+    id: "chain-season-ranking",
+    gameId: "otomo-chain-7",
+    title: "神連鎖番付",
+    game: "OTOMO CHAIN 7",
+    status: "LIVE_RANKING",
+    cadence: "7-DAY SEASON",
+    rule: "1日のベスト1走をシーズン合計",
+    integrity: "PUBLIC API VERIFIED",
+    actionLabel: "番付を見る",
+    href: "https://otomochain.sevengodsgames.com/",
+    accent: "cyan",
+  },
+  {
+    id: "farm-season-ranking",
+    gameId: "otomo-farm-77",
+    title: "神域番付",
+    game: "OTOMO FARM 77",
+    status: "LIVE_RANKING",
+    cadence: "77-DAY SEASON",
+    rule: "収穫・親密度・奉納など5部門",
+    integrity: "PUBLIC PAGE VERIFIED",
+    actionLabel: "番付を見る",
+    href: "https://otomo-farm-77.vercel.app/rankings",
+    accent: "green",
+  },
+  {
     id: "oracle-daily-ranking",
     gameId: "otomo-oracle-7",
     title: "神託番付",
@@ -213,20 +239,22 @@ export const competitions: readonly Competition[] = [
     href: "https://otomoquest.sevengodsgames.com/ranking",
     accent: "violet",
   },
-  {
-    id: "farm-season-ranking",
-    gameId: "otomo-farm-77",
-    title: "神域番付",
-    game: "OTOMO FARM 77",
-    status: "LIVE_RANKING",
-    cadence: "77-DAY SEASON",
-    rule: "収穫・親密度・奉納など5部門",
-    integrity: "PUBLIC PAGE VERIFIED",
-    actionLabel: "番付を見る",
-    href: "https://otomofarm.sevengodsgames.com/rankings",
-    accent: "green",
-  },
 ] as const;
+
+/**
+ * The boards the arena actually lists.
+ *
+ * A dormant title's ranking endpoint keeps answering long after anyone stops
+ * playing — ORACLE's still serves a day-1 table from July — so listing every
+ * competition here put four boards on screen for games nobody can play, while
+ * CHAIN, the one title running tournaments, was missing entirely. Deriving the
+ * list from release state fixes both at once, and a title returning from
+ * 工事中 reappears here on its own.
+ */
+export const liveCompetitions: readonly Competition[] = competitions.filter((competition) => {
+  const game = games.find((entry) => entry.id === competition.gameId);
+  return game?.releaseState === "LIVE";
+});
 
 /**
  * SGGでの軌跡 — the permanent record of finished tournaments.

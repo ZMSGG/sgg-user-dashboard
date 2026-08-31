@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { characterPairs } from "../../dashboard-data";
 import type { Availability, LiveData, LiveRanking } from "../../live-contract";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,9 @@ type QuestEntry = {
 type LiveSnapshot = Omit<LiveData, "servedFrom" | "cacheAgeSeconds">;
 
 const CHAIN_SEASON_SOURCE = "https://otomochain.sevengodsgames.com/api/season";
+// limit=100 because the default page stops at 50 and silently truncates a
+// season that ran with more finishers than that.
+const CHAIN_LEADERBOARD_SOURCE = "https://otomochain.sevengodsgames.com/api/leaderboard/season?limit=100";
 
 function parseChainSeason(value: unknown): LiveData["chainSeason"] {
   if (!value || typeof value !== "object") return null;
@@ -33,6 +37,45 @@ function parseChainSeason(value: unknown): LiveData["chainSeason"] {
     (s.status !== "UPCOMING" && s.status !== "ACTIVE" && s.status !== "ENDED")
   ) return null;
   return { name: s.name.slice(0, 64), startAt: s.start_at, endAt: s.end_at, status: s.status };
+}
+
+type ChainEntry = {
+  rank?: unknown;
+  display_name?: unknown;
+  season_score?: unknown;
+  representative_god_id?: unknown;
+};
+
+/** The game returns god ids; the dashboard shows the canon Japanese names. */
+const CHAIN_GOD_NAMES: Record<string, string> = Object.fromEntries(
+  characterPairs.map((pair) => [pair.godId.toLowerCase(), pair.godName]),
+);
+
+function parseChainLeaderboard(value: unknown) {
+  if (!value || typeof value !== "object") return null;
+  const payload = value as { entries?: unknown; total?: unknown };
+  if (!Array.isArray(payload.entries)) return null;
+
+  const valid = payload.entries.every((entry: ChainEntry) =>
+    typeof entry.rank === "number" &&
+    typeof entry.display_name === "string" &&
+    typeof entry.season_score === "number"
+  );
+  if (!valid) return null;
+
+  const entries: LiveRanking[] = payload.entries.slice(0, 7).map((entry: ChainEntry) => ({
+    rank: entry.rank as number,
+    name: (entry.display_name as string).slice(0, 48),
+    score: entry.season_score as number,
+    meta: typeof entry.representative_god_id === "string"
+      ? CHAIN_GOD_NAMES[entry.representative_god_id.toLowerCase()] ?? ""
+      : "",
+  }));
+
+  return {
+    entries,
+    participants: typeof payload.total === "number" ? payload.total : payload.entries.length,
+  };
 }
 
 const RANKING_SOURCES = {
@@ -181,6 +224,7 @@ async function readUpstream(): Promise<LiveSnapshot> {
       fetchJson(RANKING_SOURCES.oracle),
       fetchJson(RANKING_SOURCES.quest),
       fetchJson(CHAIN_SEASON_SOURCE),
+      fetchJson(CHAIN_LEADERBOARD_SOURCE),
     ]),
     Promise.all(
       Object.entries(RUNTIME_SOURCES).map(async ([key, url]) =>
@@ -189,7 +233,7 @@ async function readUpstream(): Promise<LiveSnapshot> {
     ),
   ]);
 
-  const [oracleResult, questResult, chainSeasonResult] = rankingResults;
+  const [oracleResult, questResult, chainSeasonResult, chainBoardResult] = rankingResults;
   const oracle = oracleResult.status === "fulfilled"
     ? parseOracle(oracleResult.value)
     : null;
@@ -198,6 +242,9 @@ async function readUpstream(): Promise<LiveSnapshot> {
     : null;
   const chainSeason = chainSeasonResult.status === "fulfilled"
     ? parseChainSeason(chainSeasonResult.value)
+    : null;
+  const chain = chainBoardResult.status === "fulfilled"
+    ? parseChainLeaderboard(chainBoardResult.value)
     : null;
   const runtimes = Object.fromEntries(runtimeEntries) as Record<keyof typeof RUNTIME_SOURCES, Availability>;
 
@@ -210,6 +257,7 @@ async function readUpstream(): Promise<LiveSnapshot> {
       quest: quest ? "online" : "unavailable",
     },
     chainSeason,
+    chain: chain ?? { entries: [], participants: 0 },
     oracle: oracle ?? { day: null, entries: [] },
     quest: quest ?? { season: null, entries: [], participants: 0 },
   };

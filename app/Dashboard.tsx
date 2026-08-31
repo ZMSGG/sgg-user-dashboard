@@ -11,8 +11,8 @@ import {
 } from "react";
 import {
   characterPairs,
-  competitions,
   games,
+  liveCompetitions,
   officialLinks,
   otomoForms,
   releaseStateCounts,
@@ -1185,19 +1185,25 @@ export function Dashboard() {
                 </section>
               )}
 
-              {/* Live standings we already fetch. Shown only when the upstream
-                  actually answered — an empty table would read as "nobody has
-                  played", which is a different and false claim. */}
-              {liveData.oracle.entries.length > 0 && (
+              {/* CHAIN is the title MY SGG actually runs tournaments for, so its
+                  standings are the ones the arena leads with. Shown only when the
+                  upstream answered — an empty table would read as "nobody has
+                  played", which is a different and false claim. Dormant titles'
+                  boards are deliberately not surfaced here: ORACLE's public
+                  endpoint still serves a day-1 table from July, and presenting
+                  that as a live ranking was the exact defect this replaces. */}
+              {liveData.chain.entries.length > 0 && (
                 <section>
                   <SectionTitle
-                    kicker="LIVE RANKING · OTOMO ORACLE 7"
-                    title={liveData.oracle.day ? `神託番付 DAY ${liveData.oracle.day}` : "神託番付"}
-                    copy={`公開APIから直接読み取り。最終確認 ${formatSyncTime(liveData.checkedAt)}。`}
-                    action={<a className={styles.textButton} href="https://otomooracle.sevengodsgames.com/ranking" target="_blank" rel="noopener noreferrer">全体を見る ↗</a>}
+                    kicker={`${liveData.chainSeason?.status === "ACTIVE" ? "LIVE" : "FINAL"} STANDINGS · OTOMO CHAIN 7`}
+                    title={liveData.chainSeason?.status === "ACTIVE" ? "神連鎖番付" : "確定番付"}
+                    copy={liveData.chainSeason?.status === "ACTIVE"
+                      ? `開催中の暫定順位。公開APIから直接読み取り、最終確認 ${formatSyncTime(liveData.checkedAt)}。`
+                      : `${number.format(liveData.chain.participants)}名が走り切った確定順位。ゲーム側でロック済みの公開APIをそのまま表示しています。`}
+                    action={<a className={styles.textButton} href="https://otomochain.sevengodsgames.com/" target="_blank" rel="noopener noreferrer">全体を見る ↗</a>}
                   />
                   <ol className={styles.rankBoard}>
-                    {liveData.oracle.entries.map((entry) => (
+                    {liveData.chain.entries.map((entry) => (
                       <li key={`${entry.rank}-${entry.name}`}>
                         <span className={styles.rankNo} data-top={entry.rank <= 3 ? "" : undefined}>{entry.rank}</span>
                         <strong>{entry.name}</strong>
@@ -1210,9 +1216,9 @@ export function Dashboard() {
               )}
 
               <section>
-                <SectionTitle kicker="ALL RANKINGS" title="ゲーム別の番付" copy="各タイトルの公式番付への導線です。" />
+                <SectionTitle kicker="ALL RANKINGS" title="ゲーム別の番付" copy="いま遊べるタイトルの公式番付への導線です。" />
                 <div className={styles.sourceGrid}>
-                  {competitions.map((comp) => (
+                  {liveCompetitions.map((comp) => (
                     <article key={comp.id} className={styles.competitionCard} data-tone={comp.accent}>
                       <div><span>{comp.game}</span><span>{comp.cadence}</span></div>
                       <h3>{comp.title}</h3>

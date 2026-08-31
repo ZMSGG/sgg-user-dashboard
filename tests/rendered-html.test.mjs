@@ -135,7 +135,7 @@ test("derives current health, search selection, and filtered feature state", asy
   // アリーナ renders the live season rather than a placeholder, and says so
   // only when the upstream actually answered.
   assert.match(dashboard, /liveData\.chainSeason \? \(/);
-  assert.match(dashboard, /liveData\.oracle\.entries\.length > 0/);
+  assert.match(dashboard, /liveData\.chain\.entries\.length > 0/);
   assert.doesNotMatch(dashboard, /大会の受付・締切・戦績と、ゲームごとの番付をここに表示します/);
   assert.match(dashboard, /稼働確認不可/);
 
@@ -338,4 +338,31 @@ test("ships the finished visual surface and retires legacy demo art", async () =
 
 test("keeps the starter preview removed", async () => {
   await assert.rejects(access(new URL("app/_sites-preview", root)));
+});
+
+test("the arena lists only boards for titles that are actually running", async () => {
+  const { games, competitions, liveCompetitions } = await import("../app/dashboard-data.ts");
+  const dashboard = await readFile(new URL("../app/Dashboard.tsx", import.meta.url), "utf8");
+
+  // Every listed board belongs to a LIVE title. A dormant game's ranking
+  // endpoint keeps answering (ORACLE still serves a day-1 table from July),
+  // so release state — not endpoint reachability — decides what is listed.
+  for (const competition of liveCompetitions) {
+    const game = games.find((entry) => entry.id === competition.gameId);
+    assert.ok(game, `${competition.id} points at an unknown game`);
+    assert.equal(game.releaseState, "LIVE", `${competition.id} is listed while ${game.title} is ${game.releaseState}`);
+  }
+  // CHAIN runs the tournaments; it must never be the missing one.
+  assert.ok(
+    liveCompetitions.some((competition) => competition.gameId === "otomo-chain-7"),
+    "OTOMO CHAIN 7 must be listed among the boards",
+  );
+  assert.ok(competitions.length > liveCompetitions.length, "dormant boards stay in the catalogue but off the screen");
+  assert.match(dashboard, /liveCompetitions\.map/);
+  assert.doesNotMatch(dashboard, /competitions\.map/);
+
+  // The headline standings come from CHAIN, not from a dormant title.
+  assert.match(dashboard, /liveData\.chain\.entries\.length > 0/);
+  assert.doesNotMatch(dashboard, /liveData\.oracle\.entries\.map/);
+  assert.doesNotMatch(dashboard, /神託番付 DAY/);
 });
