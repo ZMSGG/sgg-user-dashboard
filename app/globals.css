@@ -11,7 +11,9 @@
   --gold: #e6c46f;
   --gold-pale: #fff0b0;
   --cyan: #6fddff;
-  --violet: #9a77ff;
+  /* Lifted from #9a77ff, which landed at 4.48:1 on the card ground — just
+     under AA, and it carries label text rather than decoration. */
+  --violet: #a484ff;
   --coral: #ff786d;
   --green: #71d4a6;
   --danger: #ff6d78;

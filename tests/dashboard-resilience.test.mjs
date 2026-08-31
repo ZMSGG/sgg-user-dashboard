@@ -72,3 +72,38 @@ test("ships keyboard, mobile form, and safe-area accessibility guards", async ()
   assert.match(css, /safe-area-inset-right/);
   assert.match(css, /safe-area-inset-left/);
 });
+
+test("no text ships below the legibility floor, and secondary copy meets AA", async () => {
+  const css = await readFile(stylesUrl, "utf8");
+
+  // The card ground moved to #37232e and ~40 greys were left tuned for the
+  // old near-black, putting most secondary copy between 2.0:1 and 4.0:1.
+  // They collapse into five tokens, each measured against that ground.
+  for (const token of ["--text-1", "--text-2", "--text-3", "--text-warm", "--text-warm-dim"]) {
+    assert.match(css, new RegExp(`${token}:\\s*#[0-9a-f]{6}`), `${token} must be defined`);
+  }
+
+  const bg = [0x37, 0x23, 0x2e];
+  const channel = (c) => (c / 255 <= 0.03928 ? c / 255 / 12.92 : (((c / 255) + 0.055) / 1.055) ** 2.4);
+  const luminance = ([r, g, b]) => 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+  const contrast = (fg) => {
+    const [hi, lo] = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+  const hexToRgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+
+  for (const [, token, hex] of css.matchAll(/(--text-[a-z0-9-]+):\s*(#[0-9a-f]{6})/g)) {
+    const ratio = contrast(hexToRgb(hex));
+    assert.ok(ratio >= 4.5, `${token} (${hex}) is ${ratio.toFixed(2)}:1 on the card ground, below AA`);
+  }
+
+  // Kanji strokes collapse below ~11px; the old floor was 6px, on the primary
+  // navigation. Nothing may go back under 11.
+  const tooSmall = [...css.matchAll(/font-size:\s*(\d+(?:\.\d+)?)px/g)]
+    .map((match) => Number(match[1]))
+    .filter((size) => size < 11);
+  assert.deepEqual(tooSmall, [], `font sizes under 11px: ${tooSmall.join(", ")}`);
+
+  // Truncating a tab to コレクシ… is not a fix for a label that will not fit.
+  assert.doesNotMatch(css, /\.mobileNav a strong \{[^}]*text-overflow: ellipsis/);
+});
