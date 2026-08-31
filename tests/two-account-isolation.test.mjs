@@ -157,3 +157,82 @@ test("a session token cannot be replayed for a different purpose", async () => {
   assert.equal(await verifyPurposeToken(SECRET, "wallet-challenge", alice.token), null);
   assert.equal(await verifyPurposeToken(SECRET, "oauth-state", alice.token), null);
 });
+
+/* ---- award/grant linkage after migration 0008 --------------------------- */
+
+const {
+  getWithheldTournamentAwards,
+  getRecentIssuanceByActor,
+} = await import("../server/passport-db.ts");
+
+async function recordResultWithKey(db, discordId, rank, amount, key) {
+  await db.run(sql`INSERT INTO tournament_results
+    (tournament_id, season_id, discord_id, "rank", score, sgp_amount, breakdown, grant_idempotency_key)
+    VALUES ('chain-7-tournament-2', 'season-2026-08-01', ${discordId}, ${rank}, 100, ${amount}, NULL, ${key})`);
+}
+
+test("two tournaments in one season no longer collide on the same grant key", async (t) => {
+  const db = await fixture(t);
+  // Same season, same player, two editions — the exact case the old
+  // season-derived key silently merged into one grant.
+  await recordResult(db, ALICE, 1, 500, 20);
+  await recordResultWithKey(db, ALICE, 4, 7, `tournament:chain-7-tournament-2:${ALICE}`);
+
+  await grant(db, ALICE, 20, `tournament:season-2026-08-01:${ALICE}`);
+  const afterFirst = await getTournamentResults(db, ALICE);
+  const first = afterFirst.find((row) => row.tournamentId === "chain-7-tournament-1");
+  const second = afterFirst.find((row) => row.tournamentId === "chain-7-tournament-2");
+  assert.notEqual(first.grantedAt, null, "the first tournament is paid");
+  assert.equal(second.grantedAt, null, "the second must not claim the first tournament's grant");
+
+  await grant(db, ALICE, 7, `tournament:chain-7-tournament-2:${ALICE}`);
+  const afterSecond = await getTournamentResults(db, ALICE);
+  assert.ok(afterSecond.every((row) => row.grantedAt !== null), "both are paid under their own keys");
+});
+
+test("a MAGATAMA grant never lights up an SGP award", async (t) => {
+  const db = await fixture(t);
+  await recordResult(db, ALICE, 1, 500, 20);
+  await appendPointGrantWithAudit(db, {
+    discordId: ALICE,
+    amount: 20,
+    currency: "MAGATAMA",
+    reasonCode: "TOURNAMENT_RESULT",
+    note: null,
+    grantedBy: "500000000000000001",
+    idempotencyKey: `tournament:season-2026-08-01:${ALICE}`,
+    requestFingerprint: "magatama-under-a-tournament-key",
+  });
+
+  const [row] = await getTournamentResults(db, ALICE);
+  assert.equal(row.grantedAt, null, "SGP is the only currency that can settle an SGP award");
+});
+
+test("withheld awards are visible, and clear once the grant lands", async (t) => {
+  const db = await fixture(t);
+  await recordResult(db, ALICE, 1, 500, 20);
+  await recordResult(db, BOB, 2, 400, 9);
+
+  const before = await getWithheldTournamentAwards(db);
+  assert.equal(before.length, 2, "both awards start unpaid and visible");
+  assert.ok(before.every((row) => row.registeredAt !== null), "these two have logged in");
+
+  await grant(db, ALICE, 20, `tournament:season-2026-08-01:${ALICE}`);
+  const after = await getWithheldTournamentAwards(db);
+  assert.deepEqual(after.map((row) => row.discordId), [BOB], "only the unpaid award remains");
+});
+
+test("automated issuance is measured over a window, per actor", async (t) => {
+  const db = await fixture(t);
+  await grant(db, ALICE, 70, "campaign:a");
+  await grant(db, BOB, 30, "campaign:b");
+  // A correction: the balance guard only allows it because BOB has the 30.
+  await grant(db, BOB, -30, "campaign:b-reversal");
+
+  const epoch = "1970-01-01T00:00:00.000Z";
+  // Absolute values: a burst of corrections counts against the ceiling too,
+  // so reversing and re-granting cannot be used to walk past the limit.
+  assert.equal(await getRecentIssuanceByActor(db, "500000000000000001", epoch), 130);
+  assert.equal(await getRecentIssuanceByActor(db, ALICE, epoch), 0, "issuance is attributed to the actor, not the recipient");
+  assert.equal(await getRecentIssuanceByActor(db, "500000000000000001", "2999-01-01T00:00:00.000Z"), 0);
+});

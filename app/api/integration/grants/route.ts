@@ -11,10 +11,35 @@ import {
   getGrantByIdempotencyKey,
   getPlayer,
   getPointBalance,
+  getRecentIssuanceByActor,
   isUniqueConstraintError,
 } from "../../../../server/passport-db";
 
 export const dynamic = "force-dynamic";
+
+/**
+ * Bounds on unattended issuance.
+ *
+ * This endpoint authenticates with a shared secret and nothing else — no
+ * session, no admin allowlist, no human in the loop — so whoever holds that
+ * secret is the mint. The shared validator's ±1,000,000 ceiling is sized for
+ * a reviewed admin correction, not for automation: it allowed unlimited calls
+ * of a million each. These three limits keep the automated path within the
+ * shape of the campaigns it exists for. A genuine large distribution stays
+ * possible through the admin path, where a person is present.
+ */
+const INTEGRATION_REASON_CODES = new Set([
+  "TOURNAMENT_RESULT",
+  "TOURNAMENT_STONES",
+  "CAMPAIGN_REWARD",
+  "LOGIN_REWARD",
+  "TESTER_FEEDBACK",
+]);
+/** Largest single automated award; the biggest real one so far was 226. */
+const INTEGRATION_MAX_ABS_AMOUNT = 10_000;
+/** Rolling ceiling: the whole first tournament was 1,129 SGP. */
+const INTEGRATION_WINDOW_MS = 60 * 60 * 1_000;
+const INTEGRATION_WINDOW_MAX_TOTAL = 100_000;
 
 /**
  * Server-to-server point grant for automated campaigns (login rewards,
@@ -54,12 +79,42 @@ export async function POST(request: Request) {
   if (!parsed.ok) return jsonError(400, parsed.code, parsed.message);
   const grant = parsed.value;
 
+  if (!INTEGRATION_REASON_CODES.has(grant.reasonCode)) {
+    return jsonError(
+      400,
+      "REASON_NOT_AUTOMATABLE",
+      "この理由コードは自動付与では使用できません。管理者経路で実行してください。",
+    );
+  }
+  if (Math.abs(grant.amount) > INTEGRATION_MAX_ABS_AMOUNT) {
+    return jsonError(
+      400,
+      "AMOUNT_ABOVE_AUTOMATION_LIMIT",
+      "自動付与の1件あたり上限を超えています。管理者経路で実行してください。",
+    );
+  }
+
   const target = await getPlayer(db, grant.discordId);
   if (!target) {
     return jsonError(404, "PLAYER_NOT_FOUND", "対象プレイヤーはまだDiscord連携していません。");
   }
 
   await ensureIntegrationActor(db, config.actorId);
+
+  // Checked before writing, and only for a key that is not already recorded —
+  // a retry of an accepted grant must stay idempotent rather than trip the cap.
+  const alreadyRecorded = await getGrantByIdempotencyKey(db, grant.idempotencyKey);
+  if (!alreadyRecorded) {
+    const windowStart = new Date(Date.now() - INTEGRATION_WINDOW_MS).toISOString();
+    const issued = await getRecentIssuanceByActor(db, config.actorId, windowStart);
+    if (issued + Math.abs(grant.amount) > INTEGRATION_WINDOW_MAX_TOTAL) {
+      return jsonError(
+        429,
+        "ISSUANCE_LIMIT_REACHED",
+        "自動付与の一定時間あたりの上限に達しました。時間をおくか管理者経路で実行してください。",
+      );
+    }
+  }
   const requestFingerprint = await grantRequestFingerprint({
     actor: config.actorId,
     discordId: grant.discordId,

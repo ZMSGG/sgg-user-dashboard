@@ -465,10 +465,21 @@ export async function getCurrencyBalances(
 }
 
 /**
+ * The idempotency key an award was paid under.
+ *
+ * Recorded per row since migration 0008. Rows imported before that fall back
+ * to the season-based convention they were actually paid under, so history
+ * keeps resolving while new tournaments carry their own key.
+ */
+function grantKeyFor() {
+  return sql`COALESCE(${tournamentResults.grantIdempotencyKey}, 'tournament:' || ${tournamentResults.seasonId} || ':' || ${tournamentResults.discordId})`;
+}
+
+/**
  * The player's own confirmed tournament results, newest first. Whether the
- * decided SGP actually landed is read from the grant ledger through the
- * distribution's idempotency key (`tournament:<season_id>:<discord_id>`),
- * never stored alongside the result — the ledger stays the only SGP truth.
+ * decided SGP actually landed is read from the grant ledger through the key
+ * the award was paid under, never stored alongside the result — the ledger
+ * stays the only SGP truth.
  */
 export async function getTournamentResults(db: Db, discordId: string) {
   return db
@@ -480,17 +491,69 @@ export async function getTournamentResults(db: Db, discordId: string) {
       sgpAmount: tournamentResults.sgpAmount,
       breakdown: tournamentResults.breakdown,
       grantedAt: pointGrants.createdAt,
+      grantedAmount: pointGrants.amount,
     })
     .from(tournamentResults)
     .leftJoin(pointGrants, and(
       eq(pointGrants.discordId, tournamentResults.discordId),
-      eq(
-        pointGrants.idempotencyKey,
-        sql`'tournament:' || ${tournamentResults.seasonId} || ':' || ${tournamentResults.discordId}`,
-      ),
+      eq(pointGrants.idempotencyKey, grantKeyFor()),
+      // A MAGATAMA row under the same key must not light up 獲得SGP, and a
+      // reversal posted under adjust:<key> must not keep it lit.
+      eq(pointGrants.currency, "SGP"),
     ))
     .where(eq(tournamentResults.discordId, discordId))
     .orderBy(desc(tournamentResults.createdAt), desc(tournamentResults.tournamentId));
+}
+
+/**
+ * Awards that were decided but never landed in the ledger.
+ *
+ * A grant needs a players row, so a finisher who has never opened MY SGG is
+ * withheld until their first login — and nothing surfaces that. Without this
+ * the state is invisible on both sides: the operator sees a normal roster,
+ * and the player sees 付与予定 forever. Resend their rows to close it.
+ */
+/**
+ * How much an automated actor has issued in a recent window.
+ *
+ * The unattended grant endpoint authenticates with one shared secret and
+ * nothing else, so without a ceiling that secret is an unlimited mint. This
+ * feeds the rolling cap: absolute amounts, so a burst of corrections counts
+ * as much as a burst of awards.
+ */
+export async function getRecentIssuanceByActor(
+  db: Db,
+  actorId: string,
+  sinceIso: string,
+): Promise<number> {
+  const rows = await db
+    .select({ total: sql<number>`COALESCE(SUM(ABS(${pointGrants.amount})), 0)` })
+    .from(pointGrants)
+    .where(and(eq(pointGrants.grantedBy, actorId), gt(pointGrants.createdAt, sinceIso)));
+  return rows[0]?.total ?? 0;
+}
+
+export async function getWithheldTournamentAwards(db: Db) {
+  return db
+    .select({
+      tournamentId: tournamentResults.tournamentId,
+      seasonId: tournamentResults.seasonId,
+      discordId: tournamentResults.discordId,
+      rank: tournamentResults.rank,
+      sgpAmount: tournamentResults.sgpAmount,
+      idempotencyKey: grantKeyFor(),
+      /** Null until their first login; a grant cannot be written before it. */
+      registeredAt: players.createdAt,
+    })
+    .from(tournamentResults)
+    .leftJoin(pointGrants, and(
+      eq(pointGrants.discordId, tournamentResults.discordId),
+      eq(pointGrants.idempotencyKey, grantKeyFor()),
+      eq(pointGrants.currency, "SGP"),
+    ))
+    .leftJoin(players, eq(players.discordId, tournamentResults.discordId))
+    .where(isNull(pointGrants.id))
+    .orderBy(tournamentResults.tournamentId, tournamentResults.rank);
 }
 
 export async function getRecentGrants(db: Db, discordId: string, limit = 20) {
@@ -580,12 +643,16 @@ export async function getGachaInventory(db: Db, discordId: string) {
  * 一時データ（セッション・チャレンジ・レート制限）は含めない。
  */
 export async function exportDurableState(db: Db) {
-  const [playerRows, grantRows, pullRows, linkRows, auditRows] = await Promise.all([
+  const [playerRows, grantRows, pullRows, linkRows, auditRows, resultRows] = await Promise.all([
     db.select().from(players),
     db.select().from(pointGrants),
     db.select().from(gachaPulls),
     db.select().from(gameAccountLinks),
     db.select().from(auditEvents),
+    // 軌跡 results are durable player-facing history and exist nowhere else;
+    // leaving them out of the exit hatch meant a migration would silently
+    // blank every player's tournament card while the ledger survived.
+    db.select().from(tournamentResults),
   ]);
   return {
     counts: {
@@ -594,6 +661,7 @@ export async function exportDurableState(db: Db) {
       gachaPulls: pullRows.length,
       gameAccountLinks: linkRows.length,
       auditEvents: auditRows.length,
+      tournamentResults: resultRows.length,
     },
     tables: {
       players: playerRows,
@@ -601,6 +669,7 @@ export async function exportDurableState(db: Db) {
       gacha_pulls: pullRows,
       game_account_links: linkRows,
       audit_events: auditRows,
+      tournament_results: resultRows,
     },
   };
 }

@@ -249,6 +249,17 @@ export const tournamentResults = sqliteTable("tournament_results", {
   sgpAmount: integer("sgp_amount").notNull(),
   /** Human-readable award breakdown, written with canon character names. */
   breakdown: text("breakdown"),
+  /**
+   * The exact point_grants.idempotency_key this award was paid under.
+   *
+   * The 付与済み badge used to rebuild this key by convention from season_id,
+   * which quietly assumed one tournament per season. A second tournament in
+   * the same season would have collided with the first: the distribution
+   * swallowed as "already granted", and both cards claiming payment from one
+   * grant. Recording the key removes the assumption. Null rows fall back to
+   * the old convention so the first season's imported rows keep working.
+   */
+  grantIdempotencyKey: text("grant_idempotency_key"),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 }, (table) => [
   primaryKey({ columns: [table.tournamentId, table.discordId] }),
