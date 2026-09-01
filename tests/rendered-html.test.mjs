@@ -267,7 +267,10 @@ test("degrades image optimization gracefully without Cloudflare bindings", async
 
 test("keeps publication claims aligned with the deployment registry", async () => {
   const data = await readFile(new URL("../app/dashboard-data.ts", import.meta.url), "utf8");
-  assert.match(data, /otomo-farm-77\.vercel\.app/);
+  // FARM moved to its own subdomain; the vercel deployment now 404s, so the
+  // old host must not come back in a link or a health check.
+  assert.match(data, /otomofarm\.sevengodsgames\.com/);
+  assert.doesNotMatch(data, /otomo-farm-77\.vercel\.app/);
   // Only OTOMO CHAIN 7 and OTOMO FARM 77 are being taken to market; every
   // other built title reads 休眠中 rather than claiming a release state.
   // FARM is closed for rework (工事中, owner direction 2026-07-31): still on

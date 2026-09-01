@@ -86,7 +86,7 @@ const RANKING_SOURCES = {
 const RUNTIME_SOURCES = {
   oracle: "https://otomooracle.sevengodsgames.com/",
   quest: "https://otomoquest.sevengodsgames.com/",
-  farm: "https://otomo-farm-77.vercel.app/",
+  farm: "https://otomofarm.sevengodsgames.com/",
   taiyo: "https://emberveil.sevengodsgames.com/",
   chain: "https://otomochain.sevengodsgames.com/",
 } as const;

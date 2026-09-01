@@ -94,8 +94,8 @@ export const games: readonly GameSummary[] = [
     duration: "77",
     // 鶴のハク・寿鹿・鯛丸が棚田で農作業する公式サムネ (2026-07-31生成)。
     keyArt: "/dashboard-art/games/farm.webp",
-    officialUrl: "https://otomo-farm-77.vercel.app/",
-    rankingUrl: "https://otomo-farm-77.vercel.app/rankings",
+    officialUrl: "https://otomofarm.sevengodsgames.com/",
+    rankingUrl: "https://otomofarm.sevengodsgames.com/rankings",
     guideUrl: null,
     primaryAction: "FARMを開く",
     nextAction: "工事完了までお待ちください",
@@ -210,7 +210,7 @@ export const competitions: readonly Competition[] = [
     rule: "収穫・親密度・奉納など5部門",
     integrity: "PUBLIC PAGE VERIFIED",
     actionLabel: "番付を見る",
-    href: "https://otomo-farm-77.vercel.app/rankings",
+    href: "https://otomofarm.sevengodsgames.com/rankings",
     accent: "green",
   },
   {
