@@ -369,3 +369,23 @@ test("the arena lists only boards for titles that are actually running", async (
   assert.doesNotMatch(dashboard, /liveData\.oracle\.entries\.map/);
   assert.doesNotMatch(dashboard, /神託番付 DAY/);
 });
+
+test("a free-play route is only advertised where it was actually confirmed", async () => {
+  const { games } = await import("../app/dashboard-data.ts");
+  const dashboard = await readFile(new URL("../app/Dashboard.tsx", import.meta.url), "utf8");
+
+  for (const game of games) {
+    if (!game.freePlay) continue;
+    // Nothing can be tried without somewhere to try it, and a title that is
+    // closed for rework must not invite play at all.
+    assert.ok(game.officialUrl, `${game.id} offers free play with no URL to reach it`);
+    assert.notEqual(game.releaseState, "MAINTENANCE", `${game.id} is 工事中 and cannot be played`);
+    assert.ok(game.freePlay.label.trim(), `${game.id} free-play label is empty`);
+    // The note carries the real terms, so the invitation cannot read as a
+    // promise that the run counts towards a ranking.
+    assert.ok(game.freePlay.note.trim(), `${game.id} free-play note must state the terms`);
+  }
+  assert.ok(games.some((game) => game.freePlay), "at least one title is playable between tournaments");
+  assert.match(dashboard, /game\.freePlay && game\.officialUrl/);
+  assert.match(dashboard, /大会がなくても今すぐ試せます/);
+});

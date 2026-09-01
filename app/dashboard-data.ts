@@ -25,6 +25,15 @@ export type GameSummary = {
   primaryAction: string;
   nextAction: string;
   nextActionMeta: string;
+  /**
+   * A way to try the game when no tournament is running.
+   *
+   * Only filled in where the mode was actually opened and confirmed — a
+   * "遊べます" the game cannot honour is worse than saying nothing. `note`
+   * states the real terms, because "試しに遊ぶ" must not read as a promise
+   * that the run counts for anything.
+   */
+  freePlay: { label: string; note: string } | null;
   featured?: boolean;
 };
 
@@ -48,6 +57,7 @@ export const games: readonly GameSummary[] = [
     officialUrl: "https://otomoquest.sevengodsgames.com/",
     rankingUrl: "https://otomoquest.sevengodsgames.com/ranking",
     guideUrl: "https://otomoquest.sevengodsgames.com/guide",
+    freePlay: null,
     primaryAction: "QUESTを開く",
     nextAction: "帰還・派遣状況を確認",
     nextActionMeta: "Discordログイン後にゲーム側で同期",
@@ -72,6 +82,8 @@ export const games: readonly GameSummary[] = [
     officialUrl: "https://otomochain.sevengodsgames.com/",
     rankingUrl: "https://otomochain.sevengodsgames.com/",
     guideUrl: null,
+    // 2026-08-26 確認: トップに PRACTICE「登録不要・回数無制限」がある。
+    freePlay: { label: "練習で遊ぶ", note: "登録不要・回数無制限。ランキングには反映されません" },
     primaryAction: "CHAINをプレイする",
     nextAction: "シーズンの開催状況を確認",
     nextActionMeta: "第1回大会は終了。次回の日程は公式発表で",
@@ -97,6 +109,7 @@ export const games: readonly GameSummary[] = [
     officialUrl: "https://otomofarm.sevengodsgames.com/",
     rankingUrl: "https://otomofarm.sevengodsgames.com/rankings",
     guideUrl: null,
+    freePlay: null,
     primaryAction: "FARMを開く",
     nextAction: "工事完了までお待ちください",
     nextActionMeta: "再開は公式発表でお知らせ",
@@ -120,6 +133,8 @@ export const games: readonly GameSummary[] = [
     officialUrl: "https://otomooracle.sevengodsgames.com/",
     rankingUrl: "https://otomooracle.sevengodsgames.com/ranking",
     guideUrl: "https://otomooracle.sevengodsgames.com/guide",
+    // 2026-08-26 確認: トップに「ランダム練習を始める」がある。
+    freePlay: { label: "練習で遊ぶ", note: "難易度1〜7のランダム練習。正式挑戦とは別枠です" },
     primaryAction: "本日の神託へ",
     nextAction: "今日の問題に挑戦",
     nextActionMeta: "公開プレイ · 毎日更新",
@@ -143,6 +158,7 @@ export const games: readonly GameSummary[] = [
     officialUrl: null,
     rankingUrl: null,
     guideUrl: null,
+    freePlay: null,
     primaryAction: "この端末でウォッチ",
     nextAction: "公開レビュー待ち",
     nextActionMeta: "公開日未確定 · 現在は非公開",
@@ -166,6 +182,7 @@ export const games: readonly GameSummary[] = [
     officialUrl: null,
     rankingUrl: null,
     guideUrl: null,
+    freePlay: null,
     primaryAction: "この端末でウォッチ",
     nextAction: "リリース待ち",
     nextActionMeta: "日程未確定 · ウォッチ設定のみ",

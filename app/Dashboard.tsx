@@ -432,6 +432,14 @@ function GameCard({
         {game.releaseState !== "MAINTENANCE" && game.rankingUrl && <ExternalLink href={game.rankingUrl}>ランキング</ExternalLink>}
         {game.releaseState !== "MAINTENANCE" && game.guideUrl && <ExternalLink href={game.guideUrl}>ガイド</ExternalLink>}
       </div>
+      {/* 大会が開かれていない期間のほうが長い。そこで手ぶらで帰らせないための
+          導線で、載せるのは実際に開いて確認できたモードだけ。 */}
+      {game.releaseState !== "MAINTENANCE" && game.freePlay && game.officialUrl && (
+        <p className={styles.freePlayNote}>
+          <ExternalLink href={game.officialUrl}>{game.freePlay.label}</ExternalLink>
+          <span>大会がなくても今すぐ試せます。{game.freePlay.note}。</span>
+        </p>
+      )}
     </article>
   );
 }

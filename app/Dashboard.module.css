@@ -1380,6 +1380,23 @@
   margin-top: auto;
 }
 
+/* 大会外のお試し導線。primaryActionの下に静かに置き、主役を奪わない。 */
+.freePlayNote {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--hairline);
+}
+
+.freePlayNote span {
+  color: var(--text-1);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 .eventEmpty {
   display: flex;
   min-height: 190px;
