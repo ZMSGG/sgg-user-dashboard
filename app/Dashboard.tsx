@@ -893,7 +893,7 @@ export function Dashboard() {
     ? "CHECKING"
     : liveState === "error"
       ? "HEALTH UNAVAILABLE"
-      : `${liveData.runtimeOnlineCount} / 5 ONLINE`;
+      : `${liveData.runtimeOnlineCount} / ${liveData.runtimeTotal} ONLINE`;
   const passportBridgeLabel = passportState === "loading" && !passport
     ? "PLAYER BRIDGE · CHECKING"
     : passportState === "error" && !passport
@@ -954,7 +954,7 @@ export function Dashboard() {
           </button>
         )}
         <section className={styles.sidebarStatus}>
-          <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount === 5} />{runtimeSummary}</span>
+          <span><Dot active={liveState === "ready" && liveData.runtimeOnlineCount === liveData.runtimeTotal} />{runtimeSummary}</span>
           <small>{passportBridgeLabel}</small>
         </section>
       </aside>

@@ -87,8 +87,10 @@ const RUNTIME_SOURCES = {
   oracle: "https://otomooracle.sevengodsgames.com/",
   quest: "https://otomoquest.sevengodsgames.com/",
   farm: "https://otomofarm.sevengodsgames.com/",
-  taiyo: "https://emberveil.sevengodsgames.com/",
+  taiyo: "https://taiyo.sevengodsgames.com/",
   chain: "https://otomochain.sevengodsgames.com/",
+  raid: "https://raid.sevengodsgames.com/",
+  market: "https://oedomarket.sevengodsgames.com/",
 } as const;
 
 // Snapshot reuse protects upstream games from one fetch fan-out per visitor.
@@ -252,6 +254,7 @@ async function readUpstream(): Promise<LiveSnapshot> {
     checkedAt,
     runtimes,
     runtimeOnlineCount: Object.values(runtimes).filter((state) => state === "online").length,
+    runtimeTotal: Object.keys(RUNTIME_SOURCES).length,
     sources: {
       oracle: oracle ? "online" : "unavailable",
       quest: quest ? "online" : "unavailable",

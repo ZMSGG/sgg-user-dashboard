@@ -107,8 +107,12 @@ test("exposes a same-origin live read model without internal Quest IDs", async (
   assert.equal(typeof payload.sources.oracle, "string");
   assert.equal(typeof payload.sources.quest, "string");
   assert.equal(typeof payload.runtimeOnlineCount, "number");
-  assert.ok(payload.runtimeOnlineCount >= 0 && payload.runtimeOnlineCount <= 5);
-  for (const key of ["oracle", "quest", "farm", "taiyo", "chain"]) {
+  // The total travels with the payload rather than being hardcoded in the UI,
+  // so adopting a title cannot leave the header reading "n / 5".
+  assert.equal(typeof payload.runtimeTotal, "number");
+  assert.equal(payload.runtimeTotal, Object.keys(payload.runtimes).length);
+  assert.ok(payload.runtimeOnlineCount >= 0 && payload.runtimeOnlineCount <= payload.runtimeTotal);
+  for (const key of ["oracle", "quest", "farm", "taiyo", "chain", "raid", "market"]) {
     assert.match(payload.runtimes[key], /^(online|unavailable)$/);
   }
   assert.ok(payload.oracle.day === null || typeof payload.oracle.day === "number");

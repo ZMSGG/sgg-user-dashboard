@@ -27,8 +27,12 @@ export type LiveData = {
     farm: Availability;
     taiyo: Availability;
     chain: Availability;
+    raid: Availability;
+    market: Availability;
   };
   runtimeOnlineCount: number;
+  /** How many runtimes were checked, so the UI never hardcodes the total. */
+  runtimeTotal: number;
   /** OTOMO CHAIN season banner data, straight from the game's public API. */
   chainSeason: {
     name: string;
@@ -55,8 +59,12 @@ export const emptyLiveData: LiveData = {
   servedFrom: "origin",
   cacheAgeSeconds: 0,
   sources: { oracle: "unavailable", quest: "unavailable" },
-  runtimes: { oracle: "unavailable", quest: "unavailable", farm: "unavailable", taiyo: "unavailable", chain: "unavailable" },
+  runtimes: {
+    oracle: "unavailable", quest: "unavailable", farm: "unavailable",
+    taiyo: "unavailable", chain: "unavailable", raid: "unavailable", market: "unavailable",
+  },
   runtimeOnlineCount: 0,
+  runtimeTotal: 7,
   chainSeason: null,
   chain: { entries: [], participants: 0 },
   oracle: { day: null, entries: [] },
