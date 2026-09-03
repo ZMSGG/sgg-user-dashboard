@@ -213,11 +213,8 @@ function formatGrantDate(value: string) {
 const views = new Set<View>(navItems.map((item) => item.id));
 const number = new Intl.NumberFormat("ja-JP");
 const runtimeKeyByGameId: Partial<Record<string, keyof LiveData["runtimes"]>> = {
-  "otomo-oracle-7": "oracle",
-  "otomo-quest-77": "quest",
-  "otomo-farm-77": "farm",
-  "taiyo-action-rpg": "taiyo",
   "otomo-chain-7": "chain",
+  "otomo-farm-77": "farm",
   "otomo-raid-7": "raid",
   "oedo-market-7": "market",
 };

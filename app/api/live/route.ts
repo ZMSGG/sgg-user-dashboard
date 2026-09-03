@@ -4,19 +4,7 @@ import type { Availability, LiveData, LiveRanking } from "../../live-contract";
 
 export const dynamic = "force-dynamic";
 
-type OracleEntry = {
-  rank?: unknown;
-  displayName?: unknown;
-  score?: unknown;
-  outcome?: unknown;
-};
 
-type QuestEntry = {
-  rank?: unknown;
-  username?: unknown;
-  rankingPoints?: unknown;
-  favoriteOtomo?: unknown;
-};
 
 type LiveSnapshot = Omit<LiveData, "servedFrom" | "cacheAgeSeconds">;
 
@@ -78,17 +66,10 @@ function parseChainLeaderboard(value: unknown) {
   };
 }
 
-const RANKING_SOURCES = {
-  oracle: "https://otomooracle.sevengodsgames.com/api/ranking?scope=daily",
-  quest: "https://otomoquest.sevengodsgames.com/api/ranking",
-} as const;
 
 const RUNTIME_SOURCES = {
-  oracle: "https://otomooracle.sevengodsgames.com/",
-  quest: "https://otomoquest.sevengodsgames.com/",
-  farm: "https://otomofarm.sevengodsgames.com/",
-  taiyo: "https://taiyo.sevengodsgames.com/",
   chain: "https://otomochain.sevengodsgames.com/",
+  farm: "https://otomofarm.sevengodsgames.com/",
   raid: "https://raid.sevengodsgames.com/",
   market: "https://oedomarket.sevengodsgames.com/",
 } as const;
@@ -142,89 +123,12 @@ async function checkRuntime(url: string): Promise<Availability> {
   }
 }
 
-function parseOracle(value: unknown): { day: number; entries: LiveRanking[] } | null {
-  if (!value || typeof value !== "object") return null;
-  const payload = value as {
-    ok?: unknown;
-    scope?: unknown;
-    day?: unknown;
-    entries?: unknown;
-  };
-  if (
-    payload.ok !== true ||
-    payload.scope !== "daily" ||
-    typeof payload.day !== "number" ||
-    !Array.isArray(payload.entries)
-  ) return null;
 
-  const valid = payload.entries.every((entry: OracleEntry) =>
-    typeof entry.rank === "number" &&
-    typeof entry.displayName === "string" &&
-    typeof entry.score === "number"
-  );
-  if (!valid) return null;
-
-  const entries = payload.entries.slice(0, 7).map((entry: OracleEntry) => ({
-    rank: entry.rank as number,
-    name: (entry.displayName as string).slice(0, 48),
-    score: entry.score as number,
-    meta: entry.outcome === "completed"
-      ? "COMPLETED"
-      : entry.outcome === "timed_out"
-        ? "TIMED OUT"
-        : "OUTCOME UNKNOWN",
-  }));
-
-  return { day: payload.day, entries };
-}
-
-function parseQuest(value: unknown) {
-  if (!value || typeof value !== "object") return null;
-  const payload = value as {
-    season?: { name?: unknown; day?: unknown; totalDays?: unknown };
-    ranking?: unknown;
-  };
-  if (
-    !payload.season ||
-    typeof payload.season.name !== "string" ||
-    typeof payload.season.day !== "number" ||
-    typeof payload.season.totalDays !== "number" ||
-    !Array.isArray(payload.ranking)
-  ) return null;
-
-  const valid = payload.ranking.every((entry: QuestEntry) =>
-    typeof entry.rank === "number" &&
-    typeof entry.username === "string" &&
-    typeof entry.rankingPoints === "number"
-  );
-  if (!valid) return null;
-
-  const entries: LiveRanking[] = payload.ranking.slice(0, 7).map((entry: QuestEntry) => ({
-    rank: entry.rank as number,
-    name: (entry.username as string).slice(0, 48),
-    score: entry.rankingPoints as number,
-    meta: typeof entry.favoriteOtomo === "string"
-      ? `OTOMO ${entry.favoriteOtomo.slice(0, 24)}`
-      : "SEASON PLAYER",
-  }));
-
-  return {
-    season: {
-      name: payload.season.name,
-      day: payload.season.day,
-      totalDays: payload.season.totalDays,
-    },
-    entries,
-    participants: payload.ranking.length,
-  };
-}
 
 async function readUpstream(): Promise<LiveSnapshot> {
   const checkedAt = new Date().toISOString();
   const [rankingResults, runtimeEntries] = await Promise.all([
     Promise.allSettled([
-      fetchJson(RANKING_SOURCES.oracle),
-      fetchJson(RANKING_SOURCES.quest),
       fetchJson(CHAIN_SEASON_SOURCE),
       fetchJson(CHAIN_LEADERBOARD_SOURCE),
     ]),
@@ -235,13 +139,7 @@ async function readUpstream(): Promise<LiveSnapshot> {
     ),
   ]);
 
-  const [oracleResult, questResult, chainSeasonResult, chainBoardResult] = rankingResults;
-  const oracle = oracleResult.status === "fulfilled"
-    ? parseOracle(oracleResult.value)
-    : null;
-  const quest = questResult.status === "fulfilled"
-    ? parseQuest(questResult.value)
-    : null;
+  const [chainSeasonResult, chainBoardResult] = rankingResults;
   const chainSeason = chainSeasonResult.status === "fulfilled"
     ? parseChainSeason(chainSeasonResult.value)
     : null;
@@ -255,14 +153,8 @@ async function readUpstream(): Promise<LiveSnapshot> {
     runtimes,
     runtimeOnlineCount: Object.values(runtimes).filter((state) => state === "online").length,
     runtimeTotal: Object.keys(RUNTIME_SOURCES).length,
-    sources: {
-      oracle: oracle ? "online" : "unavailable",
-      quest: quest ? "online" : "unavailable",
-    },
     chainSeason,
     chain: chain ?? { entries: [], participants: 0 },
-    oracle: oracle ?? { day: null, entries: [] },
-    quest: quest ?? { season: null, entries: [], participants: 0 },
   };
 }
 

@@ -61,7 +61,6 @@ test("does not ship fabricated player, asset, tournament, or release data", asyn
   // tournament was running while the view still said 準備中, so the placeholder
   // copy must NOT ship. What must ship is the honest provenance line.
   for (const value of [
-    "EBISU FISHING 77",
     "順位と得点はゲーム側の公開APIがそのまま出典です",
     "COMMUNITY / OFFICIAL SIGNALS",
     "RAW GAMEPLAY SCORE",
@@ -104,20 +103,16 @@ test("exposes a same-origin live read model without internal Quest IDs", async (
   assert.equal(typeof payload.checkedAt, "string");
   assert.match(payload.servedFrom, /^(origin|cache)$/);
   assert.equal(typeof payload.cacheAgeSeconds, "number");
-  assert.equal(typeof payload.sources.oracle, "string");
-  assert.equal(typeof payload.sources.quest, "string");
   assert.equal(typeof payload.runtimeOnlineCount, "number");
   // The total travels with the payload rather than being hardcoded in the UI,
   // so adopting a title cannot leave the header reading "n / 5".
   assert.equal(typeof payload.runtimeTotal, "number");
   assert.equal(payload.runtimeTotal, Object.keys(payload.runtimes).length);
   assert.ok(payload.runtimeOnlineCount >= 0 && payload.runtimeOnlineCount <= payload.runtimeTotal);
-  for (const key of ["oracle", "quest", "farm", "taiyo", "chain", "raid", "market"]) {
+  for (const key of ["chain", "farm", "raid", "market"]) {
     assert.match(payload.runtimes[key], /^(online|unavailable)$/);
   }
-  assert.ok(payload.oracle.day === null || typeof payload.oracle.day === "number");
-  assert.ok(Array.isArray(payload.oracle.entries));
-  assert.ok(Array.isArray(payload.quest.entries));
+  assert.ok(Array.isArray(payload.chain.entries));
   assert.doesNotMatch(body, /"userId"|"discordId"|"walletAddress"/);
 });
 
@@ -286,12 +281,18 @@ test("keeps publication claims aligned with the deployment registry", async () =
   // FARM came back: otomofarm.sevengodsgames.com was serving Day 11 of a live
   // 77-day season while the dashboard still wrapped it in construction tape.
   assert.match(data, /id: "otomo-farm-77"[\s\S]*?releaseState: "LIVE"/);
-  for (const dormant of ["otomo-quest-77", "otomo-oracle-7", "taiyo-action-rpg", "ebisu-fishing-77"]) {
-    assert.match(data, new RegExp(`id: "${dormant}"[\\s\\S]*?releaseState: "DORMANT"`));
+  // The catalogue is the four adopted titles and nothing else (owner
+  // direction 2026-08-26): QUEST, ORACLE, TAIYO and EBISU were dropped rather
+  // than left on screen as 休眠中 shelf-filler.
+  assert.match(data, /id: "oedo-market-7"[\s\S]*?releaseState: "LIVE"/);
+  assert.match(data, /id: "otomo-raid-7"[\s\S]*?releaseState: "LIVE"/);
+  for (const gone of ["otomo-quest-77", "otomo-oracle-7", "taiyo-action-rpg", "ebisu-fishing-77"]) {
+    assert.doesNotMatch(data, new RegExp(`id: "${gone}"`));
   }
-  assert.doesNotMatch(data, /id: "taiyo-action-rpg"[\s\S]*?releaseLabel: "PUBLIC RUNTIME/);
   // Every title carries key art on the play surface (owner direction 2026-07-28).
-  for (const withArt of ["otomo-quest-77", "otomo-chain-7", "otomo-farm-77", "otomo-oracle-7", "taiyo-action-rpg", "ebisu-fishing-77"]) {
+  // CHAIN and FARM ship approved art; MARKET and RAID have none yet and fall
+  // back to the glyph rather than borrowing another project's images.
+  for (const withArt of ["otomo-chain-7", "otomo-farm-77"]) {
     assert.match(data, new RegExp(`id: "${withArt}"[^}]*?keyArt: "/dashboard-art/`));
   }
 });
@@ -353,7 +354,7 @@ test("keeps the starter preview removed", async () => {
 });
 
 test("the arena lists only boards for titles that are actually running", async () => {
-  const { games, competitions, liveCompetitions } = await import("../app/dashboard-data.ts");
+  const { games, liveCompetitions } = await import("../app/dashboard-data.ts");
   const dashboard = await readFile(new URL("../app/Dashboard.tsx", import.meta.url), "utf8");
 
   // Every listed board belongs to a LIVE title. A dormant game's ranking
@@ -369,7 +370,6 @@ test("the arena lists only boards for titles that are actually running", async (
     liveCompetitions.some((competition) => competition.gameId === "otomo-chain-7"),
     "OTOMO CHAIN 7 must be listed among the boards",
   );
-  assert.ok(competitions.length > liveCompetitions.length, "dormant boards stay in the catalogue but off the screen");
   assert.match(dashboard, /liveCompetitions\.map/);
   assert.doesNotMatch(dashboard, /competitions\.map/);
 
@@ -413,7 +413,7 @@ test("every live title's health check is actually wired to it", async () => {
       `${game.id} is LIVE but has no runtime key`);
   }
   // And every key the dashboard reads must be a runtime the route checks.
-  for (const key of ["oracle", "quest", "farm", "taiyo", "chain", "raid", "market"]) {
+  for (const key of ["chain", "farm", "raid", "market"]) {
     assert.match(route, new RegExp(`\\n  ${key}: "https`), `${key} is not checked by /api/live`);
   }
 });

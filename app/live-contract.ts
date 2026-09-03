@@ -20,13 +20,9 @@ export type LiveData = {
   servedFrom: "origin" | "cache";
   /** Seconds since the snapshot was read from upstream (0 for origin). */
   cacheAgeSeconds: number;
-  sources: { oracle: Availability; quest: Availability };
   runtimes: {
-    oracle: Availability;
-    quest: Availability;
-    farm: Availability;
-    taiyo: Availability;
     chain: Availability;
+    farm: Availability;
     raid: Availability;
     market: Availability;
   };
@@ -46,27 +42,15 @@ export type LiveData = {
    * as "nobody played".
    */
   chain: { entries: LiveRanking[]; participants: number };
-  oracle: { day: number | null; entries: LiveRanking[] };
-  quest: {
-    season: { name: string; day: number; totalDays: number } | null;
-    entries: LiveRanking[];
-    participants: number;
-  };
 };
 
 export const emptyLiveData: LiveData = {
   checkedAt: "",
   servedFrom: "origin",
   cacheAgeSeconds: 0,
-  sources: { oracle: "unavailable", quest: "unavailable" },
-  runtimes: {
-    oracle: "unavailable", quest: "unavailable", farm: "unavailable",
-    taiyo: "unavailable", chain: "unavailable", raid: "unavailable", market: "unavailable",
-  },
+  runtimes: { chain: "unavailable", farm: "unavailable", raid: "unavailable", market: "unavailable" },
   runtimeOnlineCount: 0,
-  runtimeTotal: 7,
+  runtimeTotal: 4,
   chainSeason: null,
   chain: { entries: [], participants: 0 },
-  oracle: { day: null, entries: [] },
-  quest: { season: null, entries: [], participants: 0 },
 };
