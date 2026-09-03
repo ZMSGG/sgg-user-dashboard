@@ -96,9 +96,9 @@ export const games: readonly GameSummary[] = [
     subtitle: "毎日3分で神域を耕す。ほのぼの農園番付",
     description:
       "相棒OTOMOを卵から満願Lv.77まで育てる77日の農園シーズン。加護予報を読んで種をまき、寝ている間に実らせる。課金や保有のブーストは一切なし——収穫も番付も、毎日の3分を積んだ者だけが強い完全平等の畑。",
-    releaseState: "MAINTENANCE",
-    releaseLabel: "工事中 · 重点タイトル",
-    sourceLabel: "DEPLOYMENT REGISTRY · 2026.07.20",
+    releaseState: "LIVE",
+    releaseLabel: "配信中 · 重点タイトル",
+    sourceLabel: "PRODUCTION · otomofarm.sevengodsgames.com",
     syncMode: "AUTH_REQUIRED",
     accent: "green",
     glyph: "F7",
@@ -109,10 +109,12 @@ export const games: readonly GameSummary[] = [
     officialUrl: "https://otomofarm.sevengodsgames.com/",
     rankingUrl: "https://otomofarm.sevengodsgames.com/rankings",
     guideUrl: null,
+    // 2026-08-26 確認: 入口は「Discordでログインして始める」のみで、
+    // ログイン前に触れるモードは見当たらなかったので何も謳わない。
     freePlay: null,
     primaryAction: "FARMを開く",
-    nextAction: "工事完了までお待ちください",
-    nextActionMeta: "再開は公式発表でお知らせ",
+    nextAction: "今日の畑に種をまく",
+    nextActionMeta: "77日シーズンが進行中。開始にはDiscordログインが必要",
   },
   {
     id: "oedo-market-7",

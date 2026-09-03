@@ -38,7 +38,6 @@ import styles from "./Dashboard.module.css";
 
 type View = "home" | "games" | "arena" | "collection" | "mysgg" | "community";
 // 「すべて」は出さない — 休眠タイトルはプレイ可能の棚に混ぜず、休眠中タブに置く。
-type GameFilter = Extract<ReleaseState, "LIVE" | "MAINTENANCE" | "DORMANT">;
 type FormFilter = "SPIRIT" | "INCARNATE" | "DOJI";
 type SourceState = "online" | "unavailable" | "checking";
 type LoadState = "idle" | "loading" | "ready" | "error";
@@ -219,6 +218,8 @@ const runtimeKeyByGameId: Partial<Record<string, keyof LiveData["runtimes"]>> = 
   "otomo-farm-77": "farm",
   "taiyo-action-rpg": "taiyo",
   "otomo-chain-7": "chain",
+  "otomo-raid-7": "raid",
+  "oedo-market-7": "market",
 };
 
 /**
@@ -446,7 +447,6 @@ function GameCard({
 
 export function Dashboard() {
   const [activeView, setActiveView] = useState<View>("home");
-  const [gameFilter, setGameFilter] = useState<GameFilter>("LIVE");
   const [formFilter, setFormFilter] = useState<FormFilter>("SPIRIT");
   const [trajectoryGame, setTrajectoryGame] = useState<string>("ALL");
   const [trajectoryQuery, setTrajectoryQuery] = useState("");
@@ -880,8 +880,12 @@ export function Dashboard() {
     trajectoryCurrentPage * TRAJECTORY_PAGE_SIZE,
   );
 
-  // 「プレイ可能」は本当に遊べるものだけ。工事中は自分のチップを持つ。
-  const filteredGames = games.filter((game) => game.releaseState === gameFilter);
+  // Three chips to reach six titles was navigation for its own sake, and two
+  // of the three led to games nobody can play. One list, playable first.
+  const gameOrder: Record<ReleaseState, number> = {
+    LIVE: 0, MAINTENANCE: 1, DORMANT: 2, DRAFT: 3, NOT_DEPLOYED: 4,
+  };
+  const orderedGames = [...games].sort((a, b) => gameOrder[a.releaseState] - gameOrder[b.releaseState]);
   const currentForm = otomoForms.find((form) => form.code === formFilter) ?? otomoForms[0];
   const getRuntimeState = (gameId: string): SourceState => {
     const runtimeKey = runtimeKeyByGameId[gameId];
@@ -1135,17 +1139,10 @@ export function Dashboard() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className={styles.headerBand} src="/dashboard-art/headers/header-taiyo.webp" alt="" aria-hidden="true" />
                 <div><p>PLAY / GAME UNIVERSE</p><h1>SGGを遊ぶ</h1><span>公開状態、進行タイプ、公式URLを正本とlive healthから統合。</span></div>
-                <div className={styles.pageStats}><span><b>{releaseStateCounts.LIVE}</b>PLAYABLE</span><span><b>{releaseStateCounts.MAINTENANCE}</b>UNDER REPAIR</span><span><b>7·77·777</b>TIME AXES</span></div>
+                <div className={styles.pageStats}><span><b>{releaseStateCounts.LIVE}</b>PLAYABLE</span><span><b>{games.length}</b>TITLES</span><span><b>7·77·777</b>TIME AXES</span></div>
               </header>
-              <div className={styles.filterBar} aria-label="ゲーム公開状態フィルター">
-                {(["LIVE", "MAINTENANCE", "DORMANT"] as GameFilter[]).map((filter) => (
-                  <button key={filter} type="button" aria-pressed={gameFilter === filter} className={gameFilter === filter ? styles.filterActive : ""} onClick={() => setGameFilter(filter)}>
-                    {releaseStateLabels[filter]}
-                  </button>
-                ))}
-              </div>
               <div className={styles.gameStack}>
-                {filteredGames.map((game) => (
+                {orderedGames.map((game) => (
                   <GameCard key={game.id} game={game} runtimeState={getRuntimeState(game.id)} watched={watchedIds.has(game.id)} onWatch={toggleWatched} />
                 ))}
               </div>

@@ -134,8 +134,11 @@ test("derives current health, search selection, and filtered feature state", asy
   // so its combobox accessibility contract no longer applies.
   // The featured/library split was removed (owner direction 2026-07-30): the
   // filter alone decides which titles the play view lists, at one shared size.
-  assert.match(dashboard, /filteredGames = games\.filter/);
-  assert.match(dashboard, /filteredGames\.map/);
+  // The three release-state chips were removed (owner direction 2026-08-26):
+  // two of them led only to titles nobody can play. One list, playable first.
+  assert.match(dashboard, /orderedGames\.map/);
+  assert.doesNotMatch(dashboard, /gameFilter/);
+  assert.doesNotMatch(dashboard, /ゲーム公開状態フィルター/);
   // アリーナ renders the live season rather than a placeholder, and says so
   // only when the upstream actually answered.
   assert.match(dashboard, /liveData\.chainSeason \? \(/);
@@ -280,7 +283,9 @@ test("keeps publication claims aligned with the deployment registry", async () =
   // FARM is closed for rework (工事中, owner direction 2026-07-31): still on
   // the front shelf, but its play links are withheld.
   assert.match(data, /id: "otomo-chain-7"[\s\S]*?releaseState: "LIVE"/);
-  assert.match(data, /id: "otomo-farm-77"[\s\S]*?releaseState: "MAINTENANCE"/);
+  // FARM came back: otomofarm.sevengodsgames.com was serving Day 11 of a live
+  // 77-day season while the dashboard still wrapped it in construction tape.
+  assert.match(data, /id: "otomo-farm-77"[\s\S]*?releaseState: "LIVE"/);
   for (const dormant of ["otomo-quest-77", "otomo-oracle-7", "taiyo-action-rpg", "ebisu-fishing-77"]) {
     assert.match(data, new RegExp(`id: "${dormant}"[\\s\\S]*?releaseState: "DORMANT"`));
   }
@@ -392,4 +397,23 @@ test("a free-play route is only advertised where it was actually confirmed", asy
   assert.ok(games.some((game) => game.freePlay), "at least one title is playable between tournaments");
   assert.match(dashboard, /game\.freePlay && game\.officialUrl/);
   assert.match(dashboard, /大会がなくても今すぐ試せます/);
+});
+
+test("every live title's health check is actually wired to it", async () => {
+  const { games } = await import("../app/dashboard-data.ts");
+  const dashboard = await readFile(new URL("../app/Dashboard.tsx", import.meta.url), "utf8");
+  const route = await readFile(new URL("../app/api/live/route.ts", import.meta.url), "utf8");
+
+  const mapping = dashboard.slice(dashboard.indexOf("const runtimeKeyByGameId"));
+  for (const game of games) {
+    if (game.releaseState !== "LIVE") continue;
+    // A LIVE title with no mapping renders 稼働確認不可 forever while its
+    // server answers fine — the card would report an outage that isn't real.
+    assert.match(mapping.slice(0, mapping.indexOf("};")), new RegExp(`"${game.id}"`),
+      `${game.id} is LIVE but has no runtime key`);
+  }
+  // And every key the dashboard reads must be a runtime the route checks.
+  for (const key of ["oracle", "quest", "farm", "taiyo", "chain", "raid", "market"]) {
+    assert.match(route, new RegExp(`\\n  ${key}: "https`), `${key} is not checked by /api/live`);
+  }
 });
