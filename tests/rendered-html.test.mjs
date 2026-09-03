@@ -417,3 +417,25 @@ test("every live title's health check is actually wired to it", async () => {
     assert.match(route, new RegExp(`\\n  ${key}: "https`), `${key} is not checked by /api/live`);
   }
 });
+
+test("art is requested directly, not through the inert image optimizer", async () => {
+  const dashboard = await readFile(new URL("../app/Dashboard.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/Dashboard.module.css", import.meta.url), "utf8");
+
+  // /_vinext/image answers every width with a 302 to the original file, so it
+  // never optimized anything — and Chrome closed the connection on lazily
+  // loaded images arriving through that redirect, blanking every game card and
+  // home tile in production. Direct requests, one hop, no redirect.
+  assert.doesNotMatch(dashboard, /from "next\/image"/);
+  assert.doesNotMatch(dashboard, /<Image\s/);
+
+  // next/image's `fill` supplied the absolute placement these frames rely on;
+  // a plain img needs it spelled out or the art collapses to nothing.
+  for (const frame of ["featureArt", "gameArt", "stageBackdrop"]) {
+    const rule = css.slice(css.indexOf(`.${frame} img {`));
+    const body = rule.slice(0, rule.indexOf("}"));
+    assert.match(body, /position: absolute/, `.${frame} img must be placed absolutely`);
+    assert.match(body, /inset: 0/, `.${frame} img must fill its frame`);
+    assert.match(body, /height: 100%/, `.${frame} img must fill its frame`);
+  }
+});

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -365,6 +364,17 @@ function ExternalLink({ href, children, className }: { href: string; children: R
 }
 
 /** Every title gets the same full-width card; no featured/library hierarchy. */
+/*
+ * Art is served straight from public/ rather than through next/image.
+ *
+ * The optimizer is inert here: /_vinext/image answers every width with a 302
+ * to the original file, so it never resized or re-encoded anything. It was
+ * worse than useless — Chrome closed the connection on lazy-loaded images that
+ * arrive via that redirect (ERR_CONNECTION_CLOSED), which blanked every game
+ * card and home feature tile in production while the eagerly-loaded backdrop
+ * came through fine. The art is already pre-sized WebP, so one direct request
+ * is both correct and one hop shorter.
+ */
 function GameCard({
   game,
   runtimeState,
@@ -393,7 +403,8 @@ function GameCard({
       </div>
       {game.keyArt ? (
         <div className={styles.gameArt}>
-          <Image src={game.keyArt} alt="" fill sizes="(max-width: 900px) 92vw, 30vw" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={game.keyArt} alt="" loading="lazy" decoding="async" />
         </div>
       ) : (
         // Dormant titles carry no key art, so the surface stays deliberately quiet.
@@ -970,7 +981,8 @@ export function Dashboard() {
               <div className={styles.homeMain}>
                 <section className={styles.stage} aria-labelledby="hero-title">
                   <div className={styles.stageBackdrop}>
-                    <Image src="/dashboard-art/bg-zipangu-dusk.webp" alt="" fill priority sizes="(max-width: 900px) 100vw, 62vw" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/dashboard-art/bg-zipangu-dusk.webp" alt="" fetchPriority="high" decoding="async" />
                   </div>
                   {(() => {
                     const duty = characterPairs.find((pair) => pair.godId === stageGodId) ?? dutyPair();
@@ -1076,7 +1088,8 @@ export function Dashboard() {
                 <section className={styles.featureRow} aria-label="主要導線">
                   <article data-tone="gold">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-01.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "82% 46%" }} />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/dashboard-art/cards/card-01.webp" alt="" loading="lazy" decoding="async" style={{ objectPosition: "82% 46%" }} />
                     </div>
                     <small>PLAY NOW</small><h3>公開中のゲーム</h3>
                     <b>{releaseStateCounts.LIVE}</b><span>稼働中のruntime</span>
@@ -1084,7 +1097,8 @@ export function Dashboard() {
                   </article>
                   <article data-tone="violet">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-02.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 50%" }} />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/dashboard-art/cards/card-02.webp" alt="" loading="lazy" decoding="async" style={{ objectPosition: "62% 50%" }} />
                     </div>
                     <small>TOURNAMENT</small><h3>大会</h3>
                     {liveData.chainSeason?.status === "ACTIVE" || liveData.chainSeason?.status === "UPCOMING" ? (
@@ -1102,7 +1116,8 @@ export function Dashboard() {
                   </article>
                   <article data-tone="cyan">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-03.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "72% 38%" }} />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/dashboard-art/cards/card-03.webp" alt="" loading="lazy" decoding="async" style={{ objectPosition: "72% 38%" }} />
                     </div>
                     <small>DIVINE COLLECTION</small><h3>神々コレクション</h3>
                     <b>{characterPairs.length}</b><span>GODS × OTOMO</span>
@@ -1110,7 +1125,8 @@ export function Dashboard() {
                   </article>
                   <article data-tone="green">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-04.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "62% 34%" }} />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/dashboard-art/cards/card-04.webp" alt="" loading="lazy" decoding="async" style={{ objectPosition: "62% 34%" }} />
                     </div>
                     <small>OTOMO GROWTH</small><h3>OTOMO育成</h3>
                     <b>未接続</b><span>ゲーム内データの連携は準備中</span>
@@ -1118,7 +1134,8 @@ export function Dashboard() {
                   </article>
                   <article data-tone="coral">
                     <div className={styles.featureArt}>
-                      <Image src="/dashboard-art/cards/card-05.webp" alt="" fill sizes="(max-width: 900px) 45vw, 15vw" style={{ objectPosition: "70% 40%" }} />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/dashboard-art/cards/card-05.webp" alt="" loading="lazy" decoding="async" style={{ objectPosition: "70% 40%" }} />
                     </div>
                     <small>COMMUNITY SNS</small><h3>コミュニティSNS</h3>
                     <b>{officialLinks.length}</b><span>公式チャンネル・マーケット</span>

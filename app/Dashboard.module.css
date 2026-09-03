@@ -3542,6 +3542,10 @@
 }
 
 .featureArt img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -3640,6 +3644,10 @@
 }
 
 .gameArt img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: 68% 42%;
 }
@@ -3961,6 +3969,10 @@ b[data-rarity="SR"] { background: rgba(230, 196, 111, 0.18); color: #e6c46f; }
 }
 
 .stageBackdrop img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center 72%;
   opacity: 1;
