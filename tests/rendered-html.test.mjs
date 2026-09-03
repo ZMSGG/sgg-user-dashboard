@@ -290,9 +290,9 @@ test("keeps publication claims aligned with the deployment registry", async () =
     assert.doesNotMatch(data, new RegExp(`id: "${gone}"`));
   }
   // Every title carries key art on the play surface (owner direction 2026-07-28).
-  // CHAIN and FARM ship approved art; MARKET and RAID have none yet and fall
-  // back to the glyph rather than borrowing another project's images.
-  for (const withArt of ["otomo-chain-7", "otomo-farm-77"]) {
+  // All four adopted titles ship key art now (MARKET and RAID generated
+  // 2026-09-03 from the OTOMO identity references, new compositions).
+  for (const withArt of ["otomo-chain-7", "otomo-farm-77", "oedo-market-7", "otomo-raid-7"]) {
     assert.match(data, new RegExp(`id: "${withArt}"[^}]*?keyArt: "/dashboard-art/`));
   }
 });

@@ -109,7 +109,8 @@ export const games: readonly GameSummary[] = [
     glyph: "両",
     genre: "MARKET SIMULATION",
     duration: "77",
-    keyArt: null,
+    // 鯛丸・小槌・笑袋が江戸の相場座敷でローソク足を見る公式サムネ (2026-09-03生成)。
+    keyArt: "/dashboard-art/games/market.webp",
     officialUrl: "https://oedomarket.sevengodsgames.com/",
     rankingUrl: null,
     guideUrl: null,
@@ -136,7 +137,8 @@ export const games: readonly GameSummary[] = [
     glyph: "獣",
     genre: "COMMUNITY RAID",
     duration: "7",
-    keyArt: null,
+    // 百勝・琴音・寿鹿が封印された神獣へ突撃する公式サムネ (2026-09-03生成)。
+    keyArt: "/dashboard-art/games/raid.webp",
     officialUrl: "https://raid.sevengodsgames.com/",
     rankingUrl: null,
     guideUrl: null,

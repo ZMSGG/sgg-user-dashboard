@@ -1,0 +1,51 @@
+{
+  "recordVersion": 1,
+  "recordedAt": "2026-09-03T07:06:51-10:00",
+  "projectId": "PRJ-202607-sgg-user-dashboard",
+  "batchId": "game-thumbs-v002",
+  "tool": {
+    "provider": "OpenAI",
+    "product": "GPT Image / Image 2.0",
+    "mode": "Codex built-in image generation with identity references",
+    "externalGeneratorUsed": false
+  },
+  "use": {
+    "surface": "OEDO MARKET 7 / OTOMO RAID 7 game thumbnails",
+    "characterUsage": "OTOMO",
+    "characterUsageReason": "The OTOMO are the subject of each game thumbnail.",
+    "status": "SHIPPED",
+    "scope": "public dashboard runtime"
+  },
+  "assets": [
+    {
+      "id": "MEDIA-oedo-market-7-thumb-a-v002",
+      "source": "market-a.png",
+      "sha256": "79a6c80303cdcc4a9e7dfe48bb8334d46a2034f747b0f9a69f579e12ebfc41df",
+      "shipped": "public/dashboard-art/games/market.webp",
+      "shippedSha256": "215c946af19cacfcf5ba11f8e0f2d56ec2e4acd4fd48f583794122a119c58adb",
+      "generated": "1536x1024 PNG",
+      "shippedFormat": "960x540 WebP q82",
+      "identityReferences": [
+        "taimaru INCARNATE",
+        "kozuchi INCARNATE",
+        "shofuku INCARNATE"
+      ]
+    },
+    {
+      "id": "MEDIA-otomo-raid-7-thumb-a-v002",
+      "source": "raid-a.png",
+      "sha256": "945a89a04ba49c0059a572eddb07da75214744a3111a89a2e19d6acf21308594",
+      "shipped": "public/dashboard-art/games/raid.webp",
+      "shippedSha256": "d001c6368c1c872b5817e30d53bd7049477f1722e2fc9260add2156c0ab778df",
+      "generated": "1536x1024 PNG",
+      "shippedFormat": "960x540 WebP q82",
+      "identityReferences": [
+        "momokatsu INCARNATE",
+        "kotone INCARNATE",
+        "juka INCARNATE"
+      ]
+    }
+  ],
+  "method": "Reference images supplied only as identity anchors via codex -i. Pose, angle, scene and background are new; no cutout, crop or background reuse from any reference. Prompts prohibited text, logos, watermarks, UI and human characters.",
+  "verification": "Both outputs read against their references for colour, face construction, body shape and markings; both cropped to the 960x540 the other game cards use and viewed at ship size."
+}
