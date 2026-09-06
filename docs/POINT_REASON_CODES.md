@@ -22,6 +22,7 @@ SGG Token とは対応しない。
 | `COMMUNITY_CONTRIBUTION` | コミュニティ貢献 | 管理者 | `community:<case_id>:<discord_id>` |
 | `LOGIN_STREAK` | ログイン継続報酬 | 自動 | `login:<yyyymmdd>:<discord_id>` |
 | `ADJUST_CORRECTION` | 誤付与の訂正(負値) | 管理者 | `adjust:<original_key>` |
+| `ADJUST_SETTLEMENT` | 月次のスポンサー還元を分配し終えた後の清算(負値・残高を0に戻す) | 管理者/自動 | `settle:<yyyy-mm>:<discord_id>` |
 
 ## 運用メモ
 
@@ -30,6 +31,13 @@ SGG Token とは対応しない。
 - 一括配布(大会報酬など)は対象リストを dry-run で確認 → 承認 → 実行の
   3 段階を踏み、実行記録を `WORKLOG.md` に残す。
 - コードの意味変更は禁止。意味が変わる場合は新コードを追加する。
+
+## 清算の考え方（2026-09-06 追記）
+
+SGPは、その月にスポンサーから提供された還元物を比例配分で受け取るための持分。
+分配が済んだら `ADJUST_SETTLEMENT` の負値行で残高を 0 に戻し、翌月ぶんを
+また積み上げる。還元を受け取っていない人（Wallet未連携など）の残高は清算せず、
+受け取れるようになるまで持分として残す。清算行の `note` には対象月と還元物を書く。
 
 ## 追加コード（2026-07-29 オーナー指示による通貨拡張）
 

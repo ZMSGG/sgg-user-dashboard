@@ -34,6 +34,9 @@ const INTEGRATION_REASON_CODES = new Set([
   "CAMPAIGN_REWARD",
   "LOGIN_REWARD",
   "TESTER_FEEDBACK",
+  // Month-end settlement after a sponsor distribution: negative rows that
+  // return each paid balance to zero. Bounded like everything else here.
+  "ADJUST_SETTLEMENT",
 ]);
 /** Largest single automated award; the biggest real one so far was 226. */
 const INTEGRATION_MAX_ABS_AMOUNT = 10_000;
